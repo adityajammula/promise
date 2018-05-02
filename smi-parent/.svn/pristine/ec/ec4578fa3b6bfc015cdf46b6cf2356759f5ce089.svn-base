@@ -1,0 +1,724 @@
+package com.zen.smi.controller;
+
+import org.codehaus.jettison.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zen.smi.bo.RuleBO;
+import com.zen.smi.cmf.bo.CaseStatusUpdateBO;
+import com.zen.smi.cmf.bo.CmfCaseBO;
+import com.zen.smi.cmf.bo.CmfCaseCriteriaBO;
+import com.zen.smi.cmf.bo.CmfCaseGraphDashboardBO;
+import com.zen.smi.cmf.bo.CmfCaseListBO;
+import com.zen.smi.cmf.bo.CmfCaseManagementDashboardBO;
+import com.zen.smi.cmf.bo.CmfCaseStaticDataBO;
+import com.zen.smi.cmf.bo.DashBoardGraphBO;
+import com.zen.smi.cmf.bo.DashBoardJSONObjectBO;
+import com.zen.smi.cmf.bo.SearchBO;
+import com.zen.smi.cmf.bo.UserBO;
+import com.zen.smi.cmf.service.CmfCaseService;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.generic.utils.MessageUtil;
+
+/**
+ * CmfCaseController class manage Cases related data. Data from screens is
+ * transferred to the controller and passed to services/dao.
+ * 
+ * @author tmangalapenta 
+ */
+@Controller
+@RequestMapping("/cmfcases")
+public class CmfCaseController extends BaseController {
+
+	/**
+	 * Logger for CmfCaseController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(CmfCaseController.class);
+
+	@Autowired
+	public CmfCaseService cmfCaseService;
+
+	/**
+	 * This method is to get all the rules information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return RuleListBO
+	 */
+	
+	@RequestMapping(value = "/closedcasesbycriteria", method = RequestMethod.POST)
+	public @ResponseBody String getAllCmfClosedCasesByCriteria(@RequestBody String closedCaseJson,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			
+			CmfCaseCriteriaBO cmfCaseCriteriaBO=gson.fromJson(closedCaseJson, CmfCaseCriteriaBO.class);			
+
+			Integer categoryId;
+			Integer priorityTypeId;
+			Integer accountTypeId;
+			
+			if(cmfCaseCriteriaBO.getCategoryType() == "" || cmfCaseCriteriaBO.getCategoryType().equals("") || cmfCaseCriteriaBO.getCategoryType().equals("All")) {
+				categoryId = null;
+			} else {
+				categoryId = Integer.parseInt(cmfCaseCriteriaBO.getCategoryType());
+			}
+			if(cmfCaseCriteriaBO.getPriorityType() == "" || cmfCaseCriteriaBO.getPriorityType().equals("") || cmfCaseCriteriaBO.getPriorityType().equals("All")) {
+				priorityTypeId = null;
+			} else {
+				priorityTypeId = Integer.parseInt(cmfCaseCriteriaBO.getPriorityType());
+			}
+			if(cmfCaseCriteriaBO.getAccountType() == "" || cmfCaseCriteriaBO.getAccountType().equals("") || cmfCaseCriteriaBO.getAccountType().equals("All")) {
+				accountTypeId = null;
+			} else {
+				accountTypeId = Integer.parseInt(cmfCaseCriteriaBO.getAccountType());
+			}
+			
+			
+			List<CmfCaseBO> cmfCaseBOList = cmfCaseService.getAllCmfClosedCases(priorityTypeId,categoryId,accountTypeId);
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setCmfCaseBO(cmfCaseBOList);
+			String cmfJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);			
+			resultJson = handleSuccess(cmfJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/staticdata", method = RequestMethod.GET)
+	public @ResponseBody String getCmfCaseStaticData(HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			
+			CmfCaseStaticDataBO cmfCaseStaticData = cmfCaseService.getCmfCaseStaticData();
+			resultJson = gson.toJson(cmfCaseStaticData, CmfCaseStaticDataBO.class);
+			resultJson = handleSuccess(resultJson, null);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	/**
+	 * This method is to get All CmfCase Counts information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/cmfCaseManagementCounts", method = RequestMethod.GET)
+	public @ResponseBody String getCountOfCmfCaseManagement(HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			 //int userId,int faceBookAccountId,int twitterBookAccountId
+			CmfCaseManagementDashboardBO cmfCaseManagementDashboardBO = cmfCaseService.getCountOfCmfCaseManagement(1,1,2);
+			String cmfJson=gson.toJson(cmfCaseManagementDashboardBO,CmfCaseManagementDashboardBO.class);			
+			resultJson = handleSuccess(cmfJson, null);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/openCasesByAccountType/{account_type}", method = RequestMethod.GET)
+	public @ResponseBody String getAllCmfOpenCasesByAccountType(@PathVariable("account_type") int accountTypeId,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			
+			List<CmfCaseBO> cmfCaseBOList = cmfCaseService.getAllCmfOpenCasesByAccountType(accountTypeId);
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setCmfCaseBO(cmfCaseBOList);
+			String cmfJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);			
+			resultJson = handleSuccess(cmfJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/openCasesByCategory/{category_type}", method = RequestMethod.GET)
+	public @ResponseBody String getAllCmfOpenCasesByCategory(@PathVariable("category_type") int categoryId,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			
+			List<CmfCaseBO> cmfCaseBOList = cmfCaseService.getAllCmfOpenCasesByCategory(categoryId);
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setCmfCaseBO(cmfCaseBOList);
+			String cmfJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);			
+			resultJson = handleSuccess(cmfJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/openCasesByPriority/{priority_type}", method = RequestMethod.GET)
+	public @ResponseBody String getAllCmfOpenCasesByPriority(@PathVariable("priority_type") int priorityTypeId,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			
+			List<CmfCaseBO> cmfCaseBOList = cmfCaseService.getAllCmfOpenCasesByPriority(priorityTypeId);
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setCmfCaseBO(cmfCaseBOList);
+			String cmfJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);			
+			resultJson = handleSuccess(cmfJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/openCasesByFinancialInstitutions/{financialInstitution_type}", method = RequestMethod.GET)
+	public @ResponseBody String getAllCmfOpenCasesByFinancialInstitutionsType(@PathVariable("financialInstitution_type") int financialInstitutionTypeId,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			
+			List<CmfCaseBO> cmfCaseBOList = cmfCaseService.getAllCmfOpenCasesByFinancialInstitutionsType(financialInstitutionTypeId);
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setCmfCaseBO(cmfCaseBOList);
+			String cmfJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);			
+			resultJson = handleSuccess(cmfJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/openCasesByCriteria", method = RequestMethod.POST)
+	public @ResponseBody String getAllCmfOpenCasesByCriteria(@RequestBody String openCaseJson,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			CmfCaseCriteriaBO cmfCaseCriteriaBO=gson.fromJson(openCaseJson, CmfCaseCriteriaBO.class);			
+
+			Integer categoryId;
+			Integer priorityTypeId;
+			Integer accountTypeId;
+			Integer socialMediaAccountsId;
+
+			if(cmfCaseCriteriaBO.getCategoryType() == "" || cmfCaseCriteriaBO.getCategoryType().equals("") || cmfCaseCriteriaBO.getCategoryType().equals("All")) {
+				categoryId = null;
+			} else {
+				categoryId = Integer.parseInt(cmfCaseCriteriaBO.getCategoryType());
+			}
+			if(cmfCaseCriteriaBO.getPriorityType() == "" || cmfCaseCriteriaBO.getPriorityType().equals("") || cmfCaseCriteriaBO.getPriorityType().equals("All")) {
+				priorityTypeId = null;
+			} else {
+				priorityTypeId = Integer.parseInt(cmfCaseCriteriaBO.getPriorityType());
+			}
+			if(cmfCaseCriteriaBO.getSocialMediaAccountsId() == "" || cmfCaseCriteriaBO.getSocialMediaAccountsId().equals("") || cmfCaseCriteriaBO.getSocialMediaAccountsId().equals("All")) {
+				socialMediaAccountsId = null;
+			} else {
+				socialMediaAccountsId = Integer.parseInt(cmfCaseCriteriaBO.getSocialMediaAccountsId());
+			}
+			if(cmfCaseCriteriaBO.getAccountType() == "" || cmfCaseCriteriaBO.getAccountType().equals("") || cmfCaseCriteriaBO.getAccountType().equals("All")) {
+				accountTypeId = null;
+			} else {
+				accountTypeId = Integer.parseInt(cmfCaseCriteriaBO.getAccountType());
+			}
+			
+			List<CmfCaseBO> cmfCaseBOList = cmfCaseService.getAllCmfOpenCasesByCriteria(priorityTypeId,categoryId,socialMediaAccountsId,accountTypeId);
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setCmfCaseBO(cmfCaseBOList);
+			String cmfJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);			
+			resultJson = handleSuccess(cmfJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/resolvedcasesbycriteria", method = RequestMethod.POST)
+	public @ResponseBody String getAllCmfResolvedCasesByCriteria(@RequestBody String resolvedCaseJson,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			
+			CmfCaseCriteriaBO cmfCaseCriteriaBO=gson.fromJson(resolvedCaseJson, CmfCaseCriteriaBO.class);			
+
+			Integer categoryId;
+			Integer priorityTypeId;
+			Integer accountTypeId;
+			
+			if(cmfCaseCriteriaBO.getCategoryType() == "" || cmfCaseCriteriaBO.getCategoryType().equals("") || cmfCaseCriteriaBO.getCategoryType().equals("All")) {
+				categoryId = null;
+			} else {
+				categoryId = Integer.parseInt(cmfCaseCriteriaBO.getCategoryType());
+			}
+			if(cmfCaseCriteriaBO.getPriorityType() == "" || cmfCaseCriteriaBO.getPriorityType().equals("") || cmfCaseCriteriaBO.getPriorityType().equals("All")) {
+				priorityTypeId = null;
+			} else {
+				priorityTypeId = Integer.parseInt(cmfCaseCriteriaBO.getPriorityType());
+			}
+			if(cmfCaseCriteriaBO.getAccountType() == "" || cmfCaseCriteriaBO.getAccountType().equals("") || cmfCaseCriteriaBO.getAccountType().equals("All")) {
+				accountTypeId = null;
+			} else {
+				accountTypeId = Integer.parseInt(cmfCaseCriteriaBO.getAccountType());
+			}
+			
+			
+			List<CmfCaseBO> cmfCaseBOList = cmfCaseService.getAllCmfResolvedCases(priorityTypeId,categoryId,accountTypeId);
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setCmfCaseBO(cmfCaseBOList);
+			String cmfJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);			
+			resultJson = handleSuccess(cmfJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/spamcasesbycriteria", method = RequestMethod.POST)
+	public @ResponseBody String getAllCmfSpamCasesByCriteria(@RequestBody String spamCaseJson,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			
+			CmfCaseCriteriaBO cmfCaseCriteriaBO=gson.fromJson(spamCaseJson, CmfCaseCriteriaBO.class);			
+
+			Integer categoryId;
+			Integer priorityTypeId;
+			Integer accountTypeId;
+			
+			if(cmfCaseCriteriaBO.getCategoryType() == "" || cmfCaseCriteriaBO.getCategoryType().equals("") || cmfCaseCriteriaBO.getCategoryType().equals("All")) {
+				categoryId = null;
+			} else {
+				categoryId = Integer.parseInt(cmfCaseCriteriaBO.getCategoryType());
+			}
+			if(cmfCaseCriteriaBO.getPriorityType() == "" || cmfCaseCriteriaBO.getPriorityType().equals("") || cmfCaseCriteriaBO.getPriorityType().equals("All")) {
+				priorityTypeId = null;
+			} else {
+				priorityTypeId = Integer.parseInt(cmfCaseCriteriaBO.getPriorityType());
+			}
+			if(cmfCaseCriteriaBO.getAccountType() == "" || cmfCaseCriteriaBO.getAccountType().equals("") || cmfCaseCriteriaBO.getAccountType().equals("All")) {
+				accountTypeId = null;
+			} else {
+				accountTypeId = Integer.parseInt(cmfCaseCriteriaBO.getAccountType());
+			}
+			
+			
+			List<CmfCaseBO> cmfCaseBOList = cmfCaseService.getAllCmfSpamCases(priorityTypeId,categoryId,accountTypeId);
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setCmfCaseBO(cmfCaseBOList);
+			String cmfJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);			
+			resultJson = handleSuccess(cmfJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/casesdetails/{case_id}", method = RequestMethod.GET)
+	public @ResponseBody String getCaseDetails(@PathVariable("case_id") String caseId,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			  List<CmfCaseBO> cmfCaseListBO=new ArrayList<CmfCaseBO>();
+			  CmfCaseBO cmfCaseBO = cmfCaseService.getCaseDetails(caseId);
+			  cmfCaseListBO.add(cmfCaseBO);		
+			  List<CmfCaseBO> cmfCaseBOs=null;
+	           if(cmfCaseBO.getGroupCaseFlag().equals("yes") && cmfCaseBO.getGroupCaseId().equals("0")){					
+	        	    cmfCaseBOs = cmfCaseService.getCaseDetailsByGroupCaseId(cmfCaseBO.getCaseId());
+	        	    cmfCaseListBO.addAll(cmfCaseBOs);
+	        	    cmfCaseListBO=  getInnerBO(cmfCaseListBO,cmfCaseBOs);
+	           }
+	            CmfCaseListBO caseList = new CmfCaseListBO();
+				caseList.setCmfCaseBO(cmfCaseListBO);
+	            String cmfJson=gson.toJson(caseList,CmfCaseListBO.class);			
+				resultJson = handleSuccess(cmfJson, null);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+
+	
+	private List<CmfCaseBO> getInnerBO(List<CmfCaseBO> cmfCaseListBO,List<CmfCaseBO> cmfCaseBOs) throws com.zen.smi.cmf.exception.BusinessException {
+		for(CmfCaseBO bo:cmfCaseBOs){			
+			 if(bo.getGroupCaseFlag().equals("yes")){
+				  cmfCaseBOs = cmfCaseService.getCaseDetailsByGroupCaseId(bo.getCaseId());
+				  cmfCaseListBO.addAll(cmfCaseBOs);
+				  getInnerBO(cmfCaseListBO, cmfCaseBOs);
+			 }	
+			
+		}
+		
+		return cmfCaseListBO;
+	}
+
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/casesByCustomer/{customer_id}", method = RequestMethod.GET)
+	public @ResponseBody String getAllCmfCasesByCustomer(@PathVariable("customer_id") int customerId,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			  
+			List<CmfCaseBO> cmfCaseBOList = cmfCaseService.getAllCmfCasesByCustomer(customerId);
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setCmfCaseBO(cmfCaseBOList);
+			String cmfJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);			
+			resultJson = handleSuccess(cmfJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	@RequestMapping(value = "/users", method = RequestMethod.GET)
+	public @ResponseBody String getAllUsers(HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			
+			List<UserBO> cmfCasesUsers = cmfCaseService.getAllUsers();
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setCmfCasesUsers(cmfCasesUsers);
+			String cmfJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);			
+			resultJson = handleSuccess(cmfJson, null);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	@RequestMapping(value = "/assign", method = RequestMethod.POST)
+	public @ResponseBody String getCustomerInformation(@RequestBody String assignUserJson,HttpServletRequest request, HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			CaseStatusUpdateBO assigntoUserInputBO=gson.fromJson(assignUserJson, CaseStatusUpdateBO.class);			
+			cmfCaseService.assignSelectedCasesToUser(assigntoUserInputBO.getUserName(), assigntoUserInputBO.getReason(),assigntoUserInputBO.getCaseIdList());
+			resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("CASE_ASSIGNMENT_CREATED", null));
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	@RequestMapping(value = "/dashboardgraph", method = RequestMethod.GET)
+	public @ResponseBody String getCountOfCmfCasesByDateCriteria(String graphDashboardJson,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+//			CmfCaseGraphDashboardBO cmfCaseGraphDashboardBO = gson.fromJson(graphDashboardJson, CmfCaseGraphDashboardBO.class);		
+			 
+			SimpleDateFormat formatter =  new SimpleDateFormat("yyyy-MM-dd");
+		    Date aDate = formatter.parse("2015-06-11");
+		    Date bDate = formatter.parse("2015-06-17");
+			List<CmfCaseGraphDashboardBO> graphDashboardBO = cmfCaseService.getCountOfCmfCasesByDateCriteria("CATEGORY",aDate,bDate);
+			List<DashBoardJSONObjectBO> dashBoardJSONObjectBOList = convertDashboardReportsBOToJSON(graphDashboardBO);
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setDashBoardJSONObjectBOList(dashBoardJSONObjectBOList);
+			String cmfJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);	
+			resultJson = handleSuccess(cmfJson, null);
+
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	public List<DashBoardJSONObjectBO> convertDashboardReportsBOToJSON(List<CmfCaseGraphDashboardBO> reportsBOList) throws JSONException {
+		LOGGER.debug("Starts convertDashboardReportsBOToJSON");
+		List<DashBoardJSONObjectBO> dashBoardJSONObjectBOList =new ArrayList<DashBoardJSONObjectBO>(0);
+		List<DashBoardGraphBO> dashBoardGraphBOList = null;
+		String lableType = "";
+		DashBoardJSONObjectBO reportsJSON = null;
+		for (CmfCaseGraphDashboardBO cmfCaseGraphDashboardBO : reportsBOList) {
+			if(null !=cmfCaseGraphDashboardBO.getTypeName() &&  !cmfCaseGraphDashboardBO.getTypeName().equals(lableType)) {
+				reportsJSON = new DashBoardJSONObjectBO();
+				reportsJSON.setLable(cmfCaseGraphDashboardBO.getTypeName());
+				dashBoardGraphBOList = new ArrayList<DashBoardGraphBO>(0);
+				reportsJSON.setDashBoardGraphBOList(dashBoardGraphBOList);
+				lableType = cmfCaseGraphDashboardBO.getTypeName();
+				dashBoardJSONObjectBOList.add(reportsJSON);
+			}
+			DashBoardGraphBO reportsJSONArray = new DashBoardGraphBO();
+			reportsJSONArray.setTypePeriod(cmfCaseGraphDashboardBO.getTypePeriod());
+			reportsJSONArray.setTypeCount(cmfCaseGraphDashboardBO.getTypeCount());
+				
+			dashBoardGraphBOList.add(reportsJSONArray);
+		}
+
+        LOGGER.debug("End convertDashboardReportsBOToJSON");
+		return dashBoardJSONObjectBOList;
+	}
+	
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/createGroup", method = RequestMethod.GET)
+	public @ResponseBody String saveGroupCase(@RequestBody String caseIdsJson,HttpServletRequest request,HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			
+			CmfCaseListBO caseBO = gson.fromJson(caseIdsJson, CmfCaseListBO.class);
+			
+			
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	
+	@RequestMapping(value = "/reopen", method = RequestMethod.POST)
+	public @ResponseBody String getReOpenSelectedCases(@RequestBody String reopenCasersJson,HttpServletRequest request, HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			CaseStatusUpdateBO  reopenCasersBO=gson.fromJson(reopenCasersJson, CaseStatusUpdateBO.class);			
+					
+			cmfCaseService.reopenSelectedCases(reopenCasersBO.getUserName(), reopenCasersBO.getReason(),reopenCasersBO.getCaseIdList());
+						
+			resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("REOPEN_CASE", null));
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	
+	@RequestMapping(value = "/close", method = RequestMethod.POST)
+	public @ResponseBody String getCloseSelectedCases(@RequestBody String closeCasersJson,HttpServletRequest request, HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			CaseStatusUpdateBO  reopenCasersBO=gson.fromJson(closeCasersJson, CaseStatusUpdateBO.class);			
+					
+			cmfCaseService.closeSelectedCases(reopenCasersBO.getUserName(), reopenCasersBO.getCaseIdList());
+						
+			resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("CLOSING_CASE", null));
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	@RequestMapping(value = "/notaspam", method = RequestMethod.POST)
+	public @ResponseBody String reOpenSpamSelectedCases(@RequestBody String reopenCasersJson,HttpServletRequest request, HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			CaseStatusUpdateBO  reopenCasersBO=gson.fromJson(reopenCasersJson, CaseStatusUpdateBO.class);			
+					
+			cmfCaseService.reOpenSpamSelectedCases(reopenCasersBO.getUserName(),reopenCasersBO.getCaseIdList());
+						
+			resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("NOT_SPAM_CASE", null));
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	@RequestMapping(value = "/resolved", method = RequestMethod.POST)
+	public @ResponseBody String getResolvedSelectedCases(@RequestBody String resolvedCasersJson,HttpServletRequest request, HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			CaseStatusUpdateBO  resolvedCasersBO=gson.fromJson(resolvedCasersJson, CaseStatusUpdateBO.class);			
+					
+			cmfCaseService.resolvedSelectedCases(resolvedCasersBO.getUserName(), resolvedCasersBO.getReason(), resolvedCasersBO.getCaseIdList());
+						
+			resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("CLOSING_CASE", null));
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public @ResponseBody String searchCase(HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			        List<CmfCaseBO> cmfCaseBOs=null;
+			        SearchBO searchBO=new SearchBO();///gson.fromJson(searchJson, SearchBO.class);
+			        searchBO.setCurrentStatus("2");
+			        searchBO.setKeyword("DCHFB");
+			        searchBO.setSourceId("1");
+			        
+	        	    cmfCaseBOs = cmfCaseService.getCaseDetailsBySearch(searchBO);
+			       	CmfCaseListBO caseList = new CmfCaseListBO();
+					caseList.setCmfCaseBO(cmfCaseBOs);
+					String cmfJson=gson.toJson(caseList,CmfCaseListBO.class);			
+					resultJson = handleSuccess(cmfJson, null);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	
+	@RequestMapping(value = "/cases/list", method = RequestMethod.GET)
+	public @ResponseBody String getAllGroupCases(HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			  List<CmfCaseBO> cmfCaseListBO=new ArrayList<CmfCaseBO>();
+			  List<CmfCaseBO> cmfCaseBO = cmfCaseService.getAllCmfGroupCases();
+			  for(CmfCaseBO groupbo:cmfCaseBO){
+				 if(groupbo.getGroupCaseFlag().equals("yes")){
+					 cmfCaseListBO.add(groupbo);
+		           }
+			  }	           
+	            CmfCaseListBO caseList = new CmfCaseListBO();
+				caseList.setCmfCaseBO(cmfCaseListBO);
+	            String cmfJson=gson.toJson(caseList,CmfCaseListBO.class);			
+				resultJson = handleSuccess(cmfJson, null);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+}
+
+
+
+

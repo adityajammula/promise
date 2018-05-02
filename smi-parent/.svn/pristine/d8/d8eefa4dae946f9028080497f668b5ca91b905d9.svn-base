@@ -1,0 +1,191 @@
+package com.zen.smi.service.impl;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.SocialMediaAccountsBO;
+import com.zen.smi.dao.SocialProfileDAO;
+import com.zen.smi.dao.entities.FinancialInstitutions;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.dao.entities.SocialProfiles;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.dao.impl.SocialProfileDAOImpl;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.SocialMediaAccountsService;
+import com.zen.smi.service.helper.SocialMediaAccountsHelper;
+
+public class SocialMediaAccountsServiceImpl extends BaseService implements  SocialMediaAccountsService {
+	
+	/**
+	 * Logger for SocialMediaAccountsServiceImpl class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(SocialMediaAccountsServiceImpl.class);
+
+	/**
+	 * Get Social Media Accounts from the database.
+	 * @param null
+	 * @return List of SocialMediaAccountsBO objects
+	 * @throws BusinessException 
+	 * @author 
+	 */
+	
+	public List<SocialMediaAccountsBO> getSocialMediaAccounts() throws BusinessException {
+		LOGGER.debug("Starts getSocialMediaAccounts()....");
+		List<SocialMediaAccounts> accountsList=null;
+		List<SocialMediaAccountsBO> socialMediaAccountsBO = new ArrayList<SocialMediaAccountsBO>();
+		String accountRelation = "";
+		try {
+			SocialProfileDAO profileDAO = new SocialProfileDAOImpl();
+			List<SocialMediaAccounts> accounts = getSocialMediaAccountsDAO().load("from SocialMediaAccounts");
+			if(accounts != null)
+			{
+				accountsList=new ArrayList<SocialMediaAccounts>(0);
+				
+				for (SocialMediaAccounts account : accounts) {
+					SocialMediaAccountsBO accountsBO = new SocialMediaAccountsBO();
+					SocialProfiles   sp = profileDAO.getSocialProfile(account.getId());
+					account.setSocialProfiles(sp);
+					FinancialInstitutions fi= getRootParent(account.getFinancialInstitutions().getId());
+					List<String> accountRelationAsList = getAccountRelation(account.getFinancialInstitutions().getId(), new ArrayList<String>());
+					accountRelation = getAcoountRelationAsString(accountRelationAsList);
+					account.setFinancialInstitutions(fi);
+					
+					accountsList.add(account);
+					accountsBO.setAccountRealtion(accountRelation);
+					accountsBO = SocialMediaAccountsHelper.getInstance().getsocialMediaAccountsBOFromEntity(account, accountsBO);
+					socialMediaAccountsBO.add(accountsBO);
+				}
+				
+				//socialMediaAccountsBO = SocialMediaAccountsHelper.getInstance().convertSocialMediaAccountsEntityToBO(accountsList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getSocialMediaAccounts()....");
+		return socialMediaAccountsBO;
+	}
+
+	public List<SocialMediaAccountsBO> getSocialMediaAccountsByAccountType(int accountTypeId) throws BusinessException {
+		LOGGER.debug("Starts getSocialMediaAccountsByAccountType()....");
+		List<SocialMediaAccounts> accountsList=null;
+		List<SocialMediaAccountsBO> socialMediaAccountsBO = null;
+		try {
+			List<SocialMediaAccounts> accounts = getSocialMediaAccountsDAO().getSocialMediaAccountsByAccountType(accountTypeId);
+			if(accounts != null)
+			{
+				accountsList=new ArrayList<SocialMediaAccounts>(0);
+				
+				for (SocialMediaAccounts account : accounts) {
+					SocialProfiles   sp = getSocialProfileDAO().getSocialProfile(account.getId());
+					account.setSocialProfiles(sp);
+			 			 
+						
+					FinancialInstitutions fi= getFinancialInstitutionsDAO().getSMAFinancialInstitution(account.getId());			
+					
+					account.setFinancialInstitutions(fi);
+					
+					accountsList.add(account);
+				}
+				
+				socialMediaAccountsBO = SocialMediaAccountsHelper.getInstance().convertSocialMediaAccountsEntityToBO(accountsList);
+				 
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getSocialMediaAccountsByAccountType()....");
+		return socialMediaAccountsBO;	
+		
+	}
+
+	
+	/**
+	 * 
+	 * @param accountId
+	 * @return
+	 * @throws GenericDAOException
+	 */
+	private FinancialInstitutions getRootParent(Integer accountId) throws GenericDAOException
+	{
+	
+		FinancialInstitutions fi= getFinancialInstitutionsDAO().getRootParentById(accountId);
+	 
+		if(fi.getParentId()!=null)
+		{
+			fi = getRootParent(fi.getParentId());
+		}
+		
+		 
+		return fi;
+	}
+	
+	/**
+	 * 
+	 * @param accountId
+	 * @param buffer
+	 * @return
+	 * @throws GenericDAOException 
+	 */
+	private List<String> getAccountRelation(Integer accountId ,List<String> relation) throws GenericDAOException
+	{
+			
+			FinancialInstitutions fi= getFinancialInstitutionsDAO().getRootParentById(accountId);
+			relation.add(fi.getAccountOwner());
+			if(fi.getParentId()!=null)
+			{
+				relation  = getAccountRelation(fi.getParentId(),relation);
+			}
+			
+			
+			return relation;
+	}
+	
+	 
+	
+	/**
+	 * 
+	 * @param rtelatiinList
+	 * @return
+	 */
+	private String getAcoountRelationAsString(List<String> rtelatiinList)
+	{
+		Collections.reverse(rtelatiinList);
+		String temp = "";
+		for(String str :rtelatiinList )
+		{
+			temp = temp +str +">>";
+		}
+		return temp.substring(0, temp.length()-2);
+			
+	}
+
+	/**
+	 * @author Venumadhava.Reddy
+	 * 
+	 */
+	public void saveSocialMediaAccount(SocialMediaAccountsBO socialMediaAccountsBo)
+			throws BusinessException {
+		try {
+			SocialMediaAccounts socialMediaAccounts = SocialMediaAccountsHelper.getInstance().convertSocialMediaBOToEntity(socialMediaAccountsBo);
+			socialMediaAccounts.setFinancialInstitutions(getFinancialInstitutionsDAO().getRootParentById(socialMediaAccountsBo.getFinancial_institution_id()));
+			socialMediaAccounts.setSocialProfiles(getSocialProfileDAO().findById(socialMediaAccountsBo.getAccount_type_id()));
+			
+			getSocialMediaAccountsDAO().saveOrUpdate(socialMediaAccounts);
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("SOCIAL_ACCOUNT_ALREADY_EXIST", null), e);
+		}
+	}
+	
+}

@@ -1,0 +1,18 @@
+.criticalcasespadding {
+	padding: 0px 15px !important;
+}
+.icondisplay {
+	display: flex !important;
+}
+.labelmargin {
+	margin-left: 15%;
+}
+.totalcriticalcases {
+	
+	text-align: center;
+	  padding: 20px 10px 0 20px !important; 
+}
+.labeltitle {
+	width:100%;
+	font-weight: bold;
+}

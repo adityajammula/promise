@@ -1,0 +1,180 @@
+package com.zen.smi.service.impl;
+
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.SocialMediaPostsBO;
+import com.zen.smi.dao.entities.SocialMediaPosts;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.SocialMediaPostsService;
+import com.zen.smi.service.helper.SocialMediaPostsHelper;
+
+public class SocialMediaPostsServiceImpl extends BaseService implements SocialMediaPostsService {
+
+	
+	
+	private static final Logger LOGGER = Logger
+			.getLogger(SocialMediaPostsServiceImpl.class);
+	
+	public List<SocialMediaPostsBO> getSocialMediaPosts()
+			throws BusinessException {
+		
+		LOGGER.debug("Starts getSocialMediaPosts....");
+		List<SocialMediaPosts> socialMediaPosts = null;	
+		List<SocialMediaPostsBO> socialMediaPostsBOList = null;
+		try {
+			socialMediaPosts = getSocialMediaPostsDAO().getSocialMediaPosts();
+			if (socialMediaPosts != null) {
+				socialMediaPostsBOList = SocialMediaPostsHelper.getInstance().convertSocialMediaEntityEntityToBO(socialMediaPosts);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getRules....");
+		return socialMediaPostsBOList;
+		
+	}
+
+	public List<SocialMediaPostsBO> getSocialMediaPostsByChannel(int channel)
+			throws BusinessException {
+		
+		LOGGER.debug("Starts getSocialMediaPostsByChannel....");
+		List<SocialMediaPosts> socialMediaPosts = null;	
+		List<SocialMediaPostsBO> socialMediaPostsBOList = null;
+		try {
+			socialMediaPosts = getSocialMediaPostsDAO().getSocialMediaPostsByChannel(channel);
+			if (socialMediaPosts != null) {
+				socialMediaPostsBOList = SocialMediaPostsHelper.getInstance().convertSocialMediaEntityEntityToBO(socialMediaPosts);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getSocialMediaPostsByChannel....");
+		return socialMediaPostsBOList;
+		
+	}
+
+	public SocialMediaPostsBO getSocialMediaPostsId(int postId)
+			throws BusinessException {
+		
+		LOGGER.debug("Starts getSocialMediaPostsByChannel....");
+		SocialMediaPosts socialMediaPosts = null;	
+		SocialMediaPostsBO socialMediaPostsBO = null;
+		try {
+			socialMediaPosts = getSocialMediaPostsDAO().getSocialMediaPostsId(postId);
+			if (socialMediaPosts != null) {
+				socialMediaPostsBO = SocialMediaPostsHelper.getInstance().convertSocialMediaEntityToSocialMediaBO(socialMediaPosts);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getSocialMediaPostsByChannel....");
+		return socialMediaPostsBO;
+		
+	}
+
+	public void editPost(SocialMediaPostsBO socialMediaPostsBO)
+			throws BusinessException {
+
+		
+		LOGGER.debug("Starts editPost....");
+		SocialMediaPosts socialMediaPosts = null;	
+		
+		try {
+			
+			if (socialMediaPostsBO != null) {
+				socialMediaPosts = SocialMediaPostsHelper.getInstance().convertSocialMediaToEntity(socialMediaPostsBO);
+				getSocialMediaPostsDAO().editPost(socialMediaPosts);
+			}
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends editPost....");
+		
+		
+	
+		
+	}
+
+	public void savePost(SocialMediaPostsBO socialMediaPostsBO)
+			throws BusinessException {
+
+		
+		LOGGER.debug("Starts savePost....");
+		SocialMediaPosts socialMediaPosts = null;	
+		
+		try {
+			
+			if (socialMediaPostsBO != null) {
+				socialMediaPosts = SocialMediaPostsHelper.getInstance().convertSocialMediaToEntity(socialMediaPostsBO);
+				getSocialMediaPostsDAO().editPost(socialMediaPosts);
+			}
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends savePost....");
+		
+		
+	
+		
+	}
+
+	public void deletePost(SocialMediaPostsBO socialMediaPostsBO)
+			throws BusinessException {
+
+		
+		LOGGER.debug("Starts deletePost....");
+		SocialMediaPosts socialMediaPosts = null;	
+		
+		try {
+			
+			if (socialMediaPostsBO != null) {
+				socialMediaPosts = SocialMediaPostsHelper.getInstance().convertSocialMediaToEntity(socialMediaPostsBO);
+				getSocialMediaPostsDAO().delete(socialMediaPosts);
+			}
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends deletePost....");
+		
+		
+	
+		
+	}
+	
+	
+	
+	
+	
+	
+}

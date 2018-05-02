@@ -1,0 +1,73 @@
+package com.zen.smi.socialtransactions.bo;
+
+import java.util.Date;
+
+public class StStatusBO {
+	private Integer stStatusId;
+	private String stStatusCode;
+	private String stStatusDescription;
+	private Date lstUpdatedDtm;
+	private String lstUpdatedBy;
+	/**
+	 * @return the stStatusId
+	 */
+	public Integer getStStatusId() {
+		return stStatusId;
+	}
+	/**
+	 * @param stStatusId the stStatusId to set
+	 */
+	public void setStStatusId(Integer stStatusId) {
+		this.stStatusId = stStatusId;
+	}
+	/**
+	 * @return the stStatusCode
+	 */
+	public String getStStatusCode() {
+		return stStatusCode;
+	}
+	/**
+	 * @param stStatusCode the stStatusCode to set
+	 */
+	public void setStStatusCode(String stStatusCode) {
+		this.stStatusCode = stStatusCode;
+	}
+	/**
+	 * @return the stStatusDescription
+	 */
+	public String getStStatusDescription() {
+		return stStatusDescription;
+	}
+	/**
+	 * @param stStatusDescription the stStatusDescription to set
+	 */
+	public void setStStatusDescription(String stStatusDescription) {
+		this.stStatusDescription = stStatusDescription;
+	}
+	/**
+	 * @return the lstUpdatedDtm
+	 */
+	public Date getLstUpdatedDtm() {
+		return lstUpdatedDtm;
+	}
+	/**
+	 * @param lstUpdatedDtm the lstUpdatedDtm to set
+	 */
+	public void setLstUpdatedDtm(Date lstUpdatedDtm) {
+		this.lstUpdatedDtm = lstUpdatedDtm;
+	}
+	/**
+	 * @return the lstUpdatedBy
+	 */
+	public String getLstUpdatedBy() {
+		return lstUpdatedBy;
+	}
+	/**
+	 * @param lstUpdatedBy the lstUpdatedBy to set
+	 */
+	public void setLstUpdatedBy(String lstUpdatedBy) {
+		this.lstUpdatedBy = lstUpdatedBy;
+	}
+	
+	
+}

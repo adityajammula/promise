@@ -1,0 +1,35 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.CmfCustomerDAO;
+import com.zen.smi.dao.CmfCustomerOtpDAO;
+import com.zen.smi.dao.entities.CmfCustomer;
+import com.zen.smi.dao.entities.CmfCustomerAccount;
+import com.zen.smi.dao.entities.CmfCustomerOtp;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfCustomerOtpDAOImpl extends BaseDAOImpl<CmfCustomerOtp, Serializable> implements CmfCustomerOtpDAO {
+
+	public CmfCustomerOtpDAOImpl() {
+		super(CmfCustomerOtp.class);
+	}
+
+	public CmfCustomerOtp getOTPByCustomerId(Integer customerId)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("cmfCustomer.customerId", customerId));
+
+		return searchUnique(expressionList, null);
+	}
+}

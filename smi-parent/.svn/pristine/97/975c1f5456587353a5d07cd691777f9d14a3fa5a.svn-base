@@ -1,0 +1,78 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Hibernate;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.CmfCustomerDAO;
+import com.zen.smi.dao.entities.CmfCustomer;
+import com.zen.smi.dao.entities.CmfCustomerAccount;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfCustomerDAOImpl extends BaseDAOImpl<CmfCustomer, Serializable> implements CmfCustomerDAO {
+
+	public CmfCustomerDAOImpl() {
+		super(CmfCustomer.class);
+	}
+
+	public CmfCustomer getCmfCustomerByCmfCase(int cmfCustomerId)
+			throws GenericDAOException {
+		String query = "FROM CmfCustomer WHERE customerId="+cmfCustomerId;
+		  return load(query).get(0);
+	}
+	
+	public List<CmfCustomer> getCustDemographicData(int customerId)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("customerId", customerId));		
+		
+		return search(expressionList, null);
+	}
+
+	public CmfCustomer getCmfCustomerByCmfCase(String twitterName)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("twitterId", twitterName));		
+		return searchUnique(expressionList, null);
+	}
+	
+	public CmfCustomer getCmfCustomerByTwitterId(String twitterAccountId)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("twitterAccountId", twitterAccountId));		
+		return searchUnique(expressionList, null);
+	}
+	
+	public CmfCustomer getCmfCustomerByFacebookId(String facebookAccountId)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("facebookAccountId", facebookAccountId));		
+		return searchUnique(expressionList, null);
+	}
+	
+	public void saveCustomer(CmfCustomer cmfCustomer) throws GenericDAOException {
+		Session session = getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+         try{
+        	 session.save(cmfCustomer);
+      	   	 transaction.commit(); 
+         }
+  		catch(HibernateException ex){
+  			transaction.rollback();
+  			throw ex;
+            }
+         finally {
+             if(session!=null){
+                 session.close();
+             }
+         }	  
+	}
+}

@@ -1,0 +1,101 @@
+package com.zen.smi.bo;
+
+import java.util.Date;
+
+public class ScheduleJobsBO {
+	
+	private int jobId;
+	private String jobName;
+	private Date jobScheduleDateTime;
+	private String jobStatus;
+	private Date createDate;
+	private Date lstUpdtDtm;
+	private Integer jobParantId;
+	/**
+	 * @return the jobId
+	 */
+	public int getJobId() {
+		return jobId;
+	}
+	/**
+	 * @param jobId the jobId to set
+	 */
+	public void setJobId(int jobId) {
+		this.jobId = jobId;
+	}
+	/**
+	 * @return the jobName
+	 */
+	public String getJobName() {
+		return jobName;
+	}
+	/**
+	 * @param jobName the jobName to set
+	 */
+	public void setJobName(String jobName) {
+		this.jobName = jobName;
+	}
+	/**
+	 * @return the jobScheduleDateTime
+	 */
+	public Date getJobScheduleDateTime() {
+		return jobScheduleDateTime;
+	}
+	/**
+	 * @param jobScheduleDateTime the jobScheduleDateTime to set
+	 */
+	public void setJobScheduleDateTime(Date jobScheduleDateTime) {
+		this.jobScheduleDateTime = jobScheduleDateTime;
+	}
+	/**
+	 * @return the jobStatus
+	 */
+	public String getJobStatus() {
+		return jobStatus;
+	}
+	/**
+	 * @param jobStatus the jobStatus to set
+	 */
+	public void setJobStatus(String jobStatus) {
+		this.jobStatus = jobStatus;
+	}
+	/**
+	 * @return the createDate
+	 */
+	public Date getCreateDate() {
+		return createDate;
+	}
+	/**
+	 * @param createDate the createDate to set
+	 */
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+	/**
+	 * @return the lstUpdtDtm
+	 */
+	public Date getLstUpdtDtm() {
+		return lstUpdtDtm;
+	}
+	/**
+	 * @param lstUpdtDtm the lstUpdtDtm to set
+	 */
+	public void setLstUpdtDtm(Date lstUpdtDtm) {
+		this.lstUpdtDtm = lstUpdtDtm;
+	}
+	/**
+	 * @return the jobParantId
+	 */
+	public Integer getJobParantId() {
+		return jobParantId;
+	}
+	/**
+	 * @param jobParantId the jobParantId to set
+	 */
+	public void setJobParantId(Integer jobParantId) {
+		this.jobParantId = jobParantId;
+	}
+	
+	
+
+}

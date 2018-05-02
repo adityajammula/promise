@@ -1,0 +1,137 @@
+angular.module('smiApp')
+		.controller('PostsController',function($scope,dialogs,fileReader,$timeout,$modal) {
+			$scope.IsShowCalendar = false;
+			$scope.isFacebook = false;
+			$scope.isTwitter = false;
+			$scope.postOptions = [ { id : 1, name : 'Post Now'}, 
+			                       { id : 2, name : 'Post Later'} ];
+			    $scope.getFile = function () {
+			        fileReader.readAsDataUrl($scope.file, $scope).then(function(result) {
+	                          $scope.imageSrc = result;
+						});
+			    	};
+			    
+			    $scope.start = new Date();
+			    $scope.minStartDate = 0; //fixed date
+			    $scope.maxStartDate = $scope.end; //init value
+			    $scope.minEndDate = $scope.start; //init value
+			    $scope.maxEndDate = $scope.end; //fixed date same as $scope.maxStartDate init value
+			    $scope.parent = {currentDate:''};
+			   $scope.$watch('start', function(v){
+			      $scope.minEndDate = v;
+			    });
+			    $scope.$watch('end', function(v){
+			      $scope.maxStartDate = v;
+			    });
+
+
+			    $scope.openEnd = function() {
+			    	
+			      $timeout(function() {
+			        $scope.endOpened = true;
+			      });
+			     
+			    };
+
+			    $scope.dateOptions = {
+			      'year-format': "'yy'",
+			      'starting-day': 1
+			    };
+			    $scope.start = "";
+			    $scope.getOption = function(options) {
+			    	if(options != null) {
+			    	if($scope.options.name.name =="Post Later") {
+			    	$scope.IsShowCalendar = true.toString();
+			    	} else if($scope.options.name.name =="Post Now"){
+			    	$scope.IsShowCalendar = false;
+			    	};
+			    	} else {
+			    	$scope.IsShowCalendar = false;
+			    	}
+			    	};
+			    	 
+			    	$scope.postToFacebook = function() {
+			    	$scope.isFacebook = true;
+			    	};
+			    	$scope.postToTwitter = function() {
+			    	$scope.isTwitter = true;
+			    	};
+			$scope.savePost= function(){
+				var date = new Date($scope.parent.currentDate);
+			    var day= date.getDate();
+			    var month = date.getMonth()+1;
+			    var year = date.getFullYear();
+			    
+			    $scope.fullDate = day+"/"+month+"/"+year;
+				if ($scope.isFacebook == true && $scope.isTwitter == false) {
+		    		$scope.channel = 1;
+		    	} else if ($scope.isFacebook == false && $scope.isTwitter == true) {
+		    		$scope.channel = 2;
+		    	} else if ($scope.isFacebook == true && $scope.isTwitter == true) {
+		    		$scope.channel = 3;
+		    	}
+				if($scope.hrs>24 ||$scope.hrs<0 ) {
+					dialogs.error("Error !", "Please Enter valid hours.");
+					return false;
+				} else if($scope.mnts>60 || $scope.mnts<0) {
+					dialogs.error("Error !", "Please Enter valid minutes.");
+					return false;
+				}
+		    	if ($scope.IsShowCalendar) {
+		    		$scope.date = $scope.fullDate+':'+$scope.hrs + ':' + $scope.mnts;
+		    	} else {
+		    		$scope.date = new Date();
+		    	}
+				  var modalInstance = $modal.open({
+				  templateUrl:'postChannel.html',
+				  controller :'PostChannelController',
+				  resolve: {
+					   items: function () {
+					        var obj = {};
+				            obj.postTitle = $scope.postTitle;
+				            obj.imageSrc =$scope.imageSrc;
+				            obj.date =$scope.date;
+				            obj.channel = $scope.channel;
+					       return obj;
+					       }
+					   }
+				  });
+				  if ($scope.postTitle == null || $scope.postTitle == undefined) {
+				    	dialogs.error("Error !", "Please Enter comments.");
+				    	return false;
+				    	} else if ($scope.postTitle != null && $scope.postTitle.length > 500) {
+				    	dialogs.error("Error !","post should be maximum 500 characters.");
+				    	return false;
+				    	} 
+			};
+			
+}).controller('PostChannelController', function ($scope, $modalInstance,$rootScope,items,OpenfacebookCaseService) {
+		$scope.Title="Post";
+		$scope.comments=items.postTitle;
+		$scope.imagePriview=items.imageSrc;
+		$scope.date=items.date;
+		$scope.channel=items.channel;
+
+	$scope.ok = function () {
+		  var postData = {
+	      "text": $scope.comments,
+	      "channel": $scope.channel,
+	      "image":$scope.imagePriview,
+	      "date":$scope.date,
+	      "time": $scope.mytime,
+	      "imageName" : "sample.png"
+	  };
+		    	  OpenfacebookCaseService.savePost(postData).then(function(response) {
+		    		  
+					});
+		    		
+		    		$modalInstance.close();
+		    	
+			
+	};
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+  });
+
+

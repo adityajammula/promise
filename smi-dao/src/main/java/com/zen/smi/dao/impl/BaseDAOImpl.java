@@ -1,0 +1,453 @@
+package com.zen.smi.dao.impl;
+
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.SimpleExpression;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
+
+import com.zen.smi.dao.BaseDAO;
+import com.zen.smi.dao.entities.Users;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.generic.utils.MessageUtil;
+
+/**
+ * @author hduser
+ *
+ * @param <T>
+ * @param <PK>
+ */
+/**
+ * @author hduser
+ *
+ * @param <T>
+ * @param <PK>
+ */
+/**
+ * @author hduser
+ *
+ * @param <T>
+ * @param <PK>
+ */
+public class BaseDAOImpl<T,PK extends Serializable>  implements BaseDAO<T,PK>{
+
+	private Class<T> entityClass;
+
+    private static SessionFactory sessionFactory;
+
+    private static ServiceRegistry serviceRegistry;
+    
+    public BaseDAOImpl(Class<T> entityClass) {
+        this.entityClass = entityClass;
+    }
+    
+    public SessionFactory getSessionFactory(){
+        if(sessionFactory==null){
+        	Configuration configuration = new Configuration();
+		    configuration.configure();
+		    serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()). buildServiceRegistry();
+		    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+        }
+        return sessionFactory;
+    }
+    
+    @SuppressWarnings("unchecked")
+	public T findById(Serializable id) {
+        T object = null;
+        if(id!=null){
+        	Session session = getSessionFactory().openSession();
+            Transaction transaction = session.beginTransaction();
+             try{
+        		object =  (T)session.get(entityClass,id);
+        		  transaction.commit(); 
+             }
+      		catch(HibernateException ex){
+      			transaction.rollback();
+	          }
+             finally {
+                 if(session!=null){
+                     session.close();
+                 }
+             }
+
+            return object;
+        }
+
+        return object;
+    }
+
+    @SuppressWarnings("unchecked")
+  	public List<T> getListById(int id) {
+          List<T> object = null;
+          Session session = getSessionFactory().openSession();
+          Transaction transaction = session.beginTransaction();
+           try{
+        	   object =  (List<T>)session.get(entityClass,id);
+        	   transaction.commit(); 
+           }
+    		catch(HibernateException ex){
+    			transaction.rollback();
+               throw ex;
+            }
+           finally {
+               if(session!=null){
+                   session.close();
+               }
+           }
+
+          return object;
+    }
+
+    
+    @SuppressWarnings("unchecked")
+  	public List<T> retrieveAll() {
+          List<T> object = null;
+          Session session = getSessionFactory().openSession();
+          Transaction transaction = session.beginTransaction();
+           try{
+        	   	object =  session.createCriteria(entityClass).list();
+        	   	transaction.commit(); 
+           }
+    		catch(HibernateException ex){
+    			transaction.rollback();
+    			throw ex;
+              }
+           finally {
+               if(session!=null){
+                   session.close();
+               }
+           }
+
+          return object;
+      }
+
+    public void saveOrUpdate(T object) {
+        Session session = null;
+        try{
+        	session = getSessionFactory().openSession();
+        	Transaction transaction = session.beginTransaction();
+            session.saveOrUpdate(object);
+            transaction.commit();
+        }
+        catch (HibernateException ex){
+            if(session!=null && session.getTransaction()!=null){
+                session.getTransaction().rollback();
+            }
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+
+    }
+    
+    public void saveAll(List<T> object) {
+        Session session = null;
+        try{
+        	session = getSessionFactory().openSession();
+        	Transaction transaction = session.beginTransaction();
+            for(T t:object){
+            session.save(t);
+            }
+            transaction.commit();
+        }
+        catch (HibernateException ex){
+            if(session!=null && session.getTransaction()!=null){
+                session.getTransaction().rollback();
+            }
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+
+     }
+    
+    public T searchUnique(List<SimpleExpression> expressionList, List<Order> orderByList)
+    		throws GenericDAOException {
+    	
+    	List<T> recordSet = search(expressionList, orderByList);
+    	if(recordSet == null || recordSet.isEmpty()) {
+    		return null;
+    	}
+    	if(recordSet.size() > 1){
+            throw new GenericDAOException(MessageUtil.getInstance().getMessage("NOT_UNIQUE_RECORDS", new Object[]{expressionList}));
+        }
+
+        return recordSet.get(0);
+    }
+    
+    
+    public List<T> search(List<SimpleExpression> expressionList, List<Order> orderByList) {
+    	List<T> recordSet = null;
+		Session session = null;
+		 Transaction transaction = null;
+		try{
+			session = getSessionFactory().openSession();
+			transaction = session.beginTransaction();
+	       Criteria criteria = session.createCriteria(entityClass);
+			if(expressionList != null && !expressionList.isEmpty())
+			{
+				for(SimpleExpression simpleExpression:expressionList)
+				{
+					criteria.add(simpleExpression);
+				}
+			}
+			
+			if(orderByList != null && !orderByList.isEmpty())
+			{
+				for(Order order:orderByList)
+				{
+					criteria.addOrder(order);
+				}
+			}
+			
+			recordSet = criteria.list();
+			transaction.commit();
+        }
+		catch (HibernateException ex){
+			transaction.rollback();
+            throw ex;
+        }
+		finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+
+		return recordSet;
+    }
+    
+    public List<T> retrieve(String queryName, Map<String, String> parameters) {
+		List<T> recordSet = null;
+		Session session = null;
+		Transaction transaction = null;
+		try{
+			session = getSessionFactory().openSession();
+	        transaction = session.beginTransaction();
+            Query myQuery = session.createQuery(queryName);
+			if (parameters != null && !parameters.isEmpty()) {
+				for (String parameter : parameters.keySet()) {
+					myQuery.setString(parameter, parameters.get(parameter));
+				}
+			}
+
+			recordSet = myQuery.list();
+			transaction.commit();
+        }
+		catch (HibernateException ex){
+			transaction.rollback();
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+  
+		return recordSet;
+	}
+    
+    public List<Object[]> retrievewithsql(String queryName, Map<String, Integer> parameters) {
+    	List<Object[]> recordSet = null;
+ 		Session session = null;
+ 		Transaction transaction = null;
+ 		try{
+ 			session = getSessionFactory().openSession();
+	        transaction = session.beginTransaction();          
+ 			Query myQuery = session.createSQLQuery(queryName);
+ 			if (parameters != null && !parameters.isEmpty()) {
+ 				for (String parameter : parameters.keySet()) {
+ 					//myQuery.setString(parameter, parameters.get(parameter));
+ 					myQuery.setParameter(parameter, parameters.get(parameter));
+ 				}
+ 			}
+
+ 			recordSet = myQuery.list();
+ 			transaction.commit();
+         }
+ 		catch (HibernateException ex){
+ 			transaction.rollback();
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+
+ 		return recordSet;
+ 	}
+    
+    
+    
+    public List<Object[]> loadWithsql(String queryName) {
+    	List<Object[]> recordSet = null;
+ 		Session session = null;
+ 		Transaction transaction = null;
+ 		try{
+ 			session = getSessionFactory().openSession();
+	        transaction = session.beginTransaction();
+             Query myQuery = session.createSQLQuery(queryName);
+ 			
+
+ 			recordSet = myQuery.list();
+ 			transaction.commit();
+        }
+		catch (HibernateException ex){
+			transaction.rollback();
+           throw ex;
+       }
+       finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+
+ 		return recordSet;
+ 	}
+    
+  
+    
+    /* added to load all the user entities without any parameters*/
+    public List<T> load(String queryName) {
+		List<T> recordSet = null;
+		Session session = null;
+		Transaction transaction = null;
+ 		try{
+ 			session = getSessionFactory().openSession();
+	        transaction = session.beginTransaction();
+            Query myQuery = session.createQuery(queryName);
+			
+
+			recordSet = myQuery.list();
+			transaction.commit();
+        }
+		catch (HibernateException ex){
+			transaction.rollback();
+           throw ex;
+       }
+       finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+
+		return recordSet;
+	}
+  
+
+    public void delete(T object)  {
+        if(object!=null){
+            Session session = null;
+            Transaction transaction = null;
+            try{
+            	session = getSessionFactory().openSession();
+            	transaction = session.beginTransaction();
+                session.delete(object);
+                transaction.commit();
+            }
+            catch (HibernateException ex){
+                if(session!=null && session.getTransaction()!=null){
+                	transaction.rollback();
+                }
+                throw ex;
+            }
+            finally {
+                if(session!=null){
+                    session.close();
+                }
+            }
+        }
+    }
+
+
+
+    public Class<T> getEntityClass() {
+        return entityClass;
+    }
+
+    public void setEntityClass(Class<T> entityClass) {
+        this.entityClass = entityClass;
+    }
+
+	public static void main(String[] args) throws Exception {
+		BaseDAOImpl<Users, Serializable> dao = new BaseDAOImpl<Users, Serializable>(Users.class);
+		List<Users> list = dao.retrieve("from Users", null);
+		for(Users user:list)
+		{
+			System.out.println(user.getUserName());
+		}
+	}
+	
+	 public T searchUniqueCriterion(List<Criterion> criterionList, List<Order> orderByList)
+	    		throws GenericDAOException {
+	    	
+	    	List<T> recordSet = searchCriterion(criterionList, orderByList);
+	    	if(recordSet == null || recordSet.isEmpty()) {
+	    		return null;
+	    	}
+	    	if(recordSet.size() > 1){
+	            throw new GenericDAOException(MessageUtil.getInstance().getMessage("NOT_UNIQUE_RECORDS", new Object[]{criterionList}));
+	        }
+
+	        return recordSet.get(0);
+	    }
+	
+	 public List<T> searchCriterion(List<Criterion> criterionList, List<Order> orderByList) {
+	    	List<T> recordSet = null;
+			Session session = null;
+			Transaction transaction = null;
+			try{
+				session = getSessionFactory().openSession();
+				transaction = session.beginTransaction();
+		       Criteria criteria = session.createCriteria(entityClass);
+				if(criterionList != null && !criterionList.isEmpty())
+				{
+					for(Criterion criterion:criterionList)
+					{
+						criteria.add(criterion);
+					}
+				}
+				
+				if(orderByList != null && !orderByList.isEmpty())
+				{
+					for(Order order:orderByList)
+					{
+						criteria.addOrder(order);
+					}
+				}
+				
+				recordSet = criteria.list();
+				transaction.commit();
+	        }
+			catch (HibernateException ex){
+				transaction.rollback();
+	            throw ex;
+	        }
+			finally {
+	            if(session!=null){
+	                session.close();
+	            }
+	        }
+
+			return recordSet;
+	    }
+	    
+}

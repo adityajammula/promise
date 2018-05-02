@@ -1,0 +1,17 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.CmfCaseCategoryDAO;
+import com.zen.smi.dao.CmfCaseHistoryDAO;
+import com.zen.smi.dao.entities.CmfCaseCategory;
+import com.zen.smi.dao.entities.CmfCaseHistory;
+
+public class CmfCaseCategoryDAOImpl extends BaseDAOImpl<CmfCaseCategory, Serializable> implements CmfCaseCategoryDAO {
+
+	public CmfCaseCategoryDAOImpl() {
+		super(CmfCaseCategory.class);
+	}
+	
+	
+}

@@ -1,0 +1,300 @@
+package com.zen.smi.socialtransactions.bo;
+
+
+
+import java.util.Date;
+
+import com.zen.smi.cmf.bo.CmfCustomerBO;
+import com.zen.smi.cmf.bo.SocialProfilesBO;
+import com.zen.smi.dao.entities.CmfCustomer;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.dao.entities.SocialProfiles;
+import com.zen.smi.dao.entities.StStatus;
+import com.zen.smi.dao.entities.StTransactionType;
+
+
+
+public class StCaseTransactionBO {
+	
+	private Integer stCaseTransactionId;
+	private SocialProfiles socialProfiles;
+	private StStatus stStatus;
+	private CmfCustomer cmfCustomerByStCustomerId;
+	private StTransactionType stTransactionType;
+	private SocialMediaAccounts socialMediaAccountsBySocialAccount;
+	private SocialMediaAccounts socialMediaAccountsByStSocialMediaAccountId;
+	private CmfCustomer cmfCustomerByStBeneficiaryId;
+	private String caseMessage;
+	private String stTransactionId;
+	private String stAmount;
+	private Date stTransactionDate;
+	private String stMessageId;
+	private String postId;
+	private Date updatedDate;
+	private String updatedBy;
+	private StStatusBO stStatusBO;
+	private SocialProfilesBO socialProfilesBO;
+	private CmfCustomerBO cmfCustomerBO;
+	private CmfCustomerBO cmfCustomerByStBeneficiaryBO;
+	private StTransactionTypeBO stTransactionTypeBO;
+	
+	
+	/**
+	 * @return the stCaseTransactionId
+	 */
+	public Integer getStCaseTransactionId() {
+		return stCaseTransactionId;
+	}
+	/**
+	 * @param stCaseTransactionId the stCaseTransactionId to set
+	 */
+	public void setStCaseTransactionId(Integer stCaseTransactionId) {
+		this.stCaseTransactionId = stCaseTransactionId;
+	}
+	/**
+	 * @return the socialProfiles
+	 */
+	public SocialProfiles getSocialProfiles() {
+		return socialProfiles;
+	}
+	/**
+	 * @param socialProfiles the socialProfiles to set
+	 */
+	public void setSocialProfiles(SocialProfiles socialProfiles) {
+		this.socialProfiles = socialProfiles;
+	}
+	/**
+	 * @return the stStatus
+	 */
+	public StStatus getStStatus() {
+		return stStatus;
+	}
+	/**
+	 * @param stStatus the stStatus to set
+	 */
+	public void setStStatus(StStatus stStatus) {
+		this.stStatus = stStatus;
+	}
+	/**
+	 * @return the cmfCustomerByStCustomerId
+	 */
+	public CmfCustomer getCmfCustomerByStCustomerId() {
+		return cmfCustomerByStCustomerId;
+	}
+	/**
+	 * @param cmfCustomerByStCustomerId the cmfCustomerByStCustomerId to set
+	 */
+	public void setCmfCustomerByStCustomerId(CmfCustomer cmfCustomerByStCustomerId) {
+		this.cmfCustomerByStCustomerId = cmfCustomerByStCustomerId;
+	}
+	/**
+	 * @return the stTransactionType
+	 */
+	public StTransactionType getStTransactionType() {
+		return stTransactionType;
+	}
+	/**
+	 * @param stTransactionType the stTransactionType to set
+	 */
+	public void setStTransactionType(StTransactionType stTransactionType) {
+		this.stTransactionType = stTransactionType;
+	}
+	/**
+	 * @return the socialMediaAccountsBySocialAccount
+	 */
+	public SocialMediaAccounts getSocialMediaAccountsBySocialAccount() {
+		return socialMediaAccountsBySocialAccount;
+	}
+	/**
+	 * @param socialMediaAccountsBySocialAccount the socialMediaAccountsBySocialAccount to set
+	 */
+	public void setSocialMediaAccountsBySocialAccount(
+			SocialMediaAccounts socialMediaAccountsBySocialAccount) {
+		this.socialMediaAccountsBySocialAccount = socialMediaAccountsBySocialAccount;
+	}
+	/**
+	 * @return the socialMediaAccountsByStSocialMediaAccountId
+	 */
+	public SocialMediaAccounts getSocialMediaAccountsByStSocialMediaAccountId() {
+		return socialMediaAccountsByStSocialMediaAccountId;
+	}
+	/**
+	 * @param socialMediaAccountsByStSocialMediaAccountId the socialMediaAccountsByStSocialMediaAccountId to set
+	 */
+	public void setSocialMediaAccountsByStSocialMediaAccountId(
+			SocialMediaAccounts socialMediaAccountsByStSocialMediaAccountId) {
+		this.socialMediaAccountsByStSocialMediaAccountId = socialMediaAccountsByStSocialMediaAccountId;
+	}
+	/**
+	 * @return the cmfCustomerByStBeneficiaryId
+	 */
+	public CmfCustomer getCmfCustomerByStBeneficiaryId() {
+		return cmfCustomerByStBeneficiaryId;
+	}
+	/**
+	 * @param cmfCustomerByStBeneficiaryId the cmfCustomerByStBeneficiaryId to set
+	 */
+	public void setCmfCustomerByStBeneficiaryId(
+			CmfCustomer cmfCustomerByStBeneficiaryId) {
+		this.cmfCustomerByStBeneficiaryId = cmfCustomerByStBeneficiaryId;
+	}
+	/**
+	 * @return the caseMessage
+	 */
+	public String getCaseMessage() {
+		return caseMessage;
+	}
+	/**
+	 * @param caseMessage the caseMessage to set
+	 */
+	public void setCaseMessage(String caseMessage) {
+		this.caseMessage = caseMessage;
+	}
+	/**
+	 * @return the stTransactionId
+	 */
+	public String getStTransactionId() {
+		return stTransactionId;
+	}
+	/**
+	 * @param stTransactionId the stTransactionId to set
+	 */
+	public void setStTransactionId(String stTransactionId) {
+		this.stTransactionId = stTransactionId;
+	}
+	/**
+	 * @return the stAmount
+	 */
+	public String getStAmount() {
+		return stAmount;
+	}
+	/**
+	 * @param stAmount the stAmount to set
+	 */
+	public void setStAmount(String stAmount) {
+		this.stAmount = stAmount;
+	}
+	/**
+	 * @return the stTransactionDate
+	 */
+	public Date getStTransactionDate() {
+		return stTransactionDate;
+	}
+	/**
+	 * @param stTransactionDate the stTransactionDate to set
+	 */
+	public void setStTransactionDate(Date stTransactionDate) {
+		this.stTransactionDate = stTransactionDate;
+	}
+	/**
+	 * @return the stMessageId
+	 */
+	public String getStMessageId() {
+		return stMessageId;
+	}
+	/**
+	 * @param stMessageId the stMessageId to set
+	 */
+	public void setStMessageId(String stMessageId) {
+		this.stMessageId = stMessageId;
+	}
+	/**
+	 * @return the postId
+	 */
+	public String getPostId() {
+		return postId;
+	}
+	/**
+	 * @param postId the postId to set
+	 */
+	public void setPostId(String postId) {
+		this.postId = postId;
+	}
+	/**
+	 * @return the updatedDate
+	 */
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	/**
+	 * @param updatedDate the updatedDate to set
+	 */
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	/**
+	 * @return the updatedBy
+	 */
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	/**
+	 * @param updatedBy the updatedBy to set
+	 */
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	/**
+	 * @return the stStatusBO
+	 */
+	public StStatusBO getStStatusBO() {
+		return stStatusBO;
+	}
+	/**
+	 * @param stStatusBO the stStatusBO to set
+	 */
+	public void setStStatusBO(StStatusBO stStatusBO) {
+		this.stStatusBO = stStatusBO;
+	}
+	/**
+	 * @return the socialProfilesBO
+	 */
+	public SocialProfilesBO getSocialProfilesBO() {
+		return socialProfilesBO;
+	}
+	/**
+	 * @param socialProfilesBO the socialProfilesBO to set
+	 */
+	public void setSocialProfilesBO(SocialProfilesBO socialProfilesBO) {
+		this.socialProfilesBO = socialProfilesBO;
+	}
+	/**
+	 * @return the cmfCustomerBO
+	 */
+	public CmfCustomerBO getCmfCustomerBO() {
+		return cmfCustomerBO;
+	}
+	/**
+	 * @param cmfCustomerBO the cmfCustomerBO to set
+	 */
+	public void setCmfCustomerBO(CmfCustomerBO cmfCustomerBO) {
+		this.cmfCustomerBO = cmfCustomerBO;
+	}
+	/**
+	 * @return the cmfCustomerByStBeneficiaryBO
+	 */
+	public CmfCustomerBO getCmfCustomerByStBeneficiaryBO() {
+		return cmfCustomerByStBeneficiaryBO;
+	}
+	/**
+	 * @param cmfCustomerByStBeneficiaryBO the cmfCustomerByStBeneficiaryBO to set
+	 */
+	public void setCmfCustomerByStBeneficiaryBO(
+			CmfCustomerBO cmfCustomerByStBeneficiaryBO) {
+		this.cmfCustomerByStBeneficiaryBO = cmfCustomerByStBeneficiaryBO;
+	}
+	/**
+	 * @return the stTransactionTypeBO
+	 */
+	public StTransactionTypeBO getStTransactionTypeBO() {
+		return stTransactionTypeBO;
+	}
+	/**
+	 * @param stTransactionTypeBO the stTransactionTypeBO to set
+	 */
+	public void setStTransactionTypeBO(StTransactionTypeBO stTransactionTypeBO) {
+		this.stTransactionTypeBO = stTransactionTypeBO;
+	}
+	
+
+}

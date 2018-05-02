@@ -1,0 +1,36 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+public class GraphBO {
+
+	private List<DashBoardJSONObjectBO> dashBoardGraphBOList;
+	private List<DashBoardGraphBO> optionsList;
+	/**
+	 * @return the dashBoardGraphBOList
+	 */
+	public List<DashBoardJSONObjectBO> getDashBoardGraphBOList() {
+		return dashBoardGraphBOList;
+	}
+	/**
+	 * @param dashBoardGraphBOList the dashBoardGraphBOList to set
+	 */
+	public void setDashBoardGraphBOList(
+			List<DashBoardJSONObjectBO> dashBoardGraphBOList) {
+		this.dashBoardGraphBOList = dashBoardGraphBOList;
+	}
+	/**
+	 * @return the optionsList
+	 */
+	public List<DashBoardGraphBO> getOptionsList() {
+		return optionsList;
+	}
+	/**
+	 * @param optionsList the optionsList to set
+	 */
+	public void setOptionsList(List<DashBoardGraphBO> optionsList) {
+		this.optionsList = optionsList;
+	}
+	
+	
+}

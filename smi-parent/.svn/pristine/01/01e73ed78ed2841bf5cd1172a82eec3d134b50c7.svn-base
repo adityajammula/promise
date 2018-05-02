@@ -1,0 +1,17 @@
+angular
+		.module('smiApp')
+		.controller('TransactionFbDetailsController',function($scope,$rootScope,$state,SocialTransactionsServices,$stateParams) {
+
+			 $rootScope.initializeFbTransactionDetailsController = function(){
+				 alert("hari");
+				 alert($stateParams.stCaseTransaction_id);
+				 SocialTransactionsServices.getIndividualTransactionDetails($stateParams.stCaseTransaction_id).then(function(response){
+					 $scope.caseDetails = response.data;
+				 });
+			 };
+			 $scope.goFaceBookTransactionsPage = function(){
+				 $state.go('facebooktransactions');
+			};
+		});
+
+

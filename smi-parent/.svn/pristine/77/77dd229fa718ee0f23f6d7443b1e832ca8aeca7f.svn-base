@@ -1,0 +1,59 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.CmfCustomerAccountDAO;
+import com.zen.smi.dao.FlumeAgentsDAO;
+import com.zen.smi.dao.entities.CmfCustomer;
+import com.zen.smi.dao.entities.CmfCustomerAccount;
+import com.zen.smi.dao.entities.CmfCustomerSocialData;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfCustomerAccountDAOImpl extends BaseDAOImpl<CmfCustomerAccount, Serializable> implements CmfCustomerAccountDAO {
+
+	public CmfCustomerAccountDAOImpl() {
+		super(CmfCustomerAccount.class);
+	}
+
+	public List<CmfCustomerAccount> getCustomerAccounts(int customerId)
+			throws GenericDAOException {
+//		CmfCustomerDAOImpl cmfCustomerDAOImpl = new CmfCustomerDAOImpl();
+//		CmfCustomer cmfCustomer = cmfCustomerDAOImpl.getCmfCustomerByCmfCase(customerId);
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("cmfCustomer.customerId", customerId));
+		
+		return search(expressionList, null);
+	}
+	
+	public void addCustomerAccounts(List<CmfCustomerAccount> customerAccountList)
+			throws GenericDAOException {
+		for (CmfCustomerAccount customerAccount :customerAccountList) {
+			saveOrUpdate(customerAccount);			
+		}
+	}
+
+	public void updateCustomerAccounts(
+			List<CmfCustomerAccount> customerAccountList)
+			throws GenericDAOException {
+		for (CmfCustomerAccount customerAccount :customerAccountList) {
+			saveOrUpdate(customerAccount);			
+		}
+	}
+
+	public void deleteCustomerAccounts(
+			List<CmfCustomerAccount> customerAccountList)
+			throws GenericDAOException {
+		for (CmfCustomerAccount customerAccount :customerAccountList) {
+			delete(customerAccount);			
+		}
+		
+	}
+	
+}

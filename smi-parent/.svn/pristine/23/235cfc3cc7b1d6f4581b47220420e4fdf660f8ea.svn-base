@@ -1,0 +1,197 @@
+var smiUtility = angular.module('smiApp.utility', []);
+smiUtility.factory('smiGenUtil',function(toastr, toastrConfig){
+	
+	var monthNames = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	                 	  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+	this.dayNames = [ "Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun"];
+    return{
+    	 	
+    	// Start handleResponse 
+    	handleSuccess: function(response) {
+    		var isSuccess = false;
+    		if(response != null && response.status == "SUCCESS")
+    		{
+    			isSuccess = true;
+    		}
+    		if(isSuccess)
+    		{
+    			if(response.message != null && response.message != "")
+    			{
+    				//Check if message is present or not
+        			var openedToasts = [];
+          			toastrConfig.positionClass = 'toast-top-center';
+          			toastrConfig.timeOut = 1000;
+          		    var toast = toastr['success'](response.message, "Success", {
+                       iconClass: 'bg-success',
+                       closeButton: true,
+                       iconType:'fa-check-square',
+                      
+                    });
+        		    openedToasts.push(toast);
+    			}
+    			
+    		}else
+    		{
+    			this.handleError(response);
+    		}
+    		
+        },
+        handleError: function(response) {
+        	//Check error
+        	var errorMessage = "Error occured while fetching data. Please contact system administrator";
+        	if(response != null && response.message != null && response.message != "")
+			{
+        		errorMessage = response.message;
+			}
+        	var openedToasts = [];
+  			toastrConfig.positionClass = 'toast-top-center';
+  			toastrConfig.timeOut = 1000;
+  		    
+  		    var toast = toastr['success'](errorMessage, "Error", {
+  		    	iconClass: 'bg-danger',
+  		    	timeout: '2000',
+                closeButton: true,
+                iconType:'fa-times-circle'
+            });
+		    openedToasts.push(toast);
+		
+        },
+        getDisplayStatus: function(status) {
+        	//Display Status
+        	var displayStatus = "";
+        	if(status == "NOT_STARTED")
+    		{
+    			displayStatus = "Not Started";
+    		}else if(status == "GROUP_POSTS_CRASHED")
+    		{
+    			displayStatus = "Post Crashed";
+    		}else if(status == "GROUP_POST_REPLIES_CRASHED")
+    		{
+    			displayStatus = "Replies Crashed";
+    		}else if(status == "GROUP_POSTS_PROCESSED")
+    		{
+    			displayStatus = "Posts Processed";
+    		}else if(status == "GROUP_POST_REPLIES_PROCESSED")
+    		{
+    			displayStatus = "Post Replies Processed";
+    		}else if(status == "IN_PROGRESS")
+    		{
+    			displayStatus = "In Progress";
+    		}else if(status == "COMPLETED")
+    		{
+    			displayStatus = "Completed";
+    		}
+        	
+    		return displayStatus;
+        },
+        
+    	getDateAfterDays: function(inputDt, noOfDays) 
+    	{
+    		if(inputDt == null || inputDt == "")
+    		{
+    			return "";
+    		}
+    		inputDt.setHours(0,0,0,0);
+    		var yyyy = parseInt(inputDt.getFullYear(), 10);
+    		var mm = inputDt.getMonth(); // getMonth() is zero-based
+    		
+    		var dd  = parseInt(inputDt.getDate(), 10)+noOfDays;
+    		var retDate = new Date(yyyy, mm, dd);
+    	    retDate.setHours(0,0,0,0);
+    		
+    		return retDate;
+    	},
+    	
+  	  getCurrentWeekLabel: function(firstDt, lastDt){
+  		var firstDayString = firstDt.getDate()+" "+monthNames[firstDt.getMonth()];
+  		var lastDayString = lastDt.getDate()+" "+monthNames[lastDt.getMonth()];
+  		return firstDayString +" - "+lastDayString;
+  	  },
+  	
+  	  getDateToYMD: function(inputDt) {
+  		if(inputDt == null || inputDt == "")
+  		{
+  			return "";
+  		}
+  		var date = getDateFromYYYYMMDD(inputDt);
+  		if(date == null || date == "")
+  		{
+  			return "";
+  		}
+  		var year, month, day;
+          year = String(date.getFullYear());
+          month = String(date.getMonth() + 1);
+          if (month.length == 1) {
+              month = "0" + month;
+          }
+          day = String(date.getDate());
+          if (day.length == 1) {
+              day = "0" + day;
+          }
+          return year + "-" + month + "-" + day;
+  	  },
+  	
+  	  getDateFromYYYYMMDD: function(inputDt) {
+  		if(inputDt == null || inputDt == "")
+  		{
+  			return "";
+  		}
+  		if(inputDt instanceof Date)
+  		{
+  			return angular.copy(inputDt);
+  		}
+  		var parts = inputDt.split('-');
+  		if(parts == null || parts.length != 3)
+  		{
+  			return inputDt;
+  		}
+  		parts[0] = parseInt(parts[0], 10);
+  		parts[1] = parseInt(parts[1], 10);
+  		parts[2] = parts[2].substring(0, 2);
+  		parts[2] = parseInt(parts[2], 10);
+  	    var retDate = new Date(parts[0], parts[1]-1, parts[2]);
+  	    retDate.setHours(0,0,0,0);
+  	  
+  		return retDate ;
+  	},
+  	updateDateHHmm: function(inputDt, hours, min) {
+  		if(inputDt == null || inputDt == "")
+  		{
+  			return "";
+  		}
+  		var iHrs = 0;
+  		if(!isNaN(hours))iHrs = parseInt(hours, 10);
+  		var iMin = 0;
+  		if(!isNaN(min))iMin = parseInt(min, 10);
+  		
+  		inputDt.setHours(iHrs,iMin,0,0);
+  	  
+  		return inputDt ;
+  	},
+  	getDaysJSONArray: function(fromDt){
+  		
+  		var daysJSONArray = new Array();
+  		var currentDt = new Date();
+  		for(var nextDayIndex = 0;nextDayIndex<7;nextDayIndex++)
+  		{
+  			var daysJSON = {};
+  			var clonedDate = new Date(fromDt.getTime());
+  			clonedDate.setDate(clonedDate.getDate() + nextDayIndex);
+  			daysJSON.dayName = this.dayNames[nextDayIndex];
+  			daysJSON.dayValue = pad(clonedDate.getDate());
+  			daysJSON.monthName = this.monthNames[clonedDate.getMonth()];
+  			daysJSON.totalDate = new Date(clonedDate.getFullYear(),clonedDate.getMonth(), clonedDate.getDate()+1);
+  			
+  			daysJSONArray.push(daysJSON);
+  		}
+  		function pad(n){return n<10 ? '0'+n : n;};
+  		
+  		return daysJSONArray;
+  	}
+        
+        
+         
+         
+ 
+    };
+});

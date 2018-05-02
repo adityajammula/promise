@@ -1,0 +1,96 @@
+package com.zen.smi.service.helper;
+
+import static com.zen.smi.generic.utils.SmiConstants.FLUMEAGENTSPROCESS_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.SOCIALDATAPROCESS_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.FLUMEAGENTS_PROPERTIES;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.FlumeAgentsBO;
+import com.zen.smi.bo.FlumeAgentsProcessBO;
+import com.zen.smi.bo.SocialDataProcessBO;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.entities.FlumeAgentsProcess;
+import com.zen.smi.dao.entities.SocialDataProcess;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+
+public final class FlumeAgentsProcessHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for StaffHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(FlumeAgentsProcessHelper .class);
+
+	/**
+	 * Instance of StaffHelper.
+	 */
+	private static FlumeAgentsProcessHelper  instance;
+
+	/**
+	 * Private constructor
+	 */
+	private FlumeAgentsProcessHelper() {
+
+	}
+	
+	/**
+	 * Converts List of Rule entity to RuleBO objects
+	 * @param Staff staff
+	 * @return List<RuleBO>
+	 * @author tmangalapenta
+	 */
+	public List<FlumeAgentsProcessBO> convertFlumeAgentsProcesssEntityToBO(List<FlumeAgentsProcess> flumeAgentsProcesssList) {
+		LOGGER.debug("Starts convertFlumeAgentsProcesssEntityToBO...");
+		List<FlumeAgentsProcessBO> flumeAgentsProcessBOList = new ArrayList<FlumeAgentsProcessBO>();
+		for(FlumeAgentsProcess flumeAgentsProcess:flumeAgentsProcesssList)
+		{	
+			FlumeAgentsProcessBO flumeAgentsProcessBO = convertFlumeAgentsProcessBO(flumeAgentsProcess);
+			
+			flumeAgentsProcessBOList.add(flumeAgentsProcessBO);
+		}
+
+		LOGGER.debug("Ends convertFlumeAgentsProcesssEntityToBO...");
+		return flumeAgentsProcessBOList;
+	}
+	
+	private FlumeAgentsProcessBO convertFlumeAgentsProcessBO(FlumeAgentsProcess flumeAgentsProcess) {
+		
+		FlumeAgentsProcessBO flumeAgentsProcessBO = new FlumeAgentsProcessBO();
+//		String[] flumeAgentsProcessProperties = {"agentProcessId","startDate","endDate","status","processData","statistics","stacktrace","systemProcessId"};
+        BeanCopyUtil.copyBeanProperties(flumeAgentsProcess, flumeAgentsProcessBO, FLUMEAGENTSPROCESS_PROPERTIES);
+		
+        FlumeAgents flumeAgents =  flumeAgentsProcess.getFlumeAgents();
+        FlumeAgentsBO flumeAgentsBO = new  FlumeAgentsBO();
+//        String[] flumeAgentsProperties = {"agentId","name","description","status"};
+        BeanCopyUtil.copyBeanProperties(flumeAgents, flumeAgentsBO, FLUMEAGENTS_PROPERTIES);
+        flumeAgentsProcessBO.setFlumeAgentsBO(flumeAgentsBO);
+        
+        SocialDataProcess socialDataProcess =  flumeAgentsProcess.getSocialDataProcess();
+        SocialDataProcessBO socialDataProcessBO = new  SocialDataProcessBO();
+//        String[] socialDataProcessProperties = {"processId","name","status","startDate","endDate","statistics","processData"};
+        BeanCopyUtil.copyBeanProperties(socialDataProcess, socialDataProcessBO, SOCIALDATAPROCESS_PROPERTIES);
+        flumeAgentsProcessBO.setSocialDataProcessBO(socialDataProcessBO);
+      
+        return flumeAgentsProcessBO;
+	}
+	
+		
+	/**
+	 * Singleton instance of StaffHelper.
+	 *
+	 * @return instance StaffHelper
+	 */
+	public static FlumeAgentsProcessHelper getInstance() {
+		if (instance == null) {
+			instance = new FlumeAgentsProcessHelper();
+		}
+		return instance;
+	}
+
+	
+	
+	
+	
+}

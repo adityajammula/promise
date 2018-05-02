@@ -1,0 +1,26 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+import com.zen.smi.dao.entities.SocialMediaPosts;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public interface SocialMediaPostsDAO extends BaseDAO<SocialMediaPosts, Serializable> {
+
+	
+
+	List<SocialMediaPosts> getSocialMediaPosts() throws GenericDAOException;
+
+	List<SocialMediaPosts> getSocialMediaPostsByChannel(int postId ) throws GenericDAOException;	
+	
+	SocialMediaPosts getSocialMediaPostsId(int postId ) throws GenericDAOException;
+	
+	void editPost(SocialMediaPosts socialMediaPosts) throws GenericDAOException;
+	
+	void savePost(SocialMediaPosts socialMediaPosts) throws GenericDAOException;
+	
+	void deletePost(SocialMediaPosts socialMediaPosts) throws GenericDAOException;
+
+}

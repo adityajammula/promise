@@ -1,0 +1,111 @@
+<div id="sidebar-wrap" ng-controller="NavController">
+	<accordion close-others="oneAtTime" slimscroll="{height: '100%'}">
+
+	<accordion-group is-open="status.isFirstOpen"
+		ng-class="{'open': status.isFirstOpen, 'closed': !status.isFirstOpen}">
+	<accordion-heading> Navigation <i class="fa"
+		ng-class="{'fa-angle-up': status.isFirstOpen, 'fa-angle-down': !status.isFirstOpen}"></i>
+	</accordion-heading>
+	<ul id="navigation" nav-collapse ripple>
+		<li ui-sref-active="active"><a ui-sref="dashboard"><fa name="dashboard"></fa><span>Dashboard</span></a></li>
+		<li ui-sref-active="active"><a ui-sref="#"><!-- <img src="resources/images/money_bag_business.png" alt= "" style="height: 23px;"> --> 
+		<i class="fa fa-bank"></i>
+		<span>Hashtag Banking</span></a>
+			<ul>
+				<li ui-sref-active="active"><a ui-sref="facebooktransactions">
+				                 <fa name="facebook"></fa>&nbsp;&nbsp;Facebook</a>
+				    <ul>
+						<li ui-sref-active="active"><a ui-sref="viewrules"><fa
+									name="caret-right"></fa>Transactions</a></li>
+						<li ui-sref-active="active"><a ui-sref="facebookbalanceinquiry" data-ng-click="initializeFacebookBalanceInquiryController()"><fa
+									name="caret-right"></fa>Account Balance</a></li>
+					</ul>
+				</li>
+				<li ui-sref-active="active"><a ui-sref="twittertransactions">
+				 				 <fa name="twitter"></fa>Twitter</a>
+				 	  <ul>
+						<li ui-sref-active="active"><a ui-sref="viewrules"><fa
+									name="caret-right"></fa>Transactions</a></li>
+						<li ui-sref-active="active"><a ui-sref="twitterbalanceinquiry" data-ng-click="initializeTwitterBalanceInquiryController()"><fa
+									name="caret-right"></fa>Account Balance</a></li>
+					</ul>
+		        </li>
+		        <li ui-sref-active="active"><a ui-sref="twittertransactions">
+				 	  <fa name="info"></fa>&nbsp;&nbsp;Help</a>
+				</li>
+		</ul>
+		</li>
+		<li ui-sref-active="active"><a ui-sref="#"><fa name="fa fa-envelope-o"></fa> <span>Case Management</span><span class="badge bg-lightred">{{totalCaseCount}}</span></a>
+			<ul>
+				<li ui-sref-active="active"><a ui-sref="casemanagement"	data-ng-click="initializeCmfDashboardController()">
+				                 <fa	name="caret-right"></fa>Dashboard</a></li>
+				<li ui-sref-active="active"><a ui-sref="openfacebookcases" data-ng-click="initializeOpenFacebookCasesController()" >
+				 				 <fa name="caret-right"></fa>Open Facebook Cases<span class="badge bg-lightred" ng-model="countfbcases">{{countfbcases}}</span></a></li>
+				<li ui-sref-active="active"><a ui-sref="opentwittercases"  data-ng-click="initializeOpenTwitterCasesController()">
+				                 <fa name="caret-right"></fa>Open Twitter Cases<span class="badge bg-lightred" ng-model="counttwittercases">{{counttwittercases}}</span></a></li>
+                <li ui-sref-active="active"><a ui-sref="resolvedcases" data-ng-click="initializeResolvedCasesController()"><fa name="caret-right"></fa>Resolved Cases<span class="badge bg-lightred" ng-model="countresolvedcases">{{countresolvedcases}}</span></a></li>
+                <li ui-sref-active="active"><a ui-sref="closedcases" data-ng-click="initializeClosedCasesController()"><fa name="caret-right"></fa>Closed Cases<span class="badge bg-lightred" ng-model="countclosedcases">{{countclosedcases}}</span></a></li>
+                <li ui-sref-active="active"><a ui-sref="cmfspamcases"	data-ng-click="initializespamCasesController()">
+				                 <fa	name="caret-right"></fa>Spam Cases<span class="badge bg-lightred" ng-model="countspamcases">{{countspamcases}}</span></a></li>
+				<li ui-sref-active="active"><a ui-sref="othercomments">
+				                 <fa	name="caret-right"></fa>Other Comments<span class="badge bg-primary" ng-model="othercommentscount">{{othercommentscount}}</span></a></li></ul>
+		</li>
+		<li ui-sref-active="active"><a ui-sref="#"><fa name="fa fa-gear"></fa>
+				<span>Administration</span></a>
+			<ul>
+				<li ui-sref-active="active"><a ui-sref="#"><fa name="cubes"></fa>
+						Manage Rules</a>
+					<ul>
+						<li ui-sref-active="active"><a ui-sref="viewrules"
+							data-ng-click="initializeViewRulesController()"><fa
+									name="caret-right"></fa> View Rules</a></li>
+						<li ui-sref-active="active"><a ui-sref="configrules"><fa
+									name="caret-right"></fa> Rule Configuration</a></li>
+						<li ui-sref-active="active"><a ui-sref="globalcolumns"
+							data-ng-click="initializeViewGlobalColumnsController()"><fa
+									name="caret-right"></fa> Global Columns</a></li>
+						<li ui-sref-active="active"><a ui-sref="testrules"
+							data-ng-click="initializeViewTestRulesController()"><fa
+									name="caret-right"></fa> Test Rules</a></li>
+						<li ui-sref-active="active"><a ui-sref="bulktestrules"
+							data-ng-click="initializeViewBulkTestRulesController()"><fa
+									name="caret-right"></fa> Bulk Test Rules</a></li>
+					</ul></li>
+			</ul>
+
+			<ul>
+				<li ui-sref-active="active"><a ui-sref="#"><fa name="group"></fa>
+						Manage Groups</a>
+					<ul>
+						<li ui-sref-active="active"><a ui-sref="viewgroups"
+							data-ng-click="initializeViewGroupsController()"><fa
+									name="caret-right"></fa> View Groups</a></li>
+					</ul></li>
+			</ul>
+			<ul>
+				<li ui-sref-active="active"><a ui-sref="#"><fa name="share-alt"></fa>
+						Manage Processes</a>
+					<ul>
+						<li ui-sref-active="active"><a ui-sref="processes"
+							data-ng-click="initializeNewProcessController()"><fa
+									name="caret-right"></fa> Processes</a></li>
+					</ul>
+					<ul>
+						<li ui-sref-active="active"><a ui-sref="agents"
+							data-ng-click="initializeAgentsControllerView()"><fa
+									name="caret-right"></fa>Agents</a></li>
+					</ul></li>
+			</ul></li>
+			
+			<li ui-sref-active="active"><a ui-sref="#"> 
+			<span>Channels</span></a>
+			<ul>
+				<li ui-sref-active="active"><a ui-sref="posts">
+				                 <fa name="caret-right"></fa>Posts</a></li>
+				<li ui-sref-active="active"><a ui-sref="allposts"> <fa name="caret-right"></fa>All Posts</a></li>
+		</ul>
+		</li>
+	</ul>
+
+	</accordion-group> </accordion>
+</div>

@@ -1,0 +1,27 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.zen.smi.dao.CmfCasePriorityDAO;
+import com.zen.smi.dao.FlumeAgentsDAO;
+import com.zen.smi.dao.entities.CmfCasePriority;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfCasePriorityDAOImpl extends BaseDAOImpl<CmfCasePriority, Serializable> implements CmfCasePriorityDAO {
+
+	public CmfCasePriorityDAOImpl() {
+		super(CmfCasePriority.class);
+	}
+
+	public CmfCasePriority getCmfCasePriorityByCmfCase(String caseId)
+			throws GenericDAOException {
+		String query = "FROM CmfCasePriority as ccp INNER  JOIN FETCH  ccp.cmfCases as cc WHERE cc.caseId="+caseId;
+		  return load(query).get(0);
+	}
+	
+	
+}

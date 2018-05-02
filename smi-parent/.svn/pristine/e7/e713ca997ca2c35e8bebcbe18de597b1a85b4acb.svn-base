@@ -1,0 +1,66 @@
+package com.zen.smi.service.helper;
+
+import java.util.ArrayList;
+
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import static com.zen.smi.generic.utils.SmiConstants.RULEGROUP_PROPERTIES;
+
+import com.zen.smi.bo.RuleGroupBO;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+/**
+ * @param Staff staff
+ * @return List<RuleBO>
+ * @author tmangalapenta
+ */
+public final class RuleGroupHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for StaffHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(RuleGroupHelper .class);
+
+	/**
+	 * Instance of StaffHelper.
+	 */
+	private static RuleGroupHelper  instance;
+
+	public static RuleGroupHelper getInstance() {
+		if (instance == null) {
+			instance = new RuleGroupHelper();
+		}
+		return instance;
+	}
+
+	public static void setInstance(RuleGroupHelper instance) {
+		RuleGroupHelper.instance = instance;
+	}
+
+	/**
+	 * Private constructor
+	 */
+	private RuleGroupHelper() {
+
+	}
+	
+	/**
+	 * Converts List of Rule Group entity to RuleGroupBO objects
+	 * @param Staff staff
+	 * @return List<RuleGroupBO>
+	 * @author tmangalapenta
+	 */
+	public List<RuleGroupBO> convertRuleGroupEntityToBO(List<RuleGroup> ruleGroup) {
+		LOGGER.debug("Starts convertRuleGroupEntityToBO...");
+		List<RuleGroupBO> ruleGroupBOList = new ArrayList<RuleGroupBO>();
+		for(RuleGroup rulGrp:ruleGroup) {
+				RuleGroupBO ruleGrpBO = new RuleGroupBO();
+//				String[] ruleGrpProperties = {"ruleGroupId","ruleGroupName","ruleGroupDescription","createdBy","updatedBy","createdDate","updatedDate"};
+	            BeanCopyUtil.copyBeanProperties(rulGrp, ruleGrpBO, RULEGROUP_PROPERTIES);
+	            ruleGroupBOList.add(ruleGrpBO);
+		}
+		LOGGER.debug("Ends convertRuleGroupEntityToBO...");
+		return ruleGroupBOList;
+	}
+}

@@ -1,0 +1,237 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+
+
+public class CmfCaseManagementDashboardBO {
+	@SerializedName("face_book_open_cases_count")	
+	private Long faceBookOpenCases;
+	@SerializedName("twitter_open_cases_count")	
+	private Long twitterOpenCases;
+	@SerializedName("resolved_cases_count")	
+	private Long resolvedCases;
+	@SerializedName("closed_cases_count")
+	private Long closedCases;
+	@SerializedName("spam_cases_count")	
+	private Long spamCases;
+	@SerializedName("total_open_cases_count")	
+	private Long totalOpenCases;
+	@SerializedName("total_dashboard_cases_count")	
+	private Long totalDashboardCases;
+	@SerializedName("cases_assigned_to_user_count")	
+	private Long casesAssignedToUser;
+	@SerializedName("critical_cases_assigned_to_user_count")	
+	private Long criticalCasesAssignedToUser;
+	@SerializedName("high_cases_assigned_to_user_count")	
+	private Long highCasesAssignedToUser;
+	@SerializedName("medium_cases_assigned_to_user_count")	
+	private Long mediumCasesAssignedToUser;
+	@SerializedName("low_cases_assigned_to_user_count")	
+	private Long lowCasesAssignedToUser;
+	List<CmfCasePriorityBO> cmfCasePriorityBOList;
+	List<CmfCasePriorityBO> cmfCasePriorityBOListAssignedToUser;
+	@SerializedName("other_comments")	
+	private Long otherComments;
+	private List<CmfCaseCategoryBO> cmfCaseCategoryBO;
+//	@SerializedName("face_book_open_cases_assigned_to_user_count")	
+//	private Long faceBookOpenCasesAssignedToUser;
+//	@SerializedName("twitter_open_cases_assigned_to_user_count")	
+//	private Long twitterOpenCasesAssignedToUser;
+	
+	
+	/**
+	 * @return the faceBookOpenCases
+	 */
+	public Long getFaceBookOpenCases() {
+		return faceBookOpenCases;
+	}
+	/**
+	 * @param faceBookOpenCases the faceBookOpenCases to set
+	 */
+	public void setFaceBookOpenCases(Long faceBookOpenCases) {
+		this.faceBookOpenCases = faceBookOpenCases;
+	}
+	/**
+	 * @return the twitterOpenCases
+	 */
+	public Long getTwitterOpenCases() {
+		return twitterOpenCases;
+	}
+	/**
+	 * @param twitterOpenCases the twitterOpenCases to set
+	 */
+	public void setTwitterOpenCases(Long twitterOpenCases) {
+		this.twitterOpenCases = twitterOpenCases;
+	}
+	/**
+	 * @return the resolvedCases
+	 */
+	public Long getResolvedCases() {
+		return resolvedCases;
+	}
+	/**
+	 * @param resolvedCases the resolvedCases to set
+	 */
+	public void setResolvedCases(Long resolvedCases) {
+		this.resolvedCases = resolvedCases;
+	}
+	/**
+	 * @return the closedCases
+	 */
+	public Long getClosedCases() {
+		return closedCases;
+	}
+	/**
+	 * @param closedCases the closedCases to set
+	 */
+	public void setClosedCases(Long closedCases) {
+		this.closedCases = closedCases;
+	}
+	/**
+	 * @return the spamCases
+	 */
+	public Long getSpamCases() {
+		return spamCases;
+	}
+	/**
+	 * @param spamCases the spamCases to set
+	 */
+	public void setSpamCases(Long spamCases) {
+		this.spamCases = spamCases;
+	}
+	
+	/**
+	 * @return the totalOpenCases
+	 */
+	public Long getTotalOpenCases() {
+		return totalOpenCases;
+	}
+	/**
+	 * @param totalOpenCases the totalOpenCases to set
+	 */
+	public void setTotalOpenCases(Long totalOpenCases) {
+		this.totalOpenCases = totalOpenCases;
+	}
+	/**
+	 * @return the totalDashboardCases
+	 */
+	public Long getTotalDashboardCases() {
+		return totalDashboardCases;
+	}
+	/**
+	 * @param totalDashboardCases the totalDashboardCases to set
+	 */
+	public void setTotalDashboardCases(Long totalDashboardCases) {
+		this.totalDashboardCases = totalDashboardCases;
+	}
+	/**
+	 * @return the casesAssignedToUser
+	 */
+	public Long getCasesAssignedToUser() {
+		return casesAssignedToUser;
+	}
+	/**
+	 * @param casesAssignedToUser the casesAssignedToUser to set
+	 */
+	public void setCasesAssignedToUser(Long casesAssignedToUser) {
+		this.casesAssignedToUser = casesAssignedToUser;
+	}
+	/**
+	 * @return the criticalCasesAssignedToUser
+	 */
+	public Long getCriticalCasesAssignedToUser() {
+		return criticalCasesAssignedToUser;
+	}
+	/**
+	 * @param criticalCasesAssignedToUser the criticalCasesAssignedToUser to set
+	 */
+	public void setCriticalCasesAssignedToUser(Long criticalCasesAssignedToUser) {
+		this.criticalCasesAssignedToUser = criticalCasesAssignedToUser;
+	}
+	/**
+	 * @return the highCasesAssignedToUser
+	 */
+	public Long getHighCasesAssignedToUser() {
+		return highCasesAssignedToUser;
+	}
+	/**
+	 * @param highCasesAssignedToUser the highCasesAssignedToUser to set
+	 */
+	public void setHighCasesAssignedToUser(Long highCasesAssignedToUser) {
+		this.highCasesAssignedToUser = highCasesAssignedToUser;
+	}
+	/**
+	 * @return the mediumCasesAssignedToUser
+	 */
+	public Long getMediumCasesAssignedToUser() {
+		return mediumCasesAssignedToUser;
+	}
+	/**
+	 * @param mediumCasesAssignedToUser the mediumCasesAssignedToUser to set
+	 */
+	public void setMediumCasesAssignedToUser(Long mediumCasesAssignedToUser) {
+		this.mediumCasesAssignedToUser = mediumCasesAssignedToUser;
+	}
+	/**
+	 * @return the lowCasesAssignedToUser
+	 */
+	public Long getLowCasesAssignedToUser() {
+		return lowCasesAssignedToUser;
+	}
+	/**
+	 * @param lowCasesAssignedToUser the lowCasesAssignedToUser to set
+	 */
+	public void setLowCasesAssignedToUser(Long lowCasesAssignedToUser) {
+		this.lowCasesAssignedToUser = lowCasesAssignedToUser;
+	}
+	/**
+	 * @return the cmfCaseCategoryBO
+	 */
+	public List<CmfCaseCategoryBO> getCmfCaseCategoryBO() {
+		return cmfCaseCategoryBO;
+	}
+	/**
+	 * @param cmfCaseCategoryBO the cmfCaseCategoryBO to set
+	 */
+	public void setCmfCaseCategoryBO(List<CmfCaseCategoryBO> cmfCaseCategoryBO) {
+		this.cmfCaseCategoryBO = cmfCaseCategoryBO;
+	}
+	/**
+	 * @return the cmfCasePriorityBOList
+	 */
+	public List<CmfCasePriorityBO> getCmfCasePriorityBOList() {
+		return cmfCasePriorityBOList;
+	}
+	/**
+	 * @param cmfCasePriorityBOList the cmfCasePriorityBOList to set
+	 */
+	public void setCmfCasePriorityBOList(
+			List<CmfCasePriorityBO> cmfCasePriorityBOList) {
+		this.cmfCasePriorityBOList = cmfCasePriorityBOList;
+	}
+	
+	/**
+	 * @return the cmfCasePriorityBOListAssignedToUser
+	 */
+	public List<CmfCasePriorityBO> getCmfCasePriorityBOListAssignedToUser() {
+		return cmfCasePriorityBOListAssignedToUser;
+	}
+	/**
+	 * @param cmfCasePriorityBOListAssignedToUser the cmfCasePriorityBOListAssignedToUser to set
+	 */
+	public void setCmfCasePriorityBOListAssignedToUser(
+			List<CmfCasePriorityBO> cmfCasePriorityBOListAssignedToUser) {
+		this.cmfCasePriorityBOListAssignedToUser = cmfCasePriorityBOListAssignedToUser;
+	}
+	public Long getOtherComments() {
+		return otherComments;
+	}
+	public void setOtherComments(Long otherComments) {
+		this.otherComments = otherComments;
+	}
+
+	
+}

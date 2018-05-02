@@ -1,0 +1,312 @@
+angular
+		.module('smiApp')
+		.controller('ResolvedCasesController',function($scope, $state, $modal, OpenfacebookCaseService,$rootScope,$log,dialogs,ResolvedCaseService) {
+					$scope.isSelect = true;
+					$scope.ischecked = false;
+					$scope.categoryId = 0;
+					$scope.priorityId = 0;
+					$scope.socialProfileId = 0;
+					$scope.accountType = 0;
+					 $scope.socialMediaAccountId = 0;
+					$scope.moreOptions = [ { id : 1, name : 'Reopen Selected Cases'}, 
+					                       { id : 2, name : 'Close Selected Cases'}, 
+					                       { id : 3, name : 'Append Notes'} ]; 
+					$scope.resolvedCaseJson = {};
+					$scope.resolvedCaseJson = {
+							"category_type" :	$scope.categoryId,
+							"priority_type" :	$scope.priorityId,
+							"account_type"  :	$scope.socialProfileId
+							};
+					$rootScope.initializeResolvedCasesController = function() {
+						$scope.resolvedCases = [];
+						ResolvedCaseService.getResolvedCaseByCriteria($scope.resolvedCaseJson).then(function(response) {
+									angular.forEach(response.data.cmfCaseBO, function(caseBo) {
+										$scope.cmfCaseBO = caseBo;
+										$scope.cmfCaseBO.isChecked= true;
+										$scope.resolvedCases.push($scope.cmfCaseBO);
+									});
+								});
+						$scope.getCategories();
+					};
+					$scope.updateSearchResults = function() {
+		 				$scope.requestData = {
+				    			'keyWord'       : "",
+				    			'status_type_id': "4",
+				    			"category_type" : $scope.categoryId,
+								"priority_type" : $scope.priorityId,
+								"account_type"  : $scope.accountType,
+								"social_media_accounts_id" : $scope.socialMediaAccountId
+				    	};
+						 if($scope.Search != null && $scope.Search != undefined && $scope.Search != ""){
+							$scope.requestData.keyWord = ($scope.Search).toString();
+							$scope.resolvedCases = [];
+						OpenfacebookCaseService.getSearchResults($scope.requestData).then(function(response){
+							$scope.resolvedCases = response.data.cmfCaseBO;
+						});
+						}else {
+								$rootScope.initializeResolvedCasesController();
+							}
+					};
+							$scope.getCategories = function() {
+								OpenfacebookCaseService.getStaticData().then(function(response) {
+													$scope.categories = response.data.cmfCaseCategoryBOList;
+													$scope.priorities = response.data.cmfCasePriorityBOList;
+													for ( var i = 0; i < response.data.cmfCasePriorityBOList.length; i++) {
+														var obj = response.data.cmfCasePriorityBOList[i];
+														obj.priorityImage = (response.data.cmfCasePriorityBOList[i].priority_name).charAt(0);
+													}
+													$scope.categoriesAll = {
+															 "category_id":$scope.categories.length,
+															"categoryImage":"A",
+															"category_name":"All" 
+													 }
+													 $scope.prioritiesAll = {
+															 "priority_id":$scope.priorities.length,
+																"priorityImage":"A",
+																"priority_name":"All" 
+													 }
+													 $scope.categories.push($scope.categoriesAll);
+													 $scope.priorities.push($scope.prioritiesAll);
+													$scope.accounts = response.data.socialProfilesBOList;
+													
+													$scope.accountsAll = {
+															 "social_profile_accounts_id":$scope.accounts.length,
+															 "statusImage":"A",
+															 "social_profile_accounts_type":"All", 
+													 }
+													$scope.accounts.push($scope.accountsAll);
+												});
+							}, 
+							$scope.getResolvedCasesByAccountCategory = function(categoryId) {
+								$scope.categoryId =  categoryId.toString();
+								if(($scope.Search == ""||$scope.Search == undefined )){
+									$scope.resolvedCaseJson.category_type = $scope.categoryId;
+									$scope.getResolvedCases();
+								} else {
+									$scope.requestData.category_type = $scope.categoryId;
+									$scope.updateSearchResults();
+								}
+							}, 
+							$scope.getResolvedCasesByPriority = function(priorityId) {
+								$scope.priorityId =  priorityId.toString();
+								if(($scope.Search == ""||$scope.Search == undefined )){
+									$scope.resolvedCaseJson.priority_type = $scope.priorityId;
+									$scope.getResolvedCases();
+								} else {
+									$scope.requestData.priority_type = $scope.priorityId;
+									$scope.updateSearchResults();
+								}
+							};
+					$scope.getResolvedCasesByAccount = function(socialProfileId) {
+						 $scope.accountType =  socialProfileId.toString();
+						if(($scope.Search == ""||$scope.Search == undefined )){
+							$scope.resolvedCaseJson.account_type = $scope.accountType;
+							$scope.getResolvedCases();
+						} else {
+							$scope.requestData.account_type = $scope.accountType;
+							$scope.updateSearchResults();
+						}
+					};
+					$scope.getAllPriorities = function() {
+						$scope.priorityId = "All";
+						if(($scope.Search == ""||$scope.Search == undefined )){
+							$scope.resolvedCaseJson.priority_type = $scope.priorityId;
+							$scope.getResolvedCases();
+						} else {
+							$scope.requestData.priority_type = 	$scope.priorityId;
+							$scope.updateSearchResults();
+						}
+					};
+					$scope.getAllCategories = function() {
+						$scope.categoryId = "All";
+						if(($scope.Search == ""||$scope.Search == undefined )){
+							$scope.resolvedCaseJson.category_type = $scope.categoryId ;
+							$scope.getResolvedCases();
+						} else {
+							$scope.requestData.category_type = $scope.categoryId ;
+							$scope.updateSearchResults();
+						}
+					};
+					$scope.getAllAccounts = function() {
+						$scope.accountId =  "All";
+						if(($scope.Search == ""||$scope.Search == undefined )){
+							$scope.resolvedCaseJson.account_type = $scope.accountId;
+							$scope.getResolvedCases();
+						} else {
+							$scope.requestData.account_type = $scope.accountId;
+							$scope.updateSearchResults();
+						}
+					};
+					$scope.getResolvedCases = function() {
+						ResolvedCaseService.getResolvedCaseByCriteria($scope.resolvedCaseJson).then(function(response) {
+									$scope.resolvedCases = response.data.cmfCaseBO;
+								});
+					};
+					$scope.highliteCategory = null;
+					$scope.sethighliteCategory = function(index) {
+						$scope.highliteCategory = index;
+					};
+					$scope.highlitePriority = null;
+					$scope.sethighlitePriority = function(index) {
+						$scope.highlitePriority = index;
+					};
+					$scope.highliteAccount = null;
+					$scope.sethighliteAccount = function(index) {
+						$scope.highliteAccount = index;
+					};
+					$scope.refreshResolvedCases = function() {
+						$rootScope.initializeResolvedCasesController();
+					}, 
+					$scope.caseDetails = function(cases) {
+						var modalInstance = $modal.open({
+							templateUrl : 'caseDetails.html',
+							controller  : 'CaseDetailsController',
+							resolve : {
+								items : function() {
+									var obj = {};
+									obj.caseId = cases.case_id;
+									return obj;
+								}
+							}
+						});
+					};
+
+					var  selectedCases = [];
+					var  selectedCaseDetails = [];
+					$scope.getSelectedValue = function(cases, index, isChecked) {
+						selectedCaseDetails.push(cases);
+						var id= cases.case_id;
+						if(isChecked && selectedCases.indexOf(id) == -1){
+							selectedCases.push(id);
+						}else{
+							angular.forEach(selectedCases, function(caseId) {
+								if(caseId == id)
+									 selectedCases.splice(selectedCases.indexOf(caseId),1);
+							});
+						}
+						if(selectedCases.length > 0){
+							$scope.isSelect = false;	
+						} else {
+							$scope.isSelect = true;	
+						}
+					};
+
+					$scope.getOption = function(id) {
+							if (id == 3) {
+							var modalInstance = $modal.open({
+								templateUrl : 'appendNote.html',
+								controller  : 'AddAppendNoteController',
+								resolve : {
+									selectedCases : function() {
+										var obj = {};
+										obj.selectedCases = selectedCases;
+										return obj;
+									}
+								}
+							});
+
+						} else if(id==2) {
+							var dlg = dialogs.confirm("Confirmation","Are you sure that you want to close the selected case ?",{size : 'md'});
+							dlg.result.then(function(btn) {
+										// Yes is clicked
+										var closeCaseJSON = {
+											"cmf_case" : []
+										};
+										closeCaseJSON.cmf_case[i] = {};
+										for ( var i = 0; i < selectedCases.length; i++) {
+											closeCaseJSON.cmf_case[i] = selectedCases[i];
+										};
+										ResolvedCaseService.closeCase(closeCaseJSON).then(function(result) {
+															$rootScope.initializeResolvedCasesController();
+														});
+										$modalInstance.close();
+									});
+						} else if(id == 1) {
+							var modalInstance = $modal.open({
+								templateUrl : 'reOpenCase.html',
+								controller  : 'ReOpenCaseController',
+								resolve: {
+									 selectedCases: function () {
+						    	        	 var obj = {};
+							        		   obj.selectedCases=selectedCases;
+								        	   return obj;
+						    	       }
+						    	      }
+							});
+						}
+					};
+					 $scope.Search = '';
+					    $scope.search = function (user) {
+					      var query = $scope.Search;
+					      var fullname = user.cmfCustomerBO.firstName+ ' ' + user.cmfCustomerBO.lastName;
+					      if (fullname.indexOf(query) != -1) {
+					        return true;
+					      }
+					      return false;
+					    };
+}).controller('AddAppendNoteController', function($scope,$modal,$state,$modalInstance,selectedCases,OpenfacebookCaseService,dialogs) {
+						$scope.saveAppendNotes = function () {
+							if($scope.appendnotesfb == null || $scope.appendnotesfb == undefined){
+								dialogs.error("ERROR","please enter the Description for Append Note",{size:'md'});
+								return false;
+							}
+					    	var saveAppendNotesJSON = {
+			    				      "note_description" : $scope.appendnotesfb,
+			    				      "cmfcase" 		 :[]
+			    			};
+					    	saveAppendNotesJSON.cmfcase[i] = {};
+					    	for(var i =0;i<selectedCases.selectedCases.length;i++) {
+					    		saveAppendNotesJSON.cmfcase[i] = selectedCases.selectedCases[i];
+					    	};
+					    	OpenfacebookCaseService.saveAppendNotes(saveAppendNotesJSON).then(function(result){
+					    		$rootScope.initializeResolvedCasesController();
+					    	});
+					    	 $modalInstance.close();
+					    };
+					  
+						$scope.close = function () {
+							$modalInstance.dismiss('close');
+					    };
+}).controller('ReOpenCaseController', function($scope,$modal,$state,$modalInstance,selectedCases,ResolvedCaseService,dialogs) {
+					$scope.reOpenCase = function() {
+						if($scope.reOpenReason == null || $scope.reOpenReason == undefined){
+							dialogs.error("ERROR","please enter the Reasons For Case Reopening",{size:'md'});
+							return false;
+						}
+						var reOpenCaseJSON = {
+							"reason"   : $scope.reOpenReason,
+							"cmf_case" : []
+						};
+						reOpenCaseJSON.cmf_case[i] = {};
+						for ( var i = 0; i < selectedCases.selectedCases.length; i++) {
+							reOpenCaseJSON.cmf_case[i] = selectedCases.selectedCases[i];
+						}
+						;
+						ResolvedCaseService.reOpenCase(reOpenCaseJSON).then(function(result) {
+							$rootScope.initializeResolvedCasesController();
+						});
+						$modalInstance.close();
+					};
+					$scope.close = function() {
+						$modalInstance.dismiss('close');
+					};
+}).controller('CaseDetailsController',function($scope, $modalInstance,items,OpenfacebookCaseService) {
+					$scope.caseId = items.caseId;
+					$scope.caseDetails = [];
+					$scope.isShow = true;
+					OpenfacebookCaseService.getIndividualCaseDetails($scope.caseId).then(function(response) {
+										if (response != null) {
+											$scope.caseContent = response.data.cmfCaseBO[0].description;
+											$scope.customerName = response.data.cmfCaseBO[0].cmfCustomerBO.firstName;
+											$scope.createdDate = response.data.cmfCaseBO[0].created_date;
+											$scope.casePriority = response.data.cmfCaseBO[0].cmfCasePriorityBO.priority_name;
+											$scope.socialAccount = response.data.cmfCaseBO[0].socialMediaAccountsBO.social_media_accounts_accountname;
+											$scope.caseStatus = response.data.cmfCaseBO[0].cmfCaseStatusBO.caseStatus;
+											$scope.caseDetails = response.data.cmfCaseBO[0].cmfCaseHistoryBO;
+											$scope.caseStatusDetails = response.data.cmfCaseBO[0].cmfCaseNotesBO;
+										}
+									});
+					$scope.close = function() {
+						$modalInstance.dismiss('close');
+					};
+				});

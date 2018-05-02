@@ -1,0 +1,37 @@
+<div class="container-fluid">
+<div class="row tile">
+     <script type="text/ng-template" id="assignCase.html">
+<div class="modal-header">
+	<h3 class="modal-title custom-font">Case Assignment</h3>
+</div>
+<div class="modal-body">
+<div class="col-lg-12">
+	<label class="col-lg-2 text-right">Assign To</label>
+		<select data-ng-change="getAssignedUserId(user)" class="form-control mb-10 col-lg-8" data-ng-model="assignto"
+			data-ng-options="user.userName as user.userName  for user in users">
+<option value="">Select</option>
+		</select>
+	</div>
+	<div class="col-lg-12">
+		<label class="col-lg-4">Resons for Assigning</label>{{items.selectedUsers}}
+		<textarea class="form-control col-lg-6" rows="2" name="message" id="message"
+			placeholder="Type your message" ng-model="reasons" 
+			required></textarea>
+	</div>
+	<div class="modal-footer tile-body">
+		<button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c"
+			ng-click="ok()">
+			<i class="fa fa-arrow-right"></i> Save
+		</button>
+		<button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c"
+			ng-click="close()">
+			<i class="fa fa-arrow-left"></i> Cancel
+		</button>
+	</div>
+</div>
+     </script>
+     
+     </div>
+     </div>
+     
+        

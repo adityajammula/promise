@@ -1,0 +1,54 @@
+package com.zen.smi.bo;
+
+import java.util.Date;
+
+import com.zen.smi.dao.entities.SocialProfiles;
+
+public class SocialDataAnalysisBO {
+	private Integer id;
+	private SocialProfiles socialProfiles;
+	private String sentimentScore;
+	private String post;
+	private Date createdDate;
+	private String period;
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public SocialProfiles getSocialProfiles() {
+		return socialProfiles;
+	}
+	public void setSocialProfiles(SocialProfiles socialProfiles) {
+		this.socialProfiles = socialProfiles;
+	}
+	public String getSentimentScore() {
+		return sentimentScore;
+	}
+	public void setSentimentScore(String sentimentScore) {
+		this.sentimentScore = sentimentScore;
+	}
+	public String getPost() {
+		return post;
+	}
+	public void setPost(String post) {
+		this.post = post;
+	}
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	public String getPeriod() {
+		return period;
+	}
+	public void setPeriod(String period) {
+		this.period = period;
+	}
+	
+	
+	
+}

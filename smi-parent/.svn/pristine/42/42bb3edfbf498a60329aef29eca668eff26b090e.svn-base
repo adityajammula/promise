@@ -1,0 +1,46 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.FinancialInstitutions;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * @author Sowjanya.Pathakamuri
+ *
+ */
+public interface FinancialInstitutionsDAO extends BaseDAO<FinancialInstitutions, Serializable> {
+ 
+	/** To get SMA Financial Institution
+	 * @author tmangalapenta
+	 * @param  Integer accountId
+	 * @return FinancialInstitutions 
+	 * @throws GenericDAOException
+	 */
+	FinancialInstitutions getSMAFinancialInstitution(Integer accountId) throws GenericDAOException; 
+	/** To get RootParent By Id
+	 * @author venu
+	 * @param  Integer id
+	 * @return FinancialInstitutions 
+	 * @throws GenericDAOException
+	 */
+	FinancialInstitutions getRootParentById(Integer id) throws GenericDAOException;
+	/** To get Accounts based on id
+	 * @author tmangalapenta
+	 * @param  id
+	 * @return List of FinancialInstitutions 
+	 * @throws GenericDAOException
+	 */
+	List<FinancialInstitutions> getAccountsById(Integer id) throws GenericDAOException;
+	/** To get Parent Id By Id
+	 * @author venu
+	 * @param  Integer accountId
+	 * @return SocialMediaAccounts 
+	 * @throws GenericDAOException
+	 */
+	Integer getParentIdById(Integer id) throws GenericDAOException;
+	FinancialInstitutions getFinancialInstitutionsByCmfCase(int id) throws GenericDAOException;
+	
+}

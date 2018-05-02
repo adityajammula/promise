@@ -1,0 +1,51 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.List;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import com.zen.smi.dao.OtherCommentsDAO;
+import com.zen.smi.dao.entities.OtherComments;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class OtherCommentsDAOImpl extends BaseDAOImpl<OtherComments, Serializable> implements OtherCommentsDAO {
+
+	public OtherCommentsDAOImpl() {
+		super(OtherComments.class);
+	}
+
+	public List<OtherComments> getAllOtherCommentsByAccountType() throws GenericDAOException {
+		String query = "FROM OtherComments";
+
+		return load(query); 
+	}
+	
+	  public Long loadWithsqlCount(String queryName) {
+		  Long count = null;
+	 		Session session = null;
+	 		Transaction transaction = null;
+	 		try{
+	 			session = getSessionFactory().openSession();
+		        transaction = session.beginTransaction();
+	            
+	              count = (Long) session.createQuery(queryName).uniqueResult();
+
+	 			transaction.commit();
+	        }
+			catch (HibernateException ex){
+				transaction.rollback();
+	           throw ex;
+	       }
+	       finally {
+	            if(session!=null){
+	                session.close();
+	            }
+	        }
+
+	 		return count;
+	 	}
+	
+}

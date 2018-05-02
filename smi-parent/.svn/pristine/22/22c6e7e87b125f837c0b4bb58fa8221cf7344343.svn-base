@@ -1,0 +1,119 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.SocialMediaAccountsDAO;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+public class SocialMediaAccountsDAOImpl extends BaseDAOImpl<SocialMediaAccounts, Serializable> implements SocialMediaAccountsDAO  {
+
+	public SocialMediaAccountsDAOImpl() {
+			super(SocialMediaAccounts.class);
+		}
+
+	
+	/**To get Social Media Accounts
+	 * @return List<SocialMediaAccounts>
+	 * @throws GenericDAOException
+	 */
+	public  List<SocialMediaAccounts> getSocialMediaAccounts() throws GenericDAOException {
+			return retrieveAll();
+	}
+
+	public List<SocialMediaAccounts> getSocialMediaAccountsByAccountType(
+			int accountTypeId) throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("socialProfiles.profileId", accountTypeId));
+		
+		return search(expressionList, null);
+	}
+
+	public SocialMediaAccounts getSocialMediaAccountsByAccountId(
+			String accountId) throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("accountId", accountId));
+		
+		return searchUnique(expressionList, null);
+	}
+	
+	public List<SocialMediaAccounts> getSocialMediaAccountsByFinanceId(int id)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("financialInstitutions.id", id));
+		
+		return search(expressionList, null);
+	}
+
+
+	public SocialMediaAccounts getSocialMediaAccountsByCmfCase(int accountTypeId)
+			throws GenericDAOException {
+		String query = "FROM SocialMediaAccounts WHERE id="+accountTypeId;
+		  return load(query).get(0);
+	}
+
+
+	public List<SocialMediaAccounts> getAccountsByStatus(String[] status, int profileId) {
+		List<SocialMediaAccounts> socialAccounts = null;
+		
+		List<Criterion> criterionList = new ArrayList<Criterion>();
+		criterionList.add(Restrictions.in("processStatus", status));
+		criterionList.add(Restrictions.eq("socialProfiles.profileId", profileId));
+		socialAccounts = searchCriterion(criterionList, null);
+		
+		return socialAccounts;
+	}
+
+	
+	public static void main(String  args[]){
+		
+		SocialMediaAccountsDAOImpl accountDAOImpl= new SocialMediaAccountsDAOImpl();
+		List<SocialMediaAccounts> socialList = accountDAOImpl.getAccountsByStatus(new String[]{"NOT_STARTED","GROUP_POSTS_CRASHED"}, 2);
+		
+	}
+
+
+	public void addNewAccount(SocialMediaAccounts socialMediaAccounts)
+			throws GenericDAOException {
+		this.saveOrUpdate(socialMediaAccounts);
+		
+	}
+
+
+	public void updateProcessStatus(Integer id,
+			String status) throws GenericDAOException {
+		String hql = "UPDATE SocialMediaAccounts SET processStatus = ? WHERE id = ?";
+		Session session = getSessionFactory().openSession();
+		Query query = session.createQuery(hql);
+        Transaction transaction = session.beginTransaction();
+        try{
+        	query.setString(0, status);
+        	query.setInteger(1, id);
+        	query.executeUpdate();
+      	    transaction.commit(); 
+        }
+  		catch(HibernateException ex){
+  			transaction.rollback();
+             throw ex;
+        }
+        finally {
+             if(session!=null){
+                 session.close();
+           }
+        }
+	}
+}
+
+
+

@@ -1,0 +1,132 @@
+package com.zen.smi.bo;
+
+import java.util.Date;
+
+import com.google.gson.annotations.SerializedName;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleColumns;
+
+/**
+ * This class contains Rule Columns Business data.
+ *
+ * @author Tirumala Vasu
+ */
+public class RuleRulesColumnsBO {
+	
+	@SerializedName("rule_column_id")	
+	private Integer ruleColumnId;
+	@SerializedName("rule_column")	
+	private RuleColumnsBO ruleColumns;
+	@SerializedName("rule")	
+	private RuleBO ruleBO;
+	@SerializedName("created_by")	
+	private String createdBy;
+	@SerializedName("updated_by")		
+	private String updatedBy;
+	@SerializedName("created_date")
+	private Date createdDate;
+	@SerializedName("updated_date")
+	private Date updatedDate;
+	@SerializedName("action")	
+	private String action;
+	
+	
+	/**
+	 * @return the ruleColumnId
+	 */
+	public Integer getRuleColumnId() {
+		return ruleColumnId;
+	}
+	/**
+	 * @param ruleColumnId the ruleColumnId to set
+	 */
+	public void setRuleColumnId(Integer ruleColumnId) {
+		this.ruleColumnId = ruleColumnId;
+	}
+	
+	/**
+	 * @return the rule
+	 */
+
+	/**
+	 * @return the createdBy
+	 */
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	
+	public RuleBO getRuleBO() {
+		return ruleBO;
+	}
+	public void setRuleBO(RuleBO ruleBO) {
+		this.ruleBO = ruleBO;
+	}
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	/**
+	 * @return the updatedBy
+	 */
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	/**
+	 * @param updatedBy the updatedBy to set
+	 */
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the updatedDate
+	 */
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	/**
+	 * @param updatedDate the updatedDate to set
+	 */
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	/**
+	 * @return the ruleColumns
+	 */
+	public RuleColumnsBO getRuleColumns() {
+		return ruleColumns;
+	}
+	/**
+	 * @param ruleColumns the ruleColumns to set
+	 */
+	public void setRuleColumns(RuleColumnsBO ruleColumns) {
+		this.ruleColumns = ruleColumns;
+	}
+	/**
+	 * @return the action
+	 */
+	public String getAction() {
+		return action;
+	}
+	/**
+	 * @param action the action to set
+	 */
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	
+}

@@ -1,0 +1,69 @@
+package com.zen.smi.service.helper;
+
+import static com.zen.smi.generic.utils.SmiConstants.CMFCUSTOMER_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.OTHERCOMMENTS_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.SOCIALPROFILES_PROPERTIES;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.OtherCommentsBO;
+import com.zen.smi.bo.SocialProfilesBO;
+import com.zen.smi.cmf.bo.CmfCustomerBO;
+import com.zen.smi.dao.entities.OtherComments;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+
+public final class OtherCommentsHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for SocialMediaAccountsHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(OtherCommentsHelper .class);
+
+	/**
+	 * Instance of SocialMediaAccountsHelper.
+	 */
+	private static OtherCommentsHelper  instance;
+
+	/**
+	 * Private constructor
+	 */
+	private OtherCommentsHelper() {
+
+	}
+	
+	
+	
+	/**
+	 * Singleton instance of SocialMediaAccountsHelper.
+	 *
+	 * @return instance SocialMediaAccountsHelper
+	 */
+	public static OtherCommentsHelper getInstance() {
+		if (instance == null) {
+			instance = new OtherCommentsHelper();
+		}
+		return instance;
+	}
+
+	
+	public List<OtherCommentsBO> convertOtherCommentsEntityToBO(
+			List<OtherComments> otherCommentsList) {
+		List<OtherCommentsBO> otherCommentsBOList = new ArrayList<OtherCommentsBO>();
+		for (OtherComments otherComments : otherCommentsList) {
+			 OtherCommentsBO otherCommentsBO = new OtherCommentsBO();
+			 BeanCopyUtil.copyBeanProperties(otherComments, otherCommentsBO, OTHERCOMMENTS_PROPERTIES);
+			 SocialProfilesBO socialProfilesBO = new  SocialProfilesBO();
+	         BeanCopyUtil.copyBeanProperties(otherComments.getSocialProfiles(), socialProfilesBO, SOCIALPROFILES_PROPERTIES);
+	         otherCommentsBO.setSocialProfilesBO(socialProfilesBO);
+	         CmfCustomerBO cmfCustomerBO  = new CmfCustomerBO();
+	 		 BeanCopyUtil.copyBeanProperties(otherComments.getCmfCustomer(), cmfCustomerBO, CMFCUSTOMER_PROPERTIES);
+	 		 otherCommentsBO.setCmfCustomerBO(cmfCustomerBO);
+	 		 otherCommentsBOList.add(otherCommentsBO);
+		}
+		
+        return otherCommentsBOList;
+	}
+}

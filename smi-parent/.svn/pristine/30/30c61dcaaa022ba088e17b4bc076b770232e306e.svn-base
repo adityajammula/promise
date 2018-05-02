@@ -1,0 +1,53 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * @author  Sowjanya.Pathakamuri
+ *
+ */
+public interface SocialMediaAccountsDAO extends BaseDAO<SocialMediaAccounts, Serializable> {
+	
+	final String STATUS_NOT_STARTED = "NOT_STARTED";
+	/**
+	 */
+	void updateProcessStatus(Integer id, String status) throws GenericDAOException;
+	
+	/**To get Social Media Accounts
+	 * @author tmangalapenta
+	 * @return List<SocialMediaAccounts>
+	 * @throws GenericDAOException
+	 */
+	List<SocialMediaAccounts> getSocialMediaAccounts() throws GenericDAOException;
+	
+	/**to retrieve the getSocialMediaAccountsByAccountType By accountTypeId
+	 * @param accountTypeId
+	 * @return SocialDataProcess
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */	
+	List<SocialMediaAccounts> getSocialMediaAccountsByAccountType(int accountTypeId) throws GenericDAOException;
+	 
+	/**
+	 * @author Venumadhava.Reddy
+	 * To get accounts based on financial ID
+	 * @param Id
+	 * @return
+	 * @throws GenericDAOException
+	 * returns List of accounts
+	 */
+	List<SocialMediaAccounts> getSocialMediaAccountsByFinanceId(int id) throws GenericDAOException;
+
+	SocialMediaAccounts getSocialMediaAccountsByAccountId(String accountId) throws GenericDAOException;
+	
+	SocialMediaAccounts getSocialMediaAccountsByCmfCase(int accountTypeId) throws GenericDAOException;
+	
+	List<SocialMediaAccounts> getAccountsByStatus(String[] status, int profileId) throws GenericDAOException;
+	
+	void addNewAccount(SocialMediaAccounts socialMediaAccounts) throws GenericDAOException;
+}

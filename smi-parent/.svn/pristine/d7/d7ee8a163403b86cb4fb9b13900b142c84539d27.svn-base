@@ -1,0 +1,143 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.RulesDAO;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleRulesColumns;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class RulesDAOImpl extends BaseDAOImpl<Rule, Serializable> implements RulesDAO {
+
+	public RulesDAOImpl() {
+		super(Rule.class);
+	}
+
+	/**
+	 * this method is to get the Rule by Rule Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return Rule
+	 */
+	public Rule getRuleByRuleId(int ruleId) throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("ruleId", ruleId));
+		
+		return searchUnique(expressionList, null);
+	}
+	
+	/**
+	 * this method is to get the list of Rule by Rule Name and RuleGroup Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return Rule
+	 */
+	public Rule getRulesByNameAndGroupId(String ruleName,int ruleGroupId) throws GenericDAOException {
+		
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("ruleGroup.ruleGroupId", ruleGroupId));
+		expressionList.add(Restrictions.eq("ruleName", ruleName));
+		return searchUnique(expressionList, null);
+		 
+		 
+	}
+
+	/**
+	 * this method is to get the list of Rule by RuleGroup Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of Rule
+	 */
+	public List<Rule> getRulesByGroupId(int ruleGroupId) throws GenericDAOException {
+		
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("ruleGroup.ruleGroupId", ruleGroupId));
+		
+		return search(expressionList, null);
+		 
+		 
+	}
+	
+	/**
+	 * @author Venumadhava.Reddy
+	 */
+	public Rule getFormulasByRuleId(int ruleId ) throws GenericDAOException{		 
+			
+			List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+			expressionList.add(Restrictions.eq("ruleId", ruleId));
+			
+			return searchUnique(expressionList, null); 			 
+	}
+	
+	
+	/**
+	 * @author tmangalapenta
+	 * @param Rule Entity
+	 * @return
+	 * @throws GenericDAOException
+	 */
+	public void editRule(Rule editRule) throws GenericDAOException {
+		 saveOrUpdate(editRule);
+	}
+	/**
+	 * @author kalyan
+	 * @param Rule
+	 * @return
+	 * @throws GenericDAOException
+	 */
+	public void saveRule(Rule rule) throws GenericDAOException {
+		 saveOrUpdate(rule);
+	}
+
+
+	public boolean isRuleNameExist(Rule rule) throws GenericDAOException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/**
+	 * this method is to get the list of Rule by RuleApp Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of Rule
+	 */
+	public List<Rule> getRulesByRuleAppId(int ruleAppId)
+			throws GenericDAOException {
+		String query = "FROM Rule WHERE ruleGroup.ruleFamily.ruleApps.appId="+ruleAppId;
+		return load(query);
+		}
+	
+	/**
+	 * this method is to get the list of Rule by RuleApp Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of Rule
+	 */
+	public List<Object[]> getExistingRelationshipsOfGlobalColumnById(Integer ruleColumnId)
+			throws GenericDAOException {
+		String query = "SELECT f.rule_family_name,rg.rule_group_name,r.rule_name FROM rule_rules_columns rc " +
+				"INNER JOIN rule r ON r.rule_id=rc.rule_id" +
+				"INNER JOIN rule_group rg ON rg.rule_group_id=r.rule_group_id" +
+				"INNER JOIN rule_family f ON f.rule_family_id=rg.rule_family_id" +
+				"where column_id="+ruleColumnId;
+		return loadWithsql(query);
+	}
+	 
+}

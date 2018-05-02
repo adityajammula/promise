@@ -1,0 +1,20 @@
+AppServices.factory('CustomerInformationService',function($http, $q, smiGenUtil){
+	
+    return{
+    	
+	     // Start getDemoGraphicData
+	     getDemoGraphicData:function(custId_id){
+		  		 var deferred = $q.defer();
+		  		 $http.get('cmfcustomer/'+custId_id+'',{
+		  		 }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	     }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	     });
+		  		return deferred.promise; 
+		 },// end getDemoGraphicData 
+	     
+	   
+        };
+});

@@ -1,0 +1,79 @@
+package com.zen.smi.service.helper;
+
+import static com.zen.smi.generic.utils.SmiConstants.SOCIAL_MEDIA_POSTS_PROPERTIES;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.log4j.Logger;
+import com.zen.smi.bo.SocialMediaPostsBO;
+import com.zen.smi.dao.entities.SocialMediaPosts;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+
+public final class SocialMediaPostsHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for SocialMediaPostsHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(SocialMediaPostsHelper .class);
+
+	/**
+	 * Instance of SocialMediaPostsHelper.
+	 */
+	private static SocialMediaPostsHelper  instance;
+
+	/**
+	 * Private constructor
+	 */
+	private SocialMediaPostsHelper() {
+
+	}
+	
+	
+	public List<SocialMediaPostsBO> convertSocialMediaEntityEntityToBO(List<SocialMediaPosts> socialMediaPostsList) {
+		LOGGER.debug("Starts convertSocialMediaEntityEntityToBO...");
+		List<SocialMediaPostsBO> socialMediaPostsBOList = new ArrayList<SocialMediaPostsBO>();
+		
+		for(SocialMediaPosts socialMediaPosts:socialMediaPostsList)
+		{	
+			SocialMediaPostsBO socialMediaPostsBO = convertSocialMediaEntityToSocialMediaBO(socialMediaPosts);			
+			socialMediaPostsBOList.add(socialMediaPostsBO);
+		}
+
+		LOGGER.debug("Ends convertSocialMediaEntityEntityToBO...");
+		return socialMediaPostsBOList;
+	}
+	
+	
+	public SocialMediaPostsBO convertSocialMediaEntityToSocialMediaBO(SocialMediaPosts socialMediaPosts) {
+		LOGGER.debug("Starts convertSocialMediaEntityToSocialMediaBO...");
+		SocialMediaPostsBO socialMediaPostsBO = new SocialMediaPostsBO();
+        BeanCopyUtil.copyBeanProperties(socialMediaPosts, socialMediaPostsBO, SOCIAL_MEDIA_POSTS_PROPERTIES);
+        LOGGER.debug("Ends convertSocialMediaEntityToSocialMediaBO...");
+	    return socialMediaPostsBO;
+	}
+	
+
+	/**
+	 * Singleton instance of StaffHelper.
+	 *
+	 * @return instance StaffHelper
+	 */
+	public static SocialMediaPostsHelper getInstance() {
+		if (instance == null) {
+			instance = new SocialMediaPostsHelper();
+		}
+		return instance;
+	}
+	
+	
+	public SocialMediaPosts convertSocialMediaToEntity(SocialMediaPostsBO socialMediaPostsBO) {
+		LOGGER.debug("Starts convertSocialMediaToEntity...");
+		SocialMediaPosts socialMediaPosts=new SocialMediaPosts();
+		BeanCopyUtil.copyBeanProperties(socialMediaPostsBO, socialMediaPosts , SOCIAL_MEDIA_POSTS_PROPERTIES);
+	    LOGGER.debug("Ends convertSocialMediaToEntity...");
+		return socialMediaPosts;
+	}
+	
+	
+	
+	
+}

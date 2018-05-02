@@ -1,0 +1,205 @@
+package com.zen.smi.cmf.service.helper;
+
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASE_CATEGORY;
+import static com.zen.smi.generic.utils.SmiConstants.SOCIALMEDIAACCOUNTS_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASE_PRIORITY_PROPERTIES;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.cmf.bo.CmfCaseBO;
+import com.zen.smi.cmf.bo.CmfCaseCategoryBO;
+import com.zen.smi.cmf.bo.CmfCasePriorityBO;
+import com.zen.smi.cmf.bo.SocialMediaAccountsBO;
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCaseCategory;
+import com.zen.smi.dao.entities.CmfCasePriority;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+
+public final class CmfCaseHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for StaffHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(CmfCaseHelper .class);
+
+	/**
+	 * Instance of StaffHelper.
+	 */
+	private static CmfCaseHelper  instance;
+
+	/**
+	 * Private constructor
+	 */
+	private CmfCaseHelper() {
+
+	}
+	
+	/**
+	 * Converts List of CmfCase entity to CmfCaseBO objects
+	 * @param Staff staff
+	 * @return List<CmfCaseBO>
+	 * @author tmangalapenta
+	 */
+	public List<CmfCaseBO> convertCmfCaseEntityToBO(List<CmfCase> cmfCases) {
+		LOGGER.debug("Starts convertCmfCaseEntityToBO...");
+		List<CmfCaseBO> cmfCaseBOList = new ArrayList<CmfCaseBO>();
+		for(CmfCase cmfCase:cmfCases)
+		{	
+			CmfCaseBO cmfCaseBO = convertcmfCaseEntiryToCmfCaseBO(cmfCase);
+			
+			cmfCaseBOList.add(cmfCaseBO);
+		}
+
+		LOGGER.debug("Ends convertCmfCaseEntityToBO...");
+		return cmfCaseBOList;
+	}
+	
+	
+	private CmfCaseBO convertcmfCaseEntiryToCmfCaseBO(CmfCase cmfCase) {
+		CmfCaseBO cmfCaseBO = new CmfCaseBO();
+////		String[] ruleProperties = {"ruleId","ruleName","ruleDescription","createdBy","updatedBy","createdDate","updatedDate","ruleType","cloneRuleId"};
+//        BeanCopyUtil.copyBeanProperties(rul, ruleBO, RULE_PROPERTIES);
+//		
+//        RuleGroup ruleGroup =  rul.getRuleGroup();
+//        RuleGroupBO ruleGroupBO = new  RuleGroupBO();
+////        String[] ruleGroupProperties = {"ruleGroupId","ruleGroupName","ruleGroupDescription","createdBy","updatedBy","createdDate","updatedDate"};
+//        BeanCopyUtil.copyBeanProperties(ruleGroup, ruleGroupBO, RULEGROUP_PROPERTIES);
+//        ruleBO.setRuleGroup(ruleGroupBO);
+//        
+//        RuleFamily ruleFamily =  ruleGroup.getRuleFamily();
+//        RuleFamilyBO ruleFamilyBO = new  RuleFamilyBO();
+////        String[] familyProperties = {"ruleFamilyId","ruleFamilyName","ruleFamilyDescription","createdBy","updatedBy","createdDate","updatedDate"};
+//        BeanCopyUtil.copyBeanProperties(ruleFamily, ruleFamilyBO, FAMILY_PROPERTIES);
+//        ruleGroupBO.setRuleFamily(ruleFamilyBO);
+//        
+//        Set<RuleFormula> ruleFormulas = rul.getRuleFormulas();
+//		if(ruleFormulas != null)
+//		{
+//			List<RuleFormulaBO> formulaList = new ArrayList<RuleFormulaBO>();
+//			ruleBO.setRuleFormulas(formulaList);
+//			
+//			for(RuleFormula formula:ruleFormulas)
+//			{
+//				if(formula != null)
+//				{
+//					RuleFormulaBO ruleFormulaBO = new RuleFormulaBO();
+////					String[] formulaProperties = {"ruleFormulaId","ruleFormulaName","createdBy","updatedBy","createdDate","updatedDate","ruleFormulaExpression"};
+//		            BeanCopyUtil.copyBeanProperties(formula, ruleFormulaBO, FORMULA_PROPERTIES);
+//		            ruleFormulaBO.setRuleFormulaShadowId(ruleFormulaBO.getRuleFormulaId());
+//		            formulaList.add(ruleFormulaBO);
+//				}
+//				
+//			}
+//		}	
+//
+//		
+//		Set<RuleRulesColumns> ruleColumns = rul.getRuleRulesColumnses();
+//		if(ruleColumns != null)
+//		{
+//			List<RuleRulesColumnsBO> ruleColumnsList = new ArrayList<RuleRulesColumnsBO>();
+//			
+//			for(RuleRulesColumns ruleCol:ruleColumns)
+//			{
+//				RuleColumns ruleColumn = ruleCol.getRuleColumns();
+//				RuleRulesColumnsBO ruleRulesColumnsBO = new RuleRulesColumnsBO();
+//				if(ruleColumn != null)
+//				{
+//					RuleColumnsBO ruleColumnsBO = new RuleColumnsBO();
+////					String[] ruleColumnProperties = {"ruleColumnId","ruleColumnName","ruleColumnText","createdBy","createdDate","updatedDate","ruleIsGlobal","ruleColumnDesc"};
+//		            BeanCopyUtil.copyBeanProperties(ruleColumn, ruleColumnsBO, RULECOLUMN_PROPERTIES);
+//		            ruleColumnsBO.setRuleShadowId(ruleColumnsBO.getRuleColumnId());
+//		            ruleRulesColumnsBO.setRuleColumns(ruleColumnsBO);
+//		            ruleColumnsList.add(ruleRulesColumnsBO);
+//				}
+//			}
+//			ruleBO.setRuleRulesColumnses(ruleColumnsList);
+//		}
+//	 return ruleBO;
+		return null;
+	}
+
+	/**
+	 * Singleton instance of StaffHelper.
+	 *
+	 * @return instance StaffHelper
+	 */
+	public static CmfCaseHelper getInstance() {
+		if (instance == null) {
+			instance = new CmfCaseHelper();
+		}
+		return instance;
+	}
+
+	public List<CmfCaseCategoryBO> convertCmfCaseCategoryEntityToBO(List<CmfCaseCategory> cmfCaseCategoryList) {
+		
+		LOGGER.debug("Starts convertCmfCaseCategoryEntityToBO...");
+		List<CmfCaseCategoryBO> cmfCaseCategoryBOList = new ArrayList<CmfCaseCategoryBO>();
+		for(CmfCaseCategory cmfCaseCategory:cmfCaseCategoryList)
+		{	
+			CmfCaseCategoryBO cmfCaseCategoryBO = convertCmfCaseCategoryEntiryToCmfCaseCategoryBO(cmfCaseCategory);
+			
+			cmfCaseCategoryBOList.add(cmfCaseCategoryBO);
+		}
+
+		LOGGER.debug("Ends convertCmfCaseCategoryEntityToBO...");
+		return cmfCaseCategoryBOList;
+		
+	}
+
+	private CmfCaseCategoryBO convertCmfCaseCategoryEntiryToCmfCaseCategoryBO(
+			CmfCaseCategory cmfCaseCategory) {
+			CmfCaseCategoryBO cmfCaseCategoryBO = new CmfCaseCategoryBO();
+        BeanCopyUtil.copyBeanProperties(cmfCaseCategory, cmfCaseCategoryBO, CMF_CASE_CATEGORY);
+        return cmfCaseCategoryBO;
+	}
+
+	public List<CmfCasePriorityBO> convertCmfCasePriorityEntityToBO(
+			List<CmfCasePriority> cmfCasePriorityList) {
+		LOGGER.debug("Starts convertCmfCasePriorityEntityToBO...");
+		List<CmfCasePriorityBO> cmfCasePriorityBOList = new ArrayList<CmfCasePriorityBO>();
+		for(CmfCasePriority cmfCasePriority:cmfCasePriorityList)
+		{	
+			CmfCasePriorityBO cmfCasePriorityBO = convertCmfCasePriorityEntiryToBO(cmfCasePriority);
+			
+			cmfCasePriorityBOList.add(cmfCasePriorityBO);
+		}
+
+		LOGGER.debug("Ends convertCmfCasePriorityEntityToBO...");
+		return cmfCasePriorityBOList;
+	}
+
+	private CmfCasePriorityBO convertCmfCasePriorityEntiryToBO(
+			CmfCasePriority cmfCasePriority) {
+		CmfCasePriorityBO cmfCasePriorityBO = new CmfCasePriorityBO();
+        BeanCopyUtil.copyBeanProperties(cmfCasePriority, cmfCasePriorityBO, CMF_CASE_PRIORITY_PROPERTIES);
+        return cmfCasePriorityBO;
+	}
+
+	public List<SocialMediaAccountsBO> convertSocialMediaAccountsEntityToBO(
+			List<SocialMediaAccounts> socialMediaAccountsList) {
+		LOGGER.debug("Starts convertSocialMediaAccountsEntityToBO...");
+		List<SocialMediaAccountsBO> socialMediaAccountsBOList = new ArrayList<SocialMediaAccountsBO>();
+		for(SocialMediaAccounts socialMediaAccounts:socialMediaAccountsList)
+		{	
+			SocialMediaAccountsBO socialMediaAccountsBO = convertSocialMediaAccountsEntiryToBO(socialMediaAccounts);
+			
+			socialMediaAccountsBOList.add(socialMediaAccountsBO);
+		}
+
+		LOGGER.debug("Ends convertSocialMediaAccountsEntityToBO...");
+		return socialMediaAccountsBOList;
+	}
+
+	private SocialMediaAccountsBO convertSocialMediaAccountsEntiryToBO(
+			SocialMediaAccounts socialMediaAccounts) {
+		SocialMediaAccountsBO socialMediaAccountsBO = new SocialMediaAccountsBO();
+        BeanCopyUtil.copyBeanProperties(socialMediaAccounts, socialMediaAccountsBO, SOCIALMEDIAACCOUNTS_PROPERTIES);
+        return socialMediaAccountsBO;
+	}
+	
+	
+}

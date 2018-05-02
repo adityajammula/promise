@@ -1,0 +1,14 @@
+package com.zen.smi.dao;
+
+import java.util.Date;
+import java.util.List;
+
+import com.zen.smi.dao.entities.SocialMediaAccountPosts;
+import com.zen.smi.dao.entities.SocialMediaPosts;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public interface SocialMediaAccountPostsDAO {
+	public List<SocialMediaAccountPosts> getSocialMediaPostsBySearchCriteria(Integer socialProfile,
+			List<Integer> socialMediaAccountIds, Date startDate, Date endDate)
+			throws GenericDAOException;
+}

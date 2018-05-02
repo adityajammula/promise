@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Personal health check</title>
+        <link rel="stylesheet" href="resources/styles/style.css">
+         <link rel="stylesheet" href="resources/styles/jquery.growl.css">
+         <script src='resources/scripts/jquery.min.js'></script>
+          <script src='resources/scripts/jquery.growl.js'></script>
+          <script>
+          $( document ).ready(function() {
+        	  var error = getUrlParameter('error');
+        	       	  if(error>0){
+        		  $.growl.error({ title: "Error", message: "Invalid Credentials!" });
+        	  }
+        	  
+        	});
+          var getUrlParameter = function getUrlParameter(sParam) {
+        	    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        	        sURLVariables = sPageURL.split('&'),
+        	        sParameterName,
+        	        i;
+
+        	    for (i = 0; i < sURLVariables.length; i++) {
+        	        sParameterName = sURLVariables[i].split('=');
+
+        	        if (sParameterName[0] === sParam) {
+        	            return sParameterName[1] === undefined ? true : sParameterName[1];
+        	        }
+        	    }
+        	};
+          </script>
+          
+  </head>
+  <body>
+   <img style="margin-top:0px;" src="resources/images/logo_main.png"/>
+    <div class="wrapper">
+   
+	<div class="container">
+		<h1>Welcome</h1>		
+		<form class="form" action="j_spring_security_check" method="POST">
+			<input type="text" placeholder="Username" name="j_username">
+			<input type="password" placeholder="Password" name="j_password">
+			<button type="submit" style="margin-left:60px;" id="login-button">Login</button>
+			<a href="/smi/signup" style="backgroung-color:#f2f2f2;cursor:pointer">Signup</a>
+		</form>
+		
+	</div>
+	
+	<ul class="bg-bubbles">
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+	</ul>
+</div>
+  </body>
+</html>

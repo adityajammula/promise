@@ -1,0 +1,17 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.entities.CmfCustomerOtp;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * @author tmangalapenta
+ *
+ */
+public interface CmfCustomerOtpDAO extends BaseDAO<CmfCustomerOtp, Serializable> {
+
+	CmfCustomerOtp getOTPByCustomerId(Integer customerId)throws GenericDAOException;
+		
+}

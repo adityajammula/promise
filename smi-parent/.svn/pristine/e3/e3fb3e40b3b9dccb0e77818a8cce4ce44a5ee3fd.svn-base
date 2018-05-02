@@ -1,0 +1,64 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.StCaseDAO;
+import com.zen.smi.dao.StCaseTransactionDAO;
+import com.zen.smi.dao.entities.StCase;
+import com.zen.smi.dao.entities.StCaseTransaction;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class StCaseTransactionDAOImpl extends BaseDAOImpl<StCaseTransaction, Serializable> implements StCaseTransactionDAO {
+
+	public StCaseTransactionDAOImpl() {
+		super(StCaseTransaction.class);
+	}
+
+	public List<StCaseTransaction> getAllFundsTransferByTransactions(Integer accountTypeId,Integer socialMediaAccountsId,Integer statusTypeId) throws GenericDAOException {
+		boolean where = false;
+		StringBuffer fromClause = new StringBuffer("FROM StCaseTransaction ");
+		StringBuffer whereClause = new StringBuffer();
+		
+		if(null != socialMediaAccountsId && socialMediaAccountsId>0) {
+			where = true;
+			whereClause.append("socialMediaAccountsByStSocialMediaAccountId="+socialMediaAccountsId);
+		}
+		if(null != statusTypeId && statusTypeId>0) {
+			if(where) {
+				whereClause.append(" and stStatus.stStatusId = "+statusTypeId);
+			} else {
+				whereClause.append(" stStatus.stStatusId = "+statusTypeId);
+			}
+			where = true;
+		}
+		if(null != accountTypeId && accountTypeId>0) {
+			if(where) {
+				whereClause.append(" and socialProfiles = "+accountTypeId);
+			} else {
+				whereClause.append(" socialProfiles = "+accountTypeId);
+			}
+			where = true;
+		}
+		
+		if(where) {
+			fromClause.append(" where ");
+			fromClause.append(whereClause);
+		}
+		fromClause.append(" ORDER BY updatedDate DESC");
+	
+		return load(fromClause.toString());
+	}
+	
+	public StCaseTransaction getById(String stCaseTransactionId) throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("stCaseTransactionId", Integer.parseInt(stCaseTransactionId)));
+		
+		return searchUnique(expressionList, null);
+	}
+
+}

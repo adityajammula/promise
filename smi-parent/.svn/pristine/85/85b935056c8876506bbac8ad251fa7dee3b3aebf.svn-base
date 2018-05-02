@@ -1,0 +1,52 @@
+<div class="container-fluid" data-ng-init="initialize()">
+	 <script type="text/ng-template" id="editBrach.html">
+      <div class="modal-header">
+      <h3 class="modal-title custom-font">{{acctTitle}}</h3>
+      </div>
+     <div class="modal-body">
+       <table st-table="rowCollection" class="st-table table table-striped table-custom">
+         <tbody>
+            <tr>
+                <td>Enter Branch</td>
+                <td><input type="text" class="form-control input-sm" name="branchName" value="" ng-model="branchName"></td>
+            </tr>
+         </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+         <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="saveBranch()"><i class="fa fa-arrow-right"></i> Save</button>
+         <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> Cancel</button>
+		 <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-hide="deleteBtn" ng-click="deleteBranch()"><i class="fa fa-arrow-left"></i>Delete</button>
+      </div>
+     </script>
+	<div class="row tile">
+		  <div class="tile-header bg-greensea dvd dvd-btm tile">
+		          <h1 class="custom-font"><strong>Account Relationships</strong></h1>
+		  </div>
+		  <div class="col-md-12 form-group dvd dvd-btm">
+		  				<div class="form-group col-sm-10 text-right">
+							<button type="button" class="btn btn-blue btn-rounded" data-ng-click="addParent()">Add New Parent</button>
+						</div>
+						<div class="form-group col-sm-1 text-right">
+							<button type="button"  class="btn btn-blue btn-rounded" data ng-click="addChild()">Add New Child</button>
+						</div>
+		  </div>
+		  <div class=" col-md-12 dvd dvd-btm tile">
+		  		  <!-- <abn-tree tree-data="treeData" tree-control="my_tree" ng-dblclick="editBranch()" expand-level="2" initial-selection="Granny Smith" icon-leaf="fa fa-file-o" icon-expand="fa fa-plus" icon-collapse="fa fa-minus"></abn-tree> -->
+		  		  
+		  		   <custom_tree tree-data="treeData" tree-control="my_tree" ng-dblclick="editBranch()" expand-level="2" initial-selection="Granny Smith" icon-leaf="item_icon" icon-expand="fa fa-plus" icon-collapse="fa fa-minus"></custom_tree>
+		  </div>
+		  <div class=" col-md-12 tile">
+		    <button class="col-sm-1 btn btn-success btn-ef btn-ef-5 btn-ef-5a " data-ng-click="goViewGroups()"> <i class="fa fa-reply"></i> <span>Back</span> </button>
+		  </div>		  
+
+	<!-- 	<div  class="col-md-12 tile">
+				    <div class="col-md-6 text-right">
+						<button type="button" class="btn btn-blue btn-rounded">Save</button>
+				   </div>
+				    <div class="col-md-1 text-center">
+						<button type="button" class="btn btn-darkgray btn-rounded">Reset</button>
+				   </div> 
+		 </div> -->
+	</div>
+</div>

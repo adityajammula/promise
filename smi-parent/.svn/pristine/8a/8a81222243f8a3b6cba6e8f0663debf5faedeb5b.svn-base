@@ -1,0 +1,47 @@
+package com.zen.smi.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.OtherCommentsBO;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.service.OtherCommentsService;
+
+public class OtherCommentsServiceImpl extends BaseService implements OtherCommentsService{
+	
+	private static final Logger LOGGER = Logger.getLogger(OtherCommentsServiceImpl.class);
+
+	public List<OtherCommentsBO> getOtherCommentsBO() throws BusinessException {
+		List<OtherCommentsBO> finalBO= new ArrayList<OtherCommentsBO>();
+		try {
+			List<Object[]> objects=getOtherCommentsDAO().getAllOtherCommentsByAccountType();
+			if(objects.size() >0){
+				for(int i = 0; i < objects.size(); i++) {
+					Object[] value=objects.get(i);
+					 if ((String)value[0] != null  && (Integer)value[1] != null && ((String)value[2] != null ||(String)value[3] != null)) {
+						 OtherCommentsBO bo = new OtherCommentsBO();
+						 bo.setMessage((String)value[0]);
+						 bo.setAccountTypeId((Integer)value[1]);
+						 if(null!=(String)value[2]){
+							 bo.setFacebookId((String)value[2]);
+						 }else{
+							 
+							 bo.setTwitterId((String)value[3]);
+						 }
+						 
+						
+						 finalBO.add(bo);
+					 }
+				}
+				
+			}
+		} catch (GenericDAOException e) {
+			throw new BusinessException(e);
+		}
+		return finalBO;
+	}
+
+}

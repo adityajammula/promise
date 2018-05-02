@@ -1,0 +1,62 @@
+angular.module('smiApp')
+.controller('OpenFacebookCasesController', function ($scope,$state,$modal) { 
+	$scope.isSelect = true;
+	 $scope.moreOptions =[{id:1, name:'Group Selected Cases'},
+	                      {id:2, name:'Assign Selected Cases'},
+					      {id:3, name:'Append Notes'},
+						  {id:4, name:'Mark As Spam'}];
+					   $scope.fbCases = [];
+						   $scope.fbCases = [
+							{
+								"id" : 0,
+								"caseCategory" : "Debit Card",
+								"customerName" : "Adithya",
+								"casePriority" : "High",
+								"socialAccount" : "@account1",
+								"caseStatus" : "Escalated",
+								"image" : "resources/images/random-avatar1.jpg",
+								"content" : "Commodo sunt minim incididunt ipsum dolore veniam nulla Lorem reprehenderit officia. Ut esse cillum quis deserunt.",
+								"date" : "16:54, 24.11.2014"
+							},
+							{
+								"id" : 1,
+								"caseCategory" : "Credit Card",
+								"customerName" : "Karthik",
+								"casePriority" : "Medium",
+								"socialAccount" : "@account2",
+								"caseStatus" : "Assighned",
+								"image" : "resources/images/random-avatar2.jpg",
+								"content" : "Commodo sunt minim incididunt ipsum dolore veniam nulla Lorem reprehenderit officia. Ut esse cillum quis deserunt.",
+								"date" : "16:54, 24.11.2014"
+							} ];
+					$scope.caseDetails = function() {
+						$state.go('viewindividualcasedetails');
+					};
+					var selectedCases = [];
+					$scope.getSelectedValue = function(id) {
+						$scope.isSelect = false;
+						selectedCases.push(id);
+					};
+					$scope.getOption = function(id) {
+						if (id == 2) {
+							var modalInstance = $modal.open({
+								templateUrl : 'assignCase.html',
+								controller : 'AssignCaseController',
+							});
+
+						} else if (id == 3) {
+								var modalInstance = $modal.open({
+									templateUrl : 'appendNote.html',
+									controller : 'AppendNotesController',
+								});
+					
+
+						}
+					};
+			  
+}).controller('AppendNotesController', function() {
+	
+	
+}).controller('AssignCaseController', function() {
+});
+

@@ -1,0 +1,112 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('DashboardController', function ($scope,$rootScope,dashboardService,$moment) {
+
+	  $rootScope.initializeSocialDataAnalysisGraph = function(){
+		  $scope.facebookData = [];
+		  dashboardService.getRealChartData(1).then(function(response){
+				 var responseData = response.data.data;
+				 $scope.populateFacebookData(responseData);
+		  }); 
+		  dashboardService.getRealChartData(2).then(function(response){
+				 var responseData = response.data.data;
+				 $scope.populateTwitterGraphData(responseData);
+		  });
+	  }
+	  
+	  $rootScope.initializeSocialDataAnalysisGraph();
+	  $scope.populateFacebookData = function(responseData)
+	  {
+		  $scope.facebookData = [];
+			 for(var i=0; i<responseData.length; i++)
+			  {
+				 var obj = {};
+				 var yearStr = responseData[i].x;
+				 obj.year = yearStr;
+				 var valueStr = responseData[i].y;
+				 var value = 0;
+				 if(valueStr != null && valueStr != "")
+				 {
+					 value = parseFloat(valueStr);
+				 }
+				 obj.score = value;
+				 $scope.facebookData.push(obj);
+				 
+			  }
+	  }
+	  
+	  $scope.populateTwitterGraphData = function(responseData)
+	  {
+		  $scope.twitterData = [];
+			 for(var i=0; i<responseData.length; i++)
+			  {
+				 var obj = {};
+				 var yearStr = responseData[i].x;
+				 obj.year = yearStr;
+				 var valueStr = responseData[i].y;
+				 var value = 0;
+				 if(valueStr != null && valueStr != "")
+				 {
+					 value = parseFloat(valueStr);
+				 }
+				 obj.score = value;
+				 $scope.twitterData.push(obj);
+				 
+			  }
+	  }
+  $scope.options = {
+    colors: ['#a2d200'],
+    series: {
+      shadowSize: 0,
+      lines: {
+        show: true,
+        fill: 0.1,
+        color: '#FF0000',
+        width: 22,
+        value: .80 * 0 // Need to set this probably as a var.
+      }
+    },
+   
+    xaxis:{
+    	plotLines: [{
+    	    color: 'red', // Color value
+    	    dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+    	    value: 3, // Value of where the line will appear
+    	    width: 2 // Width of the line    
+    	  }]
+    },
+    yaxis: {
+    	plotLines: [{
+    	    color: 'red', // Color value
+    	    dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+    	    value: 3, // Value of where the line will appear
+    	    width: 2 // Width of the line    
+    	  }]
+    },
+  
+    grid: {
+      hoverable: true,
+      clickable: true,
+      borderWidth: 0,
+      color: '#ccc'
+    },
+    tooltip: true,
+    tooltipOpts: {
+      content: '%y%',
+      defaultTheme: false,
+      shifts: {
+        x: 0,
+        y: 20
+      }
+    }
+  };
+  
+ });

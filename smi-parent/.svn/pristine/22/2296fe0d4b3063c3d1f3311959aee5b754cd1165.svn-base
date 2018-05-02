@@ -1,0 +1,339 @@
+package com.zen.smi.cmf.service.impl;
+
+import com.zen.smi.dao.CmfCaseCategoryDAO;
+import com.zen.smi.dao.CmfCaseDAO;
+import com.zen.smi.dao.CmfCaseHistoryDAO;
+import com.zen.smi.dao.CmfCaseNoteCategoriesDAO;
+import com.zen.smi.dao.CmfCaseNoteDAO;
+import com.zen.smi.dao.CmfCasePriorityDAO;
+import com.zen.smi.dao.CmfCaseStatusDAO;
+import com.zen.smi.dao.CmfCustomerAccountDAO;
+import com.zen.smi.dao.CmfCustomerDAO;
+import com.zen.smi.dao.CmfCustomerSocialDataDAO;
+import com.zen.smi.dao.FinancialInstitutionsDAO;
+import com.zen.smi.dao.FlumeAgentsDAO;
+import com.zen.smi.dao.FlumeAgentsProcessDAO;
+import com.zen.smi.dao.RolesDAO;
+import com.zen.smi.dao.SocialDataProcessDAO;
+import com.zen.smi.dao.SocialMediaAccountsDAO;
+import com.zen.smi.dao.SocialProfileDAO;
+import com.zen.smi.dao.StCaseDAO;
+import com.zen.smi.dao.StTransactionCaseHistoryDAO;
+import com.zen.smi.dao.StTransactionTypeDAO;
+import com.zen.smi.dao.StStatusDAO;
+import com.zen.smi.dao.UsersDAO;
+import com.zen.smi.dao.UsersRolesDAO;
+
+public class CmfBaseService {
+
+	private UsersDAO userDAO;
+	private UsersRolesDAO usersRolesDAO;
+	private RolesDAO rolesDAO;
+	private SocialMediaAccountsDAO socialMediaAccountsDAO;
+	private SocialProfileDAO socialProfileDAO;
+	private FinancialInstitutionsDAO financialInstitutionsDAO;
+	private FlumeAgentsProcessDAO flumeAgentsProcesssDAO;
+	private FlumeAgentsDAO flumeAgentsDAO;
+	private SocialDataProcessDAO socialDataProcessDAO;
+	private CmfCaseDAO cmfCaseDAO;
+	private CmfCaseHistoryDAO cmfCaseHistoryDAO;
+	private CmfCaseNoteDAO cmfCaseNoteDAO;
+	private CmfCasePriorityDAO cmfCasePriorityDAO;
+	private CmfCaseStatusDAO cmfCaseStatusDAO;
+	private CmfCustomerAccountDAO  cmfCustomerAccountDAO;
+	private CmfCustomerDAO cmfCustomerDAO;
+	private CmfCustomerSocialDataDAO cmfCustomerSocialDataDAO;
+	private CmfCaseCategoryDAO cmfCaseCategoryDAO;
+	private CmfCaseNoteCategoriesDAO cmfCaseNoteCategoriesDAO;
+	private StStatusDAO stStatusDAO;
+	private StTransactionTypeDAO stTransactionTypeDAO; 
+	private StCaseDAO stCaseDAO;
+	private StTransactionCaseHistoryDAO stTransactionCaseHistoryDAO;
+	
+	/**
+	 * @return the userDAO
+	 */
+	public UsersDAO getUserDAO() {
+		return userDAO;
+	}
+	/**
+	 * @param userDAO the userDAO to set
+	 */
+	public void setUserDAO(UsersDAO userDAO) {
+		this.userDAO = userDAO;
+	}
+	/**
+	 * @return the usersRolesDAO
+	 */
+	public UsersRolesDAO getUsersRolesDAO() {
+		return usersRolesDAO;
+	}
+	/**
+	 * @param usersRolesDAO the usersRolesDAO to set
+	 */
+	public void setUsersRolesDAO(UsersRolesDAO usersRolesDAO) {
+		this.usersRolesDAO = usersRolesDAO;
+	}
+	/**
+	 * @return the rolesDAO
+	 */
+	public RolesDAO getRolesDAO() {
+		return rolesDAO;
+	}
+	/**
+	 * @param rolesDAO the rolesDAO to set
+	 */
+	public void setRolesDAO(RolesDAO rolesDAO) {
+		this.rolesDAO = rolesDAO;
+	}
+	/**
+	 * @return the socialMediaAccountsDAO
+	 */
+	public SocialMediaAccountsDAO getSocialMediaAccountsDAO() {
+		return socialMediaAccountsDAO;
+	}
+	/**
+	 * @param socialMediaAccountsDAO the socialMediaAccountsDAO to set
+	 */
+	public void setSocialMediaAccountsDAO(
+			SocialMediaAccountsDAO socialMediaAccountsDAO) {
+		this.socialMediaAccountsDAO = socialMediaAccountsDAO;
+	}
+	/**
+	 * @return the socialProfileDAO
+	 */
+	public SocialProfileDAO getSocialProfileDAO() {
+		return socialProfileDAO;
+	}
+	/**
+	 * @param socialProfileDAO the socialProfileDAO to set
+	 */
+	public void setSocialProfileDAO(SocialProfileDAO socialProfileDAO) {
+		this.socialProfileDAO = socialProfileDAO;
+	}
+	/**
+	 * @return the financialInstitutionsDAO
+	 */
+	public FinancialInstitutionsDAO getFinancialInstitutionsDAO() {
+		return financialInstitutionsDAO;
+	}
+	/**
+	 * @param financialInstitutionsDAO the financialInstitutionsDAO to set
+	 */
+	public void setFinancialInstitutionsDAO(
+			FinancialInstitutionsDAO financialInstitutionsDAO) {
+		this.financialInstitutionsDAO = financialInstitutionsDAO;
+	}
+	/**
+	 * @return the flumeAgentsProcesssDAO
+	 */
+	public FlumeAgentsProcessDAO getFlumeAgentsProcesssDAO() {
+		return flumeAgentsProcesssDAO;
+	}
+	/**
+	 * @param flumeAgentsProcesssDAO the flumeAgentsProcesssDAO to set
+	 */
+	public void setFlumeAgentsProcesssDAO(
+			FlumeAgentsProcessDAO flumeAgentsProcesssDAO) {
+		this.flumeAgentsProcesssDAO = flumeAgentsProcesssDAO;
+	}
+	/**
+	 * @return the flumeAgentsDAO
+	 */
+	public FlumeAgentsDAO getFlumeAgentsDAO() {
+		return flumeAgentsDAO;
+	}
+	/**
+	 * @param flumeAgentsDAO the flumeAgentsDAO to set
+	 */
+	public void setFlumeAgentsDAO(FlumeAgentsDAO flumeAgentsDAO) {
+		this.flumeAgentsDAO = flumeAgentsDAO;
+	}
+	/**
+	 * @return the socialDataProcessDAO
+	 */
+	public SocialDataProcessDAO getSocialDataProcessDAO() {
+		return socialDataProcessDAO;
+	}
+	/**
+	 * @param socialDataProcessDAO the socialDataProcessDAO to set
+	 */
+	public void setSocialDataProcessDAO(SocialDataProcessDAO socialDataProcessDAO) {
+		this.socialDataProcessDAO = socialDataProcessDAO;
+	}
+	/**
+	 * @return the cmfCaseDAO
+	 */
+	public CmfCaseDAO getCmfCaseDAO() {
+		return cmfCaseDAO;
+	}
+	/**
+	 * @param cmfCaseDAO the cmfCaseDAO to set
+	 */
+	public void setCmfCaseDAO(CmfCaseDAO cmfCaseDAO) {
+		this.cmfCaseDAO = cmfCaseDAO;
+	}
+	/**
+	 * @return the cmfCaseHistoryDAO
+	 */
+	public CmfCaseHistoryDAO getCmfCaseHistoryDAO() {
+		return cmfCaseHistoryDAO;
+	}
+	/**
+	 * @param cmfCaseHistoryDAO the cmfCaseHistoryDAO to set
+	 */
+	public void setCmfCaseHistoryDAO(CmfCaseHistoryDAO cmfCaseHistoryDAO) {
+		this.cmfCaseHistoryDAO = cmfCaseHistoryDAO;
+	}
+	/**
+	 * @return the cmfCaseNoteDAO
+	 */
+	public CmfCaseNoteDAO getCmfCaseNoteDAO() {
+		return cmfCaseNoteDAO;
+	}
+	/**
+	 * @param cmfCaseNoteDAO the cmfCaseNoteDAO to set
+	 */
+	public void setCmfCaseNoteDAO(CmfCaseNoteDAO cmfCaseNoteDAO) {
+		this.cmfCaseNoteDAO = cmfCaseNoteDAO;
+	}
+	/**
+	 * @return the cmfCasePriorityDAO
+	 */
+	public CmfCasePriorityDAO getCmfCasePriorityDAO() {
+		return cmfCasePriorityDAO;
+	}
+	/**
+	 * @param cmfCasePriorityDAO the cmfCasePriorityDAO to set
+	 */
+	public void setCmfCasePriorityDAO(CmfCasePriorityDAO cmfCasePriorityDAO) {
+		this.cmfCasePriorityDAO = cmfCasePriorityDAO;
+	}
+	/**
+	 * @return the cmfCaseStatusDAO
+	 */
+	public CmfCaseStatusDAO getCmfCaseStatusDAO() {
+		return cmfCaseStatusDAO;
+	}
+	/**
+	 * @param cmfCaseStatusDAO the cmfCaseStatusDAO to set
+	 */
+	public void setCmfCaseStatusDAO(CmfCaseStatusDAO cmfCaseStatusDAO) {
+		this.cmfCaseStatusDAO = cmfCaseStatusDAO;
+	}
+	/**
+	 * @return the cmfCustomerAccountDAO
+	 */
+	public CmfCustomerAccountDAO getCmfCustomerAccountDAO() {
+		return cmfCustomerAccountDAO;
+	}
+	/**
+	 * @param cmfCustomerAccountDAO the cmfCustomerAccountDAO to set
+	 */
+	public void setCmfCustomerAccountDAO(CmfCustomerAccountDAO cmfCustomerAccountDAO) {
+		this.cmfCustomerAccountDAO = cmfCustomerAccountDAO;
+	}
+	/**
+	 * @return the cmfCustomerDAO
+	 */
+	public CmfCustomerDAO getCmfCustomerDAO() {
+		return cmfCustomerDAO;
+	}
+	/**
+	 * @param cmfCustomerDAO the cmfCustomerDAO to set
+	 */
+	public void setCmfCustomerDAO(CmfCustomerDAO cmfCustomerDAO) {
+		this.cmfCustomerDAO = cmfCustomerDAO;
+	}
+	/**
+	 * @return the cmfCustomerSocialDataDAO
+	 */
+	public CmfCustomerSocialDataDAO getCmfCustomerSocialDataDAO() {
+		return cmfCustomerSocialDataDAO;
+	}
+	/**
+	 * @param cmfCustomerSocialDataDAO the cmfCustomerSocialDataDAO to set
+	 */
+	public void setCmfCustomerSocialDataDAO(
+			CmfCustomerSocialDataDAO cmfCustomerSocialDataDAO) {
+		this.cmfCustomerSocialDataDAO = cmfCustomerSocialDataDAO;
+	}
+	
+	/**
+	 * @return the cmfCaseCategoryDAO
+	 */
+	public CmfCaseCategoryDAO getCmfCaseCategoryDAO() {
+		return cmfCaseCategoryDAO;
+	}
+	/**
+	 * @param cmfCaseCategoryDAO the cmfCaseCategoryDAO to set
+	 */
+	public void setCmfCaseCategoryDAO(CmfCaseCategoryDAO cmfCaseCategoryDAO) {
+		this.cmfCaseCategoryDAO = cmfCaseCategoryDAO;
+	}
+	/**
+	 * @return the cmfCaseNoteCategoriesDAO
+	 */
+	public CmfCaseNoteCategoriesDAO getCmfCaseNoteCategoriesDAO() {
+		return cmfCaseNoteCategoriesDAO;
+	}
+	/**
+	 * @param cmfCaseNoteCategoriesDAO the cmfCaseNoteCategoriesDAO to set
+	 */
+	public void setCmfCaseNoteCategoriesDAO(
+			CmfCaseNoteCategoriesDAO cmfCaseNoteCategoriesDAO) {
+		this.cmfCaseNoteCategoriesDAO = cmfCaseNoteCategoriesDAO;
+	}
+
+	/**
+	 * @return the stTransactionTypeDAO
+	 */
+	public StTransactionTypeDAO getStTransactionTypeDAO() {
+		return stTransactionTypeDAO;
+	}
+	/**
+	 * @param stTransactionTypeDAO the stTransactionTypeDAO to set
+	 */
+	public void setStTransactionTypeDAO(StTransactionTypeDAO stTransactionTypeDAO) {
+		this.stTransactionTypeDAO = stTransactionTypeDAO;
+	}
+	/**
+	 * @return the stStatusDAO
+	 */
+	public StStatusDAO getStStatusDAO() {
+		return stStatusDAO;
+	}
+	/**
+	 * @param stStatusDAO the stStatusDAO to set
+	 */
+	public void setStStatusDAO(StStatusDAO stStatusDAO) {
+		this.stStatusDAO = stStatusDAO;
+	}
+	/**
+	 * @return the stCaseDAO
+	 */
+	public StCaseDAO getStCaseDAO() {
+		return stCaseDAO;
+	}
+	/**
+	 * @param stCaseDAO the stCaseDAO to set
+	 */
+	public void setStCaseDAO(StCaseDAO stCaseDAO) {
+		this.stCaseDAO = stCaseDAO;
+	}
+	/**
+	 * @return the stTransactionCaseHistoryDAO
+	 */
+	public StTransactionCaseHistoryDAO getStTransactionCaseHistoryDAO() {
+		return stTransactionCaseHistoryDAO;
+	}
+	/**
+	 * @param stTransactionCaseHistoryDAO the stTransactionCaseHistoryDAO to set
+	 */
+	public void setStTransactionCaseHistoryDAO(
+			StTransactionCaseHistoryDAO stTransactionCaseHistoryDAO) {
+		this.stTransactionCaseHistoryDAO = stTransactionCaseHistoryDAO;
+	}
+
+	
+}

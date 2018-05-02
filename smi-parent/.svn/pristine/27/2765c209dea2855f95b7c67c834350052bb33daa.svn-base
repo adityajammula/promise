@@ -1,0 +1,74 @@
+package com.zen.smi.bo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * This class contains Rule Business data.
+ *
+ * @author Tirumala Vasu
+ */
+public class RuleEngineBO {
+	
+	@SerializedName("rule")
+	private RuleBO ruleBO;
+	@SerializedName("rule_families")
+	private List<RuleFamilyBO> ruleFamilyBOs = new ArrayList<RuleFamilyBO>(0);
+	@SerializedName("rule_groups")
+	private List<RuleGroupBO> ruleGroupBOs = new ArrayList<RuleGroupBO>(0);
+	@SerializedName("rule_apps")
+	private List<RuleAppsBO> ruleAppsBOs = new ArrayList<RuleAppsBO>(0);
+	/**
+	 * @return the ruleFamilyBOs
+	 */
+	public List<RuleFamilyBO> getRuleFamilyBOs() {
+		return ruleFamilyBOs;
+	}
+	/**
+	 * @param ruleFamilyBOs the ruleFamilyBOs to set
+	 */
+	public void setRuleFamilyBOs(List<RuleFamilyBO> ruleFamilyBOs) {
+		this.ruleFamilyBOs = ruleFamilyBOs;
+	}
+	/**
+	 * @return the ruleGroupBOs
+	 */
+	public List<RuleGroupBO> getRuleGroupBOs() {
+		return ruleGroupBOs;
+	}
+	/**
+	 * @param ruleGroupBOs the ruleGroupBOs to set
+	 */
+	public void setRuleGroupBOs(List<RuleGroupBO> ruleGroupBOs) {
+		this.ruleGroupBOs = ruleGroupBOs;
+	}
+	/**
+	 * @return the ruleBO
+	 */
+	public RuleBO getRuleBO() {
+		return ruleBO;
+	}
+	/**
+	 * @param ruleBO the ruleBO to set
+	 */
+	public void setRuleBO(RuleBO ruleBO) {
+		this.ruleBO = ruleBO;
+	}
+	/**
+	 * @return the ruleAppsBOs
+	 */
+	public List<RuleAppsBO> getRuleAppsBOs() {
+		return ruleAppsBOs;
+	}
+	/**
+	 * @param ruleAppsBOs the ruleAppsBOs to set
+	 */
+	public void setRuleAppsBOs(List<RuleAppsBO> ruleAppsBOs) {
+		this.ruleAppsBOs = ruleAppsBOs;
+	}
+	
+	
+	
+}

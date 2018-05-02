@@ -1,0 +1,52 @@
+'use strict';
+
+/**
+ * @author Sowjanya.Pathakamuri
+ * @ngdoc function
+ * @name smiApp.controller:CustomerInformationController
+ * @description
+ * # CustomerInformationController
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('CustomerInformationController', function ($scope,$state,$modal,$location,$stateParams,CustomerInformationService) {
+	   /* alert("sow");
+	    alert($stateParams.customer_id);*/
+	  CustomerInformationService.getDemoGraphicData(1).then(function(response) {
+		 /* alert("sow");
+		  alert(JSON.stringify(response));*/
+			$scope.custInfo = response.data.cmf_customer_list;
+			/*alert(JSON.stringify($scope.custInfo));*/
+			$scope.firstName = $scope.custInfo[0].firstName;
+			$scope.lastName = $scope.custInfo[0].lastName;
+			$scope.middleName = $scope.custInfo[0].middleName;
+			$scope.mobileNumber = $scope.custInfo[0].mobileNumber;
+			$scope.emailId = $scope.custInfo[0].emailId;
+			$scope.landlineNumber = $scope.custInfo[0].landlineNumber;
+			$scope.facebookId = $scope.custInfo[0].facebookId;
+			$scope.twitterId = $scope.custInfo[0].twitterId;
+			$scope.address = $scope.custInfo[0].address;
+			$scope.alternateAddress = $scope.custInfo[0].alternateAddress;
+		});
+	 
+	  $scope.linkAccount = function() {
+				var modalInstance = $modal.open({
+					templateUrl : 'linkAccount.html',
+					controller : 'LinkAccountController',
+				});
+
+		};
+		
+		
+		 /*This method to navigate back to Previous*/
+		 
+		 $scope.goOpenFacebook= function(){
+			  $state.go('openfacebookcases');
+		 };
+		 
+		 
+	  
+}).controller('LinkAccountController', function() {
+	
+	
+});

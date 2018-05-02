@@ -1,0 +1,18 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCasePriority;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * @author tmangalapenta
+ *
+ */
+public interface CmfCasePriorityDAO extends BaseDAO<CmfCasePriority, Serializable> {
+
+	CmfCasePriority getCmfCasePriorityByCmfCase(String caseId) throws GenericDAOException;
+	
+}

@@ -1,0 +1,86 @@
+package com.zen.smi.cmf.service.impl;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.cmf.bo.CmfCaseNoteBO;
+import com.zen.smi.cmf.exception.BusinessException;
+import com.zen.smi.cmf.service.CmfCaseNoteService;
+import com.zen.smi.cmf.service.helper.CmfCaseNoteHelper;
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCaseNote;
+import com.zen.smi.dao.entities.CmfCaseNoteCategories;
+import com.zen.smi.dao.entities.CmfCaseStatus;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.generic.utils.MessageUtil;
+
+public class CmfCaseNoteServiceImpl extends CmfBaseService implements CmfCaseNoteService {
+
+	/**
+	 * Logger for CmfCaseServiceImpl class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(CmfCaseNoteServiceImpl.class);
+	
+	public void appendNoteToSelectedCases(String noteDescription,List<String> caseIdList) throws BusinessException {
+
+		LOGGER.debug("Starts appendNoteToSelectedCases....");
+		CmfCase cmfCase = null;
+		try { 
+			
+			for (String caseId : caseIdList) {
+				cmfCase = null;
+				cmfCase = getCmfCaseDAO().findById(caseId);
+				CmfCaseNote caseNote = new CmfCaseNote();
+				caseNote.setNoteDescription(noteDescription);
+				caseNote.setCmfCase(cmfCase);
+				getCmfCaseNoteDAO().saveOrUpdate(caseNote);
+			}
+						
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends appendNoteToSelectedCases....");
+	}
+
+	public List<CmfCaseNoteBO> getCaseNoteDetails(String caseId)
+			throws BusinessException {
+		LOGGER.debug("Starts getCaseNoteDetails....");
+		List<CmfCaseNoteBO> cmfCaseNotesBOList;
+		try { 
+
+			List<CmfCaseNote> cmfCaseNoteList = getCmfCaseNoteDAO().getCmfCaseNoteByCaseId(caseId);
+			Set<CmfCaseNote> cmfCaseNoteSet = new HashSet<CmfCaseNote>(0);
+			for (CmfCaseNote cmfCaseNote : cmfCaseNoteList) { 
+				
+				CmfCaseStatus cmfStatus = getCmfCaseStatusDAO().getCmfCaseStatusByNote(cmfCaseNote.getNoteId());
+				if(null != cmfStatus) {
+					cmfCaseNote.setCmfCaseStatus(cmfStatus);
+				}
+				CmfCaseNoteCategories cmfCaseNoteCategories = getCmfCaseNoteCategoriesDAO().getCmfCaseNoteCategoriesByNote(cmfCaseNote.getNoteId());
+				if(null != cmfCaseNoteCategories) {
+					cmfCaseNote.setCmfCaseNoteCategories(cmfCaseNoteCategories);
+				}
+				cmfCaseNoteSet.add(cmfCaseNote);
+			}
+			
+			cmfCaseNotesBOList =  CmfCaseNoteHelper.getInstance().convertCmfCaseNotesEntityToBO(cmfCaseNoteSet);
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends getCaseNoteDetails....");
+		
+		return cmfCaseNotesBOList;
+	}
+		
+}

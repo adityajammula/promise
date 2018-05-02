@@ -1,0 +1,23 @@
+package com.zen.smi.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+
+public class FlumeAgentsProcessListBO {
+
+	@SerializedName("agent_processes")
+	private List<FlumeAgentsProcessBO> agentProcesses;
+
+	public List<FlumeAgentsProcessBO> getAgentProcesses() {
+		return agentProcesses;
+	}
+
+	public void setAgentProcesses(List<FlumeAgentsProcessBO> agentProcesses) {
+		this.agentProcesses = agentProcesses;
+	}
+
+	
+
+}

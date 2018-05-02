@@ -1,0 +1,125 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.RuleColumnsDAO;
+import com.zen.smi.dao.RuleGroupDAO;
+import com.zen.smi.dao.RuleRuleColumnsDAO;
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.entities.RuleRulesColumns;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.generic.utils.MessageUtil;
+
+/**
+ * @author tmangalapenta 
+ *
+ */
+public class RuleRuleColumnsDAOImpl extends BaseDAOImpl<RuleRulesColumns, Serializable> implements RuleRuleColumnsDAO {
+
+	public RuleRuleColumnsDAOImpl() {
+			super(RuleRulesColumns.class);
+		}
+	/**to retrieve the Rule Columns
+	 * @return List of Rule Rule Columns
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	public List<RuleRulesColumns> getRuleColumnsByRuleId(int ruleId)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("rule.ruleId", ruleId));
+		
+		return search(expressionList, null);
+	}
+
+	/**to Save the Rule Columns
+	 * @return Void
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	public void saveRuleRuleColumns(RuleRulesColumns ruleRuleColumns)
+			throws GenericDAOException {
+		saveOrUpdate(ruleRuleColumns);		
+	}
+
+	/**to Update the Rule Columns
+	 * @return Void
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	public void updateRuleRuleColumns(RuleRulesColumns ruleRuleColumns)
+			throws GenericDAOException {
+		saveOrUpdate(ruleRuleColumns);	
+		
+	}
+
+	/**to Delete the Rule Columns
+	 * @return Void
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	public void deleteRuleRuleColumns(RuleRulesColumns ruleRuleColumns)
+			throws GenericDAOException {
+		delete(ruleRuleColumns);
+		
+	}
+	/**to retrieve the Rule Rule Columns
+	 * @return RuleRulesColumns
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	//expressionList.add(Restrictions.eq("ruleColumns.ruleColumnId", ruleColumnId)); Not working
+	public RuleRulesColumns getRuleRuleColumn(Integer ruleColumnId,
+			Integer ruleId) throws GenericDAOException {
+		Session session = null;
+		List<RuleRulesColumns> results = null;
+        try{
+        	session = getSessionFactory().openSession();
+        	Criteria crit = session.createCriteria(RuleRulesColumns.class);
+			crit.add(Restrictions.eq("rule.ruleId", ruleId));
+			crit.add(Restrictions.eq("ruleColumns.ruleColumnId", ruleColumnId));
+			results = crit.list();
+		
+        }
+        catch (HibernateException ex){
+            if(session!=null && session.getTransaction()!=null){
+                session.getTransaction().rollback();
+            }
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+        if(results == null || results.isEmpty()) {
+    		return null;
+    	}
+    	if(results.size() > 1){
+            throw new GenericDAOException(MessageUtil.getInstance().getMessage("NOT_UNIQUE_RECORDS", new Object[]{null}));
+        }
+        return results.get(0);
+//		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+//		expressionList.add(Restrictions.eq("rule.ruleId", ruleId));
+//		expressionList.add(Restrictions.eq("ruleColumns.ruleColumnId", ruleColumnId));
+//		return searchUnique(expressionList, null);
+	}
+
+
+	
+}
+	
+
+

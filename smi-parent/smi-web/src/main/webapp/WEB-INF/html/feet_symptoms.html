@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)https://0.s3.envato.com/files/156110003/fixed.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title>promise</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="author" content="admin">
+	<link href="resources/styles/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
+	<link href="resources/styles/css.css" rel="stylesheet" type="text/css">
+	<link href="resources/styles/demo.min.css" rel="stylesheet" type="text/css" media="all">
+			<link rel="stylesheet" type="text/css"  href="resources/styles/reset.css" media="screen" /> 
+		<link rel="stylesheet" type="text/css"  href="resources/styles/grid.css" media="screen" />
+        <link rel="stylesheet" type="text/css"  href="resources/styles/styles.css" media="screen" />
+         <link rel="stylesheet" type="text/css"  href="resources/styles/style1.css" media="screen" />
+        <link rel="stylesheet" type="text/css"  href="resources/styles/jquery.wysiwyg.css" media="screen" />
+        <link rel="stylesheet" type="text/css"  href="resources/styles/tablesorter.css" media="screen" />
+        <link rel="stylesheet" type="text/css"  href="resources/styles/thickbox.css" media="screen" />
+        <link rel="stylesheet" type="text/css"  href="resources/styles/theme-blue.css" media="screen" />
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+  <script src="resources/scripts/jquery.min.js" type="text/javascript"></script>
+  <!-- Montserrat Sans -->
+  <link href='http://fonts.googleapis.com/css?family=Montserrat:400, 700' rel='stylesheet' type='text/css'>  
+      
+		<style>
+			.wrapper {
+    background: #50a3a2;
+    background: -webkit-linear-gradient(top left, #50a3a2 0%, #53e3a6 100%);
+    background: linear-gradient(to bottom right, #50a3a2 0%, #53e3a6 100%);
+   
+}
+		</style>
+<style type="text/css"> #u-left-panel{ min-height: 800px; } .content-panel{ min-height: 720px;} </style><style type="text/css">.oridomi-active{background-color:transparent !important;background-image:none !important;-webkit-box-sizing:border-box !important;border:none !important;outline:none !important;padding:0 !important;-webkit-transform-style:preserve-3d !important;-webkit-mask:none !important;position:relative;}.oridomi-clone{margin:0 !important;-webkit-box-sizing:border-box !important;overflow:hidden !important;display:block !important;}.oridomi-holder{width:100%;position:absolute;top:0;bottom:0;-webkit-transform-style:preserve-3d;}.oridomi-stage{width:100%;height:100%;position:absolute;-webkit-transform:translate3d(-9999px, 0, 0);margin:0;padding:0;-webkit-transform-style:preserve-3d;}.oridomi-stage-left{-webkit-perspective-origin:0% 50%;}.oridomi-stage-right{-webkit-perspective-origin:100% 50%;}.oridomi-stage-top{-webkit-perspective-origin:50% 0%;}.oridomi-stage-bottom{-webkit-perspective-origin:50% 100%;}.oridomi-shader{width:100%;height:100%;position:absolute;opacity:0;top:0;left:0;pointer-events:none;-webkit-transition-property:opacity;}.oridomi-shader-left{background:-webkit-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%);}.oridomi-shader-right{background:-webkit-linear-gradient(right, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%);}.oridomi-shader-top{background:-webkit-linear-gradient(top, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%);}.oridomi-shader-bottom{background:-webkit-linear-gradient(bottom, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%);}.oridomi-content{margin:0 !important;position:relative !important;float:none !important;-webkit-box-sizing:border-box !important;overflow:hidden !important;}.oridomi-mask{width:100%;height:100%;position:absolute;overflow:hidden;-webkit-transform:translate3d(0, 0, 0);outline:1px solid transparent;}.oridomi-panel{width:100%;height:100%;padding:0;position:absolute;-webkit-transition-property:-webkit-transform;-webkit-transform-origin:left;-webkit-transform-style:preserve-3d;}.oridomi-panel-h{-webkit-transform-origin:top;}.oridomi-stage-right .oridomi-panel{-webkit-transform-origin:right;}.oridomi-stage-bottom .oridomi-panel{-webkit-transform-origin:bottom;}</style></head>
+<script>
+$(document).ready(function(){
+   
+$.ajax({
+	  url: "current_user",
+	  type: "GET",
+	  cache: false,
+	  success: function(response){
+	   
+		  var key= $.parseJSON(response);
+		  var username=key.data.userName;
+		 $("#userName").html(username);
+	  }
+	});
+});
+
+function displaySub(id){
+	
+	for(var i=1;i<9;i++){
+		
+		$("#sub"+i).hide();
+		
+	}
+	$("#sub"+id).show();
+	
+}</script>
+
+<body class="skin-polaris">
+	<div id="u-app-wrapper" class="panel-fixed collapse-true">
+		<div id="u-topbar" style="
+    background: #50a3a2;
+    background: -webkit-linear-gradient(top left, #50a3a2 0%, #53e3a6 100%);
+    background: linear-gradient(to bottom right, #50a3a2 0%, #53e3a6 100%);">
+			<div class="title">
+				Promis<br>
+				<span class="title-sub">personalized health check</span>
+			</div>
+			<span class="left-panel-toggle">
+				<i class="fa fa-bars"></i>
+			</span>
+			<ul class="topbar-button list-unstyled">
+				<li class="message-btn">
+					<a href="javascript:void(0);"><i class="fa fa-envelope-o"></i><em class="em-blue"></em></a>
+				</li>
+				<li class="notify-btn">
+					<a href="javascript:void(0);"><i class="fa fa-bell-o"></i><em class="em-orange"></em></a>
+				</li>
+			</ul>
+			<ul class="topbar-user list-unstyled">
+				<li class="dropdown">
+					<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+						
+						<span class="topbar-username">LOGOUT<i class="fa fa-angle-down"></i></span>
+						<span class="topbar-userimage"><img src="resources/images/user.jpe" alt="user-image"></span>
+					</a>
+					
+				</li>
+			</ul>
+		</div>
+		<div id="u-left-panel" class="u-left-panel16">
+			<div class="panel-user-wrapper style1">
+				<div class="panel-user">
+					<img src="resources/images/user.jpe" alt="user-image">
+				</div>
+				<div id="userName" class="panel-user-name" style="margin-bottom:20px;">
+					
+				</div>
+				
+			</div>
+			<div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 487px;"><div id="u-left-menu" style="overflow: hidden; width: auto; height: 487px;">
+				<ul class="left-menu-wrapper list-unstyled">
+					<li class="left-menu-parent left-menu-active">
+						<a href="home">
+							<span class="left-menu-link-icon">
+								<i class="fa fa-home"></i>
+							</span>
+							<span class="left-menu-link-info">
+								<span class="link-name">HOME</span>
+							</span>
+						</a>
+					</li>
+			
+		
+					<li class="left-menu-parent">
+						<a href="profile">
+							<span class="left-menu-link-icon">
+								<i class="fa fa-user"></i>
+							</span>
+							<span class="left-menu-link-info">
+								<span class="link-name">PROFILE</span>
+								<span class="link-state"></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent">
+						<a href="#">
+							<span class="left-menu-link-icon">
+								<i class="fa fa-ambulance"></i>
+							</span>
+							<span class="left-menu-link-info">
+								<span class="link-name">HEALTH CENTER</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					
+					</li>
+					</ul>
+					
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">HOSPITALS</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">HISTORY</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">MEDICATION</span>
+							</span>
+						</a>
+					</li>
+				</ul><!--Main ul-->
+			</div><div class="slimScrollBar" style="width: 7px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px; height: 414.631px; background: rgb(255, 255, 255);"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; opacity: 0.2; z-index: 90; right: 1px; background: rgb(51, 51, 51);"></div></div>
+		</div>
+		<div class="content-wrapper">
+			<div class="content-panel content-shrink">
+				<div class="col-xs-12">
+        <div class="grid_7" style="margin-left:200px;">
+            
+            <ul>
+					
+					<li  class="left-menu-parent left-menu-active" style="width:400px">
+						<a href="#">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Symptoms of the feet</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a id="1" onclick="displaySub(this.id);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">foot cut(laceration)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a id="2" onclick="displaySub(this.id);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">foot itching</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a id="3" onclick="displaySub(this.id);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">foot numbness(paresthesias)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					
+					<li class="left-menu-parent ">
+						<a id="4" onclick="displaySub(this.id);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">foot pain</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+					<a id="5" onclick="displaySub(this.id);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">foot redness</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					</ul>
+            </div><!-- End .grid_7 -->
+             <div id="sub1" class="grid_7" style="display:none;margin-left:600px;margin-top:-320px;">
+            
+            <ul>
+					
+					<li class="left-menu-parent left-menu-active" style="width:400px">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Causes for foot cut(laceration)</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Blood vessel injury</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Foreign body in a wound</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">puncture wound ,foot</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Tendon laceration(tendon cut)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Traumatic nerve injury</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					
+					</ul>
+            </div><!-- End .grid_7 -->
+             <div id="sub2" class="grid_7" style="display:none;margin-left:600px;margin-top:-320px;">
+            
+            <ul>
+					
+					<li class="left-menu-parent left-menu-active" style="width:400px">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Causes for Foot Itching</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Allergic reaction</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Bed Bugs</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Body lice</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Insect bite</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">medication reaction</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					
+					</ul>
+            </div><!-- End .grid_7 -->
+             <div id="sub3" class="grid_7" style="display:none;margin-left:600px;margin-top:-320px;">
+            
+            <ul>
+					
+					<li  class="left-menu-parent left-menu-active" style="width:400px">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Causes for foot numbness(paresthesias)</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Alcoholism</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Diabetes</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Fracture(broken bone)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Cerebral vascular accident(stroke)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Multiple sclerosis(MS)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					
+					</ul>
+            </div><!-- End .grid_7 -->
+             <div id="sub4" class="grid_7" style="display:none;margin-left:600px;margin-top:-320px;">
+            
+            <ul>
+					
+					<li class="left-menu-parent left-menu-active" style="width:400px">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Causes for foot pain</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Calluses and corns</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Cellulitis(skin infection)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">flat feet(pes planus)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">foot sprain</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">hammer toes</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					
+					</ul>
+            </div><!-- End .grid_7 -->
+             <div id="sub5" class="grid_7" style="display:none;margin-left:600px;margin-top:-320px;">
+            
+            <ul>
+					
+					<li  class="left-menu-parent left-menu-active" style="width:400px">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Causes for foot redness</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Bee sting</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Body lice</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Burns
+</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">chemical burn</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="javascript:void(0);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">foot ulcer</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					
+					</ul>
+            </div><!-- End .grid_7 -->
+					<div class="panel-transfer-temp"></div>
+					
+				</div>
+			</div>
+			
+		
+		
+		</div>
+		
+		<!--
+			STYLE SWITCHER
+			INFO -> Ideal for Demo purposes only. Please remove after complete setup
+		-->
+ 
+	</div><!--Global-->
+
+	<!--COMBINED FILE-->
+	
+
+
+</body></html>

@@ -1,0 +1,29 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.CmfCaseCategoryDAO;
+import com.zen.smi.dao.CmfCaseHistoryDAO;
+import com.zen.smi.dao.entities.CmfCaseCategory;
+import com.zen.smi.dao.entities.CmfCaseHistory;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfCaseCategoryDAOImpl extends BaseDAOImpl<CmfCaseCategory, Serializable> implements CmfCaseCategoryDAO {
+
+	public CmfCaseCategoryDAOImpl() {
+		super(CmfCaseCategory.class);
+	}
+
+	public CmfCaseCategory getCaseCategoryById(Integer id)throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("categoryId", id));		
+		return searchUnique(expressionList, null);
+	}
+	
+	
+}

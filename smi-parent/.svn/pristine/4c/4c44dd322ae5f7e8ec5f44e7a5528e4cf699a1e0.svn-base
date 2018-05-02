@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+          "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+
+	<session-factory>
+		<property name="connection.url">jdbc:mysql://192.168.160.164:3306/smi_production</property>
+		<property name="connection.username">hadoop</property>
+		<property name="connection.password">hadoop</property>
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="hibernate.show_sql">false</property>
+		<property name="hibernate.hbm2ddl.auto">none</property>
+		<property name="hibernate.current_session_context_class">thread</property>
+		
+		<!-- configuration pool via c3p0-->
+		<property name="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+		<property name="hibernate.c3p0.max_size">15</property>
+		<property name="hibernate.c3p0.max_statements">0</property>
+		<property name="hibernate.c3p0.min_size">3</property>
+		<property name="hibernate.c3p0.timeout">25200</property>
+		<property name="hibernate.c3p0.autoCommitOnClose">false</property>
+		<property name="hibernate.c3p0.acquireRetryDelay">1000</property>
+		<property name="hibernate.c3p0.acquireRetryAttempts">60</property>
+		<property name="hibernate.c3p0.breakAfterAcquireFailure">false</property>
+		<!--  determines how many connections at a time c3p0 will try to acquire when the pool is exhausted.  -->
+		<property name="hibernate.c3p0.acquire_increment">1</property>
+        <property name="hibernate.c3p0.idle_test_period">14400</property>
+        <property name="hibernate.c3p0.preferredTestQuery">select 1;</property>
+        
+        <!-- mappings for annotated classes -->
+        <mapping class="com.zen.smi.dao.entities.CmfCase"/> 
+        <mapping class="com.zen.smi.dao.entities.CmfCaseCategory"/> 
+        <mapping class="com.zen.smi.dao.entities.CmfCaseHistory"/>
+        <mapping class="com.zen.smi.dao.entities.CmfCaseNote"/>
+        <mapping class="com.zen.smi.dao.entities.CmfCaseNoteCategories"/> 
+        <mapping class="com.zen.smi.dao.entities.CmfCasePriority"/> 
+        <mapping class="com.zen.smi.dao.entities.CmfCaseStatus"/> 
+        <mapping class="com.zen.smi.dao.entities.CmfCustomer"/> 
+        <mapping class="com.zen.smi.dao.entities.CmfCustomerAccount"/> 
+        <mapping class="com.zen.smi.dao.entities.CmfCustomerSocialData"/> 
+        <mapping class="com.zen.smi.dao.entities.FinancialInstitutions"/>
+        <mapping class="com.zen.smi.dao.entities.FlumeAgents"/> 
+        <mapping class="com.zen.smi.dao.entities.RuleApps"/> 
+        <mapping class="com.zen.smi.dao.entities.FlumeAgentsProcess"/> 
+        <mapping class="com.zen.smi.dao.entities.Messages"/>
+        <mapping class="com.zen.smi.dao.entities.Posts"/>
+        <mapping class="com.zen.smi.dao.entities.Roles"/>
+        <mapping class="com.zen.smi.dao.entities.Rule"/>
+        <mapping class="com.zen.smi.dao.entities.RuleColumns"/>
+        <mapping class="com.zen.smi.dao.entities.RuleFamily"/>
+        <mapping class="com.zen.smi.dao.entities.RuleFormula"/>
+        <mapping class="com.zen.smi.dao.entities.RuleGroup"/>
+        <mapping class="com.zen.smi.dao.entities.RuleRulesColumns"/>
+        <mapping class="com.zen.smi.dao.entities.SocialDataProcess"/>
+        <mapping class="com.zen.smi.dao.entities.SocialMediaAccounts"/>
+        <mapping class="com.zen.smi.dao.entities.SocialProfiles"/>
+        <mapping class="com.zen.smi.dao.entities.Users"/>
+        <mapping class="com.zen.smi.dao.entities.UsersRoles"/>
+		<mapping class="com.zen.smi.dao.entities.StCase"/> 
+		<mapping class="com.zen.smi.dao.entities.StStatus"/>
+		<mapping class="com.zen.smi.dao.entities.StTemplateMessage"/> 
+		<mapping class="com.zen.smi.dao.entities.StTransactionCaseHistory"/>  
+		<mapping class="com.zen.smi.dao.entities.StTransactionType"/>
+        <mapping class="com.zen.smi.dao.entities.OtherComments"/>  
+		<mapping class="com.zen.smi.dao.entities.CmfCustomerOtp"/>    
+		<mapping class="com.zen.smi.dao.entities.SocialDataAnalysis"/>  
+		<mapping class="com.zen.smi.dao.entities.SocialMediaPosts"/>   
+		<mapping class="com.zen.smi.dao.entities.SocialMediaAccountPosts"/>    
+		<mapping class="com.zen.smi.dao.entities.StCaseBalanceInquiry"/>  
+		<mapping class="com.zen.smi.dao.entities.StCaseTransaction"/> 	
+		<mapping class="com.zen.smi.dao.entities.ScheduleJobs"/> 	
+		
+	</session-factory>
+
+
+</hibernate-configuration>

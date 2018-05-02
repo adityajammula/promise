@@ -1,0 +1,54 @@
+package com.zen.smi.service.helper;
+
+import static com.zen.smi.generic.utils.SmiConstants.SOCIALDATA_ANALYSIS_PROPERTIES;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.SocialDataAnalysisBO;
+import com.zen.smi.dao.entities.SocialDataAnalysis;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+
+public final class SocialDataAnalysisHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for SocialMediaPostsHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(SocialDataAnalysisHelper .class);
+
+	/**
+	 * Instance of SocialMediaPostsHelper.
+	 */
+	private static SocialDataAnalysisHelper  instance;
+
+	/**
+	 * Private constructor
+	 */
+	private SocialDataAnalysisHelper() {
+
+	}
+	
+	/**
+	 * Singleton instance of StaffHelper.
+	 *
+	 * @return instance StaffHelper
+	 */
+	public static SocialDataAnalysisHelper getInstance() {
+		if (instance == null) {
+			instance = new SocialDataAnalysisHelper();
+		}
+		return instance;
+	}
+	
+	
+	public SocialDataAnalysis convertSocialDataAnalysisBOToEntity(SocialDataAnalysisBO socialDataAnalysisBO) {
+		LOGGER.debug("Starts convertSocialDataAnalysisBOToEntity...");
+		SocialDataAnalysis socialDataAnalysis=new SocialDataAnalysis();
+		BeanCopyUtil.copyBeanProperties(socialDataAnalysisBO, socialDataAnalysis , SOCIALDATA_ANALYSIS_PROPERTIES);
+	    LOGGER.debug("Ends convertSocialDataAnalysisBOToEntity...");
+		return socialDataAnalysis;
+	}
+	
+	
+	
+	
+}

@@ -1,0 +1,615 @@
+package com.zen.smi.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zen.rules.bo.RuleTestSummaryListBO;
+import com.zen.smi.bo.GlobalColumnsDropDownBO;
+import com.zen.smi.bo.RuleAppsBO;
+import com.zen.smi.bo.RuleBO;
+import com.zen.smi.bo.RuleColumnsBO;
+import com.zen.smi.bo.RuleColumnsListBO;
+import com.zen.smi.bo.RuleEngineBO;
+import com.zen.smi.bo.RuleFormulaBO;
+import com.zen.smi.bo.RuleFormulasBO;
+import com.zen.smi.bo.RuleListBO;
+import com.zen.smi.bo.RuleTestSummaryBO;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.exception.FormulaException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.RuleService;
+
+/**
+ * RulesPageController class manage rule related data. Data from screens is
+ * transferred to the controller and passed to services/dao.
+ * 
+ * @author kalyan
+ */
+@Controller
+@RequestMapping("/rules")
+public class RulesController extends BaseController {
+
+	/**
+	 * Logger for RulesPageController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(RulesController.class);
+
+	@Autowired
+	public RuleService ruleService;
+
+	/**
+	 * This method is to get all the rules information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return RuleListBO
+	 */
+	
+	@RequestMapping(value = "/list/{app_Id}", method = RequestMethod.GET)
+	public @ResponseBody String getRulesPageData(@PathVariable("app_Id") int appId,HttpServletRequest request,
+			HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			
+			List<RuleBO> rules = ruleService.getRules(appId);
+			RuleListBO ruleList = new RuleListBO();
+			ruleList.setRules(rules);
+			resultJson = gson.toJson(ruleList, RuleListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	/**
+	 * This method is to get all the rule Apps information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return RuleListBO
+	 */
+	@RequestMapping(value = "/appslist", method = RequestMethod.GET)
+	public @ResponseBody String getAllRuleApps(HttpServletRequest request,
+			HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			
+			List<RuleAppsBO> ruleApps = ruleService.getAllRuleApps();
+			RuleListBO ruleAppsList = new RuleListBO();
+			ruleAppsList.setRuleApps(ruleApps);
+			resultJson = gson.toJson(ruleAppsList, RuleListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	
+	/**
+	 * this method is to create a new rule in db.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public @ResponseBody
+	String createRule(@RequestBody String addRuleJson,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		LOGGER.info("starts saveOrUpdateRule");
+		String resultJson = "" ;
+		boolean result = true;	
+		String resultValidateJson = null;
+		try {
+			resultValidateJson = ruleService.getRuleEngineResults(addRuleJson);
+			RuleTestSummaryListBO bo=gson.fromJson(resultValidateJson,RuleTestSummaryListBO.class);
+			if(!checkAllFormulasAreValid(bo))
+			{
+				throw new FormulaException("Zen_Rules","",resultValidateJson);
+			}
+			
+			RuleBO rule = gson.fromJson(addRuleJson, RuleBO.class);
+			System.out.println("rule" + rule.getRuleName());
+			if (rule != null) {
+				ruleService.saveRule(rule);
+				resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("RULE_CREATED", null));
+			}
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (FormulaException fe) {
+			fe.printStackTrace();
+			resultJson =  handleFormulaError(fe);
+		}
+		catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+	
+		LOGGER.info("ends saveOrUpdateRule");
+		return resultJson;
+	}
+	
+	/**
+	 * this method is to update a existing rule in db.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public @ResponseBody
+	String saveOrUpdateRule(@RequestBody String editRuleJson,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		LOGGER.info("starts saveOrUpdateRule");
+		String resultJson = null;
+		String resultValidateJson = null;
+		try { 
+			resultValidateJson = ruleService.getRuleEngineResults(editRuleJson);
+			RuleTestSummaryListBO bo=gson.fromJson(resultValidateJson,RuleTestSummaryListBO.class);
+			if(!checkAllFormulasAreValid(bo))
+			{
+				throw new FormulaException("Zen_Rules","",resultValidateJson);
+			}
+			
+			RuleBO rule = gson.fromJson(editRuleJson, RuleBO.class);
+			
+			if (rule != null) {
+				List<RuleFormulasBO> ruleFormulasBO=rule.getRuleRulesFormulas();
+				List<RuleFormulaBO> ruleFormulaBO= new ArrayList<RuleFormulaBO>();
+				for(RuleFormulasBO formulasBO:ruleFormulasBO){
+				
+					ruleFormulaBO.add(formulasBO.getRuleFormulaBO());
+				}
+				rule.setRuleFormulas(ruleFormulaBO);
+				ruleService.editRule(rule);
+				resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("RULE_CREATED", null));
+			}
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (FormulaException fe) {
+					fe.printStackTrace();
+					resultJson =  handleFormulaError(fe);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("ends saveOrUpdateRule");
+		return resultJson;
+	}
+
+	/**
+	 * This method is used to get rule related data along with the generic
+	 * family and group data which will be used by the edit rules page.
+	 * 
+	 * @param ruleId
+	 * @param request
+	 * @param response
+	 * @return RuleEngineBO
+	 */
+	@RequestMapping(value = "/{rule_id}", method = RequestMethod.GET)
+	public @ResponseBody
+	String getRuleDataById(@PathVariable("rule_id") int ruleId,
+			HttpServletRequest request, HttpServletResponse response) {
+		LOGGER.info("starts getRuleDataById");
+		String resultJson = null;
+		try {
+			
+			RuleEngineBO rule = ruleService.getRule(ruleId);
+			resultJson = gson.toJson(rule, RuleEngineBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		LOGGER.info("ends getRuleDataById");
+		return resultJson;
+	}
+
+	/**
+	 * This method is for delete a rule.
+	 * 
+	 * @author Venumadhava.Reddy
+	 * @param ruleJson
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/destroy", method = RequestMethod.POST)
+	public @ResponseBody
+	String deleteRule(@PathVariable("rule_id") int ruleId,
+			HttpServletRequest request, HttpServletResponse response) {
+		LOGGER.info("start deleteRule");
+		String resultJson = null;
+		try {
+			
+			RuleBO ruleBO = new RuleBO();
+			ruleBO.setRuleId(ruleId);
+			ruleService.deleteRule(ruleBO);
+			resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("RULE_DELETED", null));
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("ends deleteRule");
+		return resultJson;
+	}
+
+	@RequestMapping(value = "/editRule", method = RequestMethod.POST)
+	public String editRule(@ModelAttribute("editRule") RuleBO editRuleBO,
+			BindingResult result) {
+		try {
+			ruleService.editRule(editRuleBO);
+		} catch (BusinessException e) {
+			LOGGER.info("exception json from rules page controller");
+		}
+		return "redirect:view_rules.html";
+	}
+	
+	/**
+	 * This method is to get all the Global Rule Columns information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return RuleColumnsBO
+	 */
+	@RequestMapping(value = "/global_columns/list", method = RequestMethod.GET)
+	public @ResponseBody String getGlobalRuleColumns(HttpServletRequest request,
+			HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			List<RuleColumnsBO> globalRuleColumns =  ruleService.getGlobalRuleColumns();
+			RuleColumnsListBO columnsList= new RuleColumnsListBO();
+			columnsList.setRuleColumnsBO(globalRuleColumns);
+			resultJson = gson.toJson(columnsList, RuleColumnsListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+    
+	/**
+	 * This method is to get all the Global Rule Columns information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return RuleColumnsBO
+	 */
+	@RequestMapping(value = "/global_columns_new_dropdown_values/list", method = RequestMethod.GET)
+	public @ResponseBody String getNewDropDownValues(HttpServletRequest request,
+			HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			Set<String>globalRuleColumns =  ruleService.getNewDropDownValues();
+			GlobalColumnsDropDownBO globalColumnsDropDownBO=new GlobalColumnsDropDownBO();
+			globalColumnsDropDownBO.setGlobalColumns(globalRuleColumns);
+			resultJson = gson.toJson(globalColumnsDropDownBO,GlobalColumnsDropDownBO.class);
+			resultJson = handleSuccess(resultJson, null);
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	/**
+	 * this method is to create a new global column in db.
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/global_column/create", method = RequestMethod.POST)
+	public @ResponseBody
+	String saveGlobalColumn(@RequestBody String addGlobalColumnJson,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		LOGGER.info("starts saveOrUpdateGlobalColumn");
+		String resultJson = "" ;
+		try {
+			RuleColumnsBO ruleColumn = gson.fromJson(addGlobalColumnJson, RuleColumnsBO.class);
+			if (ruleColumn != null) {
+				ruleService.saveGlobalColumn(ruleColumn);
+				resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("GLOBAL_COLUMN_CREATED", null));
+			}
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("ends saveOrUpdateRule");
+		return resultJson;
+	}
+	
+	/**
+	 * this method is to create a new global column in db.
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/global_column/update", method = RequestMethod.POST)
+	public @ResponseBody
+	String updateGlobalColumn(@RequestBody String addGlobalColumnJson,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		LOGGER.info("starts saveOrUpdateGlobalColumn");
+		String resultJson = "" ;
+		try {
+			RuleColumnsBO ruleColumn = gson.fromJson(addGlobalColumnJson, RuleColumnsBO.class);
+			if (ruleColumn != null) {
+				ruleService.updateGlobalColumn(ruleColumn);
+				resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("GLOBAL_COLUMN_UPDATED", null));
+			}
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("ends saveOrUpdateRule");
+		return resultJson;
+	}
+	
+	
+	/**
+	 * This method is to get  a new global column from  db based on rule id.
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/global_column/show/{rule_Column_Id}", method = RequestMethod.GET)
+	public @ResponseBody
+	String getGlobalColumn(@PathVariable("rule_Column_Id") Integer ruleColumnId,
+			HttpServletRequest request, HttpServletResponse response) {
+
+		LOGGER.info("starts getGlobalColumn");
+		String resultJson = "" ;
+		try {
+			if (ruleColumnId != null) {
+				RuleColumnsBO ruleColumnBO =ruleService.getGlobalColumnById(ruleColumnId);
+				resultJson=gson.toJson(ruleColumnBO,RuleColumnsBO.class);
+				resultJson = handleSuccess(resultJson, null);
+			}
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("ends getGlobalColumn");
+		return resultJson;
+	}
+	
+	/**
+	 * This method is to get all the rules information based on RuleGroupId which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return RuleBO
+	 */
+	@RequestMapping(value = "/bygroupid/{rule_Group_Id}", method = RequestMethod.GET)
+	public @ResponseBody String getRulesByGroupId(@PathVariable("rule_Group_Id") Integer ruleGroupId,HttpServletRequest request,
+			HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			
+			List<RuleBO> rules = ruleService.getRulesByGroupId(ruleGroupId);
+			RuleListBO ruleList = new RuleListBO();
+			ruleList.setRules(rules);
+			resultJson = gson.toJson(ruleList, RuleListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	/**
+	 * This method is to get all the rules information based on Rule Name RuleGroupId which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return RuleBO
+	 */
+	@RequestMapping(value = "/checkIfExists/{rule_Group_Id}/{rule_Name}", method = RequestMethod.GET)
+	public @ResponseBody String getRulesByNameAndGroupId(@PathVariable("rule_Group_Id") Integer ruleGroupId,@PathVariable("rule_Name") String ruleName,HttpServletRequest request,
+			HttpServletResponse response) {		
+		String resultJson = null;
+		try {
+			ruleService.checkIfRuleExists(ruleName,ruleGroupId);
+			resultJson = handleSuccess(resultJson, null);
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}		
+		return resultJson;
+	}
+	
+	/**
+	 * @author kalyan, Venu
+	 * this method is to create a Rule Test.The json is converted to Bo which is
+	 * will be passed to service and entity to dao
+	 * 
+	 * @param ruleTestJson
+	 * @param request
+	 * @param response
+	 * @return resultJson
+	 */
+	@RequestMapping(value = "/test", method = RequestMethod.POST)
+	public @ResponseBody
+	String testRule(@RequestBody String ruleTestJson,
+			HttpServletRequest request, HttpServletResponse response) {
+		LOGGER.info("Starts ruleTest...");
+		String resultJson = null;
+		try {
+			List<RuleTestSummaryBO> ruleTestSummary = new ArrayList<RuleTestSummaryBO>(0);
+			RuleTestSummaryBO ruleTestBO = gson.fromJson(ruleTestJson,RuleTestSummaryBO.class);
+			ruleTestSummary = ruleService.ruleTest(ruleTestBO);
+			RuleListBO ruleTestSummaryList = new RuleListBO();
+			ruleTestSummaryList.setRuleTestSummary(ruleTestSummary);
+			resultJson = gson.toJson(ruleTestSummaryList, RuleListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("Ends ruleTest...");
+		return resultJson;
+	}
+	
+	/**
+	 * @author kalyan, Venu
+	 * this method is to create a Rule Test.The json is converted to Bo which is
+	 * will be passed to service and entity to dao
+	 * 
+	 * @param ruleTestJson
+	 * @param request
+	 * @param response
+	 * @return resultJson
+	 */
+	@RequestMapping(value = "/validate", method = RequestMethod.POST)
+	public @ResponseBody
+	String validateRule(@RequestBody String resultJson ,HttpServletRequest request, HttpServletResponse response) {
+		LOGGER.info("Starts validateRule...");
+	 	try {
+			
+			String resultValidateJson=ruleService.getRuleEngineResults(resultJson);			
+			resultJson = handleSuccess(resultValidateJson, null);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("Ends validateRule...");
+		return resultJson;
+	}
+	
+	/**
+	 * @author kalyan, Venu
+	 * Method used to test the rules against rule engine 
+	 * @param ruleTestJson
+	 * @param request
+	 * @param response
+	 * @return json with which are valid and invalid.
+	 */
+	@RequestMapping(value = "/validate_by_id", method = RequestMethod.POST)
+	public @ResponseBody
+	String validateById(@RequestBody String ruleTestJson, HttpServletRequest request, HttpServletResponse response) {
+		String json=null;
+		LOGGER.info("Starts validateById...");
+	
+		try {
+			String resultValidateJson=ruleService.getRuleEngineResultsById(ruleTestJson);			
+			json = handleSuccess(resultValidateJson, null);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			json = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			json = handleOtherError(th);
+		}
+
+		LOGGER.info("Ends validateById...");
+		return json;
+	}
+
+	/**
+	 * @author kalyan, Venu
+	 * Method used to check if all formulas are valid or not
+	 * @param summaryListBO
+	 * @return false if any of the formula is invalid
+	 */
+	private boolean checkAllFormulasAreValid(RuleTestSummaryListBO  summaryListBO)
+	{
+		boolean flag = true;
+		for(com.zen.rules.bo.RuleTestSummaryBO summaryBO:summaryListBO.getRuleTestSummaryBO()){
+			
+			if(summaryBO.getStatus().equals("Invalid formula")){
+				flag = false;
+				break;
+			}
+			
+		}
+		return flag; 
+	}
+}

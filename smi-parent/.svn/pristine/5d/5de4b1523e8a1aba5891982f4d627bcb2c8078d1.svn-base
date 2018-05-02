@@ -1,0 +1,24 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.CmfCustomer;
+import com.zen.smi.dao.entities.CmfCustomerAccount;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * @author tmangalapenta
+ *
+ */
+public interface CmfCustomerDAO extends BaseDAO<CmfCustomer, Serializable> {
+
+	CmfCustomer getCmfCustomerByCmfCase(int cmfCustomerId) throws GenericDAOException;
+	
+	List<CmfCustomer> getCustDemographicData(int customerId)	throws GenericDAOException;
+	
+	CmfCustomer getCmfCustomerByCmfCase(String twitterName) throws GenericDAOException;
+	
+		
+}

@@ -1,0 +1,14 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.ScheduleJobsDAO;
+import com.zen.smi.dao.entities.ScheduleJobs;
+
+public class ScheduleJobsDAOImpl extends BaseDAOImpl<ScheduleJobs, Serializable> implements ScheduleJobsDAO{
+
+	public ScheduleJobsDAOImpl() {
+		super(ScheduleJobs.class);
+	}
+	
+}

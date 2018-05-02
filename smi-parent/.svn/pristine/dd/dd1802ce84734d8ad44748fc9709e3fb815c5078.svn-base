@@ -1,0 +1,47 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.entities.RuleRulesColumns;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public interface RuleRuleColumnsDAO extends BaseDAO<RuleRulesColumns, Serializable> {
+	/**to retrieve the Rule Columns
+	 * @return List of Rule Columns
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	List<RuleRulesColumns> getRuleColumnsByRuleId(int ruleId)  throws GenericDAOException;
+	
+	/**to Save the Rule Columns
+	 * @return Void
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	void saveRuleRuleColumns(RuleRulesColumns ruleRuleColumns) throws GenericDAOException;
+
+	/**to Update the Rule Columns
+	 * @return Void
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	void updateRuleRuleColumns(RuleRulesColumns ruleRuleColumns) throws GenericDAOException;
+	
+	/**to Delete the Rule Columns
+	 * @return Void
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	void deleteRuleRuleColumns(RuleRulesColumns ruleRuleColumns) throws GenericDAOException;
+	/**to retrieve the Rule Rule Columns
+	 * @return RuleRulesColumns
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	RuleRulesColumns getRuleRuleColumn(Integer ruleColumnId, Integer ruleId) throws GenericDAOException;
+
+}

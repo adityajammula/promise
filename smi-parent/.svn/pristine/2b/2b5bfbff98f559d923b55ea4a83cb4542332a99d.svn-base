@@ -1,0 +1,27 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.FlumeAgentsProcess;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.entities.SocialDataProcess;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * @author khaja moinuddin
+ *
+ */
+public interface SocialDataProcessDAO extends BaseDAO<SocialDataProcess, Serializable> {
+	/**to retrieve the SocialDataProcess By FlumeAgentsProcessID
+	 * @param flumeAgentsProcessId
+	 * @return SocialDataProcess
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	SocialDataProcess getSocialDataProcessByFlumeAgentsProcessID(int flumeAgentsProcessId) throws GenericDAOException;
+	
+	SocialDataProcess getSocialDataProcessByAccountId(int socialMediaActId) throws GenericDAOException;
+}

@@ -1,0 +1,32 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.zen.smi.dao.FlumeAgentsDAO;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class FlumeAgentsDAOImpl extends BaseDAOImpl<FlumeAgents, Serializable> implements FlumeAgentsDAO {
+
+	public FlumeAgentsDAOImpl() {
+		super(FlumeAgents.class);
+	}
+	/**
+	 * this method is to get FlumeAgents based on FlumeAgentsProcessID.
+	 * 
+	 * @author tmangalapenta
+	 * @param flumeAgentsProcessId
+	 * @return FlumeAgents
+	 */
+	public FlumeAgents getFlumeAgentsByFlumeAgentsProcessID(
+			int flumeAgentsProcessId) throws GenericDAOException {
+		 String query = "FROM FlumeAgents as fa LEFT JOIN FETCH  fa.flumeAgentsProcesses fas WHERE fas.agentProcessId="+flumeAgentsProcessId;
+		  return load(query).get(0);
+	}
+	
+	
+	
+}

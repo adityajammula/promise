@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <!-- row -->
+    <div class="row">
+        <!-- tile -->
+        <section class="tile">
+          <!-- tile header -->
+          <div class="tile-header bg-greensea dvd dvd-btm">
+            <h1 class="custom-font"><strong>Agents</strong></h1>
+           </div>
+          <!-- /tile header -->
+          <!-- tile body -->
+          <div class="tile-body">
+            <table datatable="ng" class="st-table table table-striped table-custom row-border hover">
+	             <thead>
+		              <tr>
+		                <th st-sort-default class="sorting">Agent Name</th>
+		                <th class="sorting">Process Name</th>
+		                <th class="sorting">Start Date</th>
+		                <th class="sorting">End Date</th>
+		                <th class="sorting">Status</th>
+		                <th></th>
+		              </tr>
+	               </thead>
+	              <tbody class="table-hover">
+			             <tr data-ng-repeat="agent in agentsData">
+			             
+			                 <td style="cursor: pointer">{{agent.flume_agent.name}}</td>
+			                 <td style="cursor: pointer">{{agent.social_data_process.name}}</td>
+			                 <td style="cursor: pointer">{{agent.start_date}}</td> 
+			                 <td style="cursor: pointer">{{agent.end_date}}</td>
+			                 <td><span class="label" ng-class="{'bg-success' : agent.status == 'COMPLETED','bg-warning' : agent.status == 'NOT_STARTED'}">{{getDisplayStatus(agent.status)}}</span></td>
+			                 <td>
+		                      <a data-ng-click="startAgent({{agent.agent_process_id}})" class="btn btn-xs btn-primary"><i class="fa fa-stop"></i>Start</a>
+		                    </td>
+			              </tr>
+	              </tbody>
+            </table>
+          </div>
+          <!-- /tile body -->
+        </section>
+        <!-- /tile -->
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /page content -->
+</div>

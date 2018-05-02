@@ -1,0 +1,15 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCaseNote;
+
+
+/**
+ * @author tmangalapenta
+ *
+ */
+public interface CmfCaseNoteDAO extends BaseDAO<CmfCaseNote, Serializable> {
+	
+}

@@ -1,0 +1,21 @@
+package com.zen.smi.extsys.service;
+ 
+import java.util.List;
+
+import com.zen.smi.extsys.facebook.bo.Group;
+import com.zen.smi.extsys.facebook.bo.PostMessageBO;
+import com.zen.smi.extsys.facebook.bo.TwitterMessageBO;
+ 
+public interface TwitterService {
+	
+
+	 public List<Group> getUsers(String keyword) throws Exception;
+
+	 public void postToTwitterAccount(PostMessageBO postMessageBO, String handle);
+	 
+	 public String postMessage(TwitterMessageBO twitterMessageBO, String handle);
+}
+ 
+ 
+
+

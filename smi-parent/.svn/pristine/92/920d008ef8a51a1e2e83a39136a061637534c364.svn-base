@@ -1,0 +1,26 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.entities.SocialProfiles;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * @author Sowjanya.Pathakamuri
+ *
+ */
+public interface SocialProfileDAO extends BaseDAO<SocialProfiles, Serializable> {
+	
+	
+
+	/**To get Social Profile
+	 * @param  int Id
+	 * @return SocialMediaAccounts 
+	 * @throws GenericDAOException
+	 */
+	SocialProfiles getSocialProfile(int Id) throws GenericDAOException;
+
+	SocialProfiles getSocialProfilesByCmfCase(int profileId) throws GenericDAOException;
+	
+}

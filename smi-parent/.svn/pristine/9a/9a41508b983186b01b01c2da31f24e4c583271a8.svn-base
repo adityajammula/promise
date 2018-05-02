@@ -1,0 +1,359 @@
+<div class="page page-full page-mail">
+<div class="row title">
+<script type="text/ng-template" id="appendNote.html">
+     <div class="modal-header ">
+      <h3 class="modal-title custom-font">Append Note</h3>
+	  </div>
+     <div class="modal-body">
+	 <label>Case Id &nbsp &nbsp:&nbsp &nbsp
+                {{$stateParams.case_id}}</label>
+       <table st-table="rowCollection" class="st-table table table-striped table-custom">
+         <tbody>
+            <tr>
+                <td>Note Description*</td>
+                <td><textarea class="form-control" rows="2" name="message"
+								id="message" on-blur-validation ng-model="appendnotesfb" required></textarea></td>
+            </tr>
+         </tbody>
+        </table>
+      </div>
+ <div class="tile-body p-0">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Note Author</th>
+                  <th>Note Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-ng-repeat ="caseHistory in noteHistories">
+                  <td>{{caseHistory.createdDate}}</td>
+                  <td>{{caseHistory.updatedBy}}</td>
+                  <td>{{caseHistory.noteDescription}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+       	<div class="modal-footer tile-body">
+		<button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" data-ng-click="saveAppendNotes()"><i class="fa fa-arrow-right"></i> Save</button>
+		<button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="close()"><i class="fa fa-arrow-left"></i> Close</button>
+	</div>
+</div>
+    </script>
+    
+         <script type="text/ng-template" id="individualGroupCase.html">
+<div class="modal-header">
+	<h3 class="modal-title custom-font">Group Case</h3>
+</div>
+<div class="modal-body">
+<div class="col-lg-12">
+	<label class="col-lg-4">Case Number</label>
+		<select data-ng-change="getAssigned()" class="form-control mb-10 col-lg-8" data-ng-model="caseNumber"
+			data-ng-options="cases.case_id  for cases in groupCaseNumbers">
+      <option value="">Select</option>
+		</select>
+	</div>
+	<div class="col-lg-12">
+		<label class="col-lg-4">Reasons for Grouping*</label>
+		<textarea class="form-control col-lg-6" rows="2" name="message" id="message"
+			placeholder="Type your message" ng-model="reasons" 
+			required></textarea>
+	</div>
+	<div class="modal-footer tile-body">
+		<button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c"ng-click="ok()"><i class="fa fa-arrow-right"></i> Save</button>
+		<button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c"ng-click="close()"><i class="fa fa-arrow-left"></i> Cancel</button>
+	</div>
+</div>
+     </script>
+ <script type="text/ng-template" id="assignCase.html">
+<div class="modal-header ">
+	<h3 class="modal-title custom-font">Case Assignment</h3>
+</div>
+<div class="modal-body">
+<div class="col-lg-12">
+	<label class="col-lg-2 text-right">Assign To</label>
+		<select data-ng-change="getAssignedUserId(user)" class="form-control mb-10 col-lg-8" data-ng-model="assignto"
+			data-ng-options="user.userName as user.userName  for user in users">
+<option value="">Select</option>
+		</select>
+	</div>
+	<div class="col-lg-12">
+		<label class="col-lg-4">Resons for Assigning</label>{{items.selectedUsers}}
+		<textarea class="form-control col-lg-6" rows="2" name="message" id="message"
+			placeholder="Type your message" ng-model="reasons" 
+			required></textarea>
+	</div>
+	<div class="modal-footer tile-body">
+		<button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c"ng-click="saveAssigncase()"><i class="fa fa-arrow-right"></i> Save</button>
+		<button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c"ng-click="close()"><i class="fa fa-arrow-left"></i> Close</button>
+	</div>
+
+</div>
+     </script>
+     <script type="text/ng-template" id="caseResolution.html">
+     <div class="modal-header ">
+      <h3 class="modal-title custom-font">Case Resolution</h3>
+	 </div>
+     <div class="modal-body">                              
+       <table st-table="rowCollection" class="st-table table table-striped table-custom">
+         <tbody>
+            <tr>
+                <td>Reasons*</td>
+                <td><textarea class="form-control" rows="2" name="message"ng-model="resolveReasons"
+								id="message" on-blur-validation required></textarea></td>
+            </tr>
+         </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+         <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" data-ng-click="saveResolveCase()"><i class="fa fa-arrow-right"></i> Save</button>
+         <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="close()"><i class="fa fa-arrow-left"></i>Close</button>
+      </div>
+     </script>
+     
+     
+     <script type="text/ng-template" id="createNewCase.html">
+     <div class="modal-header" >
+           <h3 class="modal-title custom-font">New Case</h3>
+	 </div>
+   <div class="modal-body">
+    <div class="col-lg-6">
+         <label class="col-lg3">Case Number</label>
+          <input class="form-control mb-10 col-lg-8" readonly="readonly">
+   </div>
+    <div class="col-lg-6">
+      <label class="col-lg-2 text-right">Priority*</label>
+           <select data-ng-change="" class="form-control mb-10 col-lg-8" data-ng-model="priorityId"
+          data-ng-options="priority.priorityId as priority.priority for priority in priorities">
+          <option value="">Select</option>
+     </select>
+    </div>
+       <div class="col-lg-12">
+           <label class="col-lg-2 text-right">AssignTo*</label>
+           <select class="form-control mb-10 col-lg-8" data-ng-model="userId"
+            data-ng-options="user.userId as user.userName for user in users">
+                 <option value="">Select</option>
+        </select>
+    </div>
+      <div class="col-lg-12">
+          <label class="col-lg-4">Case Description*</label>
+           <textarea class="form-control col-lg-6" style="resize:none;" rows="2" name="message" id="message"
+              placeholder="Type your message" ng-model="caseDescription" 
+              required></textarea>
+          </div>
+         <div class="col-lg-12">
+          <label class="col-lg-4">Reasons for Creating*</label>
+            <textarea class="form-control col-lg-6" style="resize:none;" rows="2" name="message" id="message"
+         placeholder="Type your message" ng-model="createReasons" 
+           required></textarea>
+   </div>
+         <div class="tile-body p-0">
+            <table class="table">
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+ 
+      <div class="modal-footer">
+         <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="saveNewCase()"><i class="fa fa-arrow-right"></i> Save</button>
+         <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="close()"><i class="fa fa-arrow-left"></i>Close</button>
+      </div>
+     </script>
+
+	<div class="tbox tbox-sm">
+		<!-- left side -->
+		<div class="tcol w-md bg-tr-white lt b-r">
+
+			<!-- left side header-->
+			<div class="p-15 bg-white" style="min-height: 61px">
+
+				<button
+					class="btn btn-sm btn-default pull-right visible-sm visible-xs"
+					active-toggle target="#mail-nav" data-ng-click="goOpenFacebook()"> 
+					<i class="fa fa-bars"></i>
+				</button>
+				<a class="btn btn-sm b-0 br-2 text-strong">Actions</a>
+
+			</div>
+			<!-- /left side header -->
+			<!-- left side body -->
+			<div class="p-15 hidden-sm hidden-xs" id="mail-nav">
+
+				<ul class="nav nav-pills nav-stacked nav-sm" id="mail-folders">
+					<li ui-sref-active="active" data-ng-click="actionsList()"><a
+						ui-sref=viewindividualcasedetails.customerinformation  data-ng-click=" $rootScope.initializeCustomerInfoController()">
+						<fa
+							class="fa-search" style="font-size:20px;padding-right:6px;"></fa>Customer Information</a></li>
+					<li ui-sref-active="active" ng-click="actionsList()"><a
+						ui-sref=viewindividualcasedetails.viewcustomerhistoryfb data-ng-click=" $rootScope.initializeCustomerHistoryController()">
+						<fa
+							class="fa-history" style="font-size:20px;padding-right:6px;"></fa>History</a></li>
+					<li ng-click="addGroupCase()"><a>
+					<fa
+							class="fa-group" style="font-size:20px;padding-right:6px;"></fa>Group Case</a></li>
+					<li ng-click="addNewCase()"><a>
+					<fa
+							class="fa-share-square-o" style="font-size:20px;padding-right:6px;"></fa>Create New Case</a></li>
+					<li ng-click="addAssignCase()"><a>
+					<fa
+							class="fa-paper-plane" style="font-size:20px;padding-right:6px;"></fa>Assign Case</a></li>
+					<li ng-click="addAppendNote()"><a>
+					<fa
+							class="fa-edit" style="font-size:20px;padding-right:6px;"></fa>Notes</a></li>
+					<li ng-click="addCaseResolution()"><a>
+					<fa
+							class="fa-check-square" style="font-size:20px;padding-right:6px;"></fa>Resolve Case</a></li>
+				</ul>
+			</div>
+			<!-- /left side body -->
+		</div>
+		<!-- /left side -->
+		<!-- right side -->
+		<div class=" bg-white b-b">
+			<div ui-view class="col-md-48" style="height: 150px; width: 100%;">
+				<!-- tile -->
+				<div class="tile-body row p-15">
+					<div class="col-md-12">
+		             <div class="col-md-2" data-ng-click="goOpenFacebook()"> 
+	                   	 <button type="button" class="btn btn-blue btn-rounded">Back</button>
+						 </div> 
+						<div class="col-md-6">
+							<label><strong>Case Number &nbsp:&nbsp {{$stateParams.case_id}}</strong></label>
+						</div>
+
+						<!-- Search -->
+						<div class="col-md-3">
+							<div class="search" id="main-search">
+								<input type="text" class="form-control underline-input"
+									placeholder="Search..."> <span
+									class="glyphicon glyphicon-search form-control-feedback"></span>
+							</div>
+						</div>
+						<!-- Search end -->
+					</div>
+				</div>
+				<div class="col-sm-12" style="border-bottom: 1px solid lightgrey;">	</div>
+				<div class="col-md-36 " style="height: 30px;">
+				<div class="col-md-12" style="text-decoration: line-through; left: 25px;">
+					<span class="badge bg-greensea">&nbsp;&nbsp;&nbsp;</span> 
+					<span data-ng-show="caseStatus=='Assigned'||caseStatus=='Escalated'"><span style="text-decoration: line-through;">----------------------------</span> 
+					<span class="badge bg-primary">&nbsp;&nbsp;&nbsp;</span> </span> 
+					<span data-ng-show="caseStatus=='Escalated'"><span style="text-decoration: line-through;">----------------------------</span> 
+					<span class="badge bg-red">&nbsp;&nbsp;&nbsp;</span> </span> 
+				</div>
+				<div class="col-md-12" >
+					<label class="tile-body custom-font col-md-3"><small><strong>Created</strong></small></label>
+					<label class="tile-body custom-font col-md-3" style="left:25px" data-ng-show="caseStatus=='Assigned'||caseStatus=='Escalated'"><small><strong>Assigned</strong></small></label>
+					<label class="tile-body custom-font col-md-3" data-ng-show="caseStatus=='Escalated'"><small><strong>Escalated</strong></small></label>
+				</div>
+				 <div class="col-md-12">
+					<label class="tile-body custom-font col-md-3">{{customerName}}</label> 
+					<label class="tile-body custom-font col-md-3" style="left:25px" data-ng-show="caseStatus=='Assigned'||caseStatus=='Escalated'"><small>{{caseStatusDetails[0].createdBy}}</small></label>
+					<label class="tile-body custom-font col-md-3" data-ng-show="caseStatus=='Escalated'">{{caseStatusDetails[1].createdBy}}</label>
+				</div> 
+				<div class="col-md-12" style="margin:5px ;">
+					<label class="tile-body text-small col-md-3"><small><strong>{{createdDate}}</strong></small></label> 
+					<label class="tile-body text-small col-md-3" style="left:25px" data-ng-show="caseStatus=='Assigned'||caseStatus=='Escalated'"><small><strong>{{caseStatusDetails[0].createdDate}}</strong></small></label> 
+					<label class="tile-body text-small col-md-3" data-ng-show="caseStatus=='Escalated'"><small><strong>{{caseStatusDetails[0].createdDate}}</strong></small></label> 
+				</div>
+				</div>
+			</div>
+		</div>
+		
+		
+
+		<!-- right side body -->
+		<div data-ng-show="isShow" class="bg-white b-b">
+							<button class="btn btn-default btn-sm br-2 refereshButton text-right" data-ng-click="refreshCaseDetails()">
+								<i class="fa fa-refresh"></i>
+							</button>
+			<ul class="list-group no-radius no-border" id="mails-list">
+			<li data-ng-class="casePriority == 'HIGH' ? 'border-orange' :(casePriority == 'MEDIUM' ? 'border-blue' : (casePriority == 'CRITICAL' ? 'border-lightred' :'border-greensea'))">	<div class="media" >
+						<div class="pull-left" style="padding-right: 21px !important;">
+							<div class="thumb thumb-sm">
+								 <img src="resources/images/defaultImage.png" alt=""class="img-circle">
+							</div>
+						</div>
+						<div class="media-body">
+							<div class="media-heading m-0">
+								<a class="mr-5">{{customerName}}</a> <span
+									class="pull-right text-sm text-muted"> <span
+									class="hidden-xs">{{ createdDate }}</span>
+								</span>
+							</div>
+							<p>{{caseContent}}</p>
+						</div>
+					</div>
+					<div class="form-group col-md-12">
+							<label class="col-md-4 "><b>Case Priority :</b><small data-ng-class="casePriority == 'HIGH' ? 'text-orange' :(casePriority == 'MEDIUM' ? 'text-blue' : (casePriority == 'CRITICAL' ? 'text-lightred' :'text-greensea'))">
+									{{casePriority}}</small></label> <label class="col-md-4 "><b>Social
+									Account : </b>{{socialAccount}}</label> <label class="col-md-4 "><b>Case
+									Status : </b> {{caseStatus}}</label>
+						</div></li>
+				<li data-ng-repeat="casedetail in caseDetails"
+					class="list-group-item b-{{mail.label.color}}">
+					<div class="media" style=" margin: 5"  data-ng-show= "casedetail.postType=='Bank'">
+						<div class="media-body">
+							<div class="media-heading m-0 col-md-12" style="margin-top: 9px !important;">
+								<span class="text-sm text-muted pull-left hidden-xs col-md-9">
+									{{ casedetail.createdDate }} </span>
+								<div class="col-lg-2 col-md-8 caseDetailsCustomer">{{casedetail.createdBy}}</div>
+								<div>
+									<i class="fa fa-2x fa-lg fa-bank pull-right"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-9 col-sm-10 pull-right">
+							<p>{{casedetail.caseHistoryDescription}}</p>
+						</div>
+					</div>
+					<div class="media-body" data-ng-show= "casedetail.postType!='Bank'">
+							<div class="media-heading">
+							<div class="thumb thumb-sm">
+								 <img src="resources/images/defaultImage.png" alt=""class="img-circle">
+							</div>
+								<a class="mr-5">{{casedetail.createdBy}}</a> <span
+									class="pull-right text-sm text-muted"> <span
+									class="hidden-xs">{{ casedetail.createdDate }}</span>
+								</span>
+								 <p class="userText">{{casedetail.caseHistoryDescription}}</p>
+							</div>
+						</div>
+				</li>
+			</ul>
+
+			<div>
+				<div>
+					<div>
+						<textarea class="form-control" rows="7" name="message"
+							id="message" placeholder="Type your message" data-ng-model="message"></textarea>
+					</div>
+					<div class="form-group col-lg-12">
+					<div class="col-lg-12">
+					   <label class="checkbox checkbox-custom-alt">
+                       <input name="facebook" type="radio" data-ng-model="privateMessage" data-ng-click="getMessage()"><i style="border: 2px solid #3D3939!important;"></i> Private
+                    </label>
+                     <i class="fa fa-trash pull-right" style="font-size: x-large" data-ng-click="deleteContent()"></i>
+                    <label class="checkbox checkbox-custom-alt">
+                       <input name="facebook" type="radio" data-ng-model="publicMessage" data-ng-click="getMessageType()"><i style="border: 2px solid #3D3939!important;"></i> Public
+                    </label>
+					  </div>
+						<div class="col-lg-12 help-block">
+							<button
+								class="btn btn-greensea btn-ef btn-ef-7 btn-ef-7b b-0 br-2" data-ng-click = "postMessage()">
+								<i class="fa fa-envelope"></i> Send Message
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<!-- /right side -->
+
+
+
+

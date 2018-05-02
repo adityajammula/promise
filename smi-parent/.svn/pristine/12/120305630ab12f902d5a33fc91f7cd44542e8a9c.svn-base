@@ -1,0 +1,189 @@
+package com.zen.smi.service.impl;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.JobKey;
+import org.quartz.SchedulerException;
+import org.quartz.SimpleTrigger;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.TriggerKey;
+import org.quartz.impl.matchers.GroupMatcher;
+
+import com.zen.smi.dao.entities.ScheduleJobs;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.dao.impl.ScheduleJobsDAOImpl;
+import com.zen.smi.service.SMISchedulerService;
+import com.zen.smi.service.helper.SchedulerHelper;
+
+public class SMISchedulerServiceImpl extends BaseService implements
+		SMISchedulerService {
+	private static final Logger LOGGER = Logger.getLogger(SMISchedulerServiceImpl.class);
+
+	JobDetail job;
+	SimpleTrigger simpleTrigger;
+	Trigger trigger;
+	private boolean deleted = false;
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+	public void addJobToScheduler(String jobId, Date scheduledDate, Class jobImplClass)
+			throws SchedulerException {
+		// TODO Auto-generated method stub save
+		LOGGER.debug("Starts addJobToScheduler....");
+		ScheduleJobs scheduleJobs = new ScheduleJobs();
+
+		if (null != jobId && !"".equals(jobId)) {
+			scheduleJobs.setJobParantId(Integer.parseInt(jobId));
+		}
+		scheduleJobs.setJobName("FB_TW_SCHEDULER_JOB_" + jobId);
+		scheduleJobs.setJobStatus("NOT_STARTED");
+		scheduleJobs.setJobScheduleDateTime(scheduledDate);
+		scheduleJobs.setCreateDate(new Date());
+		scheduleJobs.setLstUpdtDtm(new Date());
+
+		try {
+			com.zen.smi.dao.ScheduleJobsDAO schldoa = new ScheduleJobsDAOImpl();
+			schldoa.saveOrUpdate(scheduleJobs);
+			// getScheduleJobsDAO().saveOrUpdate(scheduleJobs);
+			job = JobBuilder.newJob(jobImplClass).withIdentity(jobId, "SMI")
+					.build();
+			trigger = TriggerBuilder.newTrigger()
+
+			.withIdentity(jobId, "SMI")
+
+			.startAt(scheduleJobs.getJobScheduleDateTime()).build();
+
+			SchedulerHelper.getScheduler().scheduleJob(job, trigger);
+
+		} catch (GenericDAOException e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+			LOGGER.debug("Exception addJobToScheduler...." + e.getMessage());
+		}
+		LOGGER.debug("END addJobToScheduler....");
+	}
+
+	public void deleteJobFromScheduler(String jobId)
+			throws SchedulerException {
+		// TODO Auto-generated method stub update
+		LOGGER.debug("Starts deleteJobFromScheduler....");
+		ScheduleJobs scheduleJobs = new ScheduleJobs();
+		if (null != jobId && !"".equals(jobId)) {
+			scheduleJobs.setJobParantId(Integer.parseInt(jobId));
+		}
+
+		try {
+			com.zen.smi.dao.ScheduleJobsDAO schldoa = new ScheduleJobsDAOImpl();
+			if (null != jobId && !"".equals(jobId)) {
+				scheduleJobs = schldoa.getJobsById(Integer.parseInt(jobId));
+				schldoa.delete(scheduleJobs);
+			}
+
+			deleted = SchedulerHelper.getScheduler().deleteJob(new JobKey(jobId, "SMI"));
+
+			if (!deleted) {
+				LOGGER.debug("Quartz failed to delete the job!" + jobId
+						+ ". Job not found");
+			} else {
+
+				LOGGER.debug("Quartz successfully  deleteD the job!" + jobId);
+
+			}
+
+		} catch (GenericDAOException e) {
+			// TODO Auto-generated catch block
+			LOGGER.debug("Exception deleteJobFromScheduler...."
+					+ e.getMessage());
+		}
+		LOGGER.debug("END deleteJobFromScheduler....");
+	}
+
+	public void updateJobToScheduler(String jobId, Date date)
+			throws SchedulerException {
+		// TODO Auto-generated method stub
+		LOGGER.debug("Starts updateJobToScheduler....");
+		ScheduleJobs scheduleJobs = new ScheduleJobs();
+
+		try {
+			com.zen.smi.dao.ScheduleJobsDAO schldoa = new ScheduleJobsDAOImpl();
+
+			if (null != jobId && !"".equals(jobId)) {
+
+				scheduleJobs = schldoa.getJobsById(Integer.parseInt(jobId));
+				if (null != scheduleJobs) {
+					scheduleJobs.setJobScheduleDateTime(date);
+					schldoa.saveOrUpdate(scheduleJobs);
+				}
+
+				if (SchedulerHelper.getScheduler().checkExists(new JobKey(jobId, "SMI"))) {
+					LOGGER.info("Rescheduling the Job");
+
+					Trigger oldTrigger = SchedulerHelper.getScheduler().getTrigger(new TriggerKey(
+							jobId, "SMI"));
+					Trigger newTrigger = TriggerBuilder.newTrigger()
+					.withIdentity(jobId, "SMI")
+					.startAt(scheduleJobs.getJobScheduleDateTime()).build();
+
+					SchedulerHelper.getScheduler().rescheduleJob(oldTrigger.getKey(), newTrigger);
+				}
+				
+				 //List all quartz jobs 
+				for (String groupName :
+				  SchedulerHelper.getScheduler().getJobGroupNames()) {
+					for (JobKey jobKey :
+				  SchedulerHelper.getScheduler().getJobKeys(
+				  GroupMatcher.jobGroupEquals(groupName))) { String jobName =
+				  jobKey.getName(); String jobGroup = jobKey.getGroup();
+				  
+				  List triggers = (List) SchedulerHelper.getScheduler().getTriggersOfJob(jobKey); //
+				  //Date nextFireTime = triggers.get(0).getNextFireTime();
+				  System.out.println("Job : " + jobName + ", Group : " +
+				  jobGroup + ", Next execution time : " + triggers.get(0)); } }
+				 
+			}
+
+		} catch (GenericDAOException e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+			LOGGER.debug("END updateJobToScheduler...." + e.getMessage());
+		}
+		LOGGER.debug("END updateJobToScheduler....");
+	}
+
+	
+
+	public Date formatDate(String date) {
+		Date fdate = null;
+		if (null != date && !"".equals(date)) {
+
+			try {
+				fdate = formatter.parse(date);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+
+				LOGGER.debug("Exception formatDate...." + e.getMessage());
+			}
+
+		}
+		return fdate;
+	}
+
+	public static void main(String args[]) {
+
+		SMISchedulerServiceImpl schedulerServiceImpl = new SMISchedulerServiceImpl();
+		try {
+			schedulerServiceImpl.updateJobToScheduler("16",
+					schedulerServiceImpl.formatDate("2015-08-21 19:09:10"));
+		} catch (SchedulerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}

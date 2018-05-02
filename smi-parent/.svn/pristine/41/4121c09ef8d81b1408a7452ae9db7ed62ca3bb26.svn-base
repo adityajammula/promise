@@ -1,0 +1,50 @@
+package com.zen.smi.bo;
+
+import com.google.gson.annotations.SerializedName;
+
+public class FileUploadBO {
+
+	@SerializedName("app_id")	
+    private String appId;
+	@SerializedName("rule_family_id")	
+    private String ruleFamilyId;
+	@SerializedName("rule_group_id")	
+    private String ruleGroupId;
+	@SerializedName("rule_id")	
+    private String ruleId;
+	@SerializedName("file_upload")	
+    private String  fileUpload;
+	public String getAppId() {
+		return appId;
+	}
+	public void setAppId(String appId) {
+		this.appId = appId;
+	}
+	public String getRuleFamilyId() {
+		return ruleFamilyId;
+	}
+	public void setRuleFamilyId(String ruleFamilyId) {
+		this.ruleFamilyId = ruleFamilyId;
+	}
+	public String getRuleGroupId() {
+		return ruleGroupId;
+	}
+	public void setRuleGroupId(String ruleGroupId) {
+		this.ruleGroupId = ruleGroupId;
+	}
+	public String getRuleId() {
+		return ruleId;
+	}
+	public void setRuleId(String ruleId) {
+		this.ruleId = ruleId;
+	}
+	public String getFileUpload() {
+		return fileUpload;
+	}
+	public void setFileUpload(String fileUpload) {
+		this.fileUpload = fileUpload;
+	}
+	
+	
+	
+}

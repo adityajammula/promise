@@ -1,0 +1,120 @@
+<div class="page page-full page-mail">
+	<div class="tbox tbox-sm">
+    <!-- left side -->
+    <div class="tcol w-md bg-tr-white lt b-r">
+      <!-- left side header-->
+     
+      <!-- /left side header -->
+      <!-- left side body -->
+      <div class="p-15 hidden-sm hidden-xs" id="mail-nav">
+       <h5 class="b-b p-10 text-strong">Transaction Categories</h5>
+				<ul class="nav nav-pills nav-stacked nav-sm" id="mail-folders" >
+					<li style="cursor: pointer;"class="caseTransactionLi" data-ng-repeat="transactionCategory in transactionCategories" data-ng-click = "getTransactionsByCategory(transactionCategory.st_transaction_type_id);sethighliteCategory($index)" data-ng-class="{'selected':$index == highliteCategory}">
+					<div class="casePriorityImage" data-ng-show="transactionCategory.st_transaction_description=='Balance Enquiry'"><img class="imageSize" src="resources/images/dollar-bills-128.png" alt=""></div>
+					<div class="casePriorityImage" data-ng-show="transactionCategory.st_transaction_description=='Fund Transfer'"><img class="imageSize" src="resources/images/dollar-exchange-128.png" alt=""></div>
+				    <div class="casePriorityLabel">{{transactionCategory.st_transaction_description}}</div></li>
+				</ul>
+				<h5 class="b-b p-10 text-strong">Transaction Status</h5>
+				<ul class="nav nav-pills nav-stacked nav-sm" id="mail-labels" >
+					<li class="caseTransactionLi" data-ng-repeat="Status in transactionStatus" data-ng-click="getTrasactionsByStatus(Status.st_status_id,$index);sethighliteStatus($index)" data-ng-class="{'selected':$index == highliteStatus}">
+						<div class="img-circle casePriorityIcons" data-ng-class="Status.st_status_description == 'Pending' ? 'bg-orange' :(Status.st_status_description == 'Rejected' ? 'bg-lightred' :(Status.st_status_description == 'All' ? 'img-circle bg-default casePriorityIcons':'bg-greensea'))">
+						<span>{{Status.statusImage}}</span>
+						</div>
+						<div class="casePriorityLabel">{{Status.st_status_description}}</div>
+					</li>
+				</ul>
+				<!-- <div class="caseCategoryLi" data-ng-click="getTransactionsByAnyStatus();">
+						<div class="img-circle bg-default casePriorityIcons">A</div>
+						<div class="casePriorityLabel">All</div>
+					</div> -->
+
+				<h5 class="b-b p-10 text-strong">Social Accounts</h5>
+				<ul class="nav nav-pills nav-stacked nav-sm" id="mail-labels" >
+					<li class="caseTransactionLi" data-ng-repeat="account in transactionAccounts" data-ng-click="getTransactionsByAccount(account.social_media_accounts_id,$index);sethighliteAccount($index)" data-ng-class="{'selected':$index == highliteAccount}">
+						<div data-ng-class="{'img-circle bg-default casePriorityIcons':$last}">{{account.statusImage}}</div>
+						<div class="casePriorityLabel">{{account.social_media_accounts_accountname}}</div>
+					</li>
+				</ul>
+				<!-- <div class="caseCategoryLi" data-ng-click="getTransactionsByAllAccounts()">
+						<div class="img-circle bg-default casePriorityIcons" >A</div>
+						<div class="casePriorityLabel">All</div>
+					</div> -->
+			</div>
+			<!-- /left side body -->
+		</div>
+    <!-- /left side -->
+    <!-- right side -->
+	<div class="tcol">
+	
+<div class="p-15 bg-white b-b">
+
+ <div class="btn-group pull-left">
+ <img class="imageSize" src="resources/images/Facebook.png"alt="">&nbsp &nbsp
+ <span>Facebook Transactions</span>
+  </div>
+
+  <div class="btn-group pull-right">
+    <button type="button" class="btn btn-default btn-sm br-2-l"><i class="fa fa-angle-left"></i></button>
+    <button type="button" class="btn btn-default btn-sm br-2-r"><i class="fa fa-angle-right"></i></button>
+  </div>
+  <div class="btn-toolbar">
+     <div class="btn-group mr-10 pull-right" data-ng-click="refreshPage()">
+      <button class="btn btn-default btn-sm br-2"><i class="fa fa-refresh"></i></button>
+    </div>
+     <div class="btn-group mr-10 pull-right">
+		<input data-ng-model="Search" 
+			   class="form-control underline-input"
+			   placeholder="Search..."> 
+		<span  class="glyphicon glyphicon-search form-control-feedback"></span>
+	</div>
+    
+  </div>
+
+</div>
+	
+	<!-- right side body -->
+<div>
+  	<!-- mails -->
+  		<ul class="list-group no-radius no-border" id="mails-list">
+			<li data-ng-repeat="transaction in SocialTransactions" style="border-bottom: 1px solid #CCC9C9  !important;padding: 10px !important;" data-ng-class="transaction.stStatusBO.stStatusDescription == 'Pending' ? 'border-orange' :(transaction.stStatusBO.stStatusDescription == 'Rejected' ? 'border-lightred' :'border-greensea')" class="list-group-item b-{{mail.label.color}}">
+				<div class="media">
+					<div class="pull-left">
+							   <div class="thumb thumb-sm">
+								   <img src="resources/images/defaultImage.png" class="img-circle">
+							   </div>
+							  </div>
+							  <div class="media-body" data-ng-click="transactionDetails(transaction)">
+							  <div class="form-group">
+								<div class="media-heading m-0">
+									<a class="mr-5">{{transaction.cmfCustomerBO.firstName}} {{transaction.cmfCustomerBO.lastName}}</a>
+									<a data-ng-show="transaction.cmfCustomerBO.firstName == ''">{{transaction.cmfCustomerBO.facebookId}}</a>&nbsp
+									<small data-ng-hide="transaction.cmfCustomerBO.firstName == ''">({{transaction.cmfCustomerBO.facebookId}})</small>
+									<div class="btn-group pull-right">
+										 <img style="width: 17px;"src="resources/images/Facebook.png"alt="">
+										  </div>
+								</div>
+										<p class="form-group">{{transaction.caseMessage}}</p>
+								</div>
+							</div>
+							<div class="tile-body col-md-12" data-ng-hide="transaction.stTransactionTypeBO.stTransactionDescription == 'Balance Enquiry'">
+										<label class="col-md-4 "><b>Amount &nbsp:</b>&nbsp {{transaction.stAmount}}</label>
+										<label class="col-md-4 "><b>Beneficiary Name &nbsp :&nbsp </b>{{transaction.cmfCustomerByStBeneficiaryBO.firstName}} {{transaction.cmfCustomerByStBeneficiaryBO.lastName}}</label>
+										<label class="col-md-4 "><b>Beneficiary A/C No &nbsp:&nbsp </b>{{transaction.cmfCustomerByStBeneficiaryBO.cmfCustomerAccountsBO[0].accountNumber}}</label>
+								</div>
+								<div class="tile-body col-md-12">
+										<label class="col-md-4 "><b>Transaction Status &nbsp : </b>&nbsp<b data-ng-class="transaction.stStatusBO.stStatusDescription == 'Pending' ? 'text-orange' :(transaction.stStatusBO.stStatusDescription == 'Rejected' ? 'text-lightred' :'text-greensea')">{{transaction.stStatusBO.stStatusDescription}}</b></label>
+										<label class="col-md-4 "><b>Transaction Id &nbsp : </b>&nbsp{{transaction.stTransactionId}}</label>
+										<label class="col-md-4 "><b>Transaction Date &nbsp :</b> &nbsp {{transaction.stTransactionDate}}</label>
+								</div>
+							
+							</div>
+						</li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+		</div>
+
+
+<!-- /page content -->

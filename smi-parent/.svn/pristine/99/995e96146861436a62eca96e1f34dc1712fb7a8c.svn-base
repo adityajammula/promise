@@ -1,0 +1,15 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCustomerSocialData;
+
+
+/**
+ * @author tmangalapenta
+ *
+ */
+public interface CmfCustomerSocialDataDAO extends BaseDAO<CmfCustomerSocialData, Serializable> {
+	
+}

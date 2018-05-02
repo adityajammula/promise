@@ -1,0 +1,19 @@
+package com.zen.smi.bo;
+
+import java.util.List;
+
+public class ParentListBO {
+	 private List<ParentBO> parentBOs;
+
+	public List<ParentBO> getParentBOs() {
+		return parentBOs;
+	}
+
+	public void setParentBOs(List<ParentBO> parentBOs) {
+		this.parentBOs = parentBOs;
+	}
+	 
+	 
+	  
+
+}

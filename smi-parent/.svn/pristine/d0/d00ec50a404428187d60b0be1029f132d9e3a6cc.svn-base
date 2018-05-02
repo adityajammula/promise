@@ -1,0 +1,21 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.zen.smi.dao.CmfGroupCaseDAO;
+import com.zen.smi.dao.FlumeAgentsDAO;
+import com.zen.smi.dao.entities.CmfGroupCase;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfGroupCaseDAOImpl extends BaseDAOImpl<CmfGroupCase, Serializable> implements CmfGroupCaseDAO {
+
+	public CmfGroupCaseDAOImpl() {
+		super(CmfGroupCase.class);
+	}
+
+	
+}

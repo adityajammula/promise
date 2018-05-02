@@ -1,0 +1,452 @@
+package com.zen.smi.service.impl;
+
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.zen.smi.bo.Account;
+import com.zen.smi.bo.SocialMediaAccountPostsBO;
+import com.zen.smi.bo.SocialMediaPostsBO;
+import com.zen.smi.dao.entities.SocialMediaAccountPosts;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.dao.entities.SocialMediaPosts;
+import com.zen.smi.dao.entities.SocialProfiles;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.extsys.service.FaceBookService;
+import com.zen.smi.extsys.service.TwitterService;
+import com.zen.smi.extsys.service.impl.FaceBookServiceImpl;
+import com.zen.smi.extsys.service.impl.TwitterServiceImpl;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.SocialMediaPostsService;
+import com.zen.smi.service.helper.SocialMediaPostsHelper;
+
+public class SocialMediaPostsServiceImpl extends BaseService implements SocialMediaPostsService {
+
+	
+	
+	private static final Logger LOGGER = Logger
+			.getLogger(SocialMediaPostsServiceImpl.class);
+	
+	
+	
+	
+	public List<SocialMediaPostsBO> getSocialMediaPosts()
+			throws BusinessException {
+		
+		LOGGER.debug("Starts getSocialMediaPosts....");
+		List<SocialMediaPosts> socialMediaPosts = null;	
+		List<SocialMediaPostsBO> socialMediaPostsBOList = null;
+		try {
+			socialMediaPosts = getSocialMediaPostsDAO().getSocialMediaPosts();
+			if (socialMediaPosts != null) {
+				socialMediaPostsBOList = SocialMediaPostsHelper.getInstance().convertSocialMediaEntityEntityToBO(socialMediaPosts);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getRules....");
+		return socialMediaPostsBOList;
+		
+	}
+
+	public List<SocialMediaPostsBO> getSocialMediaPostsByChannel(int channel)
+			throws BusinessException {
+		
+		LOGGER.debug("Starts getSocialMediaPostsByChannel....");
+		List<SocialMediaPosts> socialMediaPosts = null;	
+		List<SocialMediaPostsBO> socialMediaPostsBOList = null;
+		try {
+			socialMediaPosts = getSocialMediaPostsDAO().getSocialMediaPostsByChannel(channel);
+			if (socialMediaPosts != null) {
+				socialMediaPostsBOList = SocialMediaPostsHelper.getInstance().convertSocialMediaEntityEntityToBO(socialMediaPosts);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getSocialMediaPostsByChannel....");
+		return socialMediaPostsBOList;
+		
+	}
+
+	public SocialMediaPostsBO getSocialMediaPostsId(int postId)
+			throws BusinessException {
+		
+		LOGGER.debug("Starts getSocialMediaPostsByChannel....");
+		SocialMediaPosts socialMediaPosts = null;	
+		SocialMediaPostsBO socialMediaPostsBO = null;
+		List<Account> accounts=new ArrayList<Account>();
+		try {
+			socialMediaPosts = getSocialMediaPostsDAO().getSocialMediaPostsId(postId);
+			if (socialMediaPosts != null) {
+				socialMediaPostsBO = new SocialMediaPostsBO();
+				socialMediaPostsBO.setId(socialMediaPosts.getId());
+				socialMediaPostsBO.setImageName(socialMediaPosts.getImageName());
+				socialMediaPostsBO.setText(socialMediaPosts.getText());
+				socialMediaPostsBO.setCreatedDate(socialMediaPosts.getCreatedDate());
+				socialMediaPostsBO.setStatus(socialMediaPosts.getStatus());
+				socialMediaPostsBO.setImageFullPath(socialMediaPosts.getImageFullPath());//SocialMediaPostsHelper.getInstance().convertSocialMediaEntityToSocialMediaBO(socialMediaPosts);
+			}
+			
+			List<SocialMediaAccountPosts> socialMediaAccontsPosts=getSocialMediaAccountPostsDAO().getSocialMediaAccountsByPostId(socialMediaPostsBO.getId());
+			for(SocialMediaAccountPosts socialMediaAccontsPost:socialMediaAccontsPosts){					
+				//SocialMediaAccounts socialAccount=getSocialMediaAccountsDAO().getSocialMediaAccountsById(socialMediaAccontsPost.getSocialMediaAccounts().getId());
+				if(socialMediaAccontsPost.getSocialMediaAccounts()!=null){
+					SocialProfiles   socialProfiles = getSocialProfileDAO().getSocialProfile(socialMediaAccontsPost.getSocialMediaAccounts().getId());
+					Account SocialMediaAccountPostsBO=new Account();
+					SocialMediaAccountPostsBO.setAccountId(socialMediaAccontsPost.getSocialMediaAccounts().getId().toString());
+					SocialMediaAccountPostsBO.setAccountType(socialProfiles.getAccountType());
+					SocialMediaAccountPostsBO.setAccountName(socialMediaAccontsPost.getSocialMediaAccounts().getAccountName());
+					SocialMediaAccountPostsBO.setAccountTypeId(socialMediaAccontsPost.getSocialMediaAccounts().getAccountId());
+					accounts.add(SocialMediaAccountPostsBO);
+				}
+				
+				
+			}
+			socialMediaPostsBO.setAccount(accounts);
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getSocialMediaPostsByChannel....");
+		return socialMediaPostsBO;
+		
+	}
+
+	public void editPost(SocialMediaPostsBO socialMediaPostsBO)
+			throws BusinessException {
+
+		
+		LOGGER.debug("Starts editPost....");		
+		SocialMediaAccountPosts socialMediaAccountPosts=null;
+		try {
+			
+			if (socialMediaPostsBO != null) {
+				
+				
+				    SocialMediaPosts socialMediaPosts = new SocialMediaPosts();	
+				    socialMediaPosts.setId(socialMediaPostsBO.getId());
+					socialMediaPosts.setImageName(socialMediaPostsBO.getImageName());
+					socialMediaPosts.setStatus("NOT_STARTED");
+					socialMediaPosts.setText(socialMediaPostsBO.getText());
+					socialMediaPosts.setImageFullPath(socialMediaPostsBO.getImageFullPath());
+					socialMediaPosts.setCreatedDate(socialMediaPostsBO.getCreatedDate());					
+					getSocialMediaPostsDAO().savePost(socialMediaPosts);
+					
+					Set<Integer> toDelete=new HashSet<Integer>();	
+					Set<Integer> toAdd=new HashSet<Integer>();	
+				
+				List<SocialMediaAccountPosts> socialMediaAccontsPosts=getSocialMediaAccountPostsDAO().getSocialMediaAccountsByPostId(socialMediaPostsBO.getId());
+				for(SocialMediaAccountPosts socialMediaAccontsPost:socialMediaAccontsPosts){	
+					
+					SocialMediaAccounts socialAccount = socialMediaAccontsPost.getSocialMediaAccounts();					
+					for(Account account:socialMediaPostsBO.getAccount()){
+						
+						if(socialAccount.getId()==Integer.parseInt(account.getAccountId())){	
+							toDelete.add(socialAccount.getId());
+									
+						}else{
+							
+							toAdd.add(Integer.parseInt(account.getAccountId()));
+							
+						}
+					}
+					
+
+					if(!toDelete.contains(socialAccount.getId())){
+						getSocialMediaAccountPostsDAO().delete(socialMediaAccontsPost);	
+					}
+					
+					
+				}
+					for(Integer socialMediaAccont:toAdd){
+						
+						if(!toDelete.contains(socialMediaAccont)){
+						
+							SocialMediaAccounts	socialMediaAccounts = new SocialMediaAccounts();
+							socialMediaAccounts.setId(socialMediaAccont);
+							socialMediaAccountPosts=new SocialMediaAccountPosts();
+							socialMediaAccountPosts.setSocialMediaPosts(socialMediaPosts);
+							socialMediaAccountPosts.setSocialMediaAccounts(socialMediaAccounts);
+							getSocialMediaAccountPostsDAO().saveOrUpdate(socialMediaAccountPosts);
+					   }
+					}
+				
+			}
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends editPost....");
+		
+		
+	
+		
+	}
+
+	public void savePost(SocialMediaPostsBO socialMediaPostsBO)
+			throws BusinessException {
+
+		
+		LOGGER.debug("Starts savePost....");
+		SocialMediaPosts socialMediaPosts = new SocialMediaPosts();	
+		SocialMediaAccountPosts socialMediaAccountPosts=null;
+		try {
+			
+			if (socialMediaPostsBO != null) {
+				
+				socialMediaPosts.setImageName(socialMediaPostsBO.getImageName());
+				socialMediaPosts.setStatus("NOT_STARTED");
+				socialMediaPosts.setText(socialMediaPostsBO.getText());
+				socialMediaPosts.setCreatedDate(socialMediaPostsBO.getCreatedDate());
+				socialMediaPosts.setImageFullPath(socialMediaPostsBO.getImageFullPath());
+				getSocialMediaPostsDAO().savePost(socialMediaPosts);
+				
+				
+				for(Account account:socialMediaPostsBO.getAccount()){
+					Integer socialMediaId = Integer.parseInt(account.getAccountId());
+					System.out.println("socialMediaId: "+socialMediaId);
+					SocialMediaAccounts	socialMediaAccounts = new SocialMediaAccounts();
+					socialMediaAccounts.setId(socialMediaId);
+					socialMediaAccountPosts=new SocialMediaAccountPosts();
+					socialMediaAccountPosts.setSocialMediaPosts(socialMediaPosts);
+					socialMediaAccountPosts.setSocialMediaAccounts(socialMediaAccounts);
+					getSocialMediaAccountPostsDAO().saveOrUpdate(socialMediaAccountPosts);
+				}
+				socialMediaPostsBO.setId(socialMediaPosts.getId());
+		
+			}
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends savePost....");
+		
+		
+	
+		
+	}
+
+	public void deletePost(SocialMediaPostsBO socialMediaPostsBO)
+			throws BusinessException {
+
+		
+		LOGGER.debug("Starts deletePost....");
+		SocialMediaPosts socialMediaPosts = new SocialMediaPosts();	
+		socialMediaPosts.setId(socialMediaPostsBO.getId());
+		try {
+
+			if (socialMediaPostsBO != null) {				
+						
+				List<SocialMediaAccountPosts> socialMediaAccontsPosts=getSocialMediaAccountPostsDAO().getSocialMediaAccountsByPostId(socialMediaPostsBO.getId());
+				for(SocialMediaAccountPosts childOfPost:socialMediaAccontsPosts){					
+					getSocialMediaAccountPostsDAO().delete(childOfPost);
+				}
+				getSocialMediaPostsDAO().deletePost(socialMediaPosts);
+			}
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends deletePost....");
+	
+	}
+
+	public List<SocialMediaAccountPostsBO> getSocialMediaPostsBySearchCriteria(
+			Integer socialProfile, List<Integer> socialMediaAccountIds,
+			Date startDate, Date endDate) throws BusinessException {
+		LOGGER.debug("Starts getSocialMediaPostsBySearchCriteria....");
+		List<SocialMediaAccountPostsBO> socialMediaAccountPostsList = null;
+		try {
+			
+			List<SocialMediaAccountPosts>	socialMediaPostsList = getSocialMediaAccountPostsDAO().getSocialMediaPostsBySearchCriteria(socialProfile,socialMediaAccountIds,startDate,endDate);
+
+			if (socialMediaPostsList != null && !socialMediaPostsList.isEmpty()) {
+				socialMediaAccountPostsList = SocialMediaPostsHelper.getInstance().convertSocialMediaAccountPostsEntityToBO(socialMediaPostsList);	
+			}
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getSocialMediaPostsBySearchCriteria....");
+		
+		
+		return socialMediaAccountPostsList;
+
+	}
+	
+	public void savePostStatus(SocialMediaPostsBO socialMediaPostsBO) throws GenericDAOException{
+		
+		
+
+	    SocialMediaPosts socialMediaPosts = new SocialMediaPosts();	
+	    socialMediaPosts.setId(socialMediaPostsBO.getId());
+		socialMediaPosts.setImageName(socialMediaPostsBO.getImageName());		
+		socialMediaPosts.setStatus(socialMediaPostsBO.getStatus());
+		socialMediaPosts.setText(socialMediaPostsBO.getText());
+		socialMediaPosts.setImageFullPath(socialMediaPostsBO.getImageFullPath());
+		socialMediaPosts.setCreatedDate(socialMediaPostsBO.getCreatedDate());					
+		getSocialMediaPostsDAO().savePost(socialMediaPosts);
+	}
+	
+public void saveAccountStatus(SocialMediaAccountPosts socialMediaAccontsPosts) throws GenericDAOException{
+	
+	    getSocialMediaAccountPostsDAO().saveOrUpdate(socialMediaAccontsPosts);
+	}
+	
+	
+	public void postToWall(Integer postId) throws BusinessException {
+		
+		
+		try {
+			SocialMediaPostsBO socialMediaPostsBO= getSocialMediaPostsId(postId);	
+			FaceBookServiceImpl faceBookService=new FaceBookServiceImpl();
+			TwitterService twitterService=new TwitterServiceImpl();
+			final File imageFile = new File(socialMediaPostsBO.getImageFullPath());
+			byte[] bytes=readFile(imageFile);
+			
+			String imageName = socialMediaPostsBO.getImageName();
+			String message = socialMediaPostsBO.getText();
+			List<String> postResultFacebook=new ArrayList<String>();
+			List<String> postResultTwitter=new ArrayList<String>();
+			
+			
+			for(Account account:socialMediaPostsBO.getAccount()){
+				try {
+						com.zen.smi.extsys.facebook.bo.Account accountExt=new com.zen.smi.extsys.facebook.bo.Account();
+						accountExt.setAccountId(account.getAccountId());
+						accountExt.setAccountType(account.getAccountType());
+						accountExt.setAccountTypeId(account.getAccountTypeId());
+						accountExt.setAccountName(account.getAccountName());
+						
+			            if("FACEBOOK".equalsIgnoreCase(accountExt.getAccountType()))
+			            {
+			            	String postResult=faceBookService.postToUserTimeLine(accountExt,imageName, message,bytes);
+			            	   if(postResult!=""){	
+			            		 SocialMediaAccountPosts socialMediaAccontsPosts=getSocialMediaAccountPostsDAO().getSocialMediaAccountsByAccountId( Integer.parseInt(account.getAccountId()),postId);
+			            		 socialMediaAccontsPosts.setStatus("COMPLETED");
+			            		 saveAccountStatus(socialMediaAccontsPosts);
+				            		postResultFacebook.add("COMPLETED");
+				            	    }
+			            	
+			            }else if("TWITTER".equalsIgnoreCase(accountExt.getAccountType()))
+			            {
+			            	String postResult=twitterService.postToUserTimeLine(accountExt,message,imageFile);		
+			            	  if(postResult!=""){		            		
+			            		  SocialMediaAccountPosts socialMediaAccontsPosts=getSocialMediaAccountPostsDAO().getSocialMediaAccountsByAccountId(Integer. parseInt(account.getAccountId()),postId);
+			            		  socialMediaAccontsPosts.setStatus("COMPLETED");
+			            		  saveAccountStatus(socialMediaAccontsPosts);
+				            		postResultTwitter.add("COMPLETED");
+				            	    }
+			            }
+			            
+			           
+				
+				} catch (Throwable e) {
+					
+					e.printStackTrace();
+					 postResultFacebook.add("FAILED");
+	            	 postResultTwitter.add("FAILED");
+					 SocialMediaAccountPosts socialMediaAccontsPosts=getSocialMediaAccountPostsDAO().getSocialMediaAccountsByAccountId( Integer.parseInt(account.getAccountId()),postId);
+					 socialMediaAccontsPosts.setStatus("FAILED");
+					 saveAccountStatus(socialMediaAccontsPosts);
+	            	 
+				}
+			}
+			
+			
+			 if(postResultFacebook.contains("FAILED") || postResultTwitter.contains("FAILED")){
+				 socialMediaPostsBO.setStatus("COMPLETED");
+         		 savePostStatus(socialMediaPostsBO);
+         	    }else{
+         	    	 socialMediaPostsBO.setStatus("FAILED");
+         	    	savePostStatus(socialMediaPostsBO);
+         	    	
+         	    }
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			throw new BusinessException(th);
+		}
+	}
+
+	
+	
+	public byte[] readFile(File imageFile){
+		
+		
+        FileInputStream fin = null;
+        byte fileContent[]=null;
+
+        try {
+	
+	             fin = new FileInputStream(imageFile);	
+	             fileContent = new byte[(int)imageFile.length()];
+	             fin.read(fileContent);
+	         }
+
+        catch (FileNotFoundException e) {			
+            System.out.println("File not found" + e);			
+        }
+
+        catch (IOException ioe) {			 
+            System.out.println("Exception while reading file " + ioe);			
+        }
+
+        finally {			
+           
+            try {			
+                if (fin != null) {			
+                    fin.close();			 
+                }
+             }
+
+            catch (IOException ioe) {			
+                System.out.println("Error while closing stream: " + ioe);
+
+            }
+
+        }
+		return fileContent;
+
+  
+
+}
+}

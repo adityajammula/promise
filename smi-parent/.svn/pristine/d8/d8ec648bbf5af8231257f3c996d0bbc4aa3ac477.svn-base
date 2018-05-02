@@ -1,0 +1,68 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.GlobalColumnDAO;
+import com.zen.smi.dao.RuleColumnsDAO;
+import com.zen.smi.dao.RuleGroupDAO;
+import com.zen.smi.dao.RuleRuleColumnsDAO;
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.entities.RuleRulesColumns;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+/**
+ * @author Jshaik 
+ *
+ */
+public class GlobalColumnDAOImpl extends BaseDAOImpl<RuleColumns, Serializable> implements GlobalColumnDAO {
+
+	public GlobalColumnDAOImpl() {
+			super(RuleColumns.class);
+		}
+
+	public RuleColumns getGlobalColumnById(Integer ruleColumnId)
+			throws GenericDAOException {
+		RuleColumns ruleColumn = findById(ruleColumnId);
+		
+		return ruleColumn;
+	}
+
+	public List<Object[]> getGlobalColumnByName(String  name)
+			throws GenericDAOException {
+	List<Object[]>	ruleColumns=loadWithsql("select * from smi.rule_columns  where rule_column_name='"+name+"'");
+		
+		return ruleColumns;
+	}
+	/**
+	 * this method is to get the list of Existing Relationships Of GlobalColumn by Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of Relationships Of GlobalColumn
+	 */
+	public List<Object[]> getExistingRelationshipsOfGlobalColumnById(Integer ruleColumnId)
+			throws GenericDAOException {
+		String query = "SELECT f.rule_family_name,rg.rule_group_name,r.rule_name FROM rule_rules_columns rc " +
+				"INNER JOIN rule r ON r.rule_id=rc.rule_id " +
+				"INNER JOIN rule_group rg ON rg.rule_group_id=r.rule_group_id " +
+				"INNER JOIN rule_family f ON f.rule_family_id=rg.rule_family_id " +
+				"where column_id="+ruleColumnId;
+		return loadWithsql(query);
+	}
+}
+	
+
+

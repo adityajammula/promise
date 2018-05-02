@@ -1,0 +1,111 @@
+angular.module('smiApp')
+.controller('ProcessesController', function ($scope ,$rootScope,socialMediaAccountsServices,processesService,editGroupService) { 
+	
+	$scope.showProcessDetails = false;
+	$scope.showFacebookDetails = false;
+	//New Process Controller Starts from Here.
+	/**
+	 * This method gets the all social media Account details
+	 */
+	$rootScope.initializeNewProcessController = function(){
+		$scope.newProcessData = [];
+	socialMediaAccountsServices.getSocialMediaAccountsData().then(function(response){
+		 if(response.data != null) {
+				for(var i=0;i<response.data.social_media_accounts.length;i++){
+						$scope.newProcessData.push(response.data.social_media_accounts[i]);
+		  }
+		 }
+    });
+	},
+	/**
+	 * This method is to show the New process of the particular account.
+	 */
+	
+	$scope.showNewProcessDetails = function(process){
+		var requestData = {
+				 "account_id": process.social_media_accounts_accountId
+			};
+		if(process.social_profiles.social_profile_accounts_type == "TWITTER") {
+			  $scope.twitterData = [];
+			  editGroupService.getMetaData(requestData).then(function(response){
+				  if(response.data != null) {
+						  $scope.twitterData =response.data;
+					  }
+			  });
+	 } else if(process.social_profiles.social_profile_accounts_type == "FACEBOOK"){
+		 $scope.facebookData = [];
+		  editGroupService.getFaceBookMetaData(requestData).then(function(response){
+			 if(response.data != null)
+			  {
+				  $scope.facebookData =response.data;
+			  }
+		 });
+	 }
+	};
+	 
+	  //Existing Process Starts from Here..
+	  $scope.existingProcessData = [
+	                                {AccountType : "Twitter" ,AccountTypeId :"2"},
+	                                {AccountType : "Facebook" ,AccountTypeId :"1"}
+	                                ];
+	  
+	  /**
+	   * Based on account type this method will show the all account details
+	   */
+	  $scope.showDetails = function(processes) {
+		  if(processes.AccountType ==  "Facebook"){
+			  $scope.showProcessDetails = true;
+			  $scope.showFacebookDetails = true;
+			  $scope.showTwitterDetails = false;
+		  } else if (processes.AccountType == "Twitter") {
+			  $scope.showProcessDetails = true;
+			  $scope.showTwitterDetails = true;
+			  $scope.showFacebookDetails = false;
+		  }
+		  $scope.getSocialMediaAccountsByAccountType(processes);
+	  };
+		  
+		  
+		/**
+		 * Based on account Type Drop down values will display
+		 */  
+		  $scope.getSocialMediaAccountsByAccountType = function(processes) {
+		  $scope.socialMediaAccounts = [];
+		  socialMediaAccountsServices.getSocialMediaAccountsByAccountType(processes.AccountTypeId).then(function(response) {
+			  for (var i=0;i<response.data.social_media_accounts.length;i++){
+				  var object = {};
+				  object.accountname = response.data.social_media_accounts[i].social_media_accounts_accountname;
+				  object.accountId = response.data.social_media_accounts[i].social_media_accounts_accountId;
+				  
+				  $scope.socialMediaAccounts.push(object);
+			  }
+		  });
+		  $scope.postsData = [];
+			processesService.getpostDataById().then(function(response){
+			  $scope.postsData = response.data.posts;
+		  }); 
+	  };
+	  /**
+	   * This method is for Date Picker
+	   */
+	  
+	  $scope.dateOptions = {
+		      formatYear: 'yy',
+		      startingDay: 1,
+		      'class': 'datepicker'
+		    };
+	  $scope.format ='dd-MMMM-yyyy';
+	  $scope.dt = new Date();
+	  $scope.clear = function () {
+	      $scope.dt = null;
+	  };
+	  $scope.open = function($event) {
+	        $event.preventDefault();
+	        $event.stopPropagation();
+	        $scope.opened = true;
+	  };
+	  
+	  
+});
+
+

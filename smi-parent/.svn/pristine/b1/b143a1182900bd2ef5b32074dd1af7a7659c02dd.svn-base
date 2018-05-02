@@ -1,0 +1,51 @@
+package com.zen.smi.generic.senti.analysis;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class SentiDBFactory {
+	private static Connection conn = null;
+	private static Statement stat = null;
+	
+	private SentiDBFactory()
+	{
+		
+	}
+	
+	
+	public static Connection getConnection() throws SQLException {
+		if(conn == null || conn.isClosed())
+		{
+			initConnection();
+		}
+		
+		return conn;
+	}
+	private static void initConnection() throws SQLException
+	{
+		try {
+			Class.forName("org.sqlite.JDBC");
+			conn = DriverManager.getConnection("jdbc:sqlite:src/main/resources/sentiment.sqlite");
+			conn.setAutoCommit(true);
+			///home/hduser/workspace/HadoopEx/src/main/java/com/zen/hadoop/sqlite/sentiment.sqlite
+		} catch(Exception e) {
+			e.printStackTrace();
+			conn = null;
+			throw new SQLException(e.getMessage());
+			
+		}
+    }
+	public static void endConnection() throws SQLException
+	{
+		try {
+			conn.close();
+		} catch(Exception e) {
+			conn = null;
+			e.printStackTrace();
+			throw new SQLException(e.getMessage());
+		}
+	}
+	
+	 
+}

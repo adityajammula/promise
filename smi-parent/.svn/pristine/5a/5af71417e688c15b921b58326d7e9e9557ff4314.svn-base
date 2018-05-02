@@ -1,0 +1,129 @@
+angular.module('smiApp')
+ .controller('CaseManagementController', function ($scope, $rootScope,$moment,cmfDashboardService) { 
+	 $scope.init = function(){
+		 $scope.caseCounts=[];
+		 $scope.ticks=[],
+			cmfDashboardService.getCaseCountDetails().then(function(response){
+			$scope.caseCounts = response.data.cmfCasePriorityBOListAssignedToUser;
+			/*
+			 * Case Category Morris-Donut Chart Code.
+			 */
+			$scope.caseCategoryData = [
+					             {label: '', value: null, color: '#428bca'},
+					             {label: '', value: null, color: '#616f77'},
+					             {label: '', value: null, color: '#f0ad4e'},
+					             {label: '', value: null,  color: '#5bc0de'},                        
+					             {label: '', value: null, color: '#d9534f'},
+					             {label: '', value: null, color: '#1693A5'}
+					            ];
+				 var caseCategory = response.data.cmfCaseCategoryBO;
+				 for(var i=0; i<caseCategory.length; i++){
+				 		$scope.caseCategoryData[i].label= caseCategory[i].category_name;
+				 		$scope.caseCategoryData[i].value= caseCategory[i].issue_count_by_category_id;			 		
+				 	 }
+			/*
+			 * Case Priority Morris-Donut Chart Code.
+			 */
+	        $scope.casePriorityData = [
+					            {label: '', value:null ,color: '#d9534f'},
+					            {label: '', value:null, color: '#f0ad4e'},
+					            {label: '', value:null, color: '#428bca'},                        
+					            {label: '', value:null, color: '#1693A5'}
+					          ];
+					 	var casePriority = response.data.cmfCasePriorityBOList;
+					 	 for(var i=0; i<casePriority.length; i++){
+					 		$scope.casePriorityData[i].label= casePriority[i].priority_name;
+					 		$scope.casePriorityData[i].value= casePriority[i].issue_count_by_priority_id;		 		
+					 	 }
+						$scope.totalcases = response.data.total_open_cases_count;
+						$scope.totalfbcases = response.data.face_book_open_cases_count;
+						$scope.totaltwittercases = response.data.twitter_open_cases_count;
+						$scope.totalcaseprioritycases = response.data.cases_assigned_to_user_count;
+				    });
+	        };
+	 
+        $scope.config = {
+	 		    title: 'Products',
+	 		    tooltips: true,
+	 		    labels: false,
+	 		     mouseover : function(d) {
+	 			 $scope.titil=d.x + '   -->  ' + d.y ;
+	 		   },
+	 	mouseout: function(){
+	 		   $scope.titil=null;
+	 		   },
+	 	click: function(){},
+	 		  legend: {
+	 		      display: true,
+	 		      position: 'right'
+	 		    },
+	 		  colors: [],
+	 	};	 
+   $scope.caseStatisticVal = "CaseCategory";
+   $scope.startDate = $moment().subtract(1, 'days').format('MMMM D, YYYY');
+   $scope.endDate = $moment().add(31, 'days').format('MMMM D, YYYY');
+   $scope.rangeOptions = {
+     ranges: {
+       Today: [$moment(), $moment()],
+       Yesterday: [$moment().subtract(1, 'days'), $moment().subtract(1, 'days')],
+       'Last 7 Days': [$moment().subtract(6, 'days'), $moment()],
+       'Last 30 Days': [$moment().subtract(29, 'days'), $moment()],
+       'This Month': [$moment().startOf('month'), $moment().endOf('month')],
+       'Last Month': [$moment().subtract(1, 'month').startOf('month'), $moment().subtract(1, 'month').endOf('month')]
+     },
+     opens: 'left',
+     startDate: $moment().subtract(29, 'days'),
+     endDate: $moment(),
+     parentEl: '#content'
+   };
+     $scope.$watch('startDate', function() {
+     $scope.changeCase($scope.caseStatisticVal);
+      }, true);
+     $scope.$watch('endDate', function() {
+     $scope.changeCase($scope.caseStatisticVal); }, true);
+
+     $scope.formatDate = function(date){
+        	    var d = new Date(date),
+		        month = '' + (d.getMonth() + 1),
+		        day = '' + d.getDate(),
+		        year = d.getFullYear();
+
+		    if (month.length < 2) month = '0' + month;
+		    if (day.length < 2) day = '0' + day;
+		    return [year, month, day].join('-');
+      }
+
+         $scope.changeCase = function(selectedCaseStatisticVal) {
+           var startDate	= $scope.formatDate ($scope.startDate);
+         	var endDate	= $scope.formatDate ($scope.endDate);
+        	 if(selectedCaseStatisticVal == 'CaseCategory'){
+        		 var requestData = {
+              	          "startDate":startDate,
+              	          "endDate":endDate,
+              	          "caseType":"CATEGORY"
+              	      };
+        		 cmfDashboardService.getDashboardInitData(requestData).then(function(response){
+            		 $scope.data = response;
+     			  });
+        	 }else if(selectedCaseStatisticVal == 'CasePriority'){
+        		 var requestData = {
+             	          "startDate":startDate,
+             	          "endDate":endDate,
+             	          "caseType":"PRIORITY"
+             	      };
+        		 cmfDashboardService.getDashboardInitData(requestData).then(function(response){
+            		 $scope.data = response;
+     			  });
+        	 }else{
+        		 var requestData = {
+            	          "startDate":startDate,
+            	          "endDate":endDate,
+            	          "caseType":"SOCIALPROFILE"
+            	      };
+        	 cmfDashboardService.getDashboardInitData(requestData).then(function(response){
+            		 $scope.data = response;
+     			  });
+        	 }
+         }
+         $scope.init();
+ });

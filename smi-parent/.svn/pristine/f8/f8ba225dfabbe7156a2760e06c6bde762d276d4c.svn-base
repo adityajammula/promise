@@ -1,0 +1,100 @@
+package com.zen.smi.service.impl;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.FlumeAgentsProcessBO;
+import com.zen.smi.bo.RuleBO;
+import com.zen.smi.bo.RuleColumnsBO;
+import com.zen.smi.bo.RuleEngineBO;
+import com.zen.smi.bo.RuleFamilyBO;
+import com.zen.smi.bo.RuleFormulaBO;
+import com.zen.smi.bo.RuleFormulasBO;
+import com.zen.smi.bo.RuleGroupBO;
+import com.zen.smi.bo.RuleRulesColumnsBO;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.entities.FlumeAgentsProcess;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleFormula;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.entities.RuleRulesColumns;
+import com.zen.smi.dao.entities.SocialDataProcess;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.exception.UserException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.FlumeAgentsProcessService;
+import com.zen.smi.service.RuleService;
+import com.zen.smi.service.helper.FamilyHelper;
+import com.zen.smi.service.helper.FlumeAgentsProcessHelper;
+import com.zen.smi.service.helper.RuleGroupHelper;
+import com.zen.smi.service.helper.RuleHelper;
+
+public class FlumeAgentsProcessServiceImpl extends BaseService implements  FlumeAgentsProcessService {
+	
+	/**
+	 * Logger for FlumeAgentsProcessServiceImpl class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(FlumeAgentsProcessServiceImpl.class);
+
+    /**
+	 * {@inheritDoc}
+	 */
+
+	
+	public List<FlumeAgentsProcessBO> getAllFlumeAgentsProcess() throws BusinessException {
+		LOGGER.debug("Starts getAllFlumeAgentsProcess....");
+		List<FlumeAgentsProcess> flumeAgentsProcesss=null;
+		List<FlumeAgentsProcess> flumeAgentsProcesssList=null;
+		List<FlumeAgentsProcessBO> flumeAgentsProcessBO = null;
+		try {															 	
+			flumeAgentsProcesss = getFlumeAgentsProcesssDAO().load("from FlumeAgentsProcess");
+			if(flumeAgentsProcesss != null)
+			{
+				flumeAgentsProcesssList=new ArrayList<FlumeAgentsProcess>(0);
+				for (FlumeAgentsProcess flumeAgentsProces : flumeAgentsProcesss) {
+					flumeAgentsProces = getFlumeAgentsProcessDependies(flumeAgentsProces);					
+					flumeAgentsProcesssList.add(flumeAgentsProces);
+				}
+				
+				flumeAgentsProcessBO = FlumeAgentsProcessHelper.getInstance().convertFlumeAgentsProcesssEntityToBO(flumeAgentsProcesssList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllFlumeAgentsProcess....");
+		return flumeAgentsProcessBO;
+	}
+
+	
+	private FlumeAgentsProcess getFlumeAgentsProcessDependies(
+			FlumeAgentsProcess flumeAgentsProces) throws BusinessException {
+		LOGGER.debug("Starts getFlumeAgentsProcessDependies....");
+		try {
+			FlumeAgents fa = getFlumeAgentsDAO().getFlumeAgentsByFlumeAgentsProcessID(flumeAgentsProces.getAgentProcessId());
+			SocialDataProcess sdp = getSocialDataProcessDAO().getSocialDataProcessByFlumeAgentsProcessID(flumeAgentsProces.getAgentProcessId());
+			flumeAgentsProces.setFlumeAgents(fa);
+			flumeAgentsProces.setSocialDataProcess(sdp);
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends getFlumeAgentsProcessDependies....");
+		return flumeAgentsProces;
+	}
+
+
+	
+
+}

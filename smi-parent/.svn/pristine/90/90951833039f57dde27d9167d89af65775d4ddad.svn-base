@@ -1,0 +1,189 @@
+angular.module('smiApp')
+		.controller('ClosedCasesController',function($scope, $state, $modal, ClosedCasesServices,$rootScope,OpenfacebookCaseService) {
+					
+					
+					$scope.categoryId = 0;
+					$scope.priorityId = 0;
+					
+					$scope.accountType = 0;
+					$scope.socialMediaAccountId = 0;
+					
+					$scope.closedCaseJson = {
+							"category_type" :	$scope.categoryId,
+							"priority_type" :	$scope.priorityId,
+							"account_type"  :	$scope.accountType
+							};
+					$rootScope.initializeClosedCasesController = function() {
+						$scope.closedCases = [];
+						ClosedCasesServices.getAllCmfClosedCasesByCriteria($scope.closedCaseJson).then(function(response) {
+							$scope.closedCases = response.data.cmfCaseBO;
+							});
+						$scope.getCategories();
+					};
+					$scope.updateSearchResults = function() {
+		 				$scope.requestData = {
+				    			'keyWord'       : "",
+				    			'status_type_id': "6",
+				    			"category_type" : $scope.categoryId,
+								"priority_type" : $scope.priorityId,
+								"account_type"  : $scope.accountType,
+								"social_media_accounts_id" : $scope.socialMediaAccountId
+				    	};
+						 if($scope.Search != null && $scope.Search != undefined && $scope.Search != ""){
+							$scope.requestData.keyWord = ($scope.Search).toString();
+							$scope.closedCases  = [];
+						OpenfacebookCaseService.getSearchResults($scope.requestData).then(function(response){
+							$scope.closedCases  = response.data.cmfCaseBO;
+						});
+						}else {
+							$rootScope.initializeClosedCasesController ();
+							}
+					};
+						$scope.getCategories = function() {
+								OpenfacebookCaseService.getStaticData().then(function(response) {
+													$scope.categories = response.data.cmfCaseCategoryBOList;
+													$scope.priorities = response.data.cmfCasePriorityBOList;
+													for ( var i = 0; i < response.data.cmfCasePriorityBOList.length; i++) {
+														var obj = response.data.cmfCasePriorityBOList[i];
+														obj.priorityImage = (response.data.cmfCasePriorityBOList[i].priority_name).charAt(0);
+													}
+													$scope.accounts = response.data.socialProfilesBOList;
+												});
+							}, 
+							$scope.getAllCmfClosedCasesByAccountCategory = function(categoryId) {
+								$scope.categoryId =  categoryId.toString();
+								if(($scope.Search == ""||$scope.Search == undefined )){
+									$scope.closedCaseJson.category_type = $scope.categoryId;
+									$scope.getAllCmfClosedCases();
+								}
+								else{
+									$scope.requestData.category_type = $scope.categoryId;
+									$scope.updateSearchResults();
+										
+									}
+							}, 
+							$scope.getAllCmfClosedCasesByPriority = function(priorityId) {
+								$scope.priorityId =  priorityId.toString();
+								if(($scope.Search == ""||$scope.Search == undefined )){
+									$scope.closedCaseJson.priority_type = $scope.priorityId;
+								    $scope.getAllCmfClosedCases();
+								}
+								else{
+									$scope.requestData.priority_type = $scope.priorityId;
+									$scope.updateSearchResults();
+								}
+							};
+							$scope.getAllCmfClosedCasesByAccount = function(socialProfileId) {
+								alert(socialProfileId);
+								$scope.accountType =  socialProfileId.toString();
+								if(($scope.Search == ""||$scope.Search == undefined )){
+								$scope.closedCaseJson.account_type = $scope.accountType;
+								$scope.getAllCmfClosedCases();
+								}
+								else{
+									$scope.requestData.account_type = $scope.accountType;
+									$scope.updateSearchResults();
+								}
+							};
+					
+					$scope.getAllPriorities = function() {
+						$scope.priorityId = "All";
+						if(($scope.Search == ""||$scope.Search == undefined )){
+							$scope.closedCaseJson.priority_type = $scope.priorityId;
+							$scope.getAllCmfClosedCases();
+						}else{
+							$scope.requestData.priority_type = 	$scope.priorityId;
+							$scope.updateSearchResults();
+							}
+						};
+					$scope.getAllCategories = function() {
+						$scope.categoryId ="All";
+						if(($scope.Search == ""||$scope.Search == undefined )){
+							$scope.closedCaseJson.category_type = $scope.categoryId ;
+							$scope.getAllCmfClosedCases();
+						}else{
+							$scope.requestData.category_type = $scope.categoryId ;
+							$scope.updateSearchResults();
+						}
+					};
+					$scope.getAllAccounts = function() {
+						$scope.accountId =  "All";
+						if(($scope.Search == ""||$scope.Search == undefined )){
+							$scope.closedCaseJson.account_type =$scope.accountId;
+							$scope.getAllCmfClosedCases();
+						}else{
+							$scope.requestData.account_type = $scope.accountId;
+							$scope.updateSearchResults();
+						}
+					};
+					$scope.getAllCmfClosedCases = function() {
+						ClosedCasesServices.getAllCmfClosedCasesByCriteria($scope.closedCaseJson).then(function(response) {
+							$scope.closedCases = response.data.cmfCaseBO;
+								});
+					};
+					$scope.highliteCategory = null;
+					$scope.sethighliteCategory = function(index) {
+						$scope.highliteCategory = index;
+					};
+					$scope.highlitePriority = null;
+					$scope.sethighlitePriority = function(index) {
+						$scope.highlitePriority = index;
+					};
+					$scope.highliteAccount = null;
+					$scope.sethighliteAccount = function(index) {
+						$scope.highliteAccount = index;
+					};
+					$scope.refreshClosedCases = function() {
+						$rootScope.initializeClosedCasesController();
+					}, 
+					 $scope.Search = '';
+					    $scope.search = function (user) {
+					      var query = $scope.Search;
+					      var fullname = user.cmfCustomerBO.firstName+ ' ' + user.cmfCustomerBO.lastName;
+					      if (fullname.indexOf(query) != -1) {
+					        return true;
+					      }
+					      return false;
+					    };
+					    $scope.individualCaseDetails = function(cases) {
+							var modalInstance = $modal.open({
+								templateUrl : 'closedhistory.html',
+								controller : 'ClosedHistoryController',
+								 resolve: {
+								        items: function () {
+								        	 var obj = {};
+							      		     obj.caseId= cases.case_id;
+								             return obj;
+								       }
+								 }
+								});	
+								};
+				})
+					  
+		.controller('ClosedHistoryController', function($scope,$state,$modalInstance,items,OpenfacebookCaseService) {
+			
+			$scope.caseId = items.caseId;
+			$scope.caseDetails = [];
+			$scope.isShow = true;
+			OpenfacebookCaseService.getIndividualCaseDetails($scope.caseId).then(function(response) {
+				if(response != null) {
+					$scope.caseContent = response.data.cmfCaseBO[0].description;
+					$scope.customerName = response.data.cmfCaseBO[0].cmfCustomerBO.firstName;
+					$scope.createdDate = response.data.cmfCaseBO[0].created_date;
+					$scope.updatedDate = response.data.cmfCaseBO[0].updated_date;
+					$scope.updatedBy = response.data.cmfCaseBO[0].updated_by;
+					$scope.casePriority = response.data.cmfCaseBO[0].cmfCasePriorityBO.priority_name;
+					$scope.socialAccount = response.data.cmfCaseBO[0].socialMediaAccountsBO.social_media_accounts_accountname;
+					$scope.caseStatus = response.data.cmfCaseBO[0].cmfCaseStatusBO.caseStatus;
+					$scope.caseDetails = response.data.cmfCaseBO[0].cmfCaseHistoryBO;
+					$scope.caseStatusDetails = response.data.cmfCaseBO[0].cmfCaseNotesBO;
+				}
+							});
+			$scope.close = function () {
+					$modalInstance.dismiss('close');
+			    };
+		});			
+
+					
+
+

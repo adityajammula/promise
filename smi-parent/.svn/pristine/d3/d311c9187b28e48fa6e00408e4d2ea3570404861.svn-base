@@ -1,0 +1,36 @@
+package com.zen.smi.generic.startup;
+
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+
+import com.zen.smi.dao.entities.Messages;
+import com.zen.smi.dao.impl.MessagesDAOImpl;
+import com.zen.smi.generic.utils.MessageUtil;
+
+@Component
+public class StartupListener implements ApplicationListener<ContextRefreshedEvent> {
+
+	private static final Logger LOGGER = Logger.getLogger(StartupListener.class);
+	
+	public void onApplicationEvent(ContextRefreshedEvent event) {
+		LOGGER.debug("Starts onApplicationEvent.. ");
+		try {
+			List<Messages> messageList = new MessagesDAOImpl().getAllMessages();
+			
+			if(messageList != null && !messageList.isEmpty())
+			{
+				MessageUtil.getInstance().populateMessages(messageList);
+			} else {
+				LOGGER.error("No messages in database.. ");
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		LOGGER.debug("Ends onApplicationEvent.. ");
+	}
+}

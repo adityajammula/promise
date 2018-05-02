@@ -1,0 +1,105 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('NavController', function ($scope, $rootScope, $state, cmfDashboardService, otherCommentsService) {
+    $scope.oneAtATime = false;
+
+    $scope.status = {
+      isFirstOpen: true,
+      isSecondOpen: true,
+      isThirdOpen: true
+    };
+    
+    $rootScope.updateAllAcounters = function() {
+    	cmfDashboardService.getCaseCountDetails().then(function(response){
+    		$scope.countdashboardcases = response.data.total_dashboard_cases_count;
+    	    $scope.countfbcases = response.data.face_book_open_cases_count;
+    	    $scope.counttwittercases = response.data.twitter_open_cases_count;
+    	    $scope.countspamcases = response.data.spam_cases_count;
+    	    $scope.countresolvedcases = response.data.resolved_cases_count;
+    	    $scope.countclosedcases = response.data.closed_cases_count;
+    	    $scope.othercommentscount = 0;//TODO
+    	    $scope.totalCaseCount = $scope.countfbcases+ $scope.counttwittercases;
+    	});
+    	
+    };
+    $rootScope.updateAllAcounters();
+    	
+
+    $scope.initializeViewRulesController = function() {
+    	if($state.current.name == "viewrules") {
+    		$rootScope.initializeViewRulesController();
+    	}
+    };
+    $scope.initializeViewGlobalColumnsController = function() {
+    	if($state.current.name == "globalcolumns") {
+    		$rootScope.initializeViewGlobalColumnsController();
+    	}
+    };
+    $scope.initializeViewTestRulesController = function() {
+    	if($state.current.name == "testrules") {
+    		$rootScope.initializeViewTestRulesController();
+    	}
+    };  
+    $scope.initializeViewGroupsController = function() {
+    	if($state.current.name == "viewgroups") {
+    		$rootScope.initializeViewGroupsController();
+    	}
+    };
+    $scope.initializeNewProcessController = function() {
+    	if($state.current.name == "processes") {
+    		$rootScope.initializeNewProcessController();
+    	}
+    };
+    $scope.initializeAgentsControllerView = function() {
+    	if($state.current.name == "agents") {
+    		$rootScope.initializeAgentsControllerView();
+    	}
+    };
+    $scope.initializeFacebookFundsTransferController = function() {
+    	if($state.current.name == "fundstransfersfacebook") {
+    		$rootScope.initializeFacebookFundsTransferController();
+    	}
+    };
+    $scope.initializeTwitterFundsTransferController = function() {
+    	if($state.current.name == "fundstransferstwitter") {
+    		$rootScope.initializeTwitterFundsTransferController();
+    	}
+    };
+});
+
+/**
+ * @ngdoc function
+ * @name smiApp.controller:SparklineCtrl
+ * @description
+ * # sparklineCtrl navbar
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('SparklineCtrl', function ($scope) {
+    $scope.navChart1 = {
+      data: [5, 8, 3, 4, 6, 2, 1, 9, 7],
+      options: {
+        type: 'bar',
+        barColor: '#92424e',
+        barWidth: '6px',
+        height: '36px'
+      }
+    };
+    $scope.navChart2 = {
+      data: [2, 4, 5, 3, 8, 9, 7, 3, 5],
+      options: {
+        type: 'bar',
+        barColor: '#397193',
+        barWidth: '6px',
+        height: '36px'
+      }
+    };
+  });

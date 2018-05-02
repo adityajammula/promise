@@ -1,0 +1,333 @@
+<div class="container-fluid" ng-controller="CaseManagementController"  ng-init="init()">
+    <!-- row -->
+    <div class="row">
+        <!-- tile -->
+        <section class="tile">
+          <!-- tile header -->
+          <div class="tile-header bg-greensea dvd dvd-btm">
+            <h1 class="custom-font"><strong>DashBoard</strong></h1>
+          </div>
+          <!-- /tile header -->
+          <!-- tile body -->
+          <div class="tile-body">
+            <!-- cards row -->
+  <div class="row">
+    <!-- col -->
+    <div class="card-container col-lg-4 col-sm-6 col-sm-12">
+      <div class="card">
+        <div class="front bg-greensea">
+          <!-- row -->
+          <div class="row">
+            <!-- col -->
+            <div class="col-xs-4">
+              <i class="fa fa-users fa-4x"></i>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-8">
+              <p class="text-elg text-strong mb-0" ng-model="totalcases">{{totalcases}}</p>
+              <span>Cases</span>
+            </div>
+            <!-- /col -->
+          </div>
+          <div class="clearfix" style="height: 14px"></div>
+          <!-- /row -->
+        </div>
+        <div class="back bg-greensea">
+          <!-- row -->
+          <div class="row">
+            <!-- col -->
+            <div class="col-xs-6">
+              <a ui-sref="openfacebookcases"><img class ="col-xs-6"src="resources/images/Facebook.png" alt="fb" width="30px" height="30px">
+              <span class ="col-xs-6" ng-model="totalfbcases">{{totalfbcases}} Cases</span>
+              </a>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-6">
+              <a ui-sref="opentwittercases"><img class ="col-xs-6" src="resources/images/Twitter.png" alt="twitter" width="30px" height="30px">
+              <span class ="col-xs-6" ng-model="totaltwittercases">{{totaltwittercases}} Cases</span></a>
+            </div>
+            <!-- /col -->
+          </div>
+          <!-- /row -->
+        </div>
+      </div>
+    </div>
+    <!-- /col -->
+    <!-- col -->
+    <div class="card-container col-lg-4 col-sm-6 col-sm-12">
+      <div class="card">
+        <div class="front bg-lightred">
+          <!-- row -->
+          <div class="row">
+            <!-- col -->
+            <div class="col-xs-4">
+              <i class="fa fa-shopping-cart fa-4x"></i>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-8">
+              <p class="text-elg text-strong mb-0" ng-model="totalcaseprioritycases">{{totalcaseprioritycases}}</p>
+              <span>Cases</span>
+            </div>
+            <!-- /col -->
+          </div>
+          <div class="clearfix" style="height: 14px"></div>
+          <!-- /row -->
+        </div>
+        <div class="back bg-lightred">
+          <!-- row -->
+          <div class="row" ng-repeat="caseCount in caseCounts">
+            <!-- col -->
+            <div class="col-xs-3">
+            	<div class ="totalcriticalcases">
+	            	<label class="labeltitle">Critical</label>
+		             <label style="width:100%;" ng-model="criticalcasescount">{{caseCount.issue_count_by_priority_id}}</label>
+		             <label style="width:100%;">cases</label>
+	            </div>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-3">
+                <div class ="totalcriticalcases">
+	            	 <label class="labeltitle">High</label>
+		             <label style="width:100%;" ng-model="highcasescount">{{caseCount.issue_count_by_priority_id}}</label>
+		             <label style="width:100%;">cases</label>
+	            </div>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-3">
+                <div class ="totalcriticalcases">
+	            	<label class="labeltitle">Medium</label>
+		            <label style="width:100%;" ng-model="mediumcasescount">{{caseCount.issue_count_by_priority_id}}</label>
+		            <label style="width:100%;">cases</label>
+	            </div>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-3">
+                <div class ="totalcriticalcases">
+	            	<label class="labeltitle">Low</label>
+		            <label style="width:100%;" ng-model="lowcasescount">{{caseCount.issue_count_by_priority_id}}</label>
+		            <label style="width:100%;">cases</label>
+	            </div>
+            </div>
+            <!-- /col -->
+          </div>
+          <!-- /row -->
+
+        </div>
+      </div>
+    </div>
+    <!-- /col -->
+
+    <!-- col -->
+    <div class="card-container col-lg-4 col-sm-6 col-sm-12">
+      <div class="card">
+         <!-- tile -->
+      <section class="tile tile-simple bg-blue" style="min-height: 100px; overflow: hidden;">
+        <!-- tile header -->
+        <div class="tile-header">
+          <h1 class="custom-font">Critical Cases</h1>
+        </div>
+        <!-- /tile header -->
+
+        <!-- tile body -->
+        <div class="tile-body criticalcasespadding">
+
+          <wrap-owlcarousel class="owl-carousel" data-options="{
+          autoPlay: 5000,
+          stopOnHover: true,
+          slideSpeed : 300,
+          paginationSpeed : 400,
+          singleItem : true}">
+
+									<div>
+										<div class="progress-list">
+											<div class="details icondisplay">
+												<div class="title">
+													<img src="resources/images/Facebook.png" alt="fb" width="50px" height="50px">
+												</div>
+												<div class="description text-transparent-white text-lowercase">
+													<label class="text-sm labelmargin">Jaheer Abbas Shaik</label>
+													<label class="text-sm labelmargin">high priority, started at: 12.08.2014 sdgsdfg dsfgsd dfg fg sdfgdf dfgd drh fgh fgh hfdgh fghfgh fghfdgh dfghdfgh fghfghd</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="progress-list">
+											<div class="details icondisplay">
+												<div class="title">
+													<img src="resources/images/Twitter.png" alt="twitter" width="50px" height="50px">
+												</div>
+												<div class="description text-transparent-white text-lowercase">
+												    <label class="text-sm labelmargin">Jaheer Abbas Shaik</label>
+													<label class="text-sm labelmargin">high priority, started at: 12.08.2014 sdgsdfg dsfgsd dfg fg sdfgdf dfgd drh fgh fgh hfdgh fghfgh fghfdgh dfghdfgh fghfghd</label>
+												</div>
+											</div>
+
+										</div>
+
+									</div>
+
+									<div>
+										<div class="progress-list">
+											<div class="details icondisplay">
+												<div class="title">
+													<img src="resources/images/Twitter.png" alt="twitter" width="50px" height="50px">
+												</div>
+												<div class="description text-transparent-white text-lowercase">
+												    <label class="text-sm labelmargin">Jaheer Abbas Shaik</label>
+													<label class="text-sm labelmargin">high priority, started at: 12.08.2014 sdgsdfg dsfgsd dfg fg sdfgdf dfgd drh fgh fgh hfdgh fghfgh fghfdgh dfghdfgh fghfghd</label>
+												</div>
+											</div>
+
+										</div>
+
+									</div>
+            
+                                     <div>
+										<div class="progress-list">
+											<div class="details icondisplay">
+												<div class="title">
+													<img src="resources/images/Facebook.png" alt="fb" width="50px" height="50px">
+												</div>
+												<div class="description text-transparent-white text-lowercase">
+												    <label class="text-sm labelmargin">Jaheer Abbas Shaik</label>
+													<label class="text-sm labelmargin">high priority, started at: 12.08.2014 sdgsdfg dsfgsd dfg fg sdfgdf dfgd drh fgh fgh hfdgh fghfgh fghfdgh dfghdfgh fghfghd</label>
+												</div>
+											</div>
+
+										</div>
+
+									</div>
+            
+                                    <div>
+										<div class="progress-list">
+											<div class="details icondisplay">
+												<div class="title">
+													<img src="resources/images/Twitter.png" alt="twitter" width="50px" height="50px">
+												</div>
+												<div class="description text-transparent-white text-lowercase">
+												    <label class="text-sm labelmargin">Jaheer Abbas Shaik</label>
+													<label class="text-sm labelmargin">high priority, started at: 12.08.2014 sdgsdfg dsfgsd dfg fg sdfgdf dfgd drh fgh fgh hfdgh fghfgh fghfdgh dfghdfgh fghfghd</label>
+												</div>
+											</div>
+
+										</div>
+
+									</div>
+            
+            </div>
+          </wrap-owlcarousel>
+        </div>
+        <!-- /tile body -->
+      </section>
+      <!-- /tile -->
+      </div>
+    </div>
+    <!-- /col -->
+  </div>
+  <!-- /row -->
+ </div>
+<!-- /tile body -->
+</section>
+<!-- /tile -->
+</div>
+<!-- /row -->
+<!-- row -->
+<div class="row">
+  <!-- col -->
+    <div class="col-md-6">
+
+      <!-- tile -->
+      <section class="tile" fullscreen="isFullscreen02">
+
+        <!-- tile header -->
+        <div class="tile-header dvd dvd-btm">
+          <h1 class="custom-font"><strong>Case </strong>Category</h1>
+        </div>
+        <!-- /tile header -->
+
+        <!-- tile widget -->
+        <div class="tile-widget">
+          <div morris-donut-chart donut-data='caseCategoryData' style="height: 250px"></div>
+        </div>
+        <!-- /tile widget -->
+
+        
+      </section>
+      <!-- /tile -->
+
+    </div>
+    <!-- /col -->
+   <!-- col -->
+    <div class="col-md-6">
+
+      <!-- tile -->
+      <section class="tile" fullscreen="isFullscreen02">
+
+        <!-- tile header -->
+        <div class="tile-header dvd dvd-btm">
+          <h1 class="custom-font"><strong>Case</strong>Priority</h1>
+        </div>
+        <!-- /tile header -->
+
+        <!-- tile widget -->
+        <div class="tile-widget">
+          <div id="a1" morris-donut-chart  donut-data='casePriorityData' style="height: 250px"></div>
+         <!--  <div id="donut-example"></div> -->
+        </div>
+        <!-- /tile widget -->
+
+        
+      </section>
+      <!-- /tile -->
+
+    </div>
+    <!-- /col -->
+  </div>
+  <div class="row">
+     <!-- col -->
+    <div class="col-md-12">
+
+      <!-- tile -->
+      <section class="tile" fullscreen="isFullscreen01">
+
+        <!-- tile header -->
+        <div class="tile-header bg-greensea dvd dvd-btm">
+          <h1 class="custom-font"><strong>Statistics </strong>Graph</h1>
+          <ul class="controls">
+            <li>
+              <a href="javascript:;" daterangepicker="rangeOptions" date-begin="startDate" date-end="endDate">
+                <span>{{startDate}} - {{endDate}}</span>&nbsp;&nbsp;<i class="fa fa-angle-down"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- /tile header -->
+
+        <!-- tile widget -->
+        <div class="tile-widget bg-greensea">
+           <input name="customRadio" type="radio" data-ng-model="caseStatisticVal" value="CaseCategory" data-ng-change = "changeCase(caseStatisticVal)"><i></i>Case Category
+           <input name="customRadio" type="radio" data-ng-model="caseStatisticVal" value="CasePriority" data-ng-change = "changeCase(caseStatisticVal)"><i></i>Case Priority
+           <input name="customRadio" type="radio" data-ng-model="caseStatisticVal" value="SocialChannel" data-ng-change = "changeCase(caseStatisticVal)"><i></i>Social Channel
+          <flot dataset="dataset" options="options" height="250px"></flot>
+          
+
+        </div>
+        <!-- /tile widget -->
+
+      
+      </section>
+      <!-- /tile -->
+
+    </div>
+    <!-- /col -->
+</div>
+<!-- /page content -->
+</div>

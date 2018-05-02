@@ -1,0 +1,43 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class AssigntoUserInputBO {
+
+	@SerializedName("user_name")
+	String userName;
+	@SerializedName("reason_assign")
+	String reasonForAssigning;
+	@SerializedName("Case")
+	List<String> caseIdList;
+	
+	
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getReasonForAssigning() {
+		return reasonForAssigning;
+	}
+	public void setReasonForAssigning(String reasonForAssigning) {
+		this.reasonForAssigning = reasonForAssigning;
+	}
+	public List<String> getCaseIdList() {
+		return caseIdList;
+	}
+	public void setCaseIdList(List<String> caseIdList) {
+		this.caseIdList = caseIdList;
+	}
+	
+	
+}

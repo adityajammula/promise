@@ -1,0 +1,12 @@
+package com.zen.smi.service;
+
+import java.util.List;
+
+import com.zen.smi.bo.OtherCommentsBO;
+import com.zen.smi.exception.BusinessException;
+
+public interface OtherCommentsService {
+
+	
+	public List<OtherCommentsBO> getOtherCommentsBO() throws BusinessException ;
+}

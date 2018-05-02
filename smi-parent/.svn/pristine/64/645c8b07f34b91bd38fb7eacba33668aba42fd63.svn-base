@@ -1,0 +1,52 @@
+package com.zen.smi.service;
+
+import java.util.List;
+
+import com.zen.smi.bo.RuleFamilyBO;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.exception.UserException;
+
+/**
+ * @author Jshaik
+ *
+ */
+
+public interface FamilyService {
+
+	/**
+	 * to get all families.
+	 *  
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of RuleFamilyBO
+	 */
+	List<RuleFamilyBO> getFamilyDetails() throws BusinessException;
+	
+	/**
+	 * to add the new family.
+	 * @param null
+	 * @return RuleFamilyBO
+	 * @throws UserException 
+	 * * @Author kalyan
+	 */
+	void saveFamilyDetails(RuleFamilyBO familyBO) throws BusinessException;
+	
+	/**
+	 * @author Venumadhava.Reddy
+	 * @param familyId
+	 * @throws UserException
+	 */
+	void deleteFamilyDetails(RuleFamilyBO familyBO) throws BusinessException;
+
+	/**
+	 * to get all the families by App Id.
+	 *  
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of RuleFamilyBO
+	 */
+	List<RuleFamilyBO> getRuleFamilysByAppId(int ruleAppsId)throws BusinessException;
+	
+}

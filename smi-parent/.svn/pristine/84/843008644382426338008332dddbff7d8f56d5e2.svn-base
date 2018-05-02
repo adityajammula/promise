@@ -1,0 +1,72 @@
+package com.zen.smi.extsys.service.impl;
+
+import java.net.URI;
+import java.net.URL;
+import java.net.URLDecoder;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.zen.smi.extsys.service.HadoopAppService;
+import com.zen.smi.generic.utils.SmiConstants;
+public class HadoopAppServiceImpl implements HadoopAppService {
+	
+	public HadoopAppServiceImpl()
+	{
+	}
+
+	public void newAgent() throws Exception {
+		
+		String intialUrl= SmiConstants.IP_HADOOP_APP+"/zen-web/agent/new";
+		intialUrl = convertToURLEscapingIllegalCharacters(intialUrl).toString();
+    	System.out.println("Url: "+intialUrl);
+		
+    	HttpGet request = new HttpGet(intialUrl);
+        HttpClient client = new DefaultHttpClient();
+        HttpResponse response = client.execute(request);
+        System.out.println(response);
+	}
+	public URL convertToURLEscapingIllegalCharacters(String string){
+	    try {
+	        String decodedURL = URLDecoder.decode(string, "UTF-8");
+	        URL url = new URL(decodedURL);
+	        URI uri = new URI(url.getProtocol(), url.getUserInfo(), url.getHost(), url.getPort(), url.getPath(), url.getQuery(), url.getRef()); 
+	        return uri.toURL(); 
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	        return null;
+	    }
+	}
+	public static void main(String[] args) throws Exception {
+		HadoopAppService service = new HadoopAppServiceImpl();
+		service.stopAgent(12);
+	}
+
+	public void stopAgent(int agentProcessId) throws Exception {
+		String intialUrl= SmiConstants.IP_HADOOP_APP+"/zen-web/agent/stop/"+agentProcessId;
+		intialUrl = convertToURLEscapingIllegalCharacters(intialUrl).toString();
+    	System.out.println("Url: "+intialUrl);
+		
+    	HttpGet request = new HttpGet(intialUrl);
+        HttpClient client = new DefaultHttpClient();
+        HttpResponse response = client.execute(request);
+        System.out.println(response);
+		
+	}
+
+	public void startAgent(int agentProcessId) throws Exception {
+		String intialUrl= SmiConstants.IP_HADOOP_APP+"/zen-web/agent/start/"+agentProcessId;
+		intialUrl = convertToURLEscapingIllegalCharacters(intialUrl).toString();
+    	System.out.println("Url: "+intialUrl);
+		
+    	HttpGet request = new HttpGet(intialUrl);
+        HttpClient client = new DefaultHttpClient();
+        HttpResponse response = client.execute(request);
+        System.out.println(response);
+		
+	}
+	
+	
+}

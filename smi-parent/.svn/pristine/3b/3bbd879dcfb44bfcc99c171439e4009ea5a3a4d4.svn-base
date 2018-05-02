@@ -1,0 +1,40 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.CmfCaseHistoryDAO;
+import com.zen.smi.dao.FlumeAgentsDAO;
+import com.zen.smi.dao.entities.CmfCaseHistory;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfCaseHistoryDAOImpl extends BaseDAOImpl<CmfCaseHistory, Serializable> implements CmfCaseHistoryDAO {
+
+	public CmfCaseHistoryDAOImpl() {
+		super(CmfCaseHistory.class);
+	}
+
+	public List<CmfCaseHistory> getCmfCaseHistoryByDetailId(int detailId)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("cmfCaseDetails.id", detailId));
+		
+		return search(expressionList, null);
+	}
+
+	public CmfCaseHistory getCaseHistoryByParentId(Integer caseHistoryId)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("parentCaseHistoryId", caseHistoryId));
+		
+		return searchUnique(expressionList, null);
+	}
+	
+	
+}

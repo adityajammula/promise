@@ -1,0 +1,229 @@
+package com.zen.smi.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zen.smi.bo.FinancialInstitutionsBO;
+import com.zen.smi.bo.ParentBO;
+import com.zen.smi.bo.ParentListBO;
+import com.zen.smi.bo.SocialMediaAccountsBO;
+import com.zen.smi.bo.SocialMediaAccountsListBO;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.FinancialInstitutionsService;
+import com.zen.smi.service.SocialMediaAccountsService;
+
+/**
+ * SocialMediaAccountsController class manage rule related data. Data from screens is
+ * transferred to the controller and passed to services/dao.
+ * 
+ * @author kalyan
+ */
+@Controller
+@RequestMapping("/socialMediaAccounts")
+public class SocialMediaAccountsController extends BaseController {
+
+	/**
+	 * Logger for RulesPageController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(SocialMediaAccountsController.class);
+
+	@Autowired
+	public SocialMediaAccountsService socialMediaAccountsService;
+
+	@Autowired
+	public FinancialInstitutionsService financialInstitutionsService;
+	
+	/**
+	 * This method is to get all Social Media Accounts Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return SocialMediaAccountsBO
+	 */
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public @ResponseBody String getSocialMediaAccountsData(HttpServletRequest request,
+			HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			
+			List<SocialMediaAccountsBO> socialMediaAccounts = socialMediaAccountsService.getSocialMediaAccounts();
+			SocialMediaAccountsListBO socialMediaAccountsListBO = new SocialMediaAccountsListBO();
+			socialMediaAccountsListBO.setSocialMediaAccountsBO(socialMediaAccounts);
+			resultJson = gson.toJson(socialMediaAccountsListBO, SocialMediaAccountsListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+
+	@RequestMapping(value = "/{account_type_id}", method = RequestMethod.GET)
+	public @ResponseBody
+	String getSocialMediaAccountsByAccountType(@PathVariable("account_type_id") int accountTypeId,
+			HttpServletRequest request, HttpServletResponse response) {
+		LOGGER.info("starts getSocialMediaAccountsByAccountType");
+		String resultJson = null;
+		try {
+			
+			List<SocialMediaAccountsBO> socialMediaAccounts = socialMediaAccountsService.getSocialMediaAccountsByAccountType(accountTypeId);
+			SocialMediaAccountsListBO socialMediaAccountsListBO = new SocialMediaAccountsListBO();
+			socialMediaAccountsListBO.setSocialMediaAccountsBO(socialMediaAccounts);
+			resultJson = gson.toJson(socialMediaAccountsListBO, SocialMediaAccountsListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		LOGGER.info("ends getRuleDataById");
+		return resultJson;
+	}
+	
+	
+	
+	
+	
+	/**
+	 * This method is to get tree structure for account relations
+	 * @author Venumadhava.Reddy
+	 * @param request
+	 * @param response
+	 * @return json object
+	 */
+	
+	@RequestMapping(value = "/account_relations", method = RequestMethod.GET)
+	public @ResponseBody String getAccountsRelationTree(HttpServletRequest request,
+			HttpServletResponse response)
+	{
+		String resultJson = null;
+		LOGGER.debug("Starts getAccountsRelationTree... ");	
+		try {
+			List<ParentBO> parentBOs =  financialInstitutionsService.getAllAccountRelations();
+			ParentListBO parentListBO = new ParentListBO();
+			parentListBO.setParentBOs(parentBOs);
+			resultJson = gson.toJson(parentListBO, ParentListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		LOGGER.debug("Starts getAccountsRelationTree... ");
+		return resultJson;
+	}
+	
+	/**
+	 * This method is to save account relation 
+	 * @author Venumadhava.Reddy
+	 * @param addRelationJson
+	 * @param request
+	 * @param response
+	 * @return json object
+	 */
+	
+	@RequestMapping(value = "/update", method = RequestMethod.POST)	
+	public @ResponseBody String saveAccountRelation(@RequestBody String addRelationJson, HttpServletRequest request,
+			HttpServletResponse response)
+	{
+		LOGGER.debug("Starts saveAccountRelation...");
+		String resultJson = null;
+	 	FinancialInstitutionsBO financialInstitutionsBO = gson.fromJson(addRelationJson, FinancialInstitutionsBO.class);
+		try {
+			financialInstitutionsService.saveAccountRelations(financialInstitutionsBO);
+			resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("RELATION_CREATED", null));
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		LOGGER.debug("End saveAccountRelation...");
+		return resultJson;
+	}
+	
+	/**
+	 * This method is to delete the relation
+	 * @author Venumadhava.Reddy
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/destroy/{id}", method = RequestMethod.POST)	
+	public @ResponseBody String deleteRelation(@PathVariable("id") int id, HttpServletRequest request,
+			HttpServletResponse response)
+	{
+		LOGGER.debug("Starts deleteRelation...");
+		String resultJson = null;
+		 
+		FinancialInstitutionsBO financialInstitutionsBO = new FinancialInstitutionsBO();
+		financialInstitutionsBO.setId(id);
+		try {
+			financialInstitutionsService.deleteRelation(financialInstitutionsBO);
+			resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("RELATION_DELETED", null));
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be); 
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		LOGGER.debug("End deleteRelation...");
+		return resultJson;
+	}
+	
+	/**
+	 * This method is to save account relation 
+	 * @author Venumadhava.Reddy
+	 * @param addRelationJson
+	 * @param request
+	 * @param response
+	 * @return json object
+	 */
+	
+	@RequestMapping(value = "/save", method = RequestMethod.POST)	
+	public @ResponseBody String saveSocialMediaAccount(@RequestBody String addRelationJson, HttpServletRequest request,
+			HttpServletResponse response)
+	{
+		LOGGER.debug("Starts saveSocialMediaAccount...");
+		String resultJson = null;
+		SocialMediaAccountsBO socialMediaAccountsBO    = gson.fromJson(addRelationJson, SocialMediaAccountsBO.class);
+		try {
+			socialMediaAccountsService.saveSocialMediaAccount(socialMediaAccountsBO);
+			resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("SOCIAL_MEDIA_ACCOUNT_CREATED", null));
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		LOGGER.debug("End saveSocialMediaAccount...");
+		return resultJson;
+	}
+	
+}

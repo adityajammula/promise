@@ -1,0 +1,103 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.Date;
+
+import com.zen.smi.dao.entities.CmfCase;
+
+
+public class CmfCaseHistoryBO {
+	private Integer caseHistoryId;
+	private String caseHistoryDescription;
+	private Integer parentCaseHistoryId;
+	private String createdBy;
+	private Date createdDate;
+	private CmfCaseHistoryBO childCmfCaseHistoryBO;
+	private String postType;
+	
+	/**
+	 * @return the caseHistoryId
+	 */
+	public Integer getCaseHistoryId() {
+		return caseHistoryId;
+	}
+	/**
+	 * @param caseHistoryId the caseHistoryId to set
+	 */
+	public void setCaseHistoryId(Integer caseHistoryId) {
+		this.caseHistoryId = caseHistoryId;
+	}
+	/**
+	 * @return the caseHistoryDescription
+	 */
+	public String getCaseHistoryDescription() {
+		return caseHistoryDescription;
+	}
+	/**
+	 * @param caseHistoryDescription the caseHistoryDescription to set
+	 */
+	public void setCaseHistoryDescription(String caseHistoryDescription) {
+		this.caseHistoryDescription = caseHistoryDescription;
+	}
+	/**
+	 * @return the parentCaseHistoryId
+	 */
+	public Integer getParentCaseHistoryId() {
+		return parentCaseHistoryId;
+	}
+	/**
+	 * @param parentCaseHistoryId the parentCaseHistoryId to set
+	 */
+	public void setParentCaseHistoryId(Integer parentCaseHistoryId) {
+		this.parentCaseHistoryId = parentCaseHistoryId;
+	}
+	/**
+	 * @return the createdBy
+	 */
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the childCmfCaseHistoryBO
+	 */
+	public CmfCaseHistoryBO getChildCmfCaseHistoryBO() {
+		return childCmfCaseHistoryBO;
+	}
+	/**
+	 * @param childCmfCaseHistoryBO the childCmfCaseHistoryBO to set
+	 */
+	public void setChildCmfCaseHistoryBO(CmfCaseHistoryBO childCmfCaseHistoryBO) {
+		this.childCmfCaseHistoryBO = childCmfCaseHistoryBO;
+	}
+	/**
+	 * @return the postType
+	 */
+	public String getPostType() {
+		return postType;
+	}
+	/**
+	 * @param postType the postType to set
+	 */
+	public void setPostType(String postType) {
+		this.postType = postType;
+	}
+	
+	
+}

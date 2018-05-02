@@ -1,0 +1,99 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.SocialMediaAccountPostsDAO;
+import com.zen.smi.dao.entities.SocialMediaAccountPosts;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class SocialMediaAccountPostsDAOImpl extends BaseDAOImpl<SocialMediaAccountPosts, Serializable> implements SocialMediaAccountPostsDAO {
+
+	public SocialMediaAccountPostsDAOImpl() {
+		super(SocialMediaAccountPosts.class);
+	}
+	public List<SocialMediaAccountPosts> getSocialMediaAccountsByPostId(int id)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("socialMediaPosts.id", id));
+		
+		return search(expressionList, null);
+	}
+
+	
+	public List<SocialMediaAccountPosts> getSocialMediaPostsBySearchCriteria(Integer socialProfile,
+			List<Integer> socialMediaAccountIds, Date startDate, Date endDate)
+			throws GenericDAOException {
+		Session session = null;
+		
+		List<SocialMediaAccountPosts> socialMediaAccountPostsList = null;
+		Map<String, Object> parameterNameAndValues = new HashMap<String, Object>();		
+		parameterNameAndValues.put("startDate", startDate);
+		parameterNameAndValues.put("endDate", endDate);
+		StringBuilder accountIds = new StringBuilder();
+		for (Integer accountId : socialMediaAccountIds) {
+			accountIds.append(accountId+",");
+		}
+		String accIds = "";
+		if(null != socialMediaAccountIds && !socialMediaAccountIds.isEmpty()) {
+			accIds = accountIds.toString().substring(0, accountIds.toString().lastIndexOf(","));
+		}
+		 
+		try{
+        	session = getSessionFactory().openSession();
+        	StringBuilder searchQuery = new StringBuilder();
+        	searchQuery.append("FROM SocialMediaAccountPosts as accountPosts LEFT JOIN FETCH accountPosts.socialMediaPosts as posts LEFT JOIN FETCH accountPosts.socialMediaAccounts accounts WHERE ");
+        	boolean andClause = false;
+        	if(null != socialProfile && socialProfile>0) {
+        		searchQuery.append(" accounts.socialProfiles ="+socialProfile ); 
+        		andClause = true;
+        	}
+        	if(!accIds.equals("")) {
+        		if(andClause) {
+        			searchQuery.append(" and accountPosts.socialMediaAccounts in("+accIds+") " );
+        		} else {
+        			searchQuery.append(" accountPosts.socialMediaAccounts in("+accIds+") " );
+        		}
+        		andClause = true;
+        	}
+        	if(andClause) {
+    			searchQuery.append(" and posts.createdDate BETWEEN :startDate AND :endDate" );
+    		} else {
+    			searchQuery.append("  posts.createdDate BETWEEN :startDate AND :endDate" );
+    		}
+//        	String hqlQuery = "FROM SocialMediaAccountPosts as accountPosts LEFT JOIN FETCH accountPosts.socialMediaPosts as posts LEFT JOIN FETCH accountPosts.socialMediaAccounts accounts WHERE accounts.socialProfiles ="+socialProfile +" and accountPosts.socialMediaAccounts in("+accIds+") and posts.createdDate BETWEEN :startDate AND :endDate";
+        	
+        	 Query query = session.createQuery(searchQuery.toString());
+        	 for (Entry<String, Object> e : parameterNameAndValues.entrySet()) {
+        		 query.setParameter(e.getKey(), e.getValue());
+        	 }
+        	 socialMediaAccountPostsList =  query.list();
+		}
+        catch (HibernateException ex){
+            if(session!=null && session.getTransaction()!=null){
+                session.getTransaction().rollback();
+            }
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+        
+		return socialMediaAccountPostsList; 
+		
+	}
+	
+}

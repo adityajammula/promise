@@ -1,0 +1,55 @@
+package com.zen.smi.socialtransactions.bo;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.google.gson.annotations.SerializedName;
+
+
+public class TransactionCategoryBO {
+	@SerializedName("st_transaction_type_id")	
+	private Integer stTransactionTypeId;
+	@SerializedName("st_transaction_code")	
+	private String stTransactionCode;
+	@SerializedName("st_transaction_description")	
+	private String stTransactionDescription;
+	/**
+	 * @return the stTransactionTypeId
+	 */
+	public Integer getStTransactionTypeId() {
+		return stTransactionTypeId;
+	}
+	/**
+	 * @param stTransactionTypeId the stTransactionTypeId to set
+	 */
+	public void setStTransactionTypeId(Integer stTransactionTypeId) {
+		this.stTransactionTypeId = stTransactionTypeId;
+	}
+	/**
+	 * @return the stTransactionCode
+	 */
+	public String getStTransactionCode() {
+		return stTransactionCode;
+	}
+	/**
+	 * @param stTransactionCode the stTransactionCode to set
+	 */
+	public void setStTransactionCode(String stTransactionCode) {
+		this.stTransactionCode = stTransactionCode;
+	}
+	/**
+	 * @return the stTransactionDescription
+	 */
+	public String getStTransactionDescription() {
+		return stTransactionDescription;
+	}
+	/**
+	 * @param stTransactionDescription the stTransactionDescription to set
+	 */
+	public void setStTransactionDescription(String stTransactionDescription) {
+		this.stTransactionDescription = stTransactionDescription;
+	}
+	
+	
+}

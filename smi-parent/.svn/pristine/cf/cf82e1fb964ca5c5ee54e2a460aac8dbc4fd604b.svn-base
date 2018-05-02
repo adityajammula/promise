@@ -1,0 +1,25 @@
+'use strict';
+
+/**
+ * @ngdoc directive
+ * @name smiApp.directive:checkToggler
+ * @description
+ * # checkToggler
+ */
+angular.module('smiApp')
+  .directive('checkToggler', function () {
+    return {
+      restrict: 'E',
+      link: function postLink(scope, element) {
+        element.on('click', function(){
+
+          if (element.hasClass('checked')) {
+            element.removeClass('checked');
+          } else {
+            element.addClass('checked');
+          }
+
+        });
+      }
+    };
+  });

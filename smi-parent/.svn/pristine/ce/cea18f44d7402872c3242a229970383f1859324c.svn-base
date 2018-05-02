@@ -1,0 +1,21 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+import com.zen.smi.dao.entities.Posts;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * 
+ * @author Tejaswi.Gandra
+ *
+ */
+public interface ProcessesDAO extends BaseDAO <Posts, Serializable> {
+
+	List<Posts> getPostsData(String accountName,Date date);
+} 
+

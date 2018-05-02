@@ -1,0 +1,79 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+       .controller('ViewCustomerHistoryTwitterController', function ($scope,$state,$modal,OpenfacebookCaseService,$rootScope) {
+	  /**
+	   * This method is used show the History of Particular Customer.
+	   */ 	
+	  $scope.twitterCases =[];
+	    $rootScope.initializeCustomerHistoryController = function() {
+	    	 $scope.getHistory();
+		};
+		 $scope.getHistory = function() {
+	    OpenfacebookCaseService.getCustomerHistory($rootScope.customerId).then(function(response) {
+	    	 $scope.twitterCases =response.data.cmfCaseBO;
+		});
+		};
+		/**
+		* This method is used for Refresh the page
+		*/
+		 $scope.refreshTwitterPage = function() {
+			 $scope.getHistory();
+	    };
+	    
+	   /**
+		* It will show complete details of particular Customer Case in Pop up.
+		*/ 
+	  $scope.showCaseHistory = function() {
+			var modalInstance = $modal.open({
+				templateUrl : 'customerHistoryTwitter.html',
+				controller : 'CustomerHistoryControllerTwitter',
+			});	
+		};
+	    /*
+	     * This method to navigate back to Previous
+	     */
+		 $scope.goOpenTwitter= function(){
+			 $state.go('opentwittercases');
+		 };
+		  /*
+		  * This method is used for  search functionality
+		  * 
+		  */
+		  $scope.Search = '';
+		    $scope.search = function (user) {
+		      var query = $scope.Search;
+		      var fullname = user.cmfCustomerBO.firstName+ ' ' + user.cmfCustomerBO.lastName;
+		      if (fullname.indexOf(query) != -1) {
+		        return true;
+		      }
+		      return false;
+		    };
+
+}).controller('CustomerHistoryControllerTwitter', function($scope,$state,$modal,$stateParams, $modalInstance,OpenfacebookCaseService) {
+	$scope.caseDetails = [];
+	$scope.image = "resources/images/random-avatar1.jpg";
+	OpenfacebookCaseService.getIndividualCaseDetails($stateParams.case_id).then(function(response) {
+		if(response != null) {
+		$scope.caseContent = response.data.description;
+		$scope.customerName = response.data.cmfCustomerBO.firstName;
+		$scope.createdDate = response.data.created_date;
+		$scope.casePriority =  response.data.cmfCasePriorityBO.priority_name;
+		$scope.socialAccount =  response.data.socialMediaAccountsBO.social_media_accounts_accountname;
+		$scope.caseStatus =  response.data.cmfCaseStatusBO.caseStatus;
+		    if(response.data.cmfCaseDetailsBO != null) {
+		       $scope.caseDetails = response.data.cmfCaseDetailsBO.cmfCaseHistories;
+		    }
+		}
+    });
+	$scope.close = function () {
+		$modalInstance.dismiss('close');
+    };
+});

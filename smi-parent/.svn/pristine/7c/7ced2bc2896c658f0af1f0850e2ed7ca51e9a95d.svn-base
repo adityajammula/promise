@@ -1,0 +1,70 @@
+AppServices.factory('SocialTransactionsServices', function($http, $q, smiGenUtil) {
+
+	return {
+
+		// Start getSocialTransactionData 
+		getSocialTransactionData : function() {
+			var deferred = $q.defer();
+			$http.get('socialtransaction/staticdata', {
+				headers : {
+					'Content-Type' : 'application/json; charset=UTF-8'
+				}
+			}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function() {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// end getSocialTransactionData 
+		
+		// Start TransactionsByCriteria
+		getTransctionsByCriteria : function(requestData) {
+			var deferred = $q.defer();
+			$http.post('socialtransaction/stcasesbycriteria',
+					JSON.stringify(requestData), {
+						headers : {
+							'Content-Type' : 'application/json; charset=UTF-8'
+						}
+					}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function(response) {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},
+		// Start TransactionsByCriteria
+		
+		// Start getIndividualTransactionDetails
+		getIndividualTransactionDetails : function(stcase_id) {
+			var deferred = $q.defer();
+			$http.get('socialtransaction/stcasesdetails/' + stcase_id + '',
+					{}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function() {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// end getIndividualTransactionDetails 
+		
+		 // Start getAllTransctions
+		getAllTransctions : function(requestData) {
+			var deferred = $q.defer();
+			$http.post('socialtransaction/ftcasesbytransactions',
+					JSON.stringify(requestData), {
+						headers : {
+							'Content-Type' : 'application/json; charset=UTF-8'
+						}
+					}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function(response) {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},
+		// Ends getAllTransctions
+	};
+});

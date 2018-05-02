@@ -1,0 +1,143 @@
+<div class="page page-full page-mail">	  
+<script type="text/ng-template" id="customerHistoryTwitter.html">
+<div class="modal-header col-md-12 ">
+                  <h3 class="modal-title custom-font col-md-12">Case Detials</h3>				  
+ </div>      
+<div id="secondHeader" > 
+<div class="col-md-12" style="text-decoration: line-through; left: 80px;">
+	<span class="badge bg-greensea">&nbsp;&nbsp;&nbsp;</span>
+	<span style="text-decoration: line-through;">---------------</span>
+	<span class="badge bg-primary">&nbsp;&nbsp;&nbsp;</span>
+	<span style="text-decoration: line-through;">---------------</span>
+	<span class="badge bg-red">&nbsp;&nbsp;&nbsp;</span>
+	<span style="text-decoration: line-through;">---------------</span>
+	<span class="badge bg-orange">&nbsp;&nbsp;&nbsp;</span>
+	<span style="text-decoration: line-through;">---------------</span>
+	<span class="badge bg-black">&nbsp;&nbsp;&nbsp;</span>
+</div>
+<div class="col-md-12" style="left: 55px;">
+	<label class="tile-body custom-font col-md-2"><small><strong>Created</strong></small></label> <label
+		class="tile-body custom-font col-md-2"><small><strong>Assigned</strong></small></strong></label> <label
+		class="tile-body custom-font col-md-2"><small><strong>Escalated</strong></small></strong></label> <label
+		class="tile-body custom-font col-md-2"><small><strong>Resolved</strong></small></strong></label> <label
+		class="tile-body custom-font col-md-2"><small><strong>Closed</strong></small></strong></label>
+</div>
+<div class="col-md-12" style="left: 55px;">
+	<label class="tile-body custom-font col-md-2"></label> <label
+		class="tile-body custom-font col-md-2"><small><strong>Name</small></label> <label
+		class="tile-body custom-font col-md-2"></label> 
+		<label class="tile-body custom-font col-md-2"><small><strong>Name</strong></small></label>
+	<label class="tile-body custom-font col-md-2"><small><strong>Name</strong></small></label>
+</div>
+<div class="col-md-12" style="left: 55px;">
+			<label class="tile-body text-small col-md-2"><small><strong>16:54, 24.11.2014</strong></small></label> 
+			<label class="tile-body text-small col-md-2"><small><strong>16:54, 24.11.2014</strong></small></label> 
+			<label class="tile-body text-small col-md-2"><small><strong>16:54, 24.11.2014</strong></small></label> 
+			<label class="tile-body text-small col-md-2"><small><strong>16:54, 24.11.2014</strong></small></label> 
+			<label class="tile-body text-small col-md-2"><small><strong>16:54, 24.11.2014</strong></small></label>
+		</div>
+</div>
+<div class="col-md-12">
+		<ul class="list-group no-radius no-border" id="mails-list">
+			<li> <div class="media" style="border-bottom: 1px solid gray; margin: 5;">
+						<div class="pull-left">
+							<div class="thumb thumb-sm">
+								<img src="{{image}}" class="img-circle">
+							</div>
+						</div>
+						<div class="media-body">
+							<div class="media-heading m-0">
+								<a class="mr-5">{{customerName}}</a> <span
+									class="pull-right text-sm text-muted"> <span
+									class="hidden-xs">{{ createdDate }}</span>
+								</span>
+							</div>
+							<small>{{caseContent}}</small>
+						</div>
+						<div class="form-group col-md-12 ">
+							<label class="col-md-4 "><b>Case Priority :</b>&nbsp<b data-ng-class="casePriority == 'HIGH' ? 'text-orange' :(casePriority == 'MEDIUM' ? 'text-blue' : (casePriority == 'CRITICAL' ? 'text-lightred' :'text-greensea'))">{{casePriority}}</b></label> 
+							<label class="col-md-4 "><b>Social Account : {{socialAccount}}</b></label> 
+							<label class="col-md-4 "><b>Case Status :</b>&nbsp<b data-ng-class="caseStatus == 'Created' ? 'text-greensea' :(caseStatus == 'Assigned' ? 'text-blue' : (caseStatus == 'Escalated' ? 'text-lightred' :(caseStatus == 'Resolved' ? 'text-orange' :'text-black' )))"> {{caseStatus}}</b></label>
+						</div>
+					</div></li>
+				<li ng-repeat="showCaseHistoryDetail in showCaseHistory"
+					class="list-group-item b-{{mail.label.color}}">
+					<div class="media" style="border-bottom: 1px solid gray; margin: 5">
+						<div class="media-body">
+							<div class="media-heading m-0 col-md-12">
+								<span class="text-sm text-muted pull-left hidden-xs col-md-9">
+									{{ showCaseHistoryDetail.createdDate }} </span>
+								<div class="col-lg-2 col-md-8"
+									style="text-align: right; color: #337ab7; font-weight: 700;">{{showCaseHistoryDetail.createdBy}}</div>
+								<div>
+									<i class="fa fa-bank pull-right" style="font-size: xx-large"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-9 col-sm-10 " style="margin-left: 20%;">
+							<small>{{showCaseHistoryDetail.caseHistoryDescription}}</small>
+						</div>
+					</div>
+					<div class="media-body">
+							<div class="media-heading m-0">
+								<a class="mr-5">{{showCaseHistoryDetail.createdBy}}</a> <span
+									class="pull-right text-sm text-muted"> <span
+									class="hidden-xs">{{ showCaseHistoryDetail.createdDate }}</span>
+								</span>
+							</div>
+							<small>{{showCaseHistoryDetail.caseHistoryDescription}}</small>
+						</div>
+				</li>
+			</ul>
+</div>
+
+<div class="modal-footer">
+                  <button class="btn btn-primary btn-ef btn-ef-4" ng-click="close()">Close</button>
+ </div>
+</script>
+       
+  <div class="tcol">
+    	<div class="p-15 bg-white b-b">
+          <div class=" tile-body row">
+				      <div class="col-md-12">
+				         	<div class="col-md-8 ">
+					            <a  class=" br-2 w-60"  data-ng-click="goOpenTwitter()"><i class="fa fa-long-arrow-left"></i></a>
+					        </div>
+				     		<div class="col-md-3 ">
+								<input id="filter" type="search" ng-model="Search"class="form-control input-sm w-sm mb-10 inline-block "placeholder="search"> <i class="icon-magnifier"></i>
+							</div>
+							<div class="btn-group col-md-1 ">
+					 				<button class="btn btn-default btn-sm br-2 text-right" data-ng-click="refreshTwitterPage()"><i class="fa fa-refresh"></i></button>
+					         </div>
+				     </div>
+		  </div>
+		 </div>
+			  <div class="col-md-12 tile-body row" > 
+						 <ul class="list-group no-radius no-border" id="mails-list" style="width: 103.5%">
+						    <li ng-repeat="case in twitterCases|filter:search"   data-ng-class="case.cmfCasePriorityBO.priority_name == 'HIGH' ? 'border-orange' :(case.cmfCasePriorityBO.priority_name == 'MEDIUM' ? 'border-blue' : (case.cmfCasePriorityBO.priority_name == 'CRITICAL' ? 'border-lightred' :'border-greensea'))" class="list-group-item b-{{mail.label.color}}" >
+								 <div class="media" >
+						     		<div class="pull-left">
+						          		<div class="thumb thumb-sm">
+						           		 <img src="{{image}}" class="img-circle" >
+						          		</div>
+						        	</div>
+						      <div class="media-body" data-ng-click="showCaseHistory(case)">
+						         		 <div class="media-heading m-0">
+						            	  <a class="mr-5">{{case.cmfCustomerBO.firstName}} {{case.cmfCustomerBO.lastName}}</a>
+						                  <span class="pull-right text-sm text-muted">
+						                  <span class="hidden-xs"><b>{{ case.created_date }}</b></span>
+						                   </span>
+						                  </div>
+						                  <small>{{case.description}}</small>
+						            <div class="form-group col-md-12 tile-body ">
+						         		 <label  class="col-md-4 "><b>Case Priority :</b> &nbsp<b data-ng-class="case.cmfCasePriorityBO.priority_name == 'HIGH' ? 'text-orange' :(case.cmfCasePriorityBO.priority_name == 'MEDIUM' ? 'text-blue' : (case.cmfCasePriorityBO.priority_name == 'CRITICAL' ? 'text-lightred' :'text-greensea'))"> {{case.cmfCasePriorityBO.priority_name}}</b></label>
+								         <label class="col-md-4 "><b>Social Account :</b> &nbsp<b> {{case.socialMediaAccountsBO.social_media_accounts_accountname}}</b></label>
+								          <label class="col-md-4 "><b>Case Status : </b> &nbsp<b data-ng-class="case.cmfCaseStatusBO.caseStatus == 'Created' ? 'text-greensea' :(case.cmfCaseStatusBO.caseStatus == 'Assigned' ? 'text-blue' : (case.cmfCaseStatusBO.caseStatus == 'Escalated' ? 'text-lightred' :(case.cmfCaseStatusBO.caseStatus== 'Resolved' ? 'text-orange' :'text-black' )))">{{case.cmfCaseStatusBO.caseStatus}}</b></label>
+								  </div>
+							 </div> 
+							</div>
+						</li>
+					</ul>
+			</div>
+     </div>
+</div>

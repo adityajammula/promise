@@ -1,0 +1,224 @@
+package com.zen.smi.controller;
+
+
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.zen.smi.cmf.bo.CmfCaseCriteriaBO;
+import com.zen.smi.cmf.bo.CmfCaseListBO;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.socialtransactions.bo.SocialTransactionStaticDataBO;
+import com.zen.smi.socialtransactions.bo.StCaseBO;
+import com.zen.smi.socialtransactions.bo.StCaseBalanceEnquiryBO;
+import com.zen.smi.socialtransactions.bo.StCaseTransactionBO;
+import com.zen.smi.socialtransactions.service.SocialTransactionCaseDataService;
+
+/**
+ * 
+ * 
+ * @author  
+ */
+@Controller
+@RequestMapping("/socialtransaction")
+public class SocialTransactionCaseController extends BaseController{
+	
+	/**
+	 * Logger for StCaseController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(SocialTransactionCaseController.class);
+	
+	@Autowired
+	public SocialTransactionCaseDataService socialTransactionCaseDataService;
+	
+	@Autowired
+	Gson gson;
+	
+	
+
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/staticdata", method = RequestMethod.GET)
+	public @ResponseBody String getSTTransactionStaticData(HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			SocialTransactionStaticDataBO socialTransaction = socialTransactionCaseDataService.getSTTransactionStaticData(1);
+			resultJson = gson.toJson(socialTransaction, SocialTransactionStaticDataBO.class);
+			resultJson = handleSuccess(resultJson, null);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	@RequestMapping(value = "/stcasesbycriteria", method = RequestMethod.POST)
+	public @ResponseBody String getCmfCasesSearchCriteria(@RequestBody String stCaseJson,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			CmfCaseCriteriaBO cmfCaseCriteriaBO=gson.fromJson(stCaseJson, CmfCaseCriteriaBO.class);			
+
+			Integer accountTypeId;
+			Integer socialMediaAccountsId;
+			Integer statusTypeId;
+			Integer categoryTypeId;
+			if(cmfCaseCriteriaBO.getCategoryType() == "" || cmfCaseCriteriaBO.getCategoryType().equals("") || cmfCaseCriteriaBO.getCategoryType().equals("All")) {
+				categoryTypeId = null;
+			} else {
+				categoryTypeId = Integer.parseInt(cmfCaseCriteriaBO.getCategoryType());
+			}
+			if(cmfCaseCriteriaBO.getSocialMediaAccountsId() == "" || cmfCaseCriteriaBO.getSocialMediaAccountsId().equals("") || cmfCaseCriteriaBO.getSocialMediaAccountsId().equals("All")) {
+				socialMediaAccountsId = null;
+			} else {
+				socialMediaAccountsId = Integer.parseInt(cmfCaseCriteriaBO.getSocialMediaAccountsId());
+			}
+			if(cmfCaseCriteriaBO.getAccountType() == "" || cmfCaseCriteriaBO.getAccountType().equals("") || cmfCaseCriteriaBO.getAccountType().equals("All")) {
+				accountTypeId = null;
+			} else {
+				accountTypeId = Integer.parseInt(cmfCaseCriteriaBO.getAccountType());
+			}
+			
+			if(cmfCaseCriteriaBO.getStatusTypeId() == "" || cmfCaseCriteriaBO.getStatusTypeId().equals("") || cmfCaseCriteriaBO.getStatusTypeId().equals("All")) {
+				statusTypeId = null;
+			} else {
+				statusTypeId = Integer.parseInt(cmfCaseCriteriaBO.getStatusTypeId());
+			}
+
+			List<StCaseBO> stCaseBOList = socialTransactionCaseDataService.getCmfCasesSearchCriteria(accountTypeId, socialMediaAccountsId,statusTypeId,categoryTypeId);
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setStCaseBOList(stCaseBOList);
+			String cmfJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);			
+			resultJson = handleSuccess(cmfJson, null);
+			System.out.println(stCaseBOList.size());
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/stcasesdetails/{stcasetransaction_id}", method = RequestMethod.GET)
+	public @ResponseBody String getStCaseDetails(@PathVariable("stcasetransaction_id") String stCaseTransactionId,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		System.out.println("stCaseTransactionId==>"+stCaseTransactionId);
+		String resultJson = null;
+		try {
+			StCaseTransactionBO stCaseTransactionBO = socialTransactionCaseDataService.getStCaseDetails(stCaseTransactionId);
+			  String cmfJson=gson.toJson(stCaseTransactionBO,StCaseTransactionBO.class);			
+				resultJson = handleSuccess(cmfJson, null);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	
+	
+	@RequestMapping(value = "/ftcasesbytransactions", method = RequestMethod.POST)
+	public @ResponseBody String getAllFundsTransfers(@RequestBody String stCaseJson,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			CmfCaseCriteriaBO cmfCaseCriteriaBO=gson.fromJson(stCaseJson, CmfCaseCriteriaBO.class);			
+
+			Integer accountTypeId;
+			Integer socialMediaAccountsId;
+			Integer statusTypeId;
+			if(cmfCaseCriteriaBO.getSocialMediaAccountsId() == "" || cmfCaseCriteriaBO.getSocialMediaAccountsId().equals("") || cmfCaseCriteriaBO.getSocialMediaAccountsId().equals("All")) {
+				socialMediaAccountsId = null;
+			} else {
+				socialMediaAccountsId = Integer.parseInt(cmfCaseCriteriaBO.getSocialMediaAccountsId());
+			}
+			if(cmfCaseCriteriaBO.getAccountType() == "" || cmfCaseCriteriaBO.getAccountType().equals("") || cmfCaseCriteriaBO.getAccountType().equals("All")) {
+				accountTypeId = null;
+			} else {
+				accountTypeId = Integer.parseInt(cmfCaseCriteriaBO.getAccountType());
+			}
+			if(cmfCaseCriteriaBO.getStatusTypeId() == "" || cmfCaseCriteriaBO.getStatusTypeId().equals("") || cmfCaseCriteriaBO.getStatusTypeId().equals("All")) {
+				statusTypeId = null;
+			} else {
+				statusTypeId = Integer.parseInt(cmfCaseCriteriaBO.getStatusTypeId());
+			}
+			
+			List<StCaseTransactionBO> stCaseTransactionBOList = socialTransactionCaseDataService.getAllFundsTransferByTransactions(accountTypeId,socialMediaAccountsId,statusTypeId);
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setStCaseTransactionBOList(stCaseTransactionBOList);
+			String ftJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);			
+			resultJson = handleSuccess(ftJson, null);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	@RequestMapping(value = "/balanceenquirycasesbytransactions", method = RequestMethod.POST)
+	public @ResponseBody String getAllBalanceEnquiryTransactions(@RequestBody String stCaseJson,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			CmfCaseCriteriaBO cmfCaseCriteriaBO=gson.fromJson(stCaseJson, CmfCaseCriteriaBO.class);			
+
+			Integer accountTypeId;
+			Integer socialMediaAccountsId;
+			Integer statusTypeId;
+			
+			if(cmfCaseCriteriaBO.getSocialMediaAccountsId() == "" || cmfCaseCriteriaBO.getSocialMediaAccountsId().equals("") || cmfCaseCriteriaBO.getSocialMediaAccountsId().equals("All")) {
+				socialMediaAccountsId = null;
+			} else {
+				socialMediaAccountsId = Integer.parseInt(cmfCaseCriteriaBO.getSocialMediaAccountsId());
+			}
+			if(cmfCaseCriteriaBO.getAccountType() == "" || cmfCaseCriteriaBO.getAccountType().equals("") || cmfCaseCriteriaBO.getAccountType().equals("All")) {
+				accountTypeId = null;
+			} else {
+				accountTypeId = Integer.parseInt(cmfCaseCriteriaBO.getAccountType());
+			}
+			
+			if(cmfCaseCriteriaBO.getStatusTypeId() == "" || cmfCaseCriteriaBO.getStatusTypeId().equals("") || cmfCaseCriteriaBO.getStatusTypeId().equals("All")) {
+				statusTypeId = null;
+			} else {
+				statusTypeId = Integer.parseInt(cmfCaseCriteriaBO.getStatusTypeId());
+			}
+			
+			List<StCaseBalanceEnquiryBO> stCaseBalanceEnquiryBOList = socialTransactionCaseDataService.getAllBalanceEnquiryByTransactions(accountTypeId,socialMediaAccountsId,statusTypeId);
+			CmfCaseListBO cmfCaseListBO = new CmfCaseListBO();
+			cmfCaseListBO.setStCaseBalanceEnquiryBOList(stCaseBalanceEnquiryBOList);
+			String balanceenquiryJson=gson.toJson(cmfCaseListBO,CmfCaseListBO.class);			
+			resultJson = handleSuccess(balanceenquiryJson, null);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+}

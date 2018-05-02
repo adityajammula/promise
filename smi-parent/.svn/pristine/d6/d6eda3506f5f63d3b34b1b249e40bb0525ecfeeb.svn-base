@@ -1,0 +1,93 @@
+angular
+		.module('smiApp')
+		.controller('FacebookTransactionsController',function($scope,$rootScope,$state,SocialTransactionsServices) {
+			
+			$scope.categoryId = 0;
+			$scope.statusId = 0;
+			account_type = 1;
+			$scope.accountType = account_type.toString();
+			$scope.socialMediaAccountId = 0;
+			
+			 $rootScope.initializeFacebookTransactionsController = function(){
+				 $scope.getStaticData();
+				 $scope.getFbTransactions();
+			 };
+			 $scope.getStaticData = function(){
+				 SocialTransactionsServices.getSocialTransactionData().then(function(response){
+					 $scope.transactionCategories = response.data.transactionCategoryBOList;
+					 $scope.transactionStatus = response.data.transactionStatusBOList;
+					 for ( var i = 0; i < response.data.transactionStatusBOList.length; i++) {
+							var obj = response.data.transactionStatusBOList[i];
+							obj.statusImage = (response.data.transactionStatusBOList[i].st_status_description).charAt(0);
+						}
+					 $scope.transactionAll = {
+							 "st_status_id":$scope.transactionStatus.length,
+							"statusImage":"A",
+							"st_status_description":"All" 
+					 }
+					 $scope.transactionStatus.push($scope.transactionAll);
+					 $scope.transactionAccounts = response.data.socialMediaAccountsList;
+					 $scope.transactionAccountAll = {
+							 "social_media_accounts_id":$scope.transactionAccounts.length,
+							"statusImage":"A",
+							"social_media_accounts_accountname":"All" 
+					 }
+					 $scope.transactionAccounts.push($scope.transactionAccountAll)
+				 });
+			 };
+			 $scope.requstData = {
+						"category_type" :	$scope.categoryId,
+						"status_type_id" :	$scope.statusId,
+						"account_type"  :	$scope.accountType,
+						"social_media_accounts_id" : $scope.socialMediaAccountId
+				};
+			 $scope.getTransactionsByCategory = function(categoryId) {
+				 $scope.requstData.category_type = categoryId.toString();
+				 $scope.getFbTransactions();
+			 };
+			 $scope.getTrasactionsByStatus = function(statusId) {
+				 $scope.requstData.status_type_id = statusId.toString();
+				 $scope.getFbTransactions();
+			 };
+			 $scope.getTransactionsByAccount = function(accountId) {
+				 $scope.requstData.social_media_accounts_id = accountId.toString();
+				 $scope.getFbTransactions();
+			 };
+			 $scope.getTransactionsByAnyStatus = function() {
+				 $scope.requstData.status_type_id = "All";
+				 $scope.getFbTransactions();
+			 };
+			 $scope.getTransactionsByAllAccounts = function() {
+				 $scope.requstData.social_media_accounts_id = "All";
+				 $scope.getFbTransactions();
+			 };
+			 $scope.getFbTransactions = function(){
+				 SocialTransactionsServices.getTransctionsByCriteria($scope.requstData).then(function(response){
+					 $scope.SocialTransactions = response.data.stCaseBOList;
+				 });
+			 };
+			 $scope.transactionDetails = function(transaction) {
+				 var params = {};
+					if (transaction != null) {
+						params.stCase_id = transaction.stCaseId;
+					}
+				 $state.go('viewfbtrasactiondetails',params);
+			 };
+			 $scope.refreshPage = function() {
+				 $rootScope.initializeFacebookTransactionsController();
+			 };
+				$scope.highliteCategory = null;
+				$scope.sethighliteCategory = function(index) {
+					$scope.highliteCategory = index;
+				};
+				$scope.highliteStatus = null;
+				$scope.sethighliteStatus = function(index) {
+					$scope.highliteStatus = index;
+				};
+				$scope.highliteAccount = null;
+				$scope.sethighliteAccount = function(index) {
+					$scope.highliteAccount = index;
+				};
+					});
+
+

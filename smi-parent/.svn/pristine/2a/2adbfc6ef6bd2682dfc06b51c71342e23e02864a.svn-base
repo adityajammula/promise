@@ -1,0 +1,76 @@
+package com.zen.smi.service.impl;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.RoleBO;
+import com.zen.smi.bo.UserBO;
+import com.zen.smi.dao.entities.Roles;
+import com.zen.smi.dao.entities.Users;
+import com.zen.smi.dao.entities.UsersRoles;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.exception.UserException;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+import com.zen.smi.service.UserService;
+import com.zen.smi.service.helper.UserHelper;
+
+public class UserServiceImpl extends BaseService implements UserService {
+	
+	/**
+	 * Logger for StaffServiceImpl class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(UserServiceImpl.class);
+
+    /**
+	 * {@inheritDoc}
+	 */
+	public UserBO getUserByUserName(String userName) throws UserException {
+		
+		LOGGER.debug("Starts getUserByUserName....");
+		UserBO userBO = null;
+		try {
+			Users users = getUserDAO().getUserByUserName(userName);
+			if(users != null)
+			{
+				userBO = UserHelper.getInstance().convertUserEntityToBO(users);
+			}
+		} catch (GenericDAOException e) {
+			e.printStackTrace();
+			
+		}
+		LOGGER.debug("Ends getUserByUserName....");
+		
+		return userBO;
+	}
+	
+    public UserBO authenticate(String userName, String password) throws UserException {
+		
+		LOGGER.debug("Starts authenticate....");
+		UserBO userBO = null;
+		try {
+			Users users = getUserDAO().authenticate(userName, password);
+			List<UsersRoles> userRolesList = getUsersRolesDAO().getUserRoles(users.getUserId());
+			Set<UsersRoles> userRoles = new HashSet<UsersRoles>(userRolesList);
+			users.setUsersRoleses(userRoles);
+			for(UsersRoles userRole:userRoles)
+			{
+				Roles role = getRolesDAO().getRoles(userRole.getUserRoleId());
+				userRole.setRoles(role);
+			}
+			if(users != null)
+			{
+				userBO = UserHelper.getInstance().convertUserEntityToBO(users);
+			}
+		} catch (GenericDAOException e) {
+			e.printStackTrace();
+		}
+		LOGGER.debug("Ends authenticate....");
+		
+		return userBO;
+	}
+	
+	
+}

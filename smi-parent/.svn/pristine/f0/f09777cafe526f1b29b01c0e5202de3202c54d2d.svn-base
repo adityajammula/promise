@@ -1,0 +1,98 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.StCaseDAO;
+import com.zen.smi.dao.entities.StCase;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class StCaseDAOImpl extends BaseDAOImpl<StCase, Serializable> implements StCaseDAO {
+
+	public StCaseDAOImpl() {
+		super(StCase.class);
+	}
+
+	public List<StCase> getAllStCasesByCriteria(Integer accountTypeId,
+			Integer socialMediaAccountsId, Integer statusTypeId,
+			Integer categoryTypeId) throws GenericDAOException {
+		boolean where = false;
+		StringBuffer fromClause = new StringBuffer("FROM StCase ");
+		StringBuffer whereClause = new StringBuffer();
+		if(null != socialMediaAccountsId && socialMediaAccountsId>0) {
+			where = true;
+			whereClause.append(" socialMediaAccounts="+socialMediaAccountsId);
+		}
+		if(null != statusTypeId && statusTypeId>0) {
+			if(where) {
+				whereClause.append(" and stStatus.stStatusId = "+statusTypeId);
+			} else {
+				whereClause.append(" stStatus.stStatusId = "+statusTypeId);
+			}
+			where = true;
+		}
+		if(null != accountTypeId && accountTypeId>0) {
+			if(where) {
+				whereClause.append(" and socialProfiles = "+accountTypeId);
+			} else {
+				whereClause.append(" socialProfiles = "+accountTypeId);
+			}
+			where = true;
+		}
+		if(null != categoryTypeId && categoryTypeId>0) {
+			if(where) {
+				whereClause.append(" and stTransactionType.stTransactionTypeId = "+categoryTypeId);
+			} else {
+				whereClause.append(" stTransactionType.stTransactionTypeId = "+categoryTypeId);
+			}
+			where = true;
+		}
+		if(where) {
+			fromClause.append(" where ");
+			fromClause.append(whereClause);
+		}
+		
+		return load(fromClause.toString());
+	}
+
+	public StCase getById(String stCaseId) throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("stCaseId", Integer.parseInt(stCaseId)));
+		
+		return searchUnique(expressionList, null);
+	}
+
+	public Long getMaxRowCount() throws GenericDAOException {
+		Session session = null;
+		Long results = null;
+		
+		try{
+        	session = getSessionFactory().openSession();
+    		Criteria crit = session.createCriteria(StCase.class);
+    		crit.setProjection(Projections.rowCount());
+    		results = (Long) crit.uniqueResult();
+		}
+        catch (HibernateException ex){
+            if(session!=null && session.getTransaction()!=null){
+                session.getTransaction().rollback();
+            }
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+        
+		return results; 
+		
+	}
+}

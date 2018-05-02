@@ -1,0 +1,49 @@
+.tableborder{
+	border : 1px solid #ddd;
+	
+}
+.ruleConfigInput{
+	margin-bottom:10px;
+	
+}
+.pointer{
+	cursor: pointer;
+}
+.table-hover tr:hover {
+    background-color: #e6e6fa;
+}
+
+.selected {
+  background-color: #bfbfbf!important;
+  color:#1a1a1a;
+  font-weight:bold;
+}
+.label{
+	padding-left: 50px;
+}
+.tablealign {
+	align : center;
+}
+/* .bankerScroll {
+    display:block;overflow:auto;height:500px;white-space:nowrap;
+} */
+table.tableSection {
+        display: table;
+        width: 100%;
+}
+table.tableSection thead, table.tableSection tbody {
+        float: left;
+        width: 100%;
+}
+table.tableSection tbody {
+        overflow: auto;
+        height: 500px;
+}
+table.tableSection tr {
+        width: 100%;
+        display: table;
+        text-align: left;
+}
+table.tableSection th, table.tableSection td {
+        width: 33%;
+}

@@ -1,0 +1,97 @@
+<div class="container-fluid">
+	<div class="row tile">
+	<script type="text/ng-template" id="linkAccount.html">
+     <div class="modal-body">
+            <div class=" form-group col-md-12">
+                <label class="row col-md-6">{{account}}&nbspID</label>
+                <label class="col-md-6"><input type="text" class="form-control input-sm" name="accountId" value="" ng-model="accountId"></label>
+            </div>
+ 				<div class=" form-group col-md-12">
+                <label class="row col-md-6">Password*</label>
+                <label class="col-md-5"><input type="password" class="form-control input-sm" name="password" value="" ng-model="password"></label>
+            </div>
+      </div>
+      <div class="modal-footer">
+         <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="linkAccount()"><i class="fa fa-arrow-right"></i> Link</button>
+      </div>
+     </script>
+		<div style="padding-left: 5%;">
+			<div style="padding: 2%;">
+				<p>
+					<b><large>Please Register your Twitter or Facebook
+						account to avail the benefits of Social Banking </large></b>
+				</p>
+			</div>
+			<div>
+			<div class=" form-group col-md-12" style="margin-bottom:3% !important;">
+				<div class="row col-md-2">
+					<label for="username">Account* </label>
+				</div>
+				<div class="row col-md-4">
+					<select
+						class="form-control form-control-inline ">
+						<option value="">Select</option>
+					</select>
+				</div>
+				<!-- <div class="col-md-2">
+					<button type="submit" class="btn btn-rounded btn-primary btn-sm ">Link
+						Account</button>
+
+				</div> -->
+				<div class="row col-md-2">
+					<label>Account Number*</label>
+				</div>
+				<div class="row col-md-3">
+					<input type="text" name="name" id="name"
+						data-ng-model="accountNunber" class="form-control">
+				</div>
+			</div>
+			<div class=" form-group col-md-12" style="margin-bottom: 3% !important;">
+				<div class="row col-md-2">
+					<label for="username" >Mobile Phone Number* </label>
+				</div>
+				<div class="row col-md-3">
+					<input type="text" name="name" id="name"
+						data-ng-model="phoneNumber" class="form-control">
+				</div>
+				<div class = "col-md-1"></div>
+				<div class="row col-md-2">
+					<label>MMID*</label>
+				</div>
+				<div class="row col-md-3">
+					<input type="text" name="name" id="name"
+						data-ng-model="mmid" class="form-control">
+				</div>
+			</div>
+			<div class=" form-group col-md-12" style="margin-bottom: 3% !important;">
+				<div class="row col-md-2">
+					<label for="username">Facebook ID* </label>
+				</div>
+				<div class="row col-md-3">
+					<input type="text" name="name" id="name"
+						data-ng-model="facebookId" class="form-control">
+				</div>
+				<div class="col-md-1">
+					<button type="submit" class="btn btn-rounded btn-primary btn-sm" data-ng-click="loginIntoFacebook()">Login</button>
+
+				</div>
+				<div class="row col-md-2">
+					<label>Twitter ID*</label>
+				</div>
+				<div class="row col-md-3">
+					<input type="text" name="name" id="name"
+						data-ng-model="twitterId" class="form-control">
+				</div>
+				<div class="col-md-2">
+					<button type="submit" class="btn btn-rounded btn-primary btn-sm" data-ng-click="loginIntoTwitter()">Login</button>
+
+				</div>
+			</div>
+			<div class="col-md-12" style="text-align: center;">
+					<button type="submit" class="btn btn-rounded btn-primary btn-sm ">Register</button>
+
+				</div>
+				</div>
+		</div>
+	</div>
+</div>

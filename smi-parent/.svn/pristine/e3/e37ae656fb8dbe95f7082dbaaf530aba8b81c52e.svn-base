@@ -1,0 +1,33 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.zen.smi.dao.CmfCaseStatusDAO;
+import com.zen.smi.dao.FlumeAgentsDAO;
+import com.zen.smi.dao.entities.CmfCaseStatus;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfCaseStatusDAOImpl extends BaseDAOImpl<CmfCaseStatus, Serializable> implements CmfCaseStatusDAO {
+
+	public CmfCaseStatusDAOImpl() {
+		super(CmfCaseStatus.class);
+	}
+
+	public CmfCaseStatus getCmfCaseStatusByNote(int noteId)
+			throws GenericDAOException {
+		  String query = "FROM CmfCaseStatus as cs LEFT JOIN FETCH  cs.cmfCaseNotes as n WHERE n.noteId="+noteId;
+		  if(load(query).size() >0) {
+			  return load(query).get(0);
+		  }
+		  return null;
+	}
+	public CmfCaseStatus getCmfCaseStatusByCmfCase(int cmfCaseStatusId)
+			throws GenericDAOException {
+		 String query = "FROM CmfCaseStatus WHERE caseStatusId="+cmfCaseStatusId;
+		  return load(query).get(0);
+	}
+}

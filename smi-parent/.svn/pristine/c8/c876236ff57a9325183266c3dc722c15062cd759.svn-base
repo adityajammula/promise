@@ -1,0 +1,20 @@
+angular
+		.module('smiApp')
+		.controller('OtherCommentsController',function($scope,$rootScope,otherCommentsService) {
+			
+		
+			$rootScope.initializeotherCommentsController = function() {
+				$scope.otherComments = [];
+				otherCommentsService.getAllOtherComments().then(function(response) {
+					$scope.otherComments = response.data.otherCommentsBO;
+				});
+						
+				
+			};
+
+			
+			
+					
+});
+
+

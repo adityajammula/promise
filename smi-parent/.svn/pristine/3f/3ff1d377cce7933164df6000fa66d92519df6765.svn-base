@@ -1,0 +1,19 @@
+package com.zen.smi.extsys.facebook.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class Accounts {
+	@SerializedName("account")
+	private List<Account> account;
+
+	public List<Account> getAccount() {
+		return account;
+	}
+
+	public void setAccount(List<Account> account) {
+		this.account = account;
+	}
+
+}

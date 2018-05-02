@@ -1,0 +1,44 @@
+angular.module('smiApp')
+		.controller('RegistrationController',function($scope,$modal) {
+			
+			$scope.loginIntoFacebook = function() {
+			     var modalInstance = $modal.open({
+			     templateUrl:'linkAccount.html',
+			     controller :'linkAccountController',
+			     resolve: {
+				        items: function () {
+				        	 var obj = {};
+			      		     obj.isAccountType="Facebook";
+				             return obj;
+				       }
+				      }
+		 });
+	   };	
+
+				   $scope.loginIntoTwitter = function() {
+					var modalInstance = $modal.open({
+					templateUrl : 'linkAccount.html',
+					controller : 'linkAccountController',
+					resolve : {
+						items : function() {
+							var obj = {};
+							obj.isAccountType = "Twitter";
+							return obj;
+						}
+					}
+				});
+			};	
+					
+		}).controller('linkAccountController', function ($scope, $modalInstance,items) {
+			if(items.isAccountType=="Facebook") {
+				$scope.account="Facebook";
+			} else {
+				$scope.account="Twitter";
+			}
+			$scope.cancel = function () {
+			  $modalInstance.dismiss('cancel');
+			};
+				});
+					
+
+

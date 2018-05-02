@@ -1,0 +1,102 @@
+package com.zen.smi.cmf.service;
+
+import java.util.Date;
+import java.util.List;
+
+import com.zen.smi.cmf.bo.CmfCaseBO;
+import com.zen.smi.cmf.bo.CmfCaseGraphDashboardBO;
+import com.zen.smi.cmf.bo.CmfCaseManagementDashboardBO;
+import com.zen.smi.cmf.bo.CmfCaseStaticDataBO;
+import com.zen.smi.cmf.bo.UserBO;
+import com.zen.smi.cmf.exception.BusinessException;
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+
+public interface CmfCaseService {
+
+	/**
+	 * Get the Total Count of All Cases from the database.
+	 * @param null
+	 * @return int
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	CmfCaseManagementDashboardBO getCountOfCmfCaseManagement(int userId,int faceBookAccountId,int twitterBookAccountId) throws BusinessException;
+	/**
+	 * Get the All Open Cases by Account Type from the database.
+	 * @param null
+	 * @return List of CmfCaseBO objects
+	 * @throws BusinessException 
+	 * @author tmangalapenta
+	 */
+	public List<CmfCaseBO> getAllCmfOpenCasesByAccountType(int accountTypeId)
+			throws BusinessException;
+	/**
+	 * Get the All Open Cases by Account Type from the database.
+	 * @param null
+	 * @return List of CmfCaseBO objects
+	 * @throws BusinessException 
+	 * @author tmangalapenta
+	 */
+	public List<CmfCaseBO> getAllCmfOpenCasesByAccountType(int accountTypeId,int statusId)
+			throws BusinessException;
+	
+	/**
+	 * Get the All Resolved Cases from the database.
+	 * @param null
+	 * @return List of CmfCaseBO objects
+	 * @throws BusinessException 
+	 * @author tmangalapenta
+	 */
+	List<CmfCaseBO> getAllCmfResolvedCases(Integer priorityTypeId,Integer categoryId,Integer accountTypeId) throws BusinessException;
+
+	/**
+	 * Get the All Closed Cases from the database.
+	 * @param null
+	 * @return List of CmfCaseBO objects
+	 * @throws BusinessException 
+	 * @author tmangalapenta
+	 */
+	List<CmfCaseBO> getAllCmfClosedCases() throws BusinessException;
+	
+	/**
+	 * Get the All SPAM Cases from the database.
+	 * @param null
+	 * @return List of CmfCaseBO objects
+	 * @throws BusinessException 
+	 * @author tmangalapenta
+	 */
+	List<CmfCaseBO> getAllCmfSpamCases() throws BusinessException;
+	
+	CmfCaseStaticDataBO getCmfCaseStaticData()throws BusinessException;
+	
+	List<CmfCaseBO> getAllCmfOpenCasesByCategory(int categoryId)throws BusinessException;
+	List<CmfCaseBO> getAllCmfOpenCasesByPriority(int priorityTypeId)throws BusinessException;
+	List<CmfCaseBO> getAllCmfOpenCasesByFinancialInstitutionsType(int financialInstitutionTypeId) throws BusinessException;
+	List<CmfCaseBO> getAllCmfOpenCasesByCriteria(Integer priorityTypeId,Integer categoryId,Integer socialMediaAccountsId,Integer accountTypeId)
+			throws BusinessException;
+	List<CmfCaseBO> getAllCmfCasesByCustomer(int customerId)throws BusinessException;
+	
+	/**
+	 * Get the get Case Details from the database.
+	 * @param caseId
+	 * @return CmfCaseBO object
+	 * @throws BusinessException 
+	 * @author tmangalapenta
+	 */
+	public CmfCaseBO getCaseDetails(String caseId)
+			throws BusinessException;
+	public List<UserBO> getAllUsers() throws BusinessException;
+	public void assignSelectedCasesToUser(String userName,String reasonForAssigning,List<String> caseIdList) throws BusinessException;
+	
+	public List<CmfCaseGraphDashboardBO> getCountOfCmfCasesByDateCriteria(String type,Date startDate,Date endDate) throws BusinessException;
+	List<CmfCaseBO> getCaseDetailsByGroupCaseId(String caseId) throws BusinessException;
+	List<CmfCaseBO> getAllCmfSpamCases(Integer priorityTypeId,Integer categoryId, Integer accountTypeId)throws BusinessException;
+	List<CmfCaseBO> getAllCmfClosedCases(Integer priorityTypeId,Integer categoryId, Integer accountTypeId)throws BusinessException;
+	void reopenSelectedCases(String userName, String reason, List<String> caseIdList)throws BusinessException;
+	void closeSelectedCases(String userName, List<String> caseIdList)throws BusinessException;
+	void reOpenSpamSelectedCases(String userName, List<String> caseIdList)throws BusinessException;
+	void resolvedSelectedCases(String userName, String reason, List<String> caseIdList)throws BusinessException;
+}

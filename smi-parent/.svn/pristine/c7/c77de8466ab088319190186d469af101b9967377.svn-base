@@ -1,0 +1,97 @@
+package com.zen.smi.extsys.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import twitter4j.ResponseList;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+import twitter4j.User;
+import twitter4j.auth.AccessToken;
+
+import com.zen.smi.extsys.facebook.bo.Cover;
+import com.zen.smi.extsys.facebook.bo.Group;
+import com.zen.smi.extsys.facebook.bo.GroupMetaDataBO;
+import com.zen.smi.extsys.service.TwitterService;
+public class TwitterServiceImpl implements TwitterService {
+	
+	
+	
+	public TwitterServiceImpl()
+	{
+		AccessToken a=new AccessToken(accessTokenStr,accessTokenSecretStr);
+		this.twitter=new TwitterFactory().getInstance();
+		this.twitter.setOAuthConsumer(consumerKeyStr,consumerSecretStr);
+		this.twitter.setOAuthAccessToken(a);
+	}
+	
+	
+	private Twitter twitter;
+	static String consumerKeyStr = "2j47FUXMdwijm605eg8r2NeoJ";
+	static String consumerSecretStr = "OzGYLbumkpg39OxgfRqjHBcAHKlxn3rRYu7MWoLUL6OB6tSCwj";
+	static String accessTokenStr = "3064347347-yYifHjy1Y2nq0JYMtqIyZNJ4MNyHNu52Xw1glk7";
+	static String accessTokenSecretStr = "euTOW3lTnjYGzHDNCww3gLtXeQvubtH3Pr5sZVq0jUxUD";
+	
+	
+	
+
+	
+	
+
+	public List<Group> getUsers(String keyword) throws Exception {
+		List<Group> groups= new ArrayList<Group>();
+    	ResponseList<User> userList = this.twitter.searchUsers("%"+keyword+"%", 1);
+    	if(userList != null && !userList.isEmpty())
+    	{
+    		System.out.println(userList.size());
+    		for(User user: userList)
+    		{
+    			Group group = new Group();
+    			group.setName((user.getName()));    			
+    			group.setId(Long.toString(user.getId()));
+    			groups.add(group);
+    		}
+    	}
+		return groups;
+    	
+
+	}
+	
+	
+	
+
+	public GroupMetaDataBO getUserByid(Long id) throws Exception {
+		
+    	User user = this.twitter.showUser(id);
+    	
+    	
+    	GroupMetaDataBO groupMetaDataBO=new GroupMetaDataBO();
+    	Cover cover = new Cover();
+    	groupMetaDataBO.setLikes(Long.toString(user.getFollowersCount()));
+    	cover.setSource(user.getProfileImageURL());
+    	groupMetaDataBO.setCover(cover);
+    	groupMetaDataBO.setWere_here_count(Long.toString(user.getFriendsCount()));
+    	groupMetaDataBO.setName(user.getName());
+		return groupMetaDataBO;
+    	
+
+	}
+	
+/*	public static void main (String[] args){
+		
+		TwitterServiceImpl twitterServiceImpl= new TwitterServiceImpl();
+		
+		try {
+			List<Group> groups=twitterServiceImpl.getUsers("icici");
+			GroupMetaDataBO groupMetaDataBO=twitterServiceImpl.getUserByid(Long.parseLong(groups.get(0).getId()));
+			
+			System.out.println("#########################################"+groupMetaDataBO);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}*/
+	
+}

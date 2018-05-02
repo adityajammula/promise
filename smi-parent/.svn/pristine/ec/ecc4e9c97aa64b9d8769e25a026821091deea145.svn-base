@@ -1,0 +1,41 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import com.zen.smi.dao.entities.CmfCaseNote;
+
+public class CmfCaseNoteCategoriesBO {
+
+	private int id;
+	private String type;
+	private String description;
+	private Set<CmfCaseNote> cmfCaseNotes = new HashSet<CmfCaseNote>(0);
+	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	public Set<CmfCaseNote> getCmfCaseNotes() {
+		return cmfCaseNotes;
+	}
+	public void setCmfCaseNotes(Set<CmfCaseNote> cmfCaseNotes) {
+		this.cmfCaseNotes = cmfCaseNotes;
+	}
+	
+	
+}

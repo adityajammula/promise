@@ -1,0 +1,44 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.RuleGroupDAO;
+import com.zen.smi.dao.SocialProfileDAO;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.entities.SocialProfiles;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+/**
+ * @author Sowjanya.Pathakamuri
+ *
+ */
+public class SocialProfileDAOImpl extends BaseDAOImpl<SocialProfiles, Serializable> implements SocialProfileDAO {
+
+	public SocialProfileDAOImpl() {
+			super(SocialProfiles.class);
+		}
+
+	
+	/**To get Social Profile
+	 * @param  int Id
+	 * @return SocialMediaAccounts 
+	 * @throws GenericDAOException
+	 */
+
+	public SocialProfiles getSocialProfile(int id) throws GenericDAOException {
+		  String query = "FROM SocialProfiles as sp INNER  JOIN FETCH  sp.socialMediaAccountses as sma WHERE sma.id="+id;
+		  return load(query).get(0);
+
+	}
+	
+
+
+}
+	
+
+

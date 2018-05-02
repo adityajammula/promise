@@ -1,0 +1,33 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.LogicalExpression;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.RuleAppsDAO;
+import com.zen.smi.dao.RulesDAO;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleApps;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class RuleAppsDAOImpl extends BaseDAOImpl<RuleApps, Serializable> implements RuleAppsDAO {
+
+	public RuleAppsDAOImpl() {
+		super(RuleApps.class);
+	}
+
+	public RuleApps getRuleAppByName(String appName) throws GenericDAOException {
+		// TODO Auto-generated method stub
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("appName", appName));
+		
+		return searchUnique(expressionList, null);
+		
+		 
+	}
+	 
+}

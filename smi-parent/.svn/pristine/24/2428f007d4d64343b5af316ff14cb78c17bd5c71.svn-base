@@ -1,0 +1,14 @@
+package com.zen.smi.service;
+
+import com.zen.smi.exception.BusinessException;
+
+/**
+ * @author Jshaik
+ *
+ */
+
+public interface MessageService {
+
+	void populateAllMessages() throws BusinessException;
+	
+}

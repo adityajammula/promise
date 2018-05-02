@@ -1,0 +1,47 @@
+angular.module('smiApp')
+.controller('AgentController', function ($scope, $rootScope, $state, socialMediaAccountsServices, smiGenUtil) { 
+	
+	$scope.agentsData = [];
+	
+	$rootScope.initializeAgentsControllerView = function(){
+		socialMediaAccountsServices.getAgents().then(function(response){
+			if(response.data != null) {
+				$scope.agentsData = response.data.agent_processes;
+			}
+		});
+	};
+	
+	$scope.startAgent = function(agentProcessId) {
+		socialMediaAccountsServices.startAgent(agentProcessId).then(function(response){
+			if(response.data != null) {
+				alert("Started");
+			}
+		});
+	};
+	
+	//{'bg-success' : agent.status == 'sent','bg-warning' : agent.status == 'closed',
+    //'bg-lightred' : agent.status == 'cancelled','bg-primary' : agent.status == 'pending'}
+	$scope.getDisplayStatus = function(status) {
+		return smiGenUtil.getDisplayStatus(status);
+	};
+	
+	$scope.isStartEnabled = function(status) {
+		var isEnabled = false;
+		if(status == "GROUP_POSTS_CRASHED"
+		    || status == "GROUP_POST_REPLIES_CRASHED")
+		{
+			isEnabled = false;
+		}
+		
+		return isEnabled;
+	};
+	
+	
+	
+	
+	
+	
+	
+	
+	
+});

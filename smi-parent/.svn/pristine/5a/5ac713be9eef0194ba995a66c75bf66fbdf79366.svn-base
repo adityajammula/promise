@@ -1,0 +1,28 @@
+package com.zen.smi.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.zen.smi.bo.SocialDataAnalysisBO;
+import com.zen.smi.exception.BusinessException;
+
+/**
+ * @author Venumadhava.Reddy
+ *
+ */
+
+public interface SocialDataAnalysisService {
+
+	/**
+	 * to get all families.
+	 *  
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of RuleFamilyBO
+	 */
+	List<SocialDataAnalysisBO> getSocialDataAnalysis(Integer profileId) throws BusinessException;
+	
+	void saveSocialDataSentimentScore(SocialDataAnalysisBO socialDataAnalysisBO)  throws BusinessException;
+	
+}

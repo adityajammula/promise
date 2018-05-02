@@ -1,0 +1,180 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+
+public class CmfCustomerSocialDataBO {
+	private Integer customerId;
+	private String likes;
+	private String dislikes;
+	private String books;
+	private String movies;
+	private String sports;
+	private String shoppingPreferences;
+	private String restaurantPreferences;
+	private String locationTravelled;
+	private Date keyDate1;
+	private Date keyDate2;
+	private Date keyDate3;
+	private Date keyDate4;
+	/**
+	 * @return the customerId
+	 */
+	public Integer getCustomerId() {
+		return customerId;
+	}
+	/**
+	 * @param customerId the customerId to set
+	 */
+	public void setCustomerId(Integer customerId) {
+		this.customerId = customerId;
+	}
+	/**
+	 * @return the likes
+	 */
+	public String getLikes() {
+		return likes;
+	}
+	/**
+	 * @param likes the likes to set
+	 */
+	public void setLikes(String likes) {
+		this.likes = likes;
+	}
+	/**
+	 * @return the dislikes
+	 */
+	public String getDislikes() {
+		return dislikes;
+	}
+	/**
+	 * @param dislikes the dislikes to set
+	 */
+	public void setDislikes(String dislikes) {
+		this.dislikes = dislikes;
+	}
+	/**
+	 * @return the books
+	 */
+	public String getBooks() {
+		return books;
+	}
+	/**
+	 * @param books the books to set
+	 */
+	public void setBooks(String books) {
+		this.books = books;
+	}
+	/**
+	 * @return the movies
+	 */
+	public String getMovies() {
+		return movies;
+	}
+	/**
+	 * @param movies the movies to set
+	 */
+	public void setMovies(String movies) {
+		this.movies = movies;
+	}
+	/**
+	 * @return the sports
+	 */
+	public String getSports() {
+		return sports;
+	}
+	/**
+	 * @param sports the sports to set
+	 */
+	public void setSports(String sports) {
+		this.sports = sports;
+	}
+	/**
+	 * @return the shoppingPreferences
+	 */
+	public String getShoppingPreferences() {
+		return shoppingPreferences;
+	}
+	/**
+	 * @param shoppingPreferences the shoppingPreferences to set
+	 */
+	public void setShoppingPreferences(String shoppingPreferences) {
+		this.shoppingPreferences = shoppingPreferences;
+	}
+	/**
+	 * @return the restaurantPreferences
+	 */
+	public String getRestaurantPreferences() {
+		return restaurantPreferences;
+	}
+	/**
+	 * @param restaurantPreferences the restaurantPreferences to set
+	 */
+	public void setRestaurantPreferences(String restaurantPreferences) {
+		this.restaurantPreferences = restaurantPreferences;
+	}
+	/**
+	 * @return the locationTravelled
+	 */
+	public String getLocationTravelled() {
+		return locationTravelled;
+	}
+	/**
+	 * @param locationTravelled the locationTravelled to set
+	 */
+	public void setLocationTravelled(String locationTravelled) {
+		this.locationTravelled = locationTravelled;
+	}
+	/**
+	 * @return the keyDate1
+	 */
+	public Date getKeyDate1() {
+		return keyDate1;
+	}
+	/**
+	 * @param keyDate1 the keyDate1 to set
+	 */
+	public void setKeyDate1(Date keyDate1) {
+		this.keyDate1 = keyDate1;
+	}
+	/**
+	 * @return the keyDate2
+	 */
+	public Date getKeyDate2() {
+		return keyDate2;
+	}
+	/**
+	 * @param keyDate2 the keyDate2 to set
+	 */
+	public void setKeyDate2(Date keyDate2) {
+		this.keyDate2 = keyDate2;
+	}
+	/**
+	 * @return the keyDate3
+	 */
+	public Date getKeyDate3() {
+		return keyDate3;
+	}
+	/**
+	 * @param keyDate3 the keyDate3 to set
+	 */
+	public void setKeyDate3(Date keyDate3) {
+		this.keyDate3 = keyDate3;
+	}
+	/**
+	 * @return the keyDate4
+	 */
+	public Date getKeyDate4() {
+		return keyDate4;
+	}
+	/**
+	 * @param keyDate4 the keyDate4 to set
+	 */
+	public void setKeyDate4(Date keyDate4) {
+		this.keyDate4 = keyDate4;
+	}
+	
+	
+}

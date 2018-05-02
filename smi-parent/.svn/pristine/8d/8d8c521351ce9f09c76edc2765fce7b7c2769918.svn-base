@@ -1,0 +1,254 @@
+package com.zen.smi.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.zen.smi.exception.InvalidLoginException;
+
+/**
+ * HomePageController class manage Timesheet related data. Data from screens
+ * is transferred to the controller and passed to services/dao.
+ * 
+ * @author 
+ */
+@Controller
+public class HomePageController extends BaseController {
+	
+	/**
+	 * Logger for HomePageController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(HomePageController.class);
+	
+	@RequestMapping("/")
+    public String getIndexPage() {
+        return "login";
+    }
+	
+	@RequestMapping("/login")
+    public String getLoginPage(HttpServletRequest request,
+			HttpServletResponse response) {
+		boolean isCompatible = checkBrowserCompatibility(request.getHeader("User-Agent"));
+		if(!isCompatible) return "errbrowser";
+		
+		return "login";
+    }
+	
+	
+	@RequestMapping("/home")
+    public String getHomePage() {
+        return "home";
+    }
+	@RequestMapping("/header")
+    public String getHeaderPage() {
+        return "header";
+    }
+	@RequestMapping("/nav")
+    public String getNav() {
+        return "nav";
+    }
+	@RequestMapping("/rightbar")
+    public String getRightBar() {
+        return "rightbar";
+    }
+	
+	@RequestMapping("/dashboard")
+    public String getDashboard() {
+        return "dashboard";
+    }
+	
+	@RequestMapping("/viewrules")
+    public String getViewRules() {
+        return "view_rules";
+    }
+	
+	@RequestMapping("/editrules")
+    public String getEditRules() {
+        return "edit_rules";
+    }
+	
+	@RequestMapping("/configrules")
+    public String getConfigRules() {
+        return "config_rules";
+    }
+	
+	@RequestMapping("/globalcolumns")
+    public String getGlobalColumns() {
+        return "global_columns";
+    }
+	
+	@RequestMapping("/testrules")
+    public String getTestRules() {
+        return "test_rules";
+    }
+	
+	@RequestMapping("/editglobalcolumns")
+    public String geteditGlobalColumns() {
+        return "edit_global_columns";
+    }
+	@RequestMapping("/viewgroups")
+    public String getViewGroups() {
+        return " view_groups";
+    }
+	
+	@RequestMapping("/editgroups")
+    public String getEditGroups() {
+        return "edit_groups";
+    }
+	
+	@RequestMapping("/customerinformation")
+    public String getCustomerInformation() {
+        return "customer_information";
+    }
+	
+	@RequestMapping("/customerinformationtwitter")
+    public String getCustomerInformationTwitter() {
+        return "customer_information_twitter";
+    }
+
+	@RequestMapping("/processes")
+    public String getProcesses() {
+        return "processes";
+    }
+	@RequestMapping("/agents")
+    public String getAgents() {
+        return "agents";
+    }
+	@RequestMapping("/viewindividualcasedetails")
+    public String getViewIndividualCaseDetails() {
+        return "view_individual_case_details";
+    }
+	
+	@RequestMapping("/viewindividualcasedetailstwitter")
+    public String getViewIndividualCaseDetailsTwitter() {
+        return "view_individual_case_details_twitter";
+    }
+	@RequestMapping("/openfacebookcases")
+    public String getOpenFacebookCases() {
+        return "open_facebook_cases";
+    }
+	@RequestMapping("/cmfspamcases")
+    public String getSpamCases() {
+        return "spam_cases";
+    }
+	@RequestMapping("/accountRelationship")
+    public String getAccountRelationship() {
+        return "account_relationship";
+    }
+	@RequestMapping("/viewcustomerhistoryfb")
+    public String getViewCustomerHistoryFB() {
+        return "view_customer_history_fb";
+    }
+	@RequestMapping("/viewcustomerhistorytwitter")
+    public String getViewCustomerHistoryTwitter() {
+        return "view_customer_history_twitter";
+    }
+	@RequestMapping("/opentwittercases")
+    public String getOpenTwitterCases() {
+        return "open_twitter_cases";
+    }
+
+	@RequestMapping("/historycasedetails")
+    public String getHistoryCaseDetails() {
+        return "history_casedetails";
+    }
+	@RequestMapping("/twitterhistory")
+    public String getTwitterHistory() {
+        return "twitter_history";
+    }
+	@RequestMapping("/casemanagement")
+    public String getCaseManagement() {
+        return "case_management";
+    }
+	@RequestMapping("/resolvedcases")
+    public String getResolvedCases() {
+        return "resolved_cases";
+    }
+	
+	@RequestMapping("/closedcases")
+    public String getClosedCases() {
+        return "closed_cases";
+    }
+
+	@RequestMapping("/facebooktransactions")
+    public String getFacebookTrasactions() {
+        return "facebook_transactions";
+    }
+	@RequestMapping("/twittertransactions")
+    public String getTwitterTrasactions() {
+        return "twitter_transactions";
+    }
+	@RequestMapping("/viewfbtrasactiondetails")
+    public String getviewFbTransactionDetails() {
+        return "view_fb_trasaction_details";
+    }
+	@RequestMapping("/viewtwittertrasactiondetails")
+    public String getviewTwitterTransactionDetails() {
+        return "view_twitter_trasaction_details";
+    }
+	@RequestMapping("/registerUser")
+    public String getregistration() {
+        return "register_user";
+    }
+	
+	@RequestMapping("/register")
+    public String getRegister() {
+        return "register";
+    }
+	@RequestMapping("/myprofile")
+    public String getMyProfile() {
+        return "my_profile";
+    }
+	
+    /**
+	 * @return logout
+	 */
+	@RequestMapping("/logout")
+    public String getLogout() {
+		 
+        return "logout";
+    }
+	
+    
+    /**
+     * @return footer
+     */
+    @RequestMapping("/footer")
+    public String getFooterPage() {
+        return "footer";
+    }
+    
+    @RequestMapping("/errbrowser")
+    public String getBrowserErrorPage() {
+        return "errbrowser";
+    }
+    
+    /**
+     * @return globalerror
+     */
+    @RequestMapping("/globalerror")
+    public String getErrorPage(HttpServletRequest request,
+			HttpServletResponse response) {
+    	Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
+        Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
+        String servletName = (String) request.getAttribute("javax.servlet.error.servlet_name");
+    	if(throwable instanceof RuntimeException)
+    	{
+    		RuntimeException appRuntime = (RuntimeException)throwable;
+    		if(appRuntime.getCause() instanceof BadCredentialsException)
+    		{
+    			return "redirect:/login?error=5";
+    		}else if(appRuntime.getCause() instanceof InvalidLoginException)
+    		{
+    			return "redirect:/login?error=1";
+    		}
+     	}
+    		      
+        return "globalerror";
+    }
+	
+}

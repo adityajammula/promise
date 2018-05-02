@@ -1,0 +1,12 @@
+.newprocesstdwidth{
+	width : 20%;
+}
+.datePicker{
+	display: inline-flex;
+}
+.buttonsalign{
+	margin-left: 40px;
+}
+.buttonalignment{
+	margin-left: 5px;
+}

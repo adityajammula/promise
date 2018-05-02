@@ -1,0 +1,53 @@
+package com.zen.smi.cmf.bo;
+
+public class SearchBO {
+	
+	private String  keyword;
+	private Integer sourceId;
+	private Integer currentStatus;
+	private Integer category;
+	private Integer preority;
+	private Integer accountId;
+	
+	
+	public String getKeyword() {
+		return keyword;
+	}
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+	public Integer getSourceId() {
+		return sourceId;
+	}
+	public void setSourceId(Integer sourceId) {
+		this.sourceId = sourceId;
+	}
+	public Integer getCurrentStatus() {
+		return currentStatus;
+	}
+	public void setCurrentStatus(Integer currentStatus) {
+		this.currentStatus = currentStatus;
+	}
+	public Integer getCategory() {
+		return category;
+	}
+	public void setCategory(Integer category) {
+		this.category = category;
+	}
+	public Integer getPreority() {
+		return preority;
+	}
+	public void setPreority(Integer preority) {
+		this.preority = preority;
+	}
+	public Integer getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
+	}
+	
+	
+
+	
+}

@@ -1,0 +1,217 @@
+<!doctype html>
+
+<!-- DO NOT CHANGE THE NAME OF THE CONTROLLER AS IT IS USED FOR TIMEOUT IN APP.js FUNCTION redirectIfExpired -->
+<html lang="en" data-ng-app="smiLoginApp">
+<head>
+	<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
+    <title>Login-Social Banker</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="icon" type="image/ico" href="favicon.ico" />
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="resources/bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="resources/bower_components/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="resources/bower_components/animate.css/animate.css" />
+    
+    <link rel="stylesheet" href="resources/bower_components/angular-motion/dist/angular-motion.min.css" type="text/css"/>
+    
+    <link href="resources/styles/uikit.css" rel="stylesheet" type="text/css"/>
+	<link href="resources/styles/custom.css" rel="stylesheet" type="text/css"/>
+	<link href="resources/styles/fonts.css" rel="stylesheet" type="text/css"/>
+	
+	
+     <script src="resources/bower_components/jquery/jquery.js"></script>
+    <script src="resources/bower_components/angular/angular.js"></script>
+ 
+    <script src="resources/bower_components/json3/lib/json3.js"></script>
+    <script src="resources/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="resources/bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="resources/bower_components/angular-animate/angular-animate.js"></script>
+    <script src="resources/bower_components/angular-touch/angular-touch.js"></script>
+    <script src="resources/bower_components/angular-fontawesome/dist/angular-fontawesome.js"></script>
+    <script src="resources/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+
+    <script src="resources/bower_components/jquery-ui/ui/jquery-ui.js"></script>
+    <script src="resources/bower_components/angular-strap/dist/angular-strap.min.js"></script>
+	<script src="resources/bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
+	
+	<script src="//mgcrea.github.io/angular-strap/dist/angular-strap.tpl.js" data-semver="v2.3.1"></script>
+    
+ 
+   <script src="resources/scripts/controllers/LoginController.js"></script>
+   <style>
+   body{font-family: 'Ropa Sans', sans-serif; color:#666; font-size:14px; color:#333}
+li,ul,body,input{margin:0; padding:0; list-style:none}
+#login-form{  margin:0 auto;background:rgba(248, 248, 248, 1); overflow:hidden; border-radius:7px}
+.form-header{clear:both}
+.form-header label{display:block; cursor:pointer; z-index:999}
+.form-header li{margin:0; line-height:60px; width:100%; text-align:center; background:#eee; font-size:18px; float:left; transition:all 600ms ease}
+
+/*sectiop*/
+.section-out{width:700px; float:left; transition:all 600ms ease}
+.section-out:after{content:''; clear:both; display:table}
+.section-out section{width:470px; margin:0 auto}
+
+.login{padding:20px; width:350px;}
+.ul-list{clear:both; display:table; width:100%}
+.ul-list:after{content:''; clear:both; display:table}
+.ul-list li{ margin:0 auto; margin-bottom:12px}
+.input{background:#fff; transition:all 800ms; width:247px; border-radius:3px 0 0 3px; font-family: 'Ropa Sans', sans-serif; border:solid 1px #ccc; border-right:none; outline:none; color:#999; height:40px; line-height:40px; display:inline-block; padding-left:10px; font-size:16px}
+.input,.login span.icon{vertical-align:top}
+.login span.icon{width:50px; transition:all 800ms; text-align:center; color:#999; height:40px; border-radius:0 3px 3px 0; background:#e8e8e8; height:40px; line-height:40px; display:inline-block; border:solid 1px #ccc; border-left:none; font-size:16px}
+.input:focus:invalid{border-color:red}
+.input:focus:invalid+.icon{border-color:red}
+.input:focus:valid{border-color:green}
+.input:focus:valid+.icon{border-color:green}
+#check,#check1{top:1px; position:relative}
+.btn{border:none; outline:none; background:rgba(227, 50, 43, 1);  font-family: 'Ropa Sans', sans-serif; margin:0 auto; height:40px; width:96%; padding:0 10px; border-radius:3px; font-size:16px; color:#FFF}
+.submitBtn{border:none; outline:none; background:rgba(62, 167, 235, 1);  font-family: 'Ropa Sans', sans-serif; margin:0 auto; height:40px; width:96%; padding:0 10px; border-radius:3px; font-size:16px; color:#FFF}
+.submitBtn:hover{border:none; outline:none; background:rgba(62, 167, 235, 1);  font-family: 'Ropa Sans', sans-serif; margin:0 auto; height:40px; width:96%; padding:0 10px; border-radius:3px; font-size:16px; color:#000}
+.social-login{padding:15px 20px; background:#f1f1f1; border-top:solid 2px #e8e8e8; text-align:right}
+.social-login a{display:inline-block; height:35px; text-align:center; line-height:35px; width:35px; margin:0 3px; text-decoration:none; color:#FFFFFF}
+.form a i.fa{line-height:35px}
+.fb{background:#305891} .tw{background:#2ca8d2} .gp{background:#ce4d39} .in{background:#006699}
+.remember{width: 40%;
+    display: block;
+    clear: both;
+    font-size: 14px;
+    float: right;
+    padding-bottom: 10px;}
+.remember:nth-child(2){text-align:right}
+.remember a{text-decoration:none; color:#666}
+
+.hide{display:none}
+
+/*swich form*/
+#signup:checked~.section-out{margin-left:-350px}
+#login:checked~.section-out{margin-left:0px}
+#login:checked~div .form-header li:nth-child(1),#signup:checked~div .form-header li:nth-child(2){background:#e8e8e8}
+   
+   </style>
+
+    
+  </head>
+  <body class="tm-navbar-fixed">
+  <div data-ng-controller="LoginController" >
+<nav class="tm-navbar">
+  <div class="uk-container uk-container-nav uk-container-center">
+    <div class="tm-navbar-center">
+      <div class="tm-nav-logo uk-hidden-small"> <a class="tm-logo uk-hidden-small" href="#" id="customer360" data-uk-smooth-scroll> <img src="resources/images/logo.png" alt="Customer360"></a> </div>
+      <div class="tm-nav uk-hidden-small">
+        <div class="tm-nav-wrapper">
+          <ul class="uk-navbar-nav uk-hidden-small" data-uk-scrollspy-nav="{smoothscroll:{closest:'li', cls:'uk-active', smoothscroll:true, offset: 0}}">
+            <li ><a href="#overview">Overview</a></li>
+            <li ><a href="#Whitepaper">White paper</a></li>
+          </ul>
+        </div>
+      </div>
+     
+    </div>
+  </div>
+</nav>
+<div class="uk-slidenav-position" data-uk-slideshow="{autoplay:true}" >
+  <ul class="uk-slideshow">
+    <li>
+      <div class="tm-fullscreen-container uk-height-viewport" id="teaser" >
+        <div class="tm-fullscreen">
+          <div class="caption uk-text-center" data-uk-scrollspy="{cls:'uk-animation-fade', delay:600}">
+            <div class="uk-container uk-container-center uk-text-center">
+              <div class="uk-grid uk-text-center">
+                <div class="uk-width-1-1 uk-width-medium-4-10 uk-width-large-4-10 uk-push-2-10"> <img src="resources/images/switch-on.png" alt="Switch On"/>
+                  <h1>#OmniPresence</h1>
+                  <p>Be on every channel<br class="uk-visible-large"/>
+                    on your customers path to purchase</p>
+                  <!--<a class="uk-button uk-button-primary" href="request-demo.html">Start Following Now</a>--><button type="button" class="uk-button uk-button-primary" data-template-url="loginModal.html" data-animation="am-slide-bottom" bs-modal="modal">Login</button> &nbsp;  &nbsp; 
+                  <p>SaaS solution. Switch on in 2 hours</p>
+                   <!-- You can use a custom html template with the `data-template` attr -->
+    
+                  
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li>
+      <div class="tm-fullscreen-container uk-height-viewport" id="teaser" >
+        <div class="tm-fullscreen fs2">
+          <div class="caption uk-text-center" >
+            <div class="uk-container uk-container-center uk-text-center">
+              <div class="uk-grid uk-text-center" >
+                <div class="uk-width-1-1 uk-width-medium-4-10 uk-width-large-4-10 uk-push-2-10"><img src="resources/images/switch-on.png" alt="Switch On"/>
+                  <h1>#OmniPresence</h1>
+                  <p> Since customers think and act in real time, <br class="uk-visible-large"/>
+                    mobile engagement needs to do the same</p>
+                  <a class="uk-button uk-button-primary" href="request-demo.html">Start engaging now</a>
+                  <p>SaaS solution. Switch on in 2 hours</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li>
+      <div class="tm-fullscreen-container uk-height-viewport" id="teaser" >
+        <div class="tm-fullscreen fs3">
+          <div class="caption uk-text-center" >
+            <div class="uk-container uk-container-center uk-text-center">
+              <div class="uk-grid uk-text-center" >
+                <div class="uk-width-1-1 uk-width-medium-4-10 uk-width-large-4-10 uk-push-2-10"> <img src="resources/images/switch-on.png" alt="Switch On"/>
+                  <h1>#OmniPresence</h1>
+                  <p>The right math to prompt the right recommendation<br class="uk-visible-large"/>
+                    in every customer context</p>
+                  <a class="uk-button uk-button-primary" href="request-demo.html">Start recommending now</a>
+                  <p>SaaS solution. Switch on in 2 hours</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li>
+      <div class="tm-fullscreen-container uk-height-viewport" id="teaser" >
+        <div class="tm-fullscreen fs4">
+          <div class="caption uk-text-center" >
+            <div class="uk-container uk-container-center uk-text-center">
+              <div class="uk-grid uk-text-center" >
+                <div class="uk-width-1-1 uk-width-medium-4-10 uk-width-large-4-10"><!-- <img src="images/switch-on.png" alt="Switch On"/><h1 style="background:none;"></h1>-->
+                  <p style="font-size:36px;line-height:48px;text-align:left;font-weight:300">Manthan included in <br class="uk-visible-large"/>
+                    Gartner Magic Quadrant for BI & Analytics Platforms</p>
+                  <a class="uk-button uk-button-primary uk-float-left" href="https://www.manthan.com/event/2015-gartner-magic-quadrant-for-bi-and-analytics/?utm_source=Website" target="_blank">Get the full report</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <a href="" class="uk-slidenav uk-slidenav-contrast uk-slidenav-previous" data-uk-slideshow-item="previous"></a> <a href="" class="uk-slidenav uk-slidenav-contrast uk-slidenav-next" data-uk-slideshow-item="next"></a> </div>
+
+
+<script type="text/javascript">var MTIProjectId='0ac13ee2-e41c-4118-b0d0-11dacfb80b9a'; (function(){var mtiTracking=document.createElement('script'); mtiTracking.type='text/javascript'; mtiTracking.async='true'; mtiTracking.src=('https:'==document.location.protocol?'https:':'http:')+'//fast.fonts.net/t/trackingCode.js'; (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild( mtiTracking );})();</script> 
+<script type="text/javascript" src="resources/scripts/jquery.js"></script> 
+<script type="text/javascript" src="resources/scripts/uikit.min.js"></script>
+ <script src="resources/scripts/validation/jquery.validationEngine-en.js" type="text/javascript" charset="utf-8"></script> 
+ <!-- <script src="resources/scripts/validation/jquery.validationEngine.js" type="text/javascript" charset="utf-8"></script> -->
+ <!-- <script type="text/javascript" src="resources/scripts/vendor/vedio/mediaelement-and-player.min.js"></script>  -->
+ <script type="text/javascript" src="resources/scripts/components/slideshow.min.js"></script> 
+<!--  <script type="text/javascript">jQuery(function($){var fn=function(){}, win=$(window), body=$('body'), navbar=$('.tm-navbar'); if(body.hasClass('tm-navbar-fixed')){win.on('scroll', function(){if (win.scrollTop() > 0){navbar.addClass('tm-navbar-small');}else{navbar.removeClass('tm-navbar-small');}});}});</script> -->
+ <script type="text/javascript">WebFontConfig={google:{families: [ 'Roboto:400,100,100italic,300,300italic,400italic,500,500italic,700,700italic:latin']}}; (function(){var wf=document.createElement('script'); wf.src=('https:'==document.location.protocol ? 'https' : 'http') + '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js'; wf.type='text/javascript'; wf.async='true'; var s=document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(wf, s);})(); </script> 
+
+  
+  
+  
+  </div>
+
+</body>
+
+    <!-- build:js(.) scripts/vendor.js -->
+
+</html>

@@ -1,0 +1,52 @@
+package com.zen.smi.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class RuleListBO {
+	
+	@SerializedName("rules")
+	private List<RuleBO> rules;
+	@SerializedName("ruleTestSummary")
+	private List<RuleTestSummaryBO> ruleTestSummary;
+	@SerializedName("ruleApps")
+	private List<RuleAppsBO> ruleApps;
+	
+	public List<RuleBO> getRules() {
+		return rules;
+	}
+
+	public void setRules(List<RuleBO> rules) {
+		this.rules = rules;
+	}
+
+	/**
+	 * @return the ruleTestSummary
+	 */
+	public List<RuleTestSummaryBO> getRuleTestSummary() {
+		return ruleTestSummary;
+	}
+
+	/**
+	 * @param ruleTestSummary the ruleTestSummary to set
+	 */
+	public void setRuleTestSummary(List<RuleTestSummaryBO> ruleTestSummary) {
+		this.ruleTestSummary = ruleTestSummary;
+	}
+
+	/**
+	 * @return the ruleApps
+	 */
+	public List<RuleAppsBO> getRuleApps() {
+		return ruleApps;
+	}
+
+	/**
+	 * @param ruleApps the ruleApps to set
+	 */
+	public void setRuleApps(List<RuleAppsBO> ruleApps) {
+		this.ruleApps = ruleApps;
+	}
+
+}

@@ -1,0 +1,95 @@
+package com.zen.smi.service.impl;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import com.zen.smi.bo.SocialDataAnalysisBO;
+import com.zen.smi.dao.entities.SocialDataAnalysis;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.generic.utils.DateUtil;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.generic.utils.SmiConstants;
+import com.zen.smi.service.SocialDataAnalysisService;
+
+public class SocialDataAnalysisServiceImpl extends BaseService implements SocialDataAnalysisService {
+
+	public List<SocialDataAnalysisBO> getSocialDataAnalysis(Integer profileId) throws BusinessException {
+		List<SocialDataAnalysisBO> analysisBOs = new ArrayList<SocialDataAnalysisBO>();
+		Calendar cal = Calendar.getInstance();
+		Date toDate = cal.getTime();
+		cal.add(Calendar.HOUR_OF_DAY, -SmiConstants.TIIME_DURATION);
+		Date fromDate = cal.getTime();
+		List<SocialDataAnalysis> analysisList = null;
+		try {
+			
+			analysisList =  getSocialDataAnalysisDAO().getScoreByAccountId(profileId, fromDate, toDate);
+		  
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		analysisBOs = getTimeIntervels(analysisList,fromDate, toDate);
+		return analysisBOs;
+	}
+
+	
+	private List<SocialDataAnalysisBO> getTimeIntervels(List<SocialDataAnalysis> analysisBOs,Date fromDate,Date toDate )
+	{
+		List<SocialDataAnalysisBO> socialAnalysisBOList = new ArrayList<SocialDataAnalysisBO>();
+		SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(fromDate);
+		Date startDate = cal.getTime();
+		Date endtDate = cal.getTime();
+    	int i=0;
+		int upperLimit = (SmiConstants.TIIME_DURATION*60)/ SmiConstants.TIIME_DURATION_MINS;
+		while(i++ < upperLimit){
+			SocialDataAnalysisBO socialDataAnalysisBO = new SocialDataAnalysisBO();
+			cal.add(Calendar.MINUTE, SmiConstants.TIIME_DURATION_MINS);
+			endtDate = cal.getTime();
+			socialDataAnalysisBO.setPeriod(df.format(cal.getTime()));
+			socialDataAnalysisBO.setSentimentScore(getSocialScore(analysisBOs,startDate,endtDate));
+			startDate = endtDate;
+			socialAnalysisBOList.add(socialDataAnalysisBO);
+		}
+		return socialAnalysisBOList;
+		
+	}
+	 
+	
+	private String getSocialScore(List<SocialDataAnalysis> analysis, Date startDate,Date endtDate) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	 	String avgScore = "";
+		double totalScore =0.0;
+		int totalRecords = 0;	
+		String crtDateString = "";
+		String startDateSTR = "";
+		String endtDateSTR = "";
+		for (SocialDataAnalysis socialDataAnalysis : analysis) {
+			Date crtDate = socialDataAnalysis.getCreatedDate();
+			crtDateString = format.format(crtDate);
+			startDateSTR = format.format(startDate);
+			endtDateSTR = format.format(endtDate);
+			
+			System.out.println("fromDate==:"+startDateSTR+":==endtDate==:"+endtDateSTR+"createddate=:"+crtDateString);
+			
+			if(DateUtil.getInstance().compareDates(startDateSTR, endtDateSTR, crtDateString))
+			{
+				totalScore =totalScore+ Double.parseDouble((socialDataAnalysis.getSentimentScore()));
+				totalRecords++;
+			}
+			if(totalRecords > 0){
+	    		avgScore = String.valueOf(totalScore/totalRecords);
+	    	}
+		}	 
+		return avgScore;
+	}
+
+	
+}

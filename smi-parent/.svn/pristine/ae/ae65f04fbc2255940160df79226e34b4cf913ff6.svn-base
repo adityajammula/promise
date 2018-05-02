@@ -1,0 +1,176 @@
+package com.zen.smi.bo;
+
+import java.util.Date;
+
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * This class contains Rule Formula Business data.
+ *
+ * @author Tirumala Vasu
+ */
+public class RuleFormulaBO {
+	
+	@SerializedName("rule_formula_id")	
+	private Integer ruleFormulaId;
+	@SerializedName("rule")
+	private RuleBO rule;
+	@SerializedName("rule_formula_name")
+	private String ruleFormulaName;
+	@SerializedName("created_by")
+	private String createdBy;
+	@SerializedName("updated_by")
+	private String updatedBy;
+	@SerializedName("created_date")
+	private Date createdDate;
+	@SerializedName("updated_date")
+	private Date updatedDate;
+	@SerializedName("rule_formula_expression")
+	private String ruleFormulaExpression;
+	@SerializedName("action")
+	private String action;
+	
+	
+	@SerializedName("rule_formula_shadow_id")
+	private Integer ruleFormulaShadowId;
+	public Integer getRuleFormulaShadowId() {
+		return ruleFormulaShadowId;
+	}
+	public void setRuleFormulaShadowId(Integer ruleFormulaShadowId) {
+		this.ruleFormulaShadowId = ruleFormulaShadowId;
+	}
+	public boolean isAdded() {
+		return isAdded;
+	}
+	public void setAdded(boolean isAdded) {
+		this.isAdded = isAdded;
+	}
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+	public boolean isUpdated() {
+		return isUpdated;
+	}
+	public void setUpdated(boolean isUpdated) {
+		this.isUpdated = isUpdated;
+	}
+	@SerializedName("is_added")
+	private boolean isAdded=false;
+	@SerializedName("is_deleted")
+	private boolean isDeleted=false;
+	@SerializedName("is_updated")
+	private boolean isUpdated=false;
+	/**
+	 * @return the ruleFormulaId
+	 */
+	public Integer getRuleFormulaId() {
+		return ruleFormulaId;
+	}
+	/**
+	 * @param ruleFormulaId the ruleFormulaId to set
+	 */
+	public void setRuleFormulaId(Integer ruleFormulaId) {
+		this.ruleFormulaId = ruleFormulaId;
+	}
+
+	/**
+	 * @return the ruleFormulaName
+	 */
+	public String getRuleFormulaName() {
+		return ruleFormulaName;
+	}
+	/**
+	 * @param ruleFormulaName the ruleFormulaName to set
+	 */
+	public void setRuleFormulaName(String ruleFormulaName) {
+		this.ruleFormulaName = ruleFormulaName;
+	}
+	/**
+	 * @return the createdBy
+	 */
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	/**
+	 * @return the updatedBy
+	 */
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	/**
+	 * @param updatedBy the updatedBy to set
+	 */
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the updatedDate
+	 */
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	/**
+	 * @param updatedDate the updatedDate to set
+	 */
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	/**
+	 * @return the ruleFormulaExpression
+	 */
+	public String getRuleFormulaExpression() {
+		return ruleFormulaExpression;
+	}
+	/**
+	 * @param ruleFormulaExpression the ruleFormulaExpression to set
+	 */
+	public void setRuleFormulaExpression(String ruleFormulaExpression) {
+		this.ruleFormulaExpression = ruleFormulaExpression;
+	}
+	/**
+	 * @return the rule
+	 */
+	public RuleBO getRule() {
+		return rule;
+	}
+	/**
+	 * @param rule the rule to set
+	 */
+	public void setRule(RuleBO rule) {
+		this.rule = rule;
+	}
+	/**
+	 * @return the action
+	 */
+	public String getAction() {
+		return action;
+	}
+	/**
+	 * @param action the action to set
+	 */
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+}

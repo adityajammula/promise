@@ -1,0 +1,113 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.Date;
+
+
+public class CmfCaseHistoryBO {
+	private Integer caseHistoryId;
+	private CmfCaseBO cmfCaseBO;
+	private CmfCaseStatusBO cmfCaseStatusBO;
+	private String caseHistoryDescription;
+	private Integer parentCaseHistoryId;
+	private String createdBy;
+	private Date createdDate;
+	private Date updatedDate;
+	/**
+	 * @return the caseHistoryId
+	 */
+	public Integer getCaseHistoryId() {
+		return caseHistoryId;
+	}
+	/**
+	 * @param caseHistoryId the caseHistoryId to set
+	 */
+	public void setCaseHistoryId(Integer caseHistoryId) {
+		this.caseHistoryId = caseHistoryId;
+	}
+	/**
+	 * @return the cmfCaseBO
+	 */
+	public CmfCaseBO getCmfCaseBO() {
+		return cmfCaseBO;
+	}
+	/**
+	 * @param cmfCaseBO the cmfCaseBO to set
+	 */
+	public void setCmfCaseBO(CmfCaseBO cmfCaseBO) {
+		this.cmfCaseBO = cmfCaseBO;
+	}
+	/**
+	 * @return the cmfCaseStatusBO
+	 */
+	public CmfCaseStatusBO getCmfCaseStatusBO() {
+		return cmfCaseStatusBO;
+	}
+	/**
+	 * @param cmfCaseStatusBO the cmfCaseStatusBO to set
+	 */
+	public void setCmfCaseStatusBO(CmfCaseStatusBO cmfCaseStatusBO) {
+		this.cmfCaseStatusBO = cmfCaseStatusBO;
+	}
+	/**
+	 * @return the caseHistoryDescription
+	 */
+	public String getCaseHistoryDescription() {
+		return caseHistoryDescription;
+	}
+	/**
+	 * @param caseHistoryDescription the caseHistoryDescription to set
+	 */
+	public void setCaseHistoryDescription(String caseHistoryDescription) {
+		this.caseHistoryDescription = caseHistoryDescription;
+	}
+	/**
+	 * @return the parentCaseHistoryId
+	 */
+	public Integer getParentCaseHistoryId() {
+		return parentCaseHistoryId;
+	}
+	/**
+	 * @param parentCaseHistoryId the parentCaseHistoryId to set
+	 */
+	public void setParentCaseHistoryId(Integer parentCaseHistoryId) {
+		this.parentCaseHistoryId = parentCaseHistoryId;
+	}
+	/**
+	 * @return the createdBy
+	 */
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the updatedDate
+	 */
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	/**
+	 * @param updatedDate the updatedDate to set
+	 */
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	
+	
+}

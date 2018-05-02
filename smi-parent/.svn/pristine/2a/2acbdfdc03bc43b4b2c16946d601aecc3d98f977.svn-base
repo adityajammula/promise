@@ -1,0 +1,36 @@
+package com.zen.smi.extsys.facebook.bo;
+
+public class Group {
+
+	private String id;
+	private String name;
+	private Cover cover;
+	private String likes;
+	
+	public String getLikes() {
+		return likes;
+	}
+	public void setLikes(String likes) {
+		this.likes = likes;
+	}
+	public Cover getCover() {
+		return cover;
+	}
+	public void setCover(Cover cover) {
+		this.cover = cover;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
+}

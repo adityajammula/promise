@@ -1,0 +1,113 @@
+package com.zen.smi.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zen.smi.cmf.bo.CmfCaseBO;
+import com.zen.smi.cmf.bo.CmfCaseManagementDashboardBO;
+import com.zen.smi.cmf.bo.CmfCaseStaticDataBO;
+import com.zen.smi.cmf.service.CmfCaseService;
+import com.zen.smi.exception.BusinessException;
+
+/**
+ * CmfCaseController class manage Cases related data. Data from screens is
+ * transferred to the controller and passed to services/dao.
+ * 
+ * @author tmangalapenta 
+ */
+@Controller
+@RequestMapping("/cmfcases")
+public class CmfCaseController extends BaseController {
+
+	/**
+	 * Logger for CmfCaseController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(CmfCaseController.class);
+
+	@Autowired
+	public CmfCaseService cmfCaseService;
+
+	/**
+	 * This method is to get all the rules information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return RuleListBO
+	 */
+	
+	@RequestMapping(value = "/closed", method = RequestMethod.GET)
+	public @ResponseBody String getAllCmfClosedCases(HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			
+			List<CmfCaseBO> cmfCases = cmfCaseService.getAllCmfClosedCases();
+//			RuleListBO ruleList = new RuleListBO();
+//			ruleList.setRules(rules);
+//			resultJson = gson.toJson(ruleList, RuleListBO.class);
+//			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	/**
+	 * This method is to get CmfCase Static Data information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/staticdata", method = RequestMethod.GET)
+	public @ResponseBody String getCmfCaseStaticData(HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			
+			CmfCaseStaticDataBO cmfCaseStaticData = cmfCaseService.getCmfCaseStaticData();
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	/**
+	 * This method is to get All CmfCase Counts information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return CmfCaseStaticDataBO
+	 */
+	
+	@RequestMapping(value = "/cmfCaseManagementCounts", method = RequestMethod.GET)
+	public @ResponseBody String getCountOfCmfCaseManagement(HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			 
+			CmfCaseManagementDashboardBO cmfCaseManagementDashboardBO = cmfCaseService.getCountOfCmfCaseManagement();
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+}

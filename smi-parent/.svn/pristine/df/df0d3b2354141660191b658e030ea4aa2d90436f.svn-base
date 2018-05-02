@@ -1,0 +1,159 @@
+angular.module('smiApp')
+ .controller('CaseManagementController', function ($scope, $rootScope,$moment,cmfDashboardService) { 
+	 $scope.init = function(){
+		 $scope.caseCounts=[];
+			cmfDashboardService.getCaseCountDetails().then(function(response){
+			$scope.caseCounts = response.data.cmfCasePriorityBOList;
+			/*
+			 * Case Category Morris-Donut Chart Code.
+			 */
+			$scope.caseCategoryData = [
+					             {label: '', value: null, color: '#428bca'},
+					             {label: '', value: null, color: '#616f77'},
+					             {label: '', value: null, color: '#f0ad4e'},
+					             {label: '', value: null,  color: '#5bc0de'},                        
+					             {label: '', value: null, color: '#d9534f'},
+					             {label: '', value: null, color: '#1693A5'}
+					            ];
+				 var caseCategory = response.data.cmfCaseCategoryBO;
+				 for(var i=0; i<caseCategory.length; i++){
+				 		$scope.caseCategoryData[i].label= caseCategory[i].category_name;
+				 		$scope.caseCategoryData[i].value= caseCategory[i].issue_count_by_category_id;			 		
+				 	 }
+			/*
+			 * Case Priority Morris-Donut Chart Code.
+			 */
+	        $scope.casePriorityData = [
+					            {label: '', value:null ,color: '#d9534f'},
+					            {label: '', value:null, color: '#f0ad4e'},
+					            {label: '', value:null, color: '#428bca'},                        
+					            {label: '', value:null, color: '#1693A5'}
+					          ];
+					 	var casePriority = response.data.cmfCasePriorityBOList;
+					 	 for(var i=0; i<casePriority.length; i++){
+					 		$scope.casePriorityData[i].label= casePriority[i].priority_name;
+					 		$scope.casePriorityData[i].value= casePriority[i].issue_count_by_priority_id;		 		
+					 	 }
+						$scope.totalcases = response.data.total_cases_count;
+						$scope.totalfbcases = response.data.face_book_open_cases_count;
+						$scope.totaltwittercases = response.data.twitter_open_cases_count;
+						$scope.totalcaseprioritycases = response.data.cases_assigned_to_user_count;
+				    });
+	        }
+	
+    
+     $scope.caseStatisticVal = "CaseCategory";
+    
+         $scope.options = {
+        		 colors: ['#e05d6f','#61c8b8'],
+        	      series: {
+        	        shadowSize: 0
+        	      },
+        	      legend: {
+        	        backgroundOpacity: 0,
+        	        margin: -7,
+        	        position: 'ne',
+        	        noColumns: 3
+        	      },
+           xaxis: {
+             tickLength: 0,
+             font: {
+               color: '#fff'
+             },
+             position: 'bottom',
+             ticks: [
+               [ 1, 'JAN' ], [ 2, 'FEB' ], [ 3, 'MAR' ], [ 4, 'APR' ], [ 5, 'MAY' ], [ 6, 'JUN' ], [ 7, 'JUL' ], [ 8, 'AUG' ], [ 9, 'SEP' ], [ 10, 'OCT' ], [ 11, 'NOV' ], [ 12, 'DEC' ]
+             ]
+           },
+           yaxis: {
+             tickLength: 0,
+             font: {
+               color: '#fff'
+             }
+           },
+           grid: {
+             borderWidth: {
+               top: 0,
+               right: 0,
+               bottom: 1,
+               left: 1
+             },
+             borderColor: 'rgba(255,255,255,.3)',
+             margin:0,
+             minBorderMargin:0,
+             labelMargin:20,
+             hoverable: true,
+             clickable: true,
+             mouseActiveRadius:6
+           },
+           tooltip: true,
+           tooltipOpts: {
+             content: '%s: %y',
+             defaultTheme: false,
+             shifts: {
+               x: 0,
+               y: 20
+             }
+           }
+         }; 
+         
+         $scope.startDate = $moment().subtract(1, 'days').format('MMMM D, YYYY');
+         $scope.endDate = $moment().add(31, 'days').format('MMMM D, YYYY');
+         $scope.rangeOptions = {
+           ranges: {
+             'Today': [$moment(), $moment()],
+             'Yesterday': [$moment().subtract(1, 'days'), $moment().subtract(1, 'days')],
+             'Last 7 Days': [$moment().subtract(6, 'days'), $moment()],
+             'Last 30 Days': [$moment().subtract(29, 'days'), $moment()],
+             'This Month': [$moment().startOf('month'), $moment().endOf('month')],
+             'Last Month': [$moment().subtract(1, 'month').startOf('month'), $moment().subtract(1, 'month').endOf('month')]
+           },
+           opens: 'left',
+           startDate: $moment().subtract(29, 'days'),
+           endDate: $moment(),
+           parentEl: '#content'
+         };
+         
+         $scope.$watch('startDate', function() {
+        	 /*alert( $scope.startDate +"     "+$scope.endDate);*/
+        	 $scope.changeCase($scope.caseStatisticVal);
+         }, true);
+         
+         $scope.changeCase = function(selectedCaseStatisticVal) {
+        	 if(selectedCaseStatisticVal == 'CaseCategory'){
+        		 $scope.dataset = [{
+                     data: [[1,15],[2,40],[3,35],[4,39],[5,42],[6,50],[7,46],[8,49],[9,59],[10,60],[11,58],[12,74],[13,150]],
+                     label: 'Case Category',
+                     bars: {
+                       show: true,
+                       barWidth: 0.5,
+                       lineWidth: 0,
+                       fillColor: { colors: [{ opacity: 0.3 }, { opacity: 0.8}] }
+                     }
+                   }]
+        	 }else if(selectedCaseStatisticVal == 'CasePriority'){
+        		 $scope.dataset = [{
+                     data: [[1,50],[2,80],[3,90],[4,85],[5,99],[6,125],[7,114],[8,96],[9,130],[10,145],[11,139],[12,160]],
+                     label: 'Case Priority',
+                     bars: {
+                       show: true,
+                       barWidth: 0.6,
+                       lineWidth: 0,
+                       fillColor: { colors: [{ opacity: 0.3 }, { opacity: 0.8}] }
+                     }
+                   }] 
+        	 }else{
+        		 $scope.dataset = [{
+                     data: [[1,25],[2,80],[3,40],[4,85],[5,50],[6,125],[7,97],[8,96],[9,50],[10,145],[11,100],[12,120]],
+                     label: 'Social Channel',
+                     bars: {
+                       show: true,
+                       barWidth: 0.6,
+                       lineWidth: 0,
+                       fillColor: { colors: [{ opacity: 0.3 }, { opacity: 0.8}] }
+                     }
+                   }]
+        	 }
+         }
+         $scope.init();
+ });

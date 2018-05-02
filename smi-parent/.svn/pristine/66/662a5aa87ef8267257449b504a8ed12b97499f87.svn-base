@@ -1,0 +1,264 @@
+package com.zen.smi.cmf.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.cmf.bo.CmfCaseBO;
+import com.zen.smi.cmf.bo.CmfCaseManagementDashboardBO;
+import com.zen.smi.cmf.bo.CmfCaseStaticDataBO;
+import com.zen.smi.cmf.exception.BusinessException;
+import com.zen.smi.cmf.service.CmfCaseService;
+import com.zen.smi.cmf.service.helper.CmfCaseHelper;
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCaseCategory;
+import com.zen.smi.dao.entities.CmfCasePriority;
+import com.zen.smi.dao.entities.CmfCaseStatus;
+import com.zen.smi.dao.entities.CmfCustomer;
+import com.zen.smi.dao.entities.FinancialInstitutions;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.dao.entities.SocialProfiles;
+import com.zen.smi.dao.entities.Users;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.generic.utils.MessageUtil;
+
+public class CmfCaseServiceImpl extends CmfBaseService implements CmfCaseService {
+
+	/**
+	 * Logger for CmfCaseServiceImpl class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(CmfCaseServiceImpl.class);
+
+	public CmfCaseManagementDashboardBO getCountOfCmfCaseManagement()
+			throws BusinessException {
+
+		LOGGER.debug("Starts getCountOfCmfCaseManagement....");
+		CmfCaseManagementDashboardBO cmfCaseManagementDashboardBO = new CmfCaseManagementDashboardBO();
+		
+		try {
+			cmfCaseManagementDashboardBO.setTotalCases(getCmfCaseDAO().getCountOfCmfCasesByStatusType(1));
+			cmfCaseManagementDashboardBO.setFaceBookOpenCases(getCmfCaseDAO().getCountOfCmfOpenCasesByAccountType(1,1));
+			cmfCaseManagementDashboardBO.setTwitterOpenCases(getCmfCaseDAO().getCountOfCmfOpenCasesByAccountType(2,1));
+			cmfCaseManagementDashboardBO.setCasesAssignedToUser(getCmfCaseDAO().getCountOfCmfCurrentUserCases(1));
+			cmfCaseManagementDashboardBO.setCriticalCasesAssignedToUser(getCmfCaseDAO().getCountOfCmfCurrentUserCasesByPriority(1,1));
+			cmfCaseManagementDashboardBO.setHighCasesAssignedToUser(getCmfCaseDAO().getCountOfCmfCurrentUserCasesByPriority(1,2));
+			cmfCaseManagementDashboardBO.setMediumCasesAssignedToUser(getCmfCaseDAO().getCountOfCmfCurrentUserCasesByPriority(1,3));
+			cmfCaseManagementDashboardBO.setLowCasesAssignedToUser(getCmfCaseDAO().getCountOfCmfCurrentUserCasesByPriority(1,4));
+			cmfCaseManagementDashboardBO.setResolvedCases(getCmfCaseDAO().getCountOfCmfCasesByStatusType(4));
+			cmfCaseManagementDashboardBO.setClosedCases(getCmfCaseDAO().getCountOfCmfCasesByStatusType(6));
+			cmfCaseManagementDashboardBO.setSpamCases(getCmfCaseDAO().getCountOfCmfCasesByStatusType(7));
+
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByAccountType....");
+		return cmfCaseManagementDashboardBO;
+	}
+
+	public CmfCaseStaticDataBO getCmfCaseStaticData()
+			throws BusinessException {
+
+		LOGGER.debug("Starts getCmfCaseStaticData....");
+		CmfCaseStaticDataBO cmfCaseStaticDataBO = new CmfCaseStaticDataBO();
+		
+		try { 
+			List<CmfCaseCategory> cmfCaseCategoryList = getCmfCaseCategoryDAO().load("from CmfCaseCategory");
+			List<CmfCasePriority> cmfCasePriorityList = getCmfCasePriorityDAO().load("from CmfCasePriority");
+			List<SocialMediaAccounts> socialMediaAccountsList = getSocialMediaAccountsDAO().load("from SocialMediaAccounts");
+			
+			cmfCaseStaticDataBO.setCmfCaseCategoryBOList(CmfCaseHelper.getInstance().convertCmfCaseCategoryEntityToBO(cmfCaseCategoryList));
+			cmfCaseStaticDataBO.setCmfCasePriorityBOList(CmfCaseHelper.getInstance().convertCmfCasePriorityEntityToBO(cmfCasePriorityList));
+			cmfCaseStaticDataBO.setSocialMediaAccountsList(CmfCaseHelper.getInstance().convertSocialMediaAccountsEntityToBO(socialMediaAccountsList));
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getCmfCaseStaticData....");
+		return cmfCaseStaticDataBO;
+	}
+
+	public List<CmfCaseBO> getAllCmfOpenCasesByAccountType(int accountTypeId,int statusTypeId)
+			throws BusinessException {
+		LOGGER.debug("Starts getAllCmfOpenCasesByAccountType....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			cmfCases = getCmfCaseDAO().getAllCmfOpenCasesByAccountType(accountTypeId,statusTypeId);
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(
+						cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByAccountType....");
+		return cmfCaseBO;
+	}
+
+
+	private CmfCase getCmfCaseDependencies(CmfCase cmfCase)throws BusinessException {
+		LOGGER.debug("Starts getRuleSubEntity....");
+		try {
+			SocialProfiles socialProfiles = getSocialProfileDAO().getSocialProfilesByCmfCase(
+					cmfCase.getCaseId());
+			Users users = getUserDAO().getUserByCmfCase(
+					cmfCase.getCaseId());
+			CmfCaseStatus cmfCaseStatus = getCmfCaseStatusDAO().getCmfCaseStatusByCmfCase(
+					cmfCase.getCaseId());
+			CmfCustomer cmfCustomer = getCmfCustomerDAO().getCmfCustomerByCmfCase(
+					cmfCase.getCaseId());
+			CmfCasePriority cmfCasePriority = getCmfCasePriorityDAO().getCmfCasePriorityByCmfCase(
+					cmfCase.getCaseId());
+			SocialMediaAccounts socialMediaAccounts = getSocialMediaAccountsDAO().getSocialMediaAccountsByCmfCase(
+					cmfCase.getCaseId());
+			FinancialInstitutions financialInstitutions = getFinancialInstitutionsDAO().getFinancialInstitutionsByCmfCase(
+					cmfCase.getCaseId());
+			
+//			
+//			
+//			rg.setRuleFamily(rf);
+//			rule.setRuleGroup(rg);
+//
+//			List<RuleFormula> ruleFormulas = getRuleFormulaDAO()
+//					.getRuleFormulasByRuleId(rule.getRuleId());
+//			Set<RuleFormula> ruleFormulasList = new HashSet<RuleFormula>(
+//					ruleFormulas);
+//			rule.setRuleFormulas(ruleFormulasList);
+//
+//			List<RuleRulesColumns> ruleRulesColumns = getRuleRuleColumnsDAO()
+//					.getRuleColumnsByRuleId(rule.getRuleId());
+//			Set<RuleRulesColumns> ruleRulesColumnsList = new HashSet<RuleRulesColumns>(
+//					ruleRulesColumns);
+//			for (RuleRulesColumns rrColumns : ruleRulesColumnsList) {
+//				RuleColumns rulesColumns = getRuleColumnsDAO()
+//						.getRuleColumnByRulesID(
+//								rrColumns.getRuleRulesColumnId());
+//				rrColumns.setRuleColumns(rulesColumns);
+//				rrColumnsList.add(rrColumns);
+//			}
+//
+//			rule.setRuleRulesColumnses(rrColumnsList);
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends getRuleSubEntity....");
+		return cmfCase;
+	
+	}
+
+	public List<CmfCaseBO> getAllCmfResolvedCases() throws BusinessException {
+		LOGGER.debug("Starts getAllCmfResolvedCases....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			cmfCases = getCmfCaseDAO().getAllCmfResolvedCases();
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(
+						cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfResolvedCases....");
+		return cmfCaseBO;
+	}
+
+	public List<CmfCaseBO> getAllCmfClosedCases() throws BusinessException {
+		LOGGER.debug("Starts getAllCmfClosedCases....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			cmfCases = getCmfCaseDAO().getAllCmfClosedCases();
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(
+						cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfClosedCases....");
+		return cmfCaseBO;
+	}
+
+	public List<CmfCaseBO> getAllCmfSpamCases() throws BusinessException {
+		LOGGER.debug("Starts getAllCmfSpamCases....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			cmfCases = getCmfCaseDAO().getAllCmfSpamCases();
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(
+						cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfSpamCases....");
+		return cmfCaseBO;
+	}
+
+	public List<CmfCaseBO> getAllCmfOpenCasesByAccountType(int accountTypeId)
+			throws BusinessException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	
+}

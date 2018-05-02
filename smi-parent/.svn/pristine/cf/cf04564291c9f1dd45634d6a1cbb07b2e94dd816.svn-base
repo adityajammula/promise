@@ -1,0 +1,60 @@
+package com.zen.smi.service.impl;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.zen.smi.bo.RuleFamilyBO;
+import com.zen.smi.dao.MessagesDAO;
+import com.zen.smi.dao.entities.Messages;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleApps;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleFormula;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.dao.impl.MessagesDAOImpl;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.exception.UserException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.FamilyService;
+import com.zen.smi.service.MessageService;
+import com.zen.smi.service.RuleGroupService;
+import com.zen.smi.service.RuleService;
+import com.zen.smi.service.helper.FamilyHelper;
+import com.zen.smi.service.helper.RuleHelper;
+
+/**
+ * @author Jshaik
+ *
+ */
+public class MessageServiceImpl extends BaseService implements  MessageService {
+	
+	/**
+	 * Logger for FamilyServiceImpl class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(MessageServiceImpl.class);
+
+	public void populateAllMessages() throws BusinessException {
+		try {
+			List<Messages> messageList = getMessagesDAO().getAllMessages();
+			//Change Dao to Service
+			LOGGER.info("Initializing Messages...");
+			if(messageList != null && !messageList.isEmpty())
+			{
+				MessageUtil.getInstance().populateMessages(messageList);
+			} else {
+				LOGGER.error("No messages in database.. ");
+			}
+			//Start scheduled jobs
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+}

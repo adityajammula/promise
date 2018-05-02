@@ -1,0 +1,62 @@
+package com.zen.smi.service.helper;
+
+import static com.zen.smi.generic.utils.SmiConstants.FAMILY_PROPERTIES;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.CmfCustomerSocialDataBO;
+import com.zen.smi.dao.entities.CmfCustomerSocialData;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+
+public class CmfCustomerSocialDataHelper  extends BeanCopyUtil {
+
+	
+	
+	private static final Logger LOGGER = Logger.getLogger(CmfCustomerSocialDataHelper .class);
+	
+	public static final String[] CMF_SOCIAL_DATA_PROPERTIES = {"customerId","likes","dislikes","books","movies","sports","shoppingPreferences","restaurantPreferences","locationTravelled","keyDate1","keyDate2","keyDate3","keyDate4"};
+	
+	
+	
+	private static CmfCustomerSocialDataHelper  instance;
+
+	public static CmfCustomerSocialDataHelper getInstance() {
+		if (instance == null) {
+			instance = new CmfCustomerSocialDataHelper();
+		}
+		return instance;
+	}
+
+	
+
+	/**
+	 * Private constructor
+	 */
+	private CmfCustomerSocialDataHelper() {
+
+	}
+	
+	
+	
+	public List<CmfCustomerSocialDataBO> convertCmfCustomerSocialDataToBO(List<CmfCustomerSocialData> cmfCustomerSocialData){
+		
+		 List<CmfCustomerSocialDataBO> cmfCustomerSocialDataBOList = new ArrayList<CmfCustomerSocialDataBO>();
+		
+		 
+		 for(CmfCustomerSocialData socialData:cmfCustomerSocialData){
+			 
+			 CmfCustomerSocialDataBO cmfCustomerSocialDataBO=new CmfCustomerSocialDataBO();
+			  BeanCopyUtil.copyBeanProperties(socialData, cmfCustomerSocialDataBO, CMF_SOCIAL_DATA_PROPERTIES);
+		 
+			  cmfCustomerSocialDataBOList.add(cmfCustomerSocialDataBO);
+		 }
+		
+		return cmfCustomerSocialDataBOList;
+		
+		
+		
+	}
+}

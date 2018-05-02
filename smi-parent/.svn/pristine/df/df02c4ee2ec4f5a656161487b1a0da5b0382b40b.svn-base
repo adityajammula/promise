@@ -1,0 +1,47 @@
+package com.zen.smi.extsys.facebook.bo;
+
+import com.zen.smi.extsys.facebook.bo.Cover;
+
+public class GroupMetaDataBO {
+	
+	public String likes;
+	public String were_here_count;
+	public Cover cover;
+	private String category;
+	private String name;
+	
+	
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
+	}
+	public Cover getCover() {
+		return cover;
+	}
+	public void setCover(Cover cover) {
+		this.cover = cover;
+	}
+	public String getLikes() {
+		return likes;
+	}
+	public void setLikes(String likes) {
+		this.likes = likes;
+	}
+	public String getWere_here_count() {
+		return were_here_count;
+	}
+	public void setWere_here_count(String were_here_count) {
+		this.were_here_count = were_here_count;
+	}
+	
+
+}

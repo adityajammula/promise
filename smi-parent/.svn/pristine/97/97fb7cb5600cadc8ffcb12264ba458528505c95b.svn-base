@@ -1,0 +1,117 @@
+package com.zen.smi.cmf.service.helper;
+
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CUST_INFO;
+import static com.zen.smi.generic.utils.SmiConstants.CUSTOMER_ACCOUNTS;
+import static com.zen.smi.generic.utils.SmiConstants.SOCIAL_DATA_INFO;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.cmf.bo.CmfCustomerAccountBO;
+import com.zen.smi.cmf.bo.CmfCustomerBO;
+import com.zen.smi.cmf.bo.CmfCustomerSocialDataBO;
+import com.zen.smi.dao.entities.CmfCustomer;
+import com.zen.smi.dao.entities.CmfCustomerAccount;
+import com.zen.smi.dao.entities.CmfCustomerSocialData;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+
+public final class CmfCustInfoHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for StaffHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(CmfCustInfoHelper .class);
+
+	/**
+	 * Instance of StaffHelper.
+	 */
+	private static CmfCustInfoHelper  instance;
+	
+	/**
+	 * Private constructor
+	 */
+	private CmfCustInfoHelper() {
+
+	}
+	
+	public List<CmfCustomerBO> convertCmfCustInfoToBO(List<CmfCustomer> cmfCustomerList) {
+		LOGGER.debug("Starts convertCmfCustInfoToBO...");
+		List<CmfCustomerBO> cmfCustomerBOList = new ArrayList<CmfCustomerBO>();
+		for(CmfCustomer cmfCustomer:cmfCustomerList) {	
+			CmfCustomerBO cmfCustomerBO = convertCmfCustomerToCmfCustomerBO(cmfCustomer);						
+			cmfCustomerBOList.add(cmfCustomerBO);
+		}
+		return cmfCustomerBOList;
+	}
+	
+	private CmfCustomerBO convertCmfCustomerToCmfCustomerBO(
+			CmfCustomer cmfCustomer) {
+		
+		CmfCustomerBO cmfCustomerBO = new CmfCustomerBO();
+		BeanCopyUtil.copyBeanProperties(cmfCustomer, cmfCustomerBO, CMF_CUST_INFO);
+        return cmfCustomerBO;
+	}
+	
+	public static CmfCustInfoHelper getInstance() {
+		if (instance == null) {
+			instance = new CmfCustInfoHelper();
+		}
+		return instance;
+	}
+	
+	public List<CmfCustomerSocialDataBO> convertCmfCustomerSocialDataToBO(List<CmfCustomerSocialData> cmfCustomerSocialDataList) {
+		LOGGER.debug("Starts convertCmfCustInfoToBO...");
+		List<CmfCustomerSocialDataBO> cmfCustomerSocialDataBOList = new ArrayList<CmfCustomerSocialDataBO>();
+		for(CmfCustomerSocialData cmfCustomerSocialData:cmfCustomerSocialDataList) {	
+			CmfCustomerSocialDataBO cmfCustomerSocialDataBO = convertCmfCustomerSocialDatarToCmfCustomerBO(cmfCustomerSocialData);						
+			cmfCustomerSocialDataBOList.add(cmfCustomerSocialDataBO);
+		}
+		return cmfCustomerSocialDataBOList;
+	}
+	
+	private CmfCustomerSocialDataBO convertCmfCustomerSocialDatarToCmfCustomerBO(
+			CmfCustomerSocialData cmfCustomerSocialData) {
+		
+		CmfCustomerSocialDataBO cmfCustomerSocialDataBO = new CmfCustomerSocialDataBO();
+		BeanCopyUtil.copyBeanProperties(cmfCustomerSocialData, cmfCustomerSocialDataBO, SOCIAL_DATA_INFO);
+        return cmfCustomerSocialDataBO;
+	}
+	
+	public List<CmfCustomerAccountBO> convertCmfCustomerAccountToBO(List<CmfCustomerAccount> cmfCustomerAccountList) {
+		LOGGER.debug("Starts convertCmfCustomerAccountToBO...");
+		List<CmfCustomerAccountBO> cmfCustomerAccountBOList = new ArrayList<CmfCustomerAccountBO>();
+		for(CmfCustomerAccount cmfCustomerAccount:cmfCustomerAccountList) {	
+			CmfCustomerAccountBO cmfCustomerAccountBO = convertcmfCustomerAccountToCustomerAccountBO(cmfCustomerAccount);						
+			cmfCustomerAccountBOList.add(cmfCustomerAccountBO);
+		}
+		return cmfCustomerAccountBOList;
+	}
+	
+	private CmfCustomerAccountBO convertcmfCustomerAccountToCustomerAccountBO(
+			CmfCustomerAccount cmfCustomerAccount) {
+		
+		CmfCustomerAccountBO cmfCustomerAccountBO = new CmfCustomerAccountBO();
+		BeanCopyUtil.copyBeanProperties(cmfCustomerAccount, cmfCustomerAccountBO, CUSTOMER_ACCOUNTS);
+        return cmfCustomerAccountBO;
+	}
+	
+	public List<CmfCustomerAccount> convertBoToCustomerAccount(List<CmfCustomerAccountBO> cmfCustomerAccountBOList) {
+		LOGGER.debug("Starts convertCmfCustomerAccountToBO...");
+		List<CmfCustomerAccount> cmfCustomerAccountList = new ArrayList<CmfCustomerAccount>();
+		for(CmfCustomerAccountBO cmfCustomerAccountBO:cmfCustomerAccountBOList) {	
+			CmfCustomerAccount cmfCustomerAccount = convertcmfCustomerAccountBOToCustomerAccount(cmfCustomerAccountBO);						
+			cmfCustomerAccountList.add(cmfCustomerAccount);
+		}
+		return cmfCustomerAccountList;
+	}
+	
+	private CmfCustomerAccount convertcmfCustomerAccountBOToCustomerAccount(
+			CmfCustomerAccountBO cmfCustomerAccountBO) {
+		
+		CmfCustomerAccount cmfCustomerAccount = new CmfCustomerAccount();
+		BeanCopyUtil.copyBeanProperties(cmfCustomerAccountBO, cmfCustomerAccount, CUSTOMER_ACCOUNTS);
+        return cmfCustomerAccount;
+	}
+}

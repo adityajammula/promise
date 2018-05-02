@@ -1,0 +1,76 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class CaseStatusUpdateBO {
+
+	@SerializedName("user_name")
+	String userName;
+	@SerializedName("reason")
+	String reason;
+	@SerializedName("cmf_case")
+	List<String> caseIdList;
+	@SerializedName("case_id")
+	String caseId;
+	@SerializedName("group_case_id")
+	String groupCaseId;
+	
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public List<String> getCaseIdList() {
+		return caseIdList;
+	}
+	public void setCaseIdList(List<String> caseIdList) {
+		this.caseIdList = caseIdList;
+	}
+	/**
+	 * @return the reason
+	 */
+	public String getReason() {
+		return reason;
+	}
+	/**
+	 * @param reason the reason to set
+	 */
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+	/**
+	 * @return the caseId
+	 */
+	public String getCaseId() {
+		return caseId;
+	}
+	/**
+	 * @param caseId the caseId to set
+	 */
+	public void setCaseId(String caseId) {
+		this.caseId = caseId;
+	}
+	/**
+	 * @return the groupCaseId
+	 */
+	public String getGroupCaseId() {
+		return groupCaseId;
+	}
+	/**
+	 * @param groupCaseId the groupCaseId to set
+	 */
+	public void setGroupCaseId(String groupCaseId) {
+		this.groupCaseId = groupCaseId;
+	}
+	
+	
+}

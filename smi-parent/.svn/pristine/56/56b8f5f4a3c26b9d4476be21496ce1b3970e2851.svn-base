@@ -1,0 +1,198 @@
+package com.zen.smi.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.zen.smi.bo.RuleFamilyBO;
+import com.zen.smi.bo.RuleFamilyListBO;
+import com.zen.smi.bo.RuleGroupBO;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.FamilyService;
+import com.zen.smi.service.RuleGroupService;
+import com.zen.smi.service.RuleService;
+
+/**
+ * RulesPageController class manage rule related data. Data from screens is
+ * transferred to the controller and passed to services/dao.
+ * 
+ * @author kalyan
+ */
+@Controller
+@RequestMapping("/rules/families")
+public class RuleFamilyController extends BaseController {
+
+	/**
+	 * Logger for RuleFamilyController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(RuleFamilyController.class);
+
+	@Autowired
+	public Gson gson;
+
+	@Autowired
+	public FamilyService familyService;
+
+	@Autowired
+	public RuleService ruleService;
+	
+	@Autowired
+	private RuleGroupService ruleGroupService;
+
+	/**
+	 * this method is to get all the families.respected bo object is converted
+	 * to json which is sent as the response
+	 * 
+	 * @author kreddivari
+	 * @param request
+	 * @param response
+	 * @return RuleFamilyListBO
+	 */
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public @ResponseBody
+	String listRuleFamilies(HttpServletRequest request,
+			HttpServletResponse response) {
+		LOGGER.info("Starts listRuleFamilies...");
+		String resultJson = null;
+		try {
+			
+			List<RuleFamilyBO> familyBO = familyService.getFamilyDetails();
+			RuleFamilyListBO ruleFamilyListBO = new RuleFamilyListBO();
+			ruleFamilyListBO.setRuleFamilyBO(familyBO);
+			resultJson = gson.toJson(ruleFamilyListBO, RuleFamilyListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("Ends listRuleFamilies...");
+		return resultJson;
+	}
+	
+	/**
+	 * this method is to get all the families by App Id.respected bo object is converted
+	 * to json which is sent as the response
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of RuleFamilyBO
+	 */
+	@RequestMapping(value = "/list/{rule_apps_id}", method = RequestMethod.GET)
+	public @ResponseBody
+	String getRuleFamilysByAppId(@PathVariable("rule_apps_id") int ruleAppsId,HttpServletRequest request,
+			HttpServletResponse response) {
+		LOGGER.info("Starts getRuleFamilysByAppId...");
+		String resultJson = null;
+		try {
+			
+			List<RuleFamilyBO> familyBO = familyService.getRuleFamilysByAppId(ruleAppsId);
+			RuleFamilyListBO ruleFamilyListBO = new RuleFamilyListBO();
+			ruleFamilyListBO.setRuleFamilyBO(familyBO);
+			resultJson = gson.toJson(ruleFamilyListBO, RuleFamilyListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("Ends getRuleFamilysByAppId...");
+		return resultJson;
+	}
+	
+	
+	
+	/**
+	 * this method is to create a family.The json is converted to Bo which is
+	 * will be passed to service and entity to dao
+	 * 
+	 * @param familyJson
+	 * @param request
+	 * @param response
+	 * @return resultJson
+	 */
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public @ResponseBody
+	String saveOrUpdateFamilies(@RequestBody String familyJson,
+			HttpServletRequest request, HttpServletResponse response) {
+		LOGGER.info("Starts saveOrUpdateFamilies...");
+		String resultJson = null;
+		try {
+			
+			RuleFamilyBO familyBO = gson.fromJson(familyJson,RuleFamilyBO.class);
+			familyService.saveFamilyDetails(familyBO);
+			resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("FAMILY_CREATED", null));
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("Ends saveOrUpdateFamilies...");
+		return resultJson;
+	}
+
+	/**
+	 * this method is to delete a family. Gives validation error message if a
+	 * family is bound to 1 or more rule groups.
+	 * 
+	 * @param familyJson
+	 * @param request
+	 * @param response
+	 * @return RuleFamilyBO
+	 */
+	@RequestMapping(value = "/destroy/{rule_family_id}", method = RequestMethod.POST)
+	public @ResponseBody
+	String deleteFamily(@PathVariable("rule_family_id") int familyId,
+			HttpServletRequest request, HttpServletResponse response) {
+		LOGGER.info("Starts deleteFamily");
+		String resultJson = null;
+		try {
+			
+			RuleFamilyBO familyBO = new RuleFamilyBO();
+			familyBO.setRuleFamilyId(familyId);
+			List<RuleGroupBO> ruleBOList = ruleGroupService.getGroupsDetails(familyBO.getRuleFamilyId());
+			if(ruleBOList != null && !ruleBOList.isEmpty())
+			{
+				throw new BusinessException(MessageUtil.getInstance().getMessage("DELETE_GROUP_FIRST", null));
+			}
+			familyService.deleteFamilyDetails(familyBO);
+			resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("FAMILY_DELETED", null));
+		
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("Ends deleteFamily");
+		return resultJson;
+	}
+
+}

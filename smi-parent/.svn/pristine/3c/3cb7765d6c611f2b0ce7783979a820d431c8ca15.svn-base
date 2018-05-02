@@ -1,0 +1,30 @@
+AppServices.factory('cmfDashboardService',function($http,$q, smiGenUtil){
+	
+    return{
+    	// Start Get total Count of Social data
+		 getCaseCountDetails: function(){
+		     	var deferred = $q.defer();
+		   		$http.get('cmfcases/cmfCaseManagementCounts',{
+		       	}).success(function(response, status, headers) {
+		   		   deferred.resolve(response);
+		   		   smiGenUtil.handleSuccess(response);
+		   	    }).error(function() {
+		           smiGenUtil.handleError(response);
+			    });
+		 	   return deferred.promise;
+		 },// end getRules
+		 
+		 getDashboardInitData: function(){
+		     	var deferred = $q.defer();
+		   		$http.get('cmfcases/dashboardgraph',{
+		       	}).success(function(response, status, headers) {
+		   		   deferred.resolve(response);
+		   		   smiGenUtil.handleSuccess(response);
+		   	    }).error(function() {
+		           smiGenUtil.handleError(response);
+			    });
+		 	   return deferred.promise;
+		 },// end getRules
+    };
+    
+});

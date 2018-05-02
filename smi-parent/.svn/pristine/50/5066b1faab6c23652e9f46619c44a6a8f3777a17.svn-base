@@ -1,0 +1,13 @@
+package com.zen.smi.service;
+
+import java.util.Date;
+import java.util.List;
+
+import com.zen.smi.bo.PostsBO;
+import com.zen.smi.exception.BusinessException;
+
+public interface ProcessService {
+
+	List<PostsBO> getPostsData(String accountName,Date date) throws BusinessException;
+	
+}

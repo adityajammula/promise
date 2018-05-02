@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+   <context:annotation-config/>
+   <!-- Services -->
+   <bean id="userService" class="com.zen.smi.service.impl.UserServiceImpl">
+         <property name="userDAO">
+            <bean class="com.zen.smi.dao.impl.UsersDAOImpl" />
+        </property>
+        <property name="usersRolesDAO">
+            <bean class="com.zen.smi.dao.impl.UsersRolesDAOImpl" />
+        </property>
+         <property name="rolesDAO">
+            <bean class="com.zen.smi.dao.impl.RolesDAOImpl" />
+        </property>
+        
+   </bean>
+   
+   
+    <bean id="ruleService" class="com.zen.smi.service.impl.RuleServiceImpl">
+         <property name="rulesDAO">
+            <bean class="com.zen.smi.dao.impl.RulesDAOImpl" />
+        </property>
+         <property name="familyDAO">
+            <bean class="com.zen.smi.dao.impl.FamilyDAOImpl" />
+        </property>
+         <property name="ruleGroupDAO">
+            <bean class="com.zen.smi.dao.impl.RuleGroupDAOImpl" />
+        </property>
+           <property name="ruleColumnsDAO">
+            <bean class="com.zen.smi.dao.impl.RuleColumnsDAOImpl" />
+        </property>
+         <property name="ruleFormulaDAO">
+            <bean class="com.zen.smi.dao.impl.RuleFormulaDAOImpl" />
+        </property>
+                 <property name="ruleRuleColumnsDAO">
+            <bean class="com.zen.smi.dao.impl.RuleRuleColumnsDAOImpl" />
+        </property>
+         <property name="globalColumnDAO">
+            <bean class="com.zen.smi.dao.impl.GlobalColumnDAOImpl" />
+        </property>
+        <property name="ruleAppsDAO">
+            <bean class="com.zen.smi.dao.impl.RuleAppsDAOImpl" />
+        </property>
+   </bean>
+   <bean id="familyService" class="com.zen.smi.service.impl.FamilyServiceImpl">
+         <property name="familyDAO">
+            <bean class="com.zen.smi.dao.impl.FamilyDAOImpl" />
+        </property>
+        <property name="ruleGroupDAO">
+            <bean class="com.zen.smi.dao.impl.RuleGroupDAOImpl" />
+        </property>
+        <property name="rulesDAO">
+            <bean class="com.zen.smi.dao.impl.RulesDAOImpl" />
+        </property>
+        <property name="ruleAppsDAO">
+            <bean class="com.zen.smi.dao.impl.RuleAppsDAOImpl" />
+        </property>
+   </bean>
+   
+   <bean id="ruleGroupService" class="com.zen.smi.service.impl.RuleGroupServiceImpl">
+         <property name="ruleGroupDAO">
+            <bean class="com.zen.smi.dao.impl.RuleGroupDAOImpl" />
+        </property>
+         <property name="rulesDAO">
+            <bean class="com.zen.smi.dao.impl.RulesDAOImpl" />
+        </property>
+   </bean>
+   
+   <bean id="socialMediaAccountsService" class="com.zen.smi.service.impl.SocialMediaAccountsServiceImpl">
+         <property name="socialMediaAccountsDAO">
+            <bean class="com.zen.smi.dao.impl.SocialMediaAccountsDAOImpl" />
+        </property>
+        <property name="socialProfileDAO">
+            <bean class="com.zen.smi.dao.impl.SocialProfileDAOImpl" />
+        </property>
+        <property name="financialInstitutionsDAO">
+            <bean class="com.zen.smi.dao.impl.FinancialInstitutionsDAOImpl" />
+        </property>
+   </bean>
+   
+   
+   <bean id="cmfCustomerSocialDataService" class="com.zen.smi.service.impl.CmfCustomerSocialDataServiceImpl">
+         <property name="cmfCustomerSocialDataDAO">
+            <bean class="com.zen.smi.dao.impl.CmfCustomerSocialDataDAOImpl" />
+        </property>
+      
+   </bean>
+   
+   <bean id="flumeAgentsProcessService" class="com.zen.smi.service.impl.FlumeAgentsProcessServiceImpl">
+         <property name="flumeAgentsProcesssDAO">
+            <bean class="com.zen.smi.dao.impl.FlumeAgentsProcessDAOImpl" />
+        </property>
+        <property name="flumeAgentsDAO">
+            <bean class="com.zen.smi.dao.impl.FlumeAgentsDAOImpl" />
+        </property>
+        <property name="socialDataProcessDAO">
+            <bean class="com.zen.smi.dao.impl.SocialDataProcessDAOImpl" />
+        </property>
+   </bean>
+   
+   <bean id="financialInstitutionsService" class="com.zen.smi.service.impl.FinancialInstitutionsServiceImpl">
+  	  <property name="financialInstitutionsDAO">
+            <bean class="com.zen.smi.dao.impl.FinancialInstitutionsDAOImpl" />
+        </property>
+       <property name="socialMediaAccountsDAO">
+            <bean class="com.zen.smi.dao.impl.SocialMediaAccountsDAOImpl" />
+        </property>
+         <property name="socialProfileDAO">
+            <bean class="com.zen.smi.dao.impl.SocialProfileDAOImpl" />
+        </property>
+   </bean>
+   <bean id="processService" class="com.zen.smi.service.impl.ProcessServiceImpl">
+         <property name="processesDAO">
+            <bean class="com.zen.smi.dao.impl.ProcessesDAOImpl" />
+        </property>
+   </bean>
+   
+   <bean id="cmfCaseService" class="com.zen.smi.cmf.service.impl.CmfCaseServiceImpl">
+  	  <property name="cmfCaseDAO">
+            <bean class="com.zen.smi.dao.impl.CmfCaseDAOImpl" />
+        </property>
+       <property name="socialMediaAccountsDAO">
+            <bean class="com.zen.smi.dao.impl.SocialMediaAccountsDAOImpl" />
+        </property>
+         <property name="socialProfileDAO">
+            <bean class="com.zen.smi.dao.impl.SocialProfileDAOImpl" />
+        </property>
+        <property name="cmfCaseCategoryDAO">
+            <bean class="com.zen.smi.dao.impl.CmfCaseCategoryDAOImpl" />
+        </property>
+        <property name="cmfCasePriorityDAO">
+            <bean class="com.zen.smi.dao.impl.CmfCasePriorityDAOImpl" />
+        </property>
+         <property name="userDAO">
+            <bean class="com.zen.smi.dao.impl.UsersDAOImpl" />
+        </property>
+        <property name="cmfCaseStatusDAO">
+            <bean class="com.zen.smi.dao.impl.CmfCaseStatusDAOImpl" />
+        </property>
+        <property name="cmfCustomerDAO">
+            <bean class="com.zen.smi.dao.impl.CmfCustomerDAOImpl" />
+        </property>
+         <property name="financialInstitutionsDAO">
+            <bean class="com.zen.smi.dao.impl.FinancialInstitutionsDAOImpl" />
+        </property>
+   </bean>
+   
+    <bean id="gson" class="com.google.gson.Gson"/>
+    <bean id="faceBookService" class="com.zen.smi.extsys.service.impl.FaceBookServiceImpl">
+     </bean>
+    <bean id="twitterService" class="com.zen.smi.extsys.service.impl.TwitterServiceImpl">
+       
+   </bean>
+   
+   
+   
+  
+</beans>

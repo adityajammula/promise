@@ -1,0 +1,17 @@
+AppServices.factory('otherCommentsService',function($http, $q, smiGenUtil){
+	
+    return{
+     //Starts get All Other Comments
+        getAllOtherComments: function(requestData){
+   	 	var deferred = $q.defer();
+   	 	$http.get('other_comments/list',  JSON.stringify(requestData),
+   		{headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+   		deferred.resolve(response);
+   		smiGenUtil.handleSuccess(response);
+   	 	}).error(function(response) {
+   	 	   smiGenUtil.handleError(response);
+   	    });
+   	 		 return deferred.promise;
+   	 	},// Ends get All Other Comments
+    };	
+});

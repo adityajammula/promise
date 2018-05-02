@@ -1,0 +1,35 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.CmfCustomerSocialDataDAO;
+import com.zen.smi.dao.entities.CmfCustomerSocialData;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfCustomerSocialDataDAOImpl extends BaseDAOImpl<CmfCustomerSocialData, Serializable> implements CmfCustomerSocialDataDAO {
+
+	public CmfCustomerSocialDataDAOImpl() {
+		super(CmfCustomerSocialData.class);
+	}
+
+	public List<CmfCustomerSocialData> getSocialAccountData() throws GenericDAOException {
+		List<CmfCustomerSocialData> cmfCustomerSocialData=retrieveAll();
+		return cmfCustomerSocialData;
+	}
+	
+	public List<CmfCustomerSocialData> getCustomerSocialData(int customerId)
+			throws GenericDAOException {
+		System.out.println("hiiiiiiiii");
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		System.out.println("helooo");
+		expressionList.add(Restrictions.eq("customerId", customerId));
+		System.out.println("customerId");
+		return search(expressionList, null);
+	}	
+	
+}

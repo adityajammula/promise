@@ -1,0 +1,76 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.HashSet;
+import java.util.Set;
+
+
+public class CmfCaseStatusBO {
+	private int caseStatusId;
+	private String caseStatus;
+	private String caseStatusDescription;
+	private Set<CmfCaseHistoryBO> cmfCaseHistoriesBO = new HashSet<CmfCaseHistoryBO>(
+			0);
+	private Set<CmfCaseBO> cmfCasesBO = new HashSet<CmfCaseBO>(0);
+	/**
+	 * @return the caseStatusId
+	 */
+	public int getCaseStatusId() {
+		return caseStatusId;
+	}
+	/**
+	 * @param caseStatusId the caseStatusId to set
+	 */
+	public void setCaseStatusId(int caseStatusId) {
+		this.caseStatusId = caseStatusId;
+	}
+	/**
+	 * @return the caseStatus
+	 */
+	public String getCaseStatus() {
+		return caseStatus;
+	}
+	/**
+	 * @param caseStatus the caseStatus to set
+	 */
+	public void setCaseStatus(String caseStatus) {
+		this.caseStatus = caseStatus;
+	}
+	/**
+	 * @return the caseStatusDescription
+	 */
+	public String getCaseStatusDescription() {
+		return caseStatusDescription;
+	}
+	/**
+	 * @param caseStatusDescription the caseStatusDescription to set
+	 */
+	public void setCaseStatusDescription(String caseStatusDescription) {
+		this.caseStatusDescription = caseStatusDescription;
+	}
+	/**
+	 * @return the cmfCaseHistoriesBO
+	 */
+	public Set<CmfCaseHistoryBO> getCmfCaseHistoriesBO() {
+		return cmfCaseHistoriesBO;
+	}
+	/**
+	 * @param cmfCaseHistoriesBO the cmfCaseHistoriesBO to set
+	 */
+	public void setCmfCaseHistoriesBO(Set<CmfCaseHistoryBO> cmfCaseHistoriesBO) {
+		this.cmfCaseHistoriesBO = cmfCaseHistoriesBO;
+	}
+	/**
+	 * @return the cmfCasesBO
+	 */
+	public Set<CmfCaseBO> getCmfCasesBO() {
+		return cmfCasesBO;
+	}
+	/**
+	 * @param cmfCasesBO the cmfCasesBO to set
+	 */
+	public void setCmfCasesBO(Set<CmfCaseBO> cmfCasesBO) {
+		this.cmfCasesBO = cmfCasesBO;
+	}
+	
+	
+}

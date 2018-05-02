@@ -1,0 +1,144 @@
+package com.zen.smi.controller;
+
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import com.google.gson.Gson;
+import com.zen.smi.bo.RuleGroupBO;
+import com.zen.smi.bo.RuleGroupListBO;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.RuleGroupService;
+
+/**
+ * RulesPageController class manage rule related data. Data from screens is
+ * transferred to the controller and passed to services/dao.
+ * 
+ * @author khaja moinuddin
+ */
+
+@Controller
+@RequestMapping("/rules/groups")
+public class RuleGroupController extends BaseController {
+
+	/**
+	 * Logger for RulesPageController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(RuleGroupController.class);
+	@Autowired
+	public Gson gson;
+
+	@Autowired
+	public RuleGroupService ruleGroupService;
+
+	/**
+	 * this methos is to get all the rule groups data based on the family id.
+	 * 
+	 * @param familyId
+	 * @param request
+	 * @param response
+	 * @return List<RuleGroupBO>
+	 */
+	@RequestMapping(value = "fetch_by_family_id/{family_id}", method = RequestMethod.GET)
+	public @ResponseBody
+	String getRuleGroups(@PathVariable("family_id") int familyId,
+			HttpServletRequest request, HttpServletResponse response) {
+		LOGGER.info("Starts getRuleGroups");
+		String resultJson = null;
+		try {
+			
+			List<RuleGroupBO> ruleGroupBO = ruleGroupService.getGroupsDetails(familyId);
+			RuleGroupListBO ruleGroupListBO = new RuleGroupListBO();
+			ruleGroupListBO.setRuleGroupListBO(ruleGroupBO);
+			resultJson = gson.toJson(ruleGroupListBO, RuleGroupListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("Ends getRuleGroups");
+		return resultJson;
+	}
+
+	/**
+	 * this method is to create a new rule group.json data from the screens will
+	 * be converted to BO and passed to service and DAO to create a new record
+	 * in db.
+	 * 
+	 * @param groupJson
+	 * @param request
+	 * @param response
+	 * @return resultJson
+	 */
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public @ResponseBody
+	String saveGroup(@RequestBody String groupJson, HttpServletRequest request,
+			HttpServletResponse response) {
+		String resultJson = null;
+		try {
+
+			RuleGroupBO ruleGroupBO = gson.fromJson(groupJson,RuleGroupBO.class);
+			ruleGroupService.saveGroup(ruleGroupBO);
+			resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("GROUP_CREATED", null));
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("ends getGroups");
+		return resultJson;
+	}
+
+	/**
+	 * this method is to delete a particular rule group based on the rule group
+	 * id passed. gives the validation exception when a rule group contains one
+	 * or more rules bind to the particular rule group
+	 * 
+	 * 
+	 * @param groupJson
+	 * @param request
+	 * @param response
+	 * @return RuleGroupBO
+	 */
+	@RequestMapping(value = "/destroy/{rule_group_id}", method = RequestMethod.POST)
+	public @ResponseBody
+	String deleteRuleGroup(@PathVariable("rule_group_id") int ruleGroupId,
+			HttpServletRequest request, HttpServletResponse response) {
+		LOGGER.info("Starts deleteRuleGroup");
+		String resultJson = null;
+		try {
+
+			RuleGroupBO ruleGroupBO = new RuleGroupBO();
+			ruleGroupBO.setRuleGroupId(ruleGroupId);
+			ruleGroupService.deleteRuleGroup(ruleGroupBO);
+			resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("GROUP_DELETED", null));
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+
+		LOGGER.info("ends deleteRuleGroup");
+		return resultJson;
+	}
+
+}

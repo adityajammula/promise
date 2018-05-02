@@ -1,0 +1,150 @@
+package com.zen.smi.service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.zen.rules.bo.InputBO;
+import com.zen.smi.bo.RuleAppsBO;
+import com.zen.smi.bo.RuleBO;
+import com.zen.smi.bo.RuleColumnsBO;
+import com.zen.smi.bo.RuleEngineBO;
+import com.zen.smi.bo.RuleFamilyBO;
+import com.zen.smi.bo.RuleTestSummaryBO;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.exception.UserException;
+
+
+public interface RuleService {
+
+	/**
+	 * Get the All Rules from the database.
+	 * @param null
+	 * @return List of RuleBO objects
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	List<RuleBO> getRules(int ruleAppId) throws BusinessException;
+	
+	/**
+	 * @author Venumadhava.Reddy
+	 * @param ruleBO
+	 * @throws UserException
+	 */
+	void deleteRule(RuleBO ruleBO) throws BusinessException; 
+	/**
+	 * @author Venumadhava.Reddy
+	 * @param rule
+	 * @throws UserException
+	 */
+	public void saveRule(RuleBO rule) throws BusinessException;
+	
+	/**
+	 * @author 
+	 * @param ruleId
+	 * @return
+	 * @throws UserException
+	 */
+	RuleBO getFormulasByRuleId(int ruleId) throws BusinessException;
+	/**
+	 * @author tmangalapenta 
+	 * @param EditRuleBO
+	 * @return
+	 * @throws UserException
+	 */
+	void editRule(RuleBO editRuleBO) throws BusinessException;
+	
+	/**
+	 * Get the Rule for ruleId from the database.
+	 * @param null
+	 * @return RuleEngineBO
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	RuleEngineBO getRule(int ruleId) throws BusinessException;
+	
+	/**
+	 * Get the  the database.
+	 * @param null
+	 * @return RuleColumnsBO
+	 * @throws UserException
+	 * @author Jshaik
+	 */
+	List<RuleColumnsBO> getGlobalRuleColumns() throws BusinessException;
+	
+	/**
+	 * @author Venumadhava.Reddy
+	 * @param rule
+	 * @throws UserException
+	 * @author Jshaik
+	 */
+	void saveGlobalColumn(RuleColumnsBO globalCoulmn) throws BusinessException;
+	
+	/**
+	 * @param ruleColumnId
+	 * @return
+	 * @throws UserException
+	 * @author Jshaik
+	 */
+	RuleColumnsBO getGlobalColumnById(Integer ruleColumnId)throws BusinessException;
+
+	/**This method is to update the Global Columns data
+	 * @param globalCoulmn
+	 * @throws UserException
+	 */
+	void updateGlobalColumn(RuleColumnsBO globalCoulmn)throws BusinessException;
+	
+	/**
+	 * Get the All Rules from the database.
+	 * @param null
+	 * @return List of RuleBO objects
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	List<RuleBO> getRulesByGroupId(Integer ruleGroupId) throws BusinessException;
+
+	/**Get the NewDropDownValues values from DB.
+	 * @return
+	 * @throws UserException
+	 */
+	Set<String> getNewDropDownValues() throws BusinessException;
+
+	List<RuleTestSummaryBO> ruleTest(RuleTestSummaryBO ruleTestBO)throws BusinessException;
+	
+	List<RuleAppsBO> getAllRuleApps() throws BusinessException;
+
+	RuleAppsBO getRuleAppById(Integer appId) throws BusinessException;
+
+	/**
+	 * this method is to get the list of Rule by Rule Name and RuleGroup Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return Rule
+	 */
+	void checkIfRuleExists(String ruleName, int ruleGroupId) throws BusinessException;
+	
+	/**
+	 * @author kalyan, Venu
+	 * Method used to test the rule applied are not for the formulas 
+	 * Formulas and column data passed as JSON  
+	 * @param json
+	 * @return
+	 * @throws BusinessException
+	 */
+	String getRuleEngineResults(String json)throws BusinessException;
+	
+	/**
+	 * @author kalyan, Venu
+	 * Method used to test the rules applied are not for the family , rule group and rule
+	 * @param json
+	 * @return
+	 * @throws BusinessException
+	 */
+	String getRuleEngineResultsById(String json)throws BusinessException;
+
+}

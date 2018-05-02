@@ -1,0 +1,87 @@
+var smiUtility = angular.module('smiApp.utility', []);
+smiUtility.factory('smiGenUtil',function(toastr, toastrConfig){
+	
+    return{
+    	// Start handleResponse 
+    	handleSuccess: function(response) {
+    		var isSuccess = false;
+    		if(response != null && response.status == "SUCCESS")
+    		{
+    			isSuccess = true;
+    		}
+    		if(isSuccess)
+    		{
+    			if(response.message != null && response.message != "")
+    			{
+    				//Check if message is present or not
+        			var openedToasts = [];
+          			toastrConfig.positionClass = 'toast-top-center';
+          			toastrConfig.timeOut = 1000;
+          		    var toast = toastr['success'](response.message, "Success", {
+                       iconClass: 'bg-success',
+                       closeButton: true,
+                       iconType:'fa-check-square',
+                      
+                    });
+        		    openedToasts.push(toast);
+    			}
+    			
+    		}else
+    		{
+    			this.handleError(response);
+    		}
+    		
+        },
+        handleError: function(response) {
+        	//Check error
+        	var errorMessage = "Error occured while fetching data. Please contact system administrator";
+        	if(response != null && response.message != null && response.message != "")
+			{
+        		errorMessage = response.message;
+			}
+        	var openedToasts = [];
+  			toastrConfig.positionClass = 'toast-top-center';
+  			toastrConfig.timeOut = 1000;
+  		    
+  		    var toast = toastr['success'](errorMessage, "Error", {
+  		    	iconClass: 'bg-danger',
+  		    	timeout: '2000',
+                closeButton: true,
+                iconType:'fa-times-circle'
+            });
+		    openedToasts.push(toast);
+		
+        },
+        getDisplayStatus: function(status) {
+        	//Display Status
+        	var displayStatus = "";
+        	if(status == "NOT_STARTED")
+    		{
+    			displayStatus = "Not Started";
+    		}else if(status == "GROUP_POSTS_CRASHED")
+    		{
+    			displayStatus = "Post Crashed";
+    		}else if(status == "GROUP_POST_REPLIES_CRASHED")
+    		{
+    			displayStatus = "Replies Crashed";
+    		}else if(status == "GROUP_POSTS_PROCESSED")
+    		{
+    			displayStatus = "Posts Processed";
+    		}else if(status == "GROUP_POST_REPLIES_PROCESSED")
+    		{
+    			displayStatus = "Post Replies Processed";
+    		}else if(status == "IN_PROGRESS")
+    		{
+    			displayStatus = "In Progress";
+    		}else if(status == "COMPLETED")
+    		{
+    			displayStatus = "Completed";
+    		}
+        	
+    		return displayStatus;
+        }
+         
+         
+ 
+    };
+});

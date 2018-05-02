@@ -1,0 +1,140 @@
+<div class="container-fluid">
+<div class="row">
+      <!-- tile -->
+      <section class="tile" fullscreen="isFullscreen01">
+
+        <!-- tile header -->
+        <div class="tile-header bg-greensea dvd dvd-btm">
+          <h1 class="custom-font"><strong>Dashboard </strong></h1>
+          
+        </div>
+        <!-- /tile header -->
+
+
+        <!-- tile body -->
+        <div class="tile-body">
+
+          <!-- row -->
+          <div class="row">
+
+
+            <!-- col -->
+            <div class="col-md-8 col-sm-12">
+
+              <h4 class="underline custom-font mb-20"><strong>Actual</strong> Statistics</h4>
+
+              <!-- row -->
+              <div class="row">
+                <!-- col -->
+                <div class="col-lg-4 text-center">
+                  
+                  <p class="text-uppercase text-elg mt-20 mb-0"><strong class="text-blue">6,175</strong> <small class="text-lg text-light text-default lt">Sales</small></p>
+                  <p class="text-light"><i class="fa fa-caret-up text-success"></i> 18% this month</p>
+                </div>
+                <!-- /col
+                <!-- col -->
+                <div class="col-lg-4 text-center">
+                  <div easypiechart options="easypiechart2.options" percent="easypiechart2.percent" class="easypiechart" style="width: 140px; height: 140px;">
+                    <i class="fa fa-eye fa-4x text-lightred" style="line-height: 140px;"></i>
+                    <p class="text-uppercase text-elg mt-20 mb-0"><strong class="text-lightred">8,213</strong> <small class="text-lg text-light text-default lt">Visits</small></p>
+                    <p class="text-light"><i class="fa fa-caret-down text-warning"></i> 25% this month</p>
+                  </div>
+                </div>
+                <!-- /col -->
+                <!-- col -->
+                <div class="col-lg-4 text-center">
+                  <div easypiechart options="easypiechart3.options" percent="easypiechart3.percent" class="easypiechart" style="width: 140px; height: 140px;">
+                    <i class="fa fa-user fa-4x text-greensea" style="line-height: 140px;"></i>
+                    <p class="text-uppercase text-elg mt-20 mb-0"><strong class="text-greensea">632</strong> <small class="text-lg text-light text-default lt">Users</small></p>
+                    <p class="text-light"><i class="fa fa-caret-down text-danger"></i> 61% this month</p>
+                  </div>
+                </div>
+                <!-- /col -->
+              </div>
+              <!-- /row -->
+
+            </div>
+            <!-- /col -->
+
+
+            <!-- col -->
+            <div class="col-md-4 col-sm-12">
+
+              <h4 class="underline custom-font"><strong>Visitors</strong> Statistics</h4>
+
+              <div class="progress-list">
+                <div class="details">
+                  <div class="title">America</div>
+                  <div class="description">visitor from america</div>
+                </div>
+                <div class="status pull-right">
+                  <span>40</span>%
+                </div>
+                <div class="clearfix"></div>
+                <progressbar class="progress-xs not-rounded" value="40" type="dutch"><b>40%</b></progressbar>
+              </div>
+
+              <div class="progress-list">
+                <div class="details">
+                  <div class="title">Europe</div>
+                  <div class="description">visitor from europe</div>
+                </div>
+                <div class="status pull-right">
+                  <span>38</span>%
+                </div>
+                <div class="clearfix"></div>
+                <progressbar class="progress-xs not-rounded" value="38" type="greensea"><b>38%</b></progressbar>
+              </div>
+
+              <div class="progress-list">
+                <div class="details">
+                  <div class="title">Asia</div>
+                  <div class="description">visitor from asia</div>
+                </div>
+                <div class="status pull-right">
+                  <span>12</span>%
+                </div>
+                <div class="clearfix"></div>
+                <progressbar class="progress-xs not-rounded" value="12" type="lightred"><b>12%</b></progressbar>
+              </div>
+
+              <div class="progress-list">
+                <div class="details">
+                  <div class="title">Africa</div>
+                  <div class="description">visitor from africa</div>
+                </div>
+                <div class="status pull-right">
+                  <span>7</span>%
+                </div>
+                <div class="clearfix"></div>
+                <progressbar class="progress-xs not-rounded" value="7" type="blue"><b>7%</b></progressbar>
+              </div>
+
+              <div class="progress-list">
+                <div class="details">
+                  <div class="title">Other</div>
+                  <div class="description">visitor from other</div>
+                </div>
+                <div class="status pull-right">
+                  <span>6</span>%
+                </div>
+                <div class="clearfix"></div>
+                <progressbar class="progress-xs not-rounded" value="6" type="hotpink"><b>6%</b></progressbar>
+              </div>
+
+            </div>
+            <!-- /col -->
+
+
+          </div>
+          <!-- /row -->
+
+        </div>
+        <!-- /tile body -->
+
+      </section>
+      <!-- /tile -->
+
+  </div>
+  <!-- /row -->
+ </div>

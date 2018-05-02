@@ -1,0 +1,41 @@
+package com.zen.smi.service.helper;
+
+import java.util.Date;
+
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.zen.smi.dao.impl.SocialMediaAccountPostsDAOImpl;
+import com.zen.smi.dao.impl.SocialMediaAccountsDAOImpl;
+import com.zen.smi.dao.impl.SocialMediaPostsDAOImpl;
+import com.zen.smi.dao.impl.SocialProfileDAOImpl;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.service.SocialMediaPostsService;
+import com.zen.smi.service.impl.SocialMediaPostsServiceImpl;
+
+public class SMIJob implements Job {
+
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		String postId = context.getJobDetail().getKey().getName();
+		System.out.println("Call facebook and Twitter ::"+postId+" Time: "+new Date());
+		//Need to call Facebook or twitter services
+		try {
+			if(postId != null)
+			{
+				Integer postIdInt = Integer.valueOf(postId);
+			    System.out.println("postIdInt : "+postIdInt);
+			    SocialMediaPostsServiceImpl socialMediaPostsService = new SocialMediaPostsServiceImpl();
+			    socialMediaPostsService.setSocialMediaPostsDAO(new SocialMediaPostsDAOImpl());
+			    socialMediaPostsService.setSocialMediaAccountsDAO(new SocialMediaAccountsDAOImpl());
+			    socialMediaPostsService.setSocialMediaAccountPostsDAO(new SocialMediaAccountPostsDAOImpl());
+			    socialMediaPostsService.setSocialProfileDAO(new SocialProfileDAOImpl());
+			    socialMediaPostsService.postToWall(postIdInt);
+		   }
+		} catch (Throwable e) {
+			throw new JobExecutionException(e);
+		}
+	}
+
+}

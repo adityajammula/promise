@@ -1,0 +1,29 @@
+package com.zen.smi.service;
+import java.util.List;
+
+import com.zen.smi.bo.RuleGroupBO;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.exception.UserException;
+public interface RuleGroupService {
+	/**
+	 * Get the list of group drop down values from the database.
+	 * @param null
+	 * @return RuleGroup
+	 * @throws UserException 
+	 */
+	List<RuleGroupBO> getGroupsDetails(int familyId) throws BusinessException;
+
+	
+	
+	/**
+	 * to save the rule group.
+	 * @param null
+	 * @return RuleGroup
+	 * @throws UserException 
+	 * * @Author kalyan
+	 */
+	void saveGroup(RuleGroupBO ruleGroupBO) throws BusinessException;
+	
+	void deleteRuleGroup(RuleGroupBO ruleGroupBO) throws BusinessException;
+
+}

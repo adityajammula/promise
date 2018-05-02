@@ -1,0 +1,138 @@
+<div class="container-fluid openFbCases">
+<div class="row tile">
+
+     <div class="tbox tbox-sm">
+
+		<!-- left side -->
+		<div class="tcol w-md bg-tr-white lt b-r">
+
+			<!-- left side header-->
+			<div>
+
+				<label class="text-strong">Case Categories</label>
+
+			</div>
+			<!-- /left side header -->
+			<!-- left side body -->
+			<div class="p-15 hidden-sm hidden-xs" id="mail-nav">
+
+				<ul class="nav nav-pills nav-stacked nav-sm" id="mail-folders"data-ng-repeat="category in categories">
+					<li style="cursor: pointer;" class="caseCategoryLi"data-ng-click="getAllCmfClosedCasesByAccountCategory(category.category_id);sethighliteCategory($index)" data-ng-class="{'selected':$index == highliteCategory}">
+						<div data-ng-show="category.category_name=='DEBIT CARD'"class="casePriorityImage caseCategoryLi"><img class="imageSize" src="resources/images/Debit Card.png"alt=""></div>
+						<div data-ng-show="category.category_name=='CREDIT CARDS'"class="casePriorityImage"><img class="imageSize" src="resources/images/Credit Card.png"alt=""></div>
+						<div data-ng-show="category.category_name=='ATM'"class="casePriorityImage"><img class="imageSize" src="resources/images/ATM.png" alt=""></div>
+						<div data-ng-show="category.category_name=='CHANNEL OUTAGE'"class="casePriorityImage"><img class="imageSize" src="resources/images/Channel Outage.png"alt=""></div>
+						<div data-ng-show="category.category_name=='CHEQUE'"class="casePriorityImage"><img class="imageSize" src="resources/images/Cheque.png" alt=""></div>
+						<div data-ng-show="category.category_name=='MISCELLANEOUS'"class="casePriorityImage"><img class="imageSize" src="resources/images/Miscellaneous.png"alt=""></div>
+						<div class="casePriorityLabel">{{category.category_name}}</div>
+					</li>
+				</ul>
+				<div class="caseCategoryLi" data-ng-click ="getAllCategories()">
+					<div class="img-circle bg-default casePriorityIcons">A</div>
+					<div class="casePriorityLabel">All</div>
+				</div>
+				<h5 class="b-b p-10 text-strong">Case Priority</h5>
+				<ul class="nav nav-pills nav-stacked nav-sm" id="mail-labels"
+					data-ng-repeat="priority in priorities">
+					<li class="caseCategoryLi" data-ng-click="getAllCmfClosedCasesByPriority(priority.priority_id);sethighlitePriority($index)" data-ng-class="{'selected':$index == highlitePriority}">
+						<div class="img-circle casePriorityIcons"  data-ng-class="priority.priority_name == 'HIGH' ? 'bg-orange' :(priority.priority_name == 'MEDIUM' ? 'bg-blue' : (priority.priority_name == 'CRITICAL' ? 'bg-lightred' :'bg-greensea'))">
+							<span>{{priority.priorityImage}}</span>
+						</div>
+						<div class="casePriorityLabel">{{priority.priority_name}}</div>
+					</li>
+				</ul>
+				<div class="caseCategoryLi" data-ng-click ="getAllPriorities()">
+					<div class="img-circle bg-default casePriorityIcons">A</div>
+					<div class="casePriorityLabel">All</div>
+				</div>
+
+				<h5 class="b-b p-10 text-strong">Social Accounts</h5>
+				<ul class="nav nav-pills nav-stacked nav-sm" id="mail-labels" data-ng-repeat="account in accounts">
+					<li class="caseCategoryLi" data-ng-click="getAllCmfClosedCasesByAccount(account.social_profile_accounts_id);sethighliteAccount($index)" data-ng-class="{'selected':$index == highliteAccount}">
+					<div data-ng-show="account.social_profile_accounts_type=='FACEBOOK'" class="casePriorityImage"><img class="imageSize" src="resources/images/Facebook.png"alt=""></div> 
+					<div data-ng-show="account.social_profile_accounts_type=='TWITTER'" class="casePriorityImage"><img class="imageSize" src="resources/images/Twitter.png"alt=""></div> 
+						<div class="casePriorityLabel">{{account.social_profile_accounts_type}}</div>
+					</li>
+				</ul>
+				<div class="caseCategoryLi" data-ng-click ="getAllAccounts()">
+					<div class="img-circle bg-default casePriorityIcons">A</div>
+					<div class="casePriorityLabel">All</div>
+				</div>
+			</div>
+			<!-- /left side body -->
+		</div>
+		<!-- /left side -->
+	</div>
+	<!-- right side -->
+
+	<div class="btn-group pull-right caseCategoryDesc">
+		<div class="row tile">
+			<div class=" tile-body">
+				<div class="col-md-12">
+					
+					<div class="col-md-5 ">
+							<input id="filter" type="search" ng-model="Search"
+								class="form-control input-sm w-sm mb-10 inline-block "
+								placeholder="search"> <i class="icon-magnifier"></i>
+						</div>
+						
+					 <!-- <div class="col-md-3 row tile">
+							<div class="search" id="main-search">
+							  <input type="text" class="form-control underline-input" placeholder="Search...">
+							   <span class="glyphicon glyphicon-search form-control-feedback"></span>
+							</div>
+					</div> -->
+					<div class="btn-group col-md-1 ">
+						<button class="btn btn-default btn-sm br-2 text-right"   data-ng-click="refreshOpenCategories()">
+							<i class="fa fa-refresh"></i>
+						</button>
+					</div>
+					<div class="btn-group pull-right"> 
+					    <button type="button" class="btn btn-default btn-sm br-2-l"><i class="fa fa-angle-left"></i></button> 
+					    <button type="button" class="btn btn-default btn-sm br-2-r"><i class="fa fa-angle-right"></i></button> 
+					</div>
+					
+				</div>
+			</div>
+			<div class="col-md-12">
+				<ul class="list-group no-radius no-border" id="mails-list">
+					<li data-ng-repeat="case in closedCases|filter:search"
+						class="list-group-item b-{{mail.label.color}}">
+
+						<div class="media">
+
+							<div class="pull-left">
+								
+								<div class="thumb thumb-sm">
+									<img src="{{case.image}}" class="img-circle">
+								</div>
+							</div>
+							<div class="media-body"  data-ng-click="individualCaseDetails(case)">
+								<div class="media-heading m-0">
+									<a class="mr-5">{{case.cmfCustomerBO.firstName}}  {{case.cmfCustomerBO.lastName}}</a> <span
+										class="pull-right text-sm text-muted"> <span
+										class="hidden-xs">{{ case.created_date }}</span>
+									</span>
+								</div>
+								<small>{{case.description | limitTo:150}}}</small>
+							</div>
+
+							<div class="form-group col-md-12 tile-body ">
+							<label class="col-md-3 "> <b>Case Priority :</b>&nbsp<b data-ng-class="case.cmfCasePriorityBO.priority_name == 'HIGH' ? 'text-orange' :(case.cmfCasePriorityBO.priority_name == 'MEDIUM' ? 'text-blue' : (case.cmfCasePriorityBO.priority_name == 'CRITICAL' ? 'text-lightred' :'text-greensea'))">{{case.cmfCasePriorityBO.priority_description}}</b></label>
+							<label class="col-md-4 "><b>Social Account : {{case.cmfCustomerBO.facebookId}}</b></label>
+							<label class="col-md-5 "><b>Closed By : {{case.userBO.userName}}</b></label>
+								
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- right side body -->
+		
+	</div>
+	</div>
+</div>
+<!-- /page content -->
+
+

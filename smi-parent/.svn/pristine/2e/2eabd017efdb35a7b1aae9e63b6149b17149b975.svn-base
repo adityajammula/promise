@@ -1,0 +1,102 @@
+<div class="row tile col-sm-12" data-ng-init="initializeViewRulesController()">
+	<div class="tile-header bg-greensea dvd dvd-btm ">
+		<h1 class="custom-font ">
+			<strong>Bulk Test Rules</strong>
+		</h1>
+	</div>
+	<div class="modal-body">
+		<table st-table="rowCollection" 
+			class="st-table table table-striped table-custom">
+			<tbody>
+				<tr>
+					<td class="col-lg-2">Upload File*</td>
+					<td class="col-lg-3">
+					<input type="file" ng-file-select="onFileSelect($files)" ng-model="fileUpload"><br/>
+					<!-- <label class="control-label">Single</label>
+				          <input ui-jq="filestyle" type="file" class="filestyle" ui-options="{
+				            buttonText: 'Select file',
+				            iconName: 'fa fa-inbox'
+				          }" nv-file-select="" uploader="uploader"> -->
+					</td>
+				</tr>
+				<tr>
+					<td>Application*</td>
+					<td><select class="form-control mb-10" data-ng-model="appId"
+						data-ng-options="rulesApps.appId as rulesApps.appName for rulesApps in appData"
+						data-ng-change="getFamilyDataBasedOnAppId(appId)">
+							<option value="">Select</option>
+					</select>
+					</td><td></td>
+				</tr>
+				<tr>
+					<td>Apply Family*</td>
+					<td><select class="form-control mb-10"
+						data-ng-model="rulesData.selectedRuleFamilyId"
+						data-ng-options="rulesFamily.rule_family_id as rulesFamily.rule_family_name for rulesFamily in rulesData.rulesFamilyData"
+						data-ng-change="changeRuleFamily(rulesData.selectedRuleFamilyId)">
+							<option value="">Select</option>
+					</select></td><td></td>
+				</tr>
+				<tr>
+					<td>Apply Rule Group</td>
+					<td><select class="form-control mb-10"
+						data-ng-model="rulesData.selectedRuleGroupId"
+						data-ng-options="ruleGroup.rule_group_id as ruleGroup.rule_group_name for ruleGroup in rulesData.ruleGroupData"
+						data-ng-change="changeRuleGroup(rulesData.selectedRuleGroupId)">
+							<option value="">Select</option>
+					</select></td><td></td>
+				</tr>
+				<tr>
+					<td>Apply Rule</td>
+					<td><select class="form-control mb-10"
+						data-ng-model="rulesData.selectedRuleId"
+						data-ng-options="ruleGroup.rule_id as ruleGroup.rule_name for ruleGroup in rulesData.ruleNameData"
+						data-ng-change="changeRule(rulesData.selectedRuleId)">
+							<option value="">Select</option>
+					</select></td>
+					<td>
+						<button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c"
+							ng-click="test()">
+							<i class="fa fa-arrow-right"></i> Test
+						</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="modal-header">
+		<h3 class="modal-title custom-font">Test Summary</h3>
+	</div>
+	<div class="col-lg-12">
+					<label class="checkbox checkbox-custom-alt col-lg-3" >
+                       <input name="customRadioRules" type="radio" ng-click="ruleSummary(true)" data-ng-model="isAppliedRuleModel" value="true"><i style="border: 2px solid #3D3939!important;"></i> Rules Applied
+                    </label>
+                    
+                    <label class="checkbox checkbox-custom-alt col-lg-3" style="  margin-top: 10px!important;">
+                       <input name="customRadioRules" type="radio" ng-click="ruleSummary(false)"  data-ng-model="isAppliedRuleModel" value="false"><i style="border: 2px solid #3D3939!important;"></i> Rules Not Applied
+                    </label>
+					  </div> 
+	<!-- <div>
+	    <input name="customRadioRules" type="radio" ng-click="ruleSummary(true)" data-ng-model = "isAppliedRuleModel" value="true"><i></i> Rules Applied <br/>
+	    <input name="customRadioRules" type="radio" ng-click="ruleSummary(false)"  data-ng-model = "isAppliedRuleModel" value="false"><i></i> Rules Not Applied
+	</div> -->
+	<div class="modal-body">
+		<table st-table="rowCollection"  
+			class="st-table table table-striped table-custom">
+			<thead>
+				<tr class="tile-header bg-greensea dvd dvd-btm">
+					<th>Messages</th>
+					<th ng-show="isAppliedRuleModel == 'true'">Formula Applied</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody class="table-hover">
+				<tr ng-repeat="rule in genericRules">
+					<td>{{rule.message}}</td>
+					
+					<td ng-show="rule.formula !='' ">{{rule.formula}}</td>
+			</tbody>
+		</table>
+			
+	</div>
+</div>

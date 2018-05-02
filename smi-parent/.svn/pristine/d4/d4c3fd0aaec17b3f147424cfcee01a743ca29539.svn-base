@@ -1,0 +1,140 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class SocialMediaAccountsBO {
+	
+	@SerializedName("social_media_accounts_id")	
+	private Integer id;
+	@SerializedName("social_profiles")	
+	private SocialProfilesBO socialProfiles;
+	@SerializedName("financial_institutions")	
+	private FinancialInstitutionsBO financialInstitutions;
+	@SerializedName("social_media_accounts_accountname")	
+	private String accountName;
+	@SerializedName("social_media_accounts_accountId")	
+	private String accountId;
+	private String processStatus;
+	private Date scheduledDate;
+	private Integer processPercentage;
+	private Date createdDate;
+	private Integer financial_institution_id;
+	private Integer account_type_id;
+	@SerializedName("social_data_processes")	
+	private List<SocialDataProcessBO> socialDataProcesses = new ArrayList<SocialDataProcessBO>(0);
+	
+	private String accountRealtion = ""; 
+	
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public SocialProfilesBO getSocialProfiles() {
+		return socialProfiles;
+	}
+	public void setSocialProfiles(SocialProfilesBO socialProfiles) {
+		this.socialProfiles = socialProfiles;
+	}
+	public FinancialInstitutionsBO getFinancialInstitutions() {
+		return financialInstitutions;
+	}
+	public void setFinancialInstitutions(
+			FinancialInstitutionsBO financialInstitutions) {
+		this.financialInstitutions = financialInstitutions;
+	}
+	public String getAccountName() {
+		return accountName;
+	}
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+	public String getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
+	public List<SocialDataProcessBO> getSocialDataProcesses() {
+		return socialDataProcesses;
+	}
+	public void setSocialDataProcesses(List<SocialDataProcessBO> socialDataProcesses) {
+		this.socialDataProcesses = socialDataProcesses;
+	}
+	/**
+	 * @return the processStatus
+	 */
+	public String getProcessStatus() {
+		return processStatus;
+	}
+	/**
+	 * @param processStatus the processStatus to set
+	 */
+	public void setProcessStatus(String processStatus) {
+		this.processStatus = processStatus;
+	}
+	/**
+	 * @return the scheduledDate
+	 */
+	public Date getScheduledDate() {
+		return scheduledDate;
+	}
+	/**
+	 * @param scheduledDate the scheduledDate to set
+	 */
+	public void setScheduledDate(Date scheduledDate) {
+		this.scheduledDate = scheduledDate;
+	}
+	/**
+	 * @return the processPercentage
+	 */
+	public Integer getProcessPercentage() {
+		return processPercentage;
+	}
+	/**
+	 * @param processPercentage the processPercentage to set
+	 */
+	public void setProcessPercentage(Integer processPercentage) {
+		this.processPercentage = processPercentage;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	
+	public String getAccountRealtion() {
+		return accountRealtion;
+	}
+	public void setAccountRealtion(String accountRealtion) {
+		this.accountRealtion = accountRealtion;
+	}
+	public Integer getFinancial_institution_id() {
+		return financial_institution_id;
+	}
+	public void setFinancial_institution_id(Integer financial_institution_id) {
+		this.financial_institution_id = financial_institution_id;
+	}
+	public Integer getAccount_type_id() {
+		return account_type_id;
+	}
+	public void setAccount_type_id(Integer account_type_id) {
+		this.account_type_id = account_type_id;
+	}
+  
+	
+}
+

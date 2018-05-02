@@ -1,0 +1,32 @@
+package com.zen.smi.cmf.bo;
+
+
+public class CmfGenerateCaseBO {
+
+	
+	Integer category_id;
+	Integer priority_id;
+	Integer account_type_id;
+	
+	public Integer getCategory_id() {
+		return category_id;
+	}
+	public void setCategory_id(Integer category_id) {
+		this.category_id = category_id;
+	}
+	public Integer getPriroty_id() {
+		return priority_id;
+	}
+	public void setPriroty_id(Integer priority_id) {
+		this.priority_id = priority_id;
+	}
+	public Integer getAccount_type_id() {
+		return account_type_id;
+	}
+	public void setAccount_type_id(Integer account_type_id) {
+		this.account_type_id = account_type_id;
+	}
+	
+	
+		
+}

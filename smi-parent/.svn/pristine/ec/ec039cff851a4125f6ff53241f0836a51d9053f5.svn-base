@@ -1,0 +1,266 @@
+package com.zen.smi.socialtransactions.service.impl;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.cmf.bo.CmfCaseBO;
+import com.zen.smi.cmf.exception.BusinessException;
+import com.zen.smi.cmf.service.helper.CmfCaseHelper;
+import com.zen.smi.cmf.service.impl.CmfBaseService;
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCaseNote;
+import com.zen.smi.dao.entities.CmfCaseNoteCategories;
+import com.zen.smi.dao.entities.CmfCaseStatus;
+import com.zen.smi.dao.entities.CmfCustomer;
+import com.zen.smi.dao.entities.CmfCustomerAccount;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.dao.entities.SocialProfiles;
+import com.zen.smi.dao.entities.StCase;
+import com.zen.smi.dao.entities.StCaseTransaction;
+import com.zen.smi.dao.entities.StStatus;
+import com.zen.smi.dao.entities.StTransactionCaseHistory;
+import com.zen.smi.dao.entities.StTransactionType;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.socialtransaction.service.helper.SocialTransactionHelper;
+import com.zen.smi.socialtransactions.bo.SocialTransactionStaticDataBO;
+import com.zen.smi.socialtransactions.bo.StCaseBO;
+import com.zen.smi.socialtransactions.bo.StCaseTransactionBO;
+import com.zen.smi.socialtransactions.service.SocialTransactionCaseDataService;
+
+
+public class SocialTransactionCaseDataServiceImpl extends CmfBaseService implements SocialTransactionCaseDataService{
+	
+	
+	/**
+	 * Logger for StCaseDataServiceImpl class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(SocialTransactionCaseDataServiceImpl.class);
+	
+
+
+	public SocialTransactionStaticDataBO getSTTransactionStaticData(int accountTypeId)
+			throws BusinessException {
+
+			LOGGER.debug("Starts getSTTransactionStaticData....");
+			SocialTransactionStaticDataBO socialTransactionStaticDataBO = new SocialTransactionStaticDataBO();
+			
+			try { 
+				List<SocialMediaAccounts> socialMediaAccountsList = getSocialMediaAccountsDAO().getSocialMediaAccountsByAccountType(accountTypeId);
+				List<StStatus> transactionStatusList = getStStatusDAO().load("from StStatus");
+				List<StTransactionType> transactionCategoryList = getStTransactionTypeDAO().load("from StTransactionType");
+				
+				socialTransactionStaticDataBO.setTransactionCategoryBOList(SocialTransactionHelper.getInstance().convertTransactionCategoryEntityToBO(transactionCategoryList));
+				socialTransactionStaticDataBO.setTransactionStatusBOList(SocialTransactionHelper.getInstance().convertStStatusEntityToBO(transactionStatusList));
+				socialTransactionStaticDataBO.setSocialMediaAccountsList(CmfCaseHelper.getInstance().convertSocialMediaAccountsEntityToBO(socialMediaAccountsList));
+
+			} catch (GenericDAOException gde) {
+				throw new BusinessException(gde.getMessageBO());
+			} catch (Exception e) {
+				throw new BusinessException(MessageUtil.getInstance().getMessage(
+						"UNKNOWN_EXCEPTION", null), e);
+			}
+
+			LOGGER.debug("Ends getSTTransactionStaticData....");
+			return socialTransactionStaticDataBO;
+	
+	}
+
+
+	public List<StCaseBO> getCmfCasesSearchCriteria(Integer accountTypeId,
+			Integer socialMediaAccountsId, Integer statusTypeId,
+			Integer categoryTypeId) throws BusinessException {
+		LOGGER.debug("Starts getCmfCasesSearchCriteria....");
+		List<StCase> stCases = null;
+		List<StCase> stCasesList = null;
+		List<StCaseBO> stCasesBO = null;
+		try {
+
+			stCases = getStCaseDAO().getAllStCasesByCriteria(accountTypeId,socialMediaAccountsId,statusTypeId,categoryTypeId);
+			if (null != stCases) {
+				stCasesList = new ArrayList<StCase>(0);
+				for (StCase stCase : stCases) {
+					stCase = getStCaseDependencies(stCase);
+					stCasesList.add(stCase);
+				}
+
+				stCasesBO = SocialTransactionHelper.getInstance().convertStCaseEntityToBO(
+						stCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getCmfCasesSearchCriteria....");
+		return stCasesBO;
+	}
+	public StCaseBO getStCaseDetails(String stCaseId) throws BusinessException {
+		LOGGER.debug("Starts getStCaseDetails....");
+		StCase stCase = null;
+		StCaseBO stCaseBO = null;
+		try { 
+			stCase = getStCaseDAO().getById(stCaseId);
+			
+			if (null != stCase) {
+				stCase = getStCaseDependencies(stCase);
+				
+				stCaseBO = SocialTransactionHelper.getInstance().convertStCaseEntiryToCmfCaseBO(stCase);
+			}
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getStCaseDetails....");
+		return stCaseBO;
+	}
+	
+	private StCase getStCaseDependencies(StCase stCase)throws BusinessException {
+		LOGGER.debug("Starts getStCaseDependencies....");
+		try {
+			SocialProfiles socialProfiles = null;
+//			Users users = null;
+			CmfCustomer cmfCustomer = null;
+			SocialMediaAccounts socialMediaAccounts = null;
+			StStatus stStatus= null;
+			StTransactionType stTransactionType= null;
+			CmfCustomer cmfCustomerByStBeneficiary = null;
+			
+			if(null != stCase.getSocialProfiles()) {
+				socialProfiles = getSocialProfileDAO().getSocialProfilesByCmfCase(stCase.getSocialProfiles().getProfileId());
+			}
+			if(null != stCase.getStStatus()) {
+				stStatus = getStStatusDAO().getStCaseStatusByStCase(stCase.getStStatus().getStStatusId());
+			}
+			if(null != stCase.getCmfCustomerByStCustomerId()) {
+				cmfCustomer = getCmfCustomerDAO().getCmfCustomerByCmfCase(stCase.getCmfCustomerByStCustomerId().getCustomerId());
+				cmfCustomer.setCmfCustomerAccounts(new HashSet<CmfCustomerAccount>(getCmfCustomerAccountDAO().getCustomerAccounts(cmfCustomer.getCustomerId())));
+			}
+			if(null != stCase.getStTransactionType()) {
+				stTransactionType = getStTransactionTypeDAO().getStTransactionTypeByStCase(stCase.getStTransactionType().getStTransactionTypeId());
+			}
+			if(null != stCase.getSocialMediaAccounts()) {
+			socialMediaAccounts = getSocialMediaAccountsDAO().getSocialMediaAccountsByCmfCase(stCase.getSocialMediaAccounts().getId());
+			}
+			if(null != stCase.getCmfCustomerByStBeneficiaryId()) {
+				cmfCustomerByStBeneficiary = getCmfCustomerDAO().getCmfCustomerByCmfCase(stCase.getCmfCustomerByStBeneficiaryId().getCustomerId());
+				cmfCustomerByStBeneficiary.setCmfCustomerAccounts(new HashSet<CmfCustomerAccount>(getCmfCustomerAccountDAO().getCustomerAccounts(cmfCustomerByStBeneficiary.getCustomerId())));
+			}
+			stCase.setSocialProfiles(socialProfiles);
+			stCase.setStStatus(stStatus);
+			stCase.setCmfCustomerByStCustomerId(cmfCustomer);
+			stCase.setStTransactionType(stTransactionType);
+			stCase.setSocialMediaAccounts(socialMediaAccounts);
+			stCase.setCmfCustomerByStBeneficiaryId(cmfCustomerByStBeneficiary);
+
+			List<StTransactionCaseHistory> stTransactionCaseHistory = getStTransactionCaseHistoryDAO().getStTransactionHistoryByStCaseId(""+stCase.getStCaseId());
+			Set<StTransactionCaseHistory> stTransactionCaseHistorySet = new HashSet<StTransactionCaseHistory>(stTransactionCaseHistory);
+			stCase.setStTransactionCaseHistories(stTransactionCaseHistorySet);
+
+	
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends getStCaseDependencies....");
+		return stCase;
+	
+	}
+	
+	
+	
+	private StCaseTransaction getStCaseTransactionDependencies(StCaseTransaction stCase)throws BusinessException {
+		LOGGER.debug("Starts getStCaseTransactionDependencies....");
+		try {
+			SocialProfiles socialProfiles = null;
+//			Users users = null;
+			CmfCustomer cmfCustomer = null;
+			SocialMediaAccounts socialMediaAccounts = null;
+			StStatus stStatus= null;
+			StTransactionType stTransactionType= null;
+			CmfCustomer cmfCustomerByStBeneficiary = null;
+			
+			if(null != stCase.getSocialProfiles()) {
+				socialProfiles = getSocialProfileDAO().getSocialProfilesByCmfCase(stCase.getSocialProfiles().getProfileId());
+			}
+			if(null != stCase.getStStatus()) {
+				stStatus = getStStatusDAO().getStCaseStatusByStCase(stCase.getStStatus().getStStatusId());
+			}
+			if(null != stCase.getCmfCustomerByStCustomerId()) {
+				cmfCustomer = getCmfCustomerDAO().getCmfCustomerByCmfCase(stCase.getCmfCustomerByStCustomerId().getCustomerId());
+				cmfCustomer.setCmfCustomerAccounts(new HashSet<CmfCustomerAccount>(getCmfCustomerAccountDAO().getCustomerAccounts(cmfCustomer.getCustomerId())));
+			}
+			if(null != stCase.getStTransactionType()) {
+				stTransactionType = getStTransactionTypeDAO().getStTransactionTypeByStCase(stCase.getStTransactionType().getStTransactionTypeId());
+			}
+			/*if(null != stCase.getSocialMediaAccounts()) {
+			socialMediaAccounts = getSocialMediaAccountsDAO().getSocialMediaAccountsByCmfCase(stCase.getSocialMediaAccounts().getId());
+			}*/
+			if(null != stCase.getCmfCustomerByStBeneficiaryId()) {
+				cmfCustomerByStBeneficiary = getCmfCustomerDAO().getCmfCustomerByCmfCase(stCase.getCmfCustomerByStBeneficiaryId().getCustomerId());
+				cmfCustomerByStBeneficiary.setCmfCustomerAccounts(new HashSet<CmfCustomerAccount>(getCmfCustomerAccountDAO().getCustomerAccounts(cmfCustomerByStBeneficiary.getCustomerId())));
+			}
+			stCase.setSocialProfiles(socialProfiles);
+			stCase.setStStatus(stStatus);
+			stCase.setCmfCustomerByStCustomerId(cmfCustomer);
+			stCase.setStTransactionType(stTransactionType);
+			//stCase.setSocialMediaAccounts(socialMediaAccounts);
+			stCase.setCmfCustomerByStBeneficiaryId(cmfCustomerByStBeneficiary);
+
+			//List<StTransactionCaseHistory> stTransactionCaseHistory = getStTransactionCaseHistoryDAO().getStTransactionHistoryByStCaseId(""+stCase.getStCaseId());
+			//Set<StTransactionCaseHistory> stTransactionCaseHistorySet = new HashSet<StTransactionCaseHistory>(stTransactionCaseHistory);
+			//stCase.setStTransactionCaseHistories(stTransactionCaseHistorySet);
+
+	
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends getStCaseTransactionDependencies....");
+		return stCase;
+	
+	}
+	public List<StCaseTransactionBO> getAllFundsTransferByTransactions(Integer accountTypeId) throws BusinessException {
+		LOGGER.debug("Starts getAllFundsTransferByTransactions....");
+		List<StCaseTransaction> ftCases = null;
+		List<StCaseTransaction> ftCasesList = null;
+		List<StCaseTransactionBO> stCasesTransactionBO = null;
+		try {
+
+			ftCases = getStCaseTransactionDAO().getAllFundsTransferByTransactions(accountTypeId);
+			if (null != ftCases) {
+				ftCasesList = new ArrayList<StCaseTransaction>(0);
+				for (StCaseTransaction ftCase : ftCases) {
+					ftCase = getStCaseTransactionDependencies(ftCase);
+					ftCasesList.add(ftCase);
+				}
+
+				stCasesTransactionBO = SocialTransactionHelper.getInstance().convertFtCaseEntityToBO(
+						ftCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllFundsTransferByTransactions....");
+		return stCasesTransactionBO;
+	}
+	
+}

@@ -1,0 +1,29 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+public class CmfPrirotyAndUserListBO {
+	
+	public List<CmfCasePriorityBO> cmfPriorityListBO;
+	public List<UserBO> cmfUserListBO;
+	
+	
+	
+	public List<CmfCasePriorityBO> getCmfPriorityListBO() {
+		return cmfPriorityListBO;
+	}
+	public void setCmfPriorityListBO(List<CmfCasePriorityBO> cmfPriorityListBO) {
+		this.cmfPriorityListBO = cmfPriorityListBO;
+	}
+	
+	public List<UserBO> getCmfUserListBO() {
+		return cmfUserListBO;
+	}
+	public void setCmfUserListBO(List<UserBO> cmfUserListBO) {
+		this.cmfUserListBO = cmfUserListBO;
+	}
+	 
+	
+	
+	 
+}

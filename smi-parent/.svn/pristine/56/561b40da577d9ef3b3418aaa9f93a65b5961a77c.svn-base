@@ -1,0 +1,55 @@
+package com.zen.smi.socialtransactions.bo;
+
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.zen.smi.dao.entities.StCase;
+
+public class StCaseMessageBO {
+	
+	private Integer stCaseMessageId;
+	private String stCaseMessage;
+	private List<StCase> stCases = new ArrayList<StCase>(0);
+	
+	/**
+	 * @return the stCaseMessageId
+	 */
+	public Integer getStCaseMessageId() {
+		return stCaseMessageId;
+	}
+	/**
+	 * @param stCaseMessageId the stCaseMessageId to set
+	 */
+	public void setStCaseMessageId(Integer stCaseMessageId) {
+		this.stCaseMessageId = stCaseMessageId;
+	}
+	/**
+	 * @return the stCaseMessage
+	 */
+	public String getStCaseMessage() {
+		return stCaseMessage;
+	}
+	/**
+	 * @param stCaseMessage the stCaseMessage to set
+	 */
+	public void setStCaseMessage(String stCaseMessage) {
+		this.stCaseMessage = stCaseMessage;
+	}
+	/**
+	 * @return the stCases
+	 */
+	public List<StCase> getStCases() {
+		return stCases;
+	}
+	/**
+	 * @param stCases the stCases to set
+	 */
+	public void setStCases(List<StCase> stCases) {
+		this.stCases = stCases;
+	}
+	
+
+}

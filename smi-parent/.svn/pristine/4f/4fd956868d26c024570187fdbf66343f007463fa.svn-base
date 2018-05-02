@@ -1,0 +1,96 @@
+package com.zen.smi.service.impl;
+
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.RuleGroupBO;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.exception.UserException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.RuleGroupService;
+import com.zen.smi.service.helper.FamilyHelper;
+import com.zen.smi.service.helper.RuleGroupHelper;
+/**
+ * @author Khaja moinuddin
+ *
+ */
+public class RuleGroupServiceImpl extends BaseService implements  RuleGroupService {
+	
+	/**
+	 * Logger for RuleGroupServiceImpl class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(RuleGroupServiceImpl.class);
+	
+	
+	public List<RuleGroupBO> getGroupsDetails(int familyId) throws BusinessException {
+		LOGGER.debug("Starts getGroupsDetails....");
+		
+		List<RuleGroup> ruleGroup = null;
+		List<RuleGroupBO> ruleGroupBO = null;
+		try {
+			ruleGroup = getRuleGroupDAO().getGroup(familyId);
+			if(ruleGroup != null)
+			{
+				ruleGroupBO = RuleGroupHelper.getInstance().convertRuleGroupEntityToBO(ruleGroup);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends getGroupsDetails....");
+		
+		return ruleGroupBO;
+	}
+
+	
+	/**
+	 * to save the rule group.
+	 * @param null
+	 * @return RuleGroup
+	 * @throws UserException 
+	 * * @Author kalyan
+	 */
+	
+	public void saveGroup(RuleGroupBO ruleGroupBO) throws BusinessException{
+		
+		RuleGroup ruleGroup=FamilyHelper.getInstance().convertGroupBOToEntityForSave(ruleGroupBO);
+		try {
+			getRuleGroupDAO().saveRuleGroup(ruleGroup);
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+	}
+
+
+	/**
+	 * 
+	 */
+	public void deleteRuleGroup(RuleGroupBO ruleGroupBO) throws BusinessException {
+		
+		RuleGroup ruleGroup=FamilyHelper.getInstance().convertGroupBOToEntity(ruleGroupBO);
+		List<Rule> rules=null;
+		try {
+			
+			rules = getRulesDAO().getRulesByGroupId(ruleGroupBO.getRuleGroupId());
+			if(!(rules.size() > 0))
+			{
+				getRuleGroupDAO().delete(ruleGroup);
+			}else{
+				throw new BusinessException(MessageUtil.getInstance().getMessage("ERROR_101", null));
+			}
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		}  
+	}
+	
+
+}

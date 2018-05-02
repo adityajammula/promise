@@ -1,0 +1,53 @@
+package com.zen.smi.socialtransactions.bo;
+
+import java.util.List;
+
+import com.zen.smi.cmf.bo.SocialMediaAccountsBO;
+
+
+
+public class SocialTransactionStaticDataBO {
+	private List<TransactionStatusBO> transactionStatusBOList;
+	private List<TransactionCategoryBO> transactionCategoryBOList;
+	private List<SocialMediaAccountsBO> socialMediaAccountsList;
+	/**
+	 * @return the transactionStatusBOList
+	 */
+	public List<TransactionStatusBO> getTransactionStatusBOList() {
+		return transactionStatusBOList;
+	}
+	/**
+	 * @param transactionStatusBOList the transactionStatusBOList to set
+	 */
+	public void setTransactionStatusBOList(
+			List<TransactionStatusBO> transactionStatusBOList) {
+		this.transactionStatusBOList = transactionStatusBOList;
+	}
+	/**
+	 * @return the transactionCategoryBOList
+	 */
+	public List<TransactionCategoryBO> getTransactionCategoryBOList() {
+		return transactionCategoryBOList;
+	}
+	/**
+	 * @param transactionCategoryBOList the transactionCategoryBOList to set
+	 */
+	public void setTransactionCategoryBOList(
+			List<TransactionCategoryBO> transactionCategoryBOList) {
+		this.transactionCategoryBOList = transactionCategoryBOList;
+	}
+	/**
+	 * @return the socialMediaAccountsList
+	 */
+	public List<SocialMediaAccountsBO> getSocialMediaAccountsList() {
+		return socialMediaAccountsList;
+	}
+	/**
+	 * @param socialMediaAccountsList the socialMediaAccountsList to set
+	 */
+	public void setSocialMediaAccountsList(
+			List<SocialMediaAccountsBO> socialMediaAccountsList) {
+		this.socialMediaAccountsList = socialMediaAccountsList;
+	}
+
+}

@@ -1,0 +1,74 @@
+package com.zen.smi.service.helper;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.PostsBO;
+import com.zen.smi.bo.RuleBO;
+import com.zen.smi.bo.RuleColumnsBO;
+import com.zen.smi.dao.entities.Posts;
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+
+public final class ProcessHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for ProcessHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(ProcessHelper .class);
+
+	/**
+	 * Instance of ProcessHelper.
+	 */
+	private static ProcessHelper  instance;
+
+	/**
+	 * Private constructor
+	 */
+	private ProcessHelper() {
+
+	}
+	
+	/**
+	 * Converts List of Posts  entity to PostsBO objects
+	 * @param Staff staff
+	 * @return List<PostsBO>
+	 * @author 
+	 */
+	public List<PostsBO> convertPostsListEntityToBO(List<Posts> posts) {
+		LOGGER.debug("Starts convertPostsEntityToBO...");
+		List<PostsBO> postBOList = new ArrayList<PostsBO>();
+		for(Posts postList:posts)
+		{	
+			PostsBO postsBO = convertPostsEntityToBO(postList);
+			
+			postBOList.add(postsBO);
+		}
+
+		LOGGER.debug("Ends convertRuleEntityToBO...");
+		return postBOList;
+	}
+	
+	public PostsBO convertPostsEntityToBO(Posts post) {
+
+		PostsBO postsBO = new PostsBO();
+		String[] postProperties = {"postId","shares","likes","comments","postName"};
+        BeanCopyUtil.copyBeanProperties(post, postsBO, postProperties);
+        return postsBO;
+		
+	}
+
+	public static ProcessHelper getInstance() {
+		if (instance == null) {
+			instance = new ProcessHelper();
+		}
+		return instance;
+	}
+
+	public static void setInstance(ProcessHelper instance) {
+		ProcessHelper.instance = instance;
+	}
+	
+}

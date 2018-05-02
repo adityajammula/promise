@@ -1,0 +1,69 @@
+package com.zen.smi.generic.utils;
+
+
+public final class SmiConstants {
+
+	private SmiConstants() {
+	}
+
+	public static final String[] FAMILY_PROPERTIES= {"ruleFamilyId","ruleFamilyName","ruleFamilyDescription","createdBy","updatedBy","createdDate","updatedDate"};
+    public static final String[] RULEGROUP_PROPERTIES = {"ruleGroupId","ruleGroupName","ruleGroupDescription","createdBy","updatedBy","createdDate","updatedDate"};
+    public static final String[] RULE_PROPERTIES = {"ruleId","ruleName","ruleDescription","createdBy","updatedBy","createdDate","updatedDate","ruleType","cloneRuleId"};
+    public static final String[] FLUMEAGENTSPROCESS_PROPERTIES = {"agentProcessId","startDate","endDate","status","processData","statistics","stacktrace","systemProcessId"};
+    public static final String[] FLUMEAGENTS_PROPERTIES = {"agentId","name","description","status"};
+    public static final String[] SOCIALDATAPROCESS_PROPERTIES = {"processId","name","status","startDate","endDate","statistics","processData"};
+    public static final String[] FORMULA_PROPERTIES = {"ruleFormulaId","ruleFormulaName","createdBy","updatedBy","createdDate","updatedDate","ruleFormulaExpression"};
+    public static final String[] RULECOLUMN_PROPERTIES = {"ruleColumnId","ruleColumnName","ruleColumnText","createdBy","createdDate","updatedDate","ruleIsGlobal","ruleColumnDesc"};
+    public static final String[] COLUMN_PROPERTIES = {"ruleColumnId","ruleColumnName","ruleColumnText","ruleIsGlobal"};
+    public static final String[] RULEAPPS_PROPERTIES =  {"appId","appName","appDescription"};
+    public static final String[] SOCIALMEDIAACCOUNTS_PROPERTIES = {"id","accountName","accountId","processStatus","scheduledDate","processPercentage","createdDate"};
+    public static final String[] SOCIALPROFILES_PROPERTIES = {"profileId","accountType"};
+    public static final String[] FINANCIALINSTITUTIONS_PROPERTIES =  {"id","accountOwner","parentId"};
+    public static final String[] USER_PROPERTIES =  {"userId","userName","password","firstName","middleName","lastName","email","mobile","landline"};
+    public static final String[] ROLE_PROPERTIES =  {"roleId","roleName","roleDescription"};
+    public static final String CMF_CASE_CREATED_STATUS =  "Created";
+    public static final String CMF_CASE_ASSIGNED_STATUS =  "Assigned";
+    public static final String CMF_CASE_ESCALATED_STATUS =  "Escalated";
+    public static final String CMF_CASE_RESOLVED_STATUS =  "Resolved";
+    public static final String CMF_CASE_REOPENED_STATUS =  "Reopened";
+    public static final String CMF_CASE_CLOSED_STATUS =  "Closed";
+    public static final String CMF_CASE_SPAM_STATUS =  "SPAM";
+    public static final String CMF_CASE_DASHBOARD_TYPE_CATEGORY =  "CATEGORY";
+    public static final String CMF_CASE_DASHBOARD_TYPE_PRIORITY =  "PRIORITY";
+    public static final String CMF_CASE_DASHBOARD_TYPE_SOCIALPROFILE =  "SOCIALPROFILE";
+    
+    public static final String[] CMF_CASE_CATEGORY = {"categoryId","categoryShortName","categoryName","categoryDescription","createdDate","updatedDate"};
+    public static final String[] CMF_CASE_PRIORITY_PROPERTIES = {"priorityId","priorityName","prirotyShortName","priorityDescription","createdDate","updatedDate"};
+    public static final String[] CMFCASE_PROPERTIES = {"caseId","name","description","groupCaseId","updatedBy","groupCaseFlag","createdDate","updatedDate"};
+    public static final String[] CMFCUSTOMER_PROPERTIES = {"customerId","firstName","lastName","middleName","mobileNumber","emailId","landlineNumber","facebookId","twitterId","address","alternateAddress"};
+    public static final String[] CMFCASEHISTORY_PROPERTIES = {"caseHistoryId","caseHistoryDescription","parentCaseHistoryId","createdBy","createdDate","postType"};
+    public static final String[] CMFCASENOTE_PROPERTIES = {"noteId","noteDescription","createdBy","updatedBy","createdDate","updatedDate"};
+  
+    public static final int CMF_CASES_ASSIGNED =  2;
+    public static final int CMF_CASES_CREATED =  1;
+    public static final int CMF_CASES_CRITICAL =  1;
+    public static final int CMF_CASES_HIGH =  2;
+    public static final int CMF_CASES_MEDIUM = 3;
+    public static final int CMF_CASES_LOW =  4;
+    public static final int CMF_CASES_RESOLVED =  4;
+    public static final int CMF_CASES_REOPEN = 5;
+    public static final int CMF_CASES_CLOSED =  6;
+    public static final int CMF_CASES_SPAM = 7;
+    
+    public static final int CMF_CASES_NOTE_ASSIGNED =  3;
+    public static final int CMF_CASES_NOTE_RESOLVED =  5;
+    public static final int CMF_CASES_NOTE_REOPEN =  6;
+    public static final int CMF_CASES_NOTE_CREATED =  4;
+    public static final int CMF_CASES_NOTE_GROUP =  2;
+    
+    public static final String[] CMFCASESTATUS_PROPERTIES = {"caseStatusId","caseStatus","caseStatusDescription"};
+    public static final String IP_HADOOP_APP = "http://192.168.160.106:8080";
+    public static final String[] CMF_CUST_INFO = {"customerId","firstName","lastName","middleName","mobileNumber","emailId","landlineNumber","crnNumber","facebookId","twitterId","address","alternateAddress"};
+    public static final String[] SOCIAL_DATA_INFO = {"customerId","likes","dislikes","books","movies","sports","shoppingPreferences","restaurantPreferences","locationTravelled","keyDate1","keyDate2","keyDate3","keyDate4"};
+    public static final String[] CUSTOMER_ACCOUNTS = {"customerAccountId","accountNumber","accountType","cmfCustomer"};	
+	
+	
+	
+	
+	
+}

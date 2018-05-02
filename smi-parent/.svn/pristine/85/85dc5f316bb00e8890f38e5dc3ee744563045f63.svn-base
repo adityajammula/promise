@@ -1,0 +1,51 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.zen.smi.dao.ProcessesDAO;
+import com.zen.smi.dao.entities.Posts;
+
+public class ProcessesDAOImpl extends BaseDAOImpl<Posts, Serializable> implements ProcessesDAO  {
+
+
+	public ProcessesDAOImpl() {
+			super(Posts.class);
+		}
+
+	public List<Posts> getPostsData(String accountName, Date date){
+		
+	
+		List<Posts> posts= new ArrayList<Posts>();
+		Posts post = new Posts();
+		post.setComments(-20);
+		post.setLikes(100);
+		post.setShares(18);
+		post.setPostId(1);
+		post.setPostName("addAccount");
+		
+		Posts post1 = new Posts();
+		post1.setComments(25);
+		post1.setLikes(10);
+		post1.setShares(0);
+		post1.setPostId(2);
+		post1.setPostName("transaction");
+		
+		Posts post2 = new Posts();
+		post2.setComments(35);
+		post2.setLikes(20);
+		post2.setShares(26);
+		post2.setPostId(3);
+		post2.setPostName("newPost");
+		
+		posts.add(post);
+		posts.add(post1);
+		posts.add(post2);
+		
+		return posts;
+	}
+
+	
+}

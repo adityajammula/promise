@@ -1,0 +1,145 @@
+'use strict';
+
+/**
+ * @author yunus
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('TestRulesController', function ($scope, rulesServices, $modal, $log, dialogs, $state) {
+	  
+	  $scope.rulesData = {};
+	  $scope.appData = {};
+	  $scope.formulaData = [];
+	  $scope.selectedFamilyId = null;
+	  $scope.selectedRuleGroupId = null;
+	  /**
+	   * this method is used to initialize the Application dropdown values
+	   */
+	  $scope.initializeViewRulesController = function() {
+		  rulesServices.getAppsListData().then(function(response){			
+			  if (response.data != null)
+			  {
+				 $scope.appData =  response.data.ruleApps;				 
+			  }
+	      });
+	  }; 
+	 
+	 
+ /**
+   * This method is used to get FamilyData based on application id
+   */ 	 
+   $scope.getFamilyDataBasedOnAppId = function(appId) {
+	    rulesServices.getRuleFamilysByAppId(appId).then(function(response){	    	
+			  if (response.data != null){
+				  $scope.rulesData.rulesFamilyData = response.data.rule_families;
+			  }
+	      });
+		  
+	  };
+
+  /**
+    * By using Family Id we get the Rule Group Data
+    */
+   $scope.changeRuleFamily = function(familyId){
+	   $scope.selectedFamilyId = familyId;
+	   $scope.getRuleGroupData(familyId);	   
+   };
+   $scope.getRuleGroupData = function(familyId){
+	   rulesServices.groupDetails(familyId).then(function(response){
+			 if (response != null && response.data != null){
+				 $scope.rulesData.ruleGroupData = response.data.rule_groups;
+			 }
+	   });
+   };
+   
+   /**
+    * By using Group Id we get the Rule Name Data
+    */
+   $scope.changeRuleGroup = function(groupId){
+	   $scope.selectedRuleGroupId = groupId;
+	   $scope.getRuleName(groupId);
+   };
+   
+   $scope.getRuleName = function(groupId){
+	   rulesServices.rulesByGroupId(groupId).then(function(response){		   
+			 if (response != null && response.data != null) {
+				 $scope.rulesData.ruleNameData = response.data.rules;				 
+			 }
+	   });
+   };
+   
+   /**
+    * This method to get the Rule Id 
+    **/
+   $scope.changeRule = function(ruleId){
+	   $scope.selectedRuleId = ruleId;
+   };
+   
+   /**
+   * This method to Test Rule with all Expressions
+   */  
+	$scope.test = function() {
+		 var ruleTestJson= {
+		    		"rule_family_id":null,
+		    		"rule_group_id":null,
+		    		"rule_id":null,
+		  	        "message":null
+		  	};		 
+		
+		if ($scope.ruleText == null || $scope.ruleText == undefined) {
+			 dialogs.error("ERROR","Please enter the text",{size:'md'});			 
+			return false;
+		}
+		if ($scope.appId == null || $scope.appId == undefined) {
+			 dialogs.error("ERROR","Please select the application",{size:'md'});			 
+			return false;
+		}
+		if ($scope.rulesData.selectedRuleFamilyId == null || $scope.rulesData.selectedRuleFamilyId == undefined) {
+			 dialogs.error("ERROR","Please select the family",{size:'md'});			 
+			return false;
+		}
+		
+		if ($scope.selectedFamilyId != null && $scope.selectedFamilyId != undefined) {	
+			if (($scope.selectedRuleGroupId != null && $scope.selectedRuleGroupId != undefined) && ($scope.selectedRuleId != null && $scope.selectedRuleId != undefined)){
+				ruleTestJson.rule_id = $scope.selectedRuleId;
+				ruleTestJson.message =$scope.ruleText;
+			} else if ($scope.selectedRuleGroupId != null && $scope.selectedRuleGroupId != undefined) {
+				ruleTestJson.rule_group_id = $scope.selectedRuleGroupId;
+				ruleTestJson.message =$scope.ruleText;
+			} else {
+				ruleTestJson.rule_family_id = $scope.selectedFamilyId;
+				ruleTestJson.message =$scope.ruleText;
+			}
+	    }				
+	   
+	   rulesServices.testRule(ruleTestJson).then(function(response){		   
+		   if (response !=null && response.data !=null){ 			   
+			   if (response.data.ruleTestSummaryBO.length > 0){
+				   if ($scope.formulaData.length > 0){
+					   $scope.formulaData = [];
+					   for(var i =0;i<response.data.ruleTestSummaryBO.length;i++)
+					   {
+					       var ruleTestSummaryArray = response.data.ruleTestSummaryBO;						    
+						   $scope.formulaData.push(ruleTestSummaryArray[i]);						   
+					   }
+				   } else {
+					   for(var i =0;i<response.data.ruleTestSummaryBO.length;i++)
+					   {
+					       var ruleTestSummaryArray = response.data.ruleTestSummaryBO;						    
+						   $scope.formulaData.push(ruleTestSummaryArray[i]);						   
+					   }
+				   }					
+				} else {			
+					$scope.formulaData = [];
+					dialogs.error("ERROR","No Rules/Formula found",{size:'md'});
+					return false;
+				}		
+			}
+       });			
+	};
+	 
+  });

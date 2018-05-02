@@ -1,0 +1,111 @@
+<div class="page page-full page-mail">
+
+	<div class="tbox tbox-sm">
+		<div class="tcol " style="display: flex; height: 80px; background-color: white;">
+			<div ui-view class="col-md-48" style="height: 150px; width: 100%;">
+				<!-- tile -->
+				<div class="tile-body row" style="border-bottom: 1px solid #CCC9C9;">
+					<div class="col-md-12 p-15">
+						<div class="col-md-1">
+							<a class=" br-2 w-60" data-ng-click="goTwitterTransactionsPage()" ><button type="button" class="btn btn-blue btn-rounded">Back</button></a>
+						</div>
+						<div class="col-md-10">
+							<label><strong>Transaction Id &nbsp:&nbsp</strong></label>
+						</div>
+						<div class="btn-group col-md-1 pull-right">
+							<button class="btn btn-default btn-sm br-2 text-right">
+								<i class="fa fa-refresh"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-36 " style="height: 30px;">
+				<div class="col-md-12" style="text-decoration: line-through; left: 25px;">
+					<span class="badge bg-greensea">&nbsp;&nbsp;&nbsp;</span> 
+					<span data-ng-show="caseStatus=='Assigned'||caseStatus=='Escalated'"><span style="text-decoration: line-through;">----------------------------</span> 
+					<span class="badge bg-primary">&nbsp;&nbsp;&nbsp;</span> </span> 
+					<span data-ng-show="caseStatus=='Escalated'"><span style="text-decoration: line-through;">----------------------------</span> 
+					<span class="badge bg-red">&nbsp;&nbsp;&nbsp;</span> </span> 
+				</div>
+				<div class="col-md-12" >
+					<label class="tile-body custom-font col-md-3"><small><strong>Created</strong></small></label>
+					<label class="tile-body custom-font col-md-3" style="left:25px" data-ng-show="caseStatus=='Assigned'||caseStatus=='Escalated'"><small><strong>Assigned</strong></small></label>
+					<label class="tile-body custom-font col-md-3" data-ng-show="caseStatus=='Escalated'"><small><strong>Escalated</strong></small></label>
+				</div>
+				 <div class="col-md-12">
+					<label class="tile-body custom-font col-md-3">{{customerName}}</label> 
+					<label class="tile-body custom-font col-md-3" style="left:25px" data-ng-show="caseStatus=='Assigned'||caseStatus=='Escalated'"><small>{{caseStatusDetails[0].createdBy}}</small></label>
+					<label class="tile-body custom-font col-md-3" data-ng-show="caseStatus=='Escalated'">{{caseStatusDetails[1].createdBy}}</label>
+				</div> 
+				<div class="col-md-12" style="margin: 5 ;">
+					<label class="tile-body text-small col-md-3"><small><strong>{{createdDate}}</strong></small></label> 
+					<label class="tile-body text-small col-md-3" style="left:25px" data-ng-show="caseStatus=='Assigned'||caseStatus=='Escalated'"><small><strong>{{caseStatusDetails[0].createdDate}}</strong></small></label> 
+					<label class="tile-body text-small col-md-3" data-ng-show="caseStatus=='Escalated'"><small><strong>{{caseStatusDetails[0].createdDate}}</strong></small></label> 
+				</div>
+				</div>
+			</div>
+
+		</div>
+		
+
+		<!-- right side body -->
+		<div style="background-color: white;">
+			<ul class="list-group no-radius no-border" id="mails-list">
+			<li style="border-left: 0px solid !important;">		
+			<div class="media">
+						<div class="pull-left">
+							<div class="thumb thumb-sm">
+								<img src="resources/images/defaultImage.png" class="img-circle">
+							</div>
+						</div>
+						<div class="media-body">
+							<div class="media-heading m-0">
+								<a class="mr-5">{{caseDetails.cmfCustomerBO.firstName}} {{caseDetails.cmfCustomerBO.lastName}}</a> <span
+									class="pull-right text-sm text-muted"> <span
+									class="hidden-xs">{{caseDetails.stTransactionDate}}</span>
+								</span>
+							</div>
+							<small>{{caseDetails.caseMessage}}</small>
+						</div>
+						<div class=" col-md-12 " data-ng-hide="caseDetails.stTransactionTypeBO.stTransactionDescription=='Balance enquiry'">
+						<label class="col-md-4 "><b>Amount :</b>{{caseDetails.stAmount}}</label>
+						<label class="col-md-4 "><b>Social Beneficiary Name : </b>{{caseDetails.cmfCustomerByStBeneficiaryBO.firstName}} {{caseDetails.cmfCustomerByStBeneficiaryBO.lastName}}</label>
+						<label class="col-md-4 "><b>Case Beneficiary A/C Number : </b> {{caseDetails.cmfCustomerByStBeneficiaryBO.cmfCustomerAccountsBO[0].accountNumber}}</label>
+					</div>
+					<div class=" col-md-12 " style="border-bottom: 1px solid #CCC9C9; margin: 5;">
+						<label class="col-md-4 "><b>Transaction Status :</b><span data-ng-class="caseDetails.stStatusBO.stStatusDescription == 'Pending' ? 'text-orange' :(caseDetails.stStatusBO.stStatusDescription == 'Rejected' ? 'text-lightred' :'text-greensea')">
+									{{caseDetails.stStatusBO.stStatusDescription}}</span></label> 
+						<label class="col-md-4 "><b>Social Transaction Id : </b>{{caseDetails.stTransactionId}}</label>
+						<label class="col-md-4 "><b>Case Transaction Date :</b> {{caseDetails.stTransactionDate}}</label>
+					</div>
+					</div></li>
+				<li  lass="list-group-item b-{{mail.label.color}}" style="border-left: 0px solid !important;">
+					<div class="media" style="border-bottom: 1px solid #CCC9C9; margin: 5" >
+						<div class="media-body">
+							<div class="media-heading m-0 col-md-12">
+								<span class="text-sm text-muted pull-left hidden-xs col-md-9">
+									 </span>
+								<div class="col-lg-2 col-md-8"
+									style="text-align: right; color: #337ab7; font-weight: 700;"></div>
+								<div>
+									<i class="fa fa-bank pull-right" style="font-size: xx-large"></i>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-9 col-sm-10 " style="margin-left: 20%;">
+							<small></small>
+						</div>
+					</div>
+				</li>
+			</ul>
+
+			<div>
+				<div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+

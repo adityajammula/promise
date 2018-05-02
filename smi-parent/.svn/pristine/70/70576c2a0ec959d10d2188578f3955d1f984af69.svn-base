@@ -1,0 +1,308 @@
+angular
+		.module('smiApp')
+		.controller('OpenFacebookCasesController',function($scope, $state, $modal, OpenfacebookCaseService,$rootScope,$log,dialogs) {
+					$scope.isSelect = true;
+					$scope.ischecked = false;
+					$scope.categoryId = 0;
+					$scope.priorityId = 0;
+					account_type = 1;
+					$scope.accountType = account_type.toString();
+					$scope.socialMediaAccountId = 0;
+					$scope.moreOptions = [ { id : 1, name : 'Group Selected Cases'}, 
+					                       { id : 2, name : 'Assign Selected Cases'}, 
+					                       { id : 3, name : 'Append Notes'}, 
+					                       { id : 4, name : 'Mark As Spam'} ];
+					$rootScope.initializeOpenFacebookCasesController = function() {
+						$scope.fbCases = [];
+						OpenfacebookCaseService.getOpenCases(account_type).then(function(response) {
+							angular.forEach(response.data.cmfCaseBO, function(caseBo) {
+								$scope.cmfCaseBO = caseBo;
+								$scope.cmfCaseBO.isChecked= false;
+								$scope.fbCases.push($scope.cmfCaseBO);
+							});
+									
+						});
+						$scope.getCategories();
+					};
+							$scope.getCategories = function() {
+								OpenfacebookCaseService.getStaticData().then(function(response) {
+													$scope.categories = response.data.cmfCaseCategoryBOList;
+													$scope.priorities = response.data.cmfCasePriorityBOList;
+													for ( var i = 0; i < response.data.cmfCasePriorityBOList.length; i++) {
+														var obj = response.data.cmfCasePriorityBOList[i];
+														obj.priorityImage = (response.data.cmfCasePriorityBOList[i].priority_name).charAt(0);
+													}
+													$scope.accounts = response.data.socialMediaAccountsList;
+												});
+							}, 
+							$scope.openCaseJson = {
+									"category_type" :	$scope.categoryId,
+									"priority_type" :	$scope.priorityId,
+									"account_type"  :	$scope.accountType,
+									"social_media_accounts_id" : $scope.socialMediaAccountId
+							};
+							$scope.getOpenCasesByAccountCategory = function(categoryId) {
+								$scope.openCaseJson.category_type = categoryId.toString();
+								$scope.getOpenCases();
+							}, 
+							$scope.getOpenCasesByPriority = function(priorityId) {
+								$scope.openCaseJson.priority_type = priorityId.toString();
+								$scope.getOpenCases();
+							};
+					$scope.getOpenCasesByAccount = function(socialMediaAccountId) {
+						$scope.openCaseJson.social_media_accounts_id = socialMediaAccountId.toString();
+						$scope.getOpenCases();
+					};
+					$scope.getAllPriorities = function() {
+						$scope.openCaseJson.priority_type = "All";
+						$scope.getOpenCases();
+					};
+					$scope.getAllCategories = function() {
+						$scope.openCaseJson.category_type = "All";
+						$scope.getOpenCases();
+					};
+					$scope.getAllAccounts = function() {
+						$scope.openCaseJson.social_media_accounts_id = "All";
+						$scope.getOpenCases();
+					};
+					$scope.getOpenCases = function() {
+						OpenfacebookCaseService.getOpenCasesByCriteria($scope.openCaseJson).then(function(response) {
+									$scope.fbCases = response.data.cmfCaseBO;
+								});
+					};
+					$scope.highliteCategory = null;
+					$scope.sethighliteCategory = function(index) {
+						$scope.highliteCategory = index;
+					};
+					$scope.highlitePriority = null;
+					$scope.sethighlitePriority = function(index) {
+						$scope.highlitePriority = index;
+					};
+					$scope.highliteAccount = null;
+					$scope.sethighliteAccount = function(index) {
+						$scope.highliteAccount = index;
+					};
+					$scope.refreshOpenCategories = function() {
+						$rootScope.initializeOpenFacebookCasesController();
+					}, 
+					$scope.caseDetails = function(cases) {
+						var params = {};
+						if (cases != null) {
+							params.case_id = cases.case_id;
+						}
+						$state.go('viewindividualcasedetails', params);
+						$rootScope.customerId = cases.cmfCustomerBO.customerId;
+						$rootScope.caseid = cases.case_id;
+					};
+					var  selectedCases = [];
+					$scope.getSelectedValue = function(id) {
+						$scope.isSelect = false;
+						selectedCases.push(id);
+
+					};
+					
+					$scope.getGroupCaseDetails = function() {
+
+						alert("hello");
+						var modalInstance = $modal.open({
+							templateUrl : 'groupCaseDetail.html',
+							controller : 'GroupCaseDetailController',
+							resolve : {
+								items : function() {
+									var obj = {};
+							        //obj.assignto= $scope.assignto;
+									//obj.reasons= $scope.reasons;					      		     
+									// obj.selectedCases=selectedCases;					      		    
+									return obj;
+								}
+							}
+
+						});
+
+					};
+				/*	$scope.getSelectedValue = function(id, index, isChecked) {
+						$scope.isSelect = false;						
+						if(isChecked && $scope.selectedCases.indexOf(id) == -1){
+							$scope.selectedCases.push(id);
+						}else{
+							angular.forEach($scope.selectedCases, function(id) {
+								if($scope.selectedCases.indexOf(id) != -1)
+									 $scope.selectedCases.splice($scope.selectedCases.indexOf(id),1);
+							});
+						}
+					};*/
+					
+
+					$scope.getOption = function(id) {
+						alert("hiii");
+						var modalInstance = $modal.open({
+							templateUrl : 'groupCaseDetail.html',
+							controller : 'GroupCaseDetailController',
+							resolve : {
+								items : function() {
+									var obj = {};
+									
+									return obj;
+								}
+							}
+
+						});
+
+					};
+
+					$scope.getOption = function(id) {
+						if (id == 1) {
+							var modalInstance = $modal.open({
+								templateUrl : 'groupCase.html',
+								controller : 'GroupCaseController',
+								resolve : {
+									items : function() {
+										var obj = {};
+										
+										return obj;
+									}
+								}
+
+							});
+						} else if (id == 2) {
+							var modalInstance = $modal.open({
+								templateUrl : 'assignCase.html',
+								controller : 'AddassignCaseController',
+
+								resolve : {
+									items : function() {
+										var obj = {};
+										obj.assignto = $scope.assignto;
+										obj.reasons = $scope.reasons;
+										obj.selectedCases = selectedCases;
+										return obj;
+									}
+								}
+							});
+
+						} else if (id == 3) {
+							var modalInstance = $modal.open({
+								templateUrl : 'appendNote.html',
+								controller : 'AddAppendNoteController',
+								resolve : {
+									selectedCases : function() {
+										var obj = {};
+										obj.selectedCases = selectedCases;
+										return obj;
+									}
+								}
+							});
+
+						}
+					};
+					 $scope.Search = '';
+					    $scope.search = function (user) {
+					      var query = $scope.Search;
+					      var fullname = user.cmfCustomerBO.firstName+ ' ' + user.cmfCustomerBO.lastName;
+					      if (fullname.indexOf(query) != -1) {
+					        return true;
+					      }
+					      return false;
+					    };
+}).controller('AddassignCaseController',  function ($scope, $modalInstance,$rootScope,OpenfacebookCaseService,items ) {
+					
+					$scope.getAssignedUserId= function(user) {
+						$scope.user=user
+					};
+					OpenfacebookCaseService.getAllUsers().then(function(response) {
+						$scope.users = response.data.cmfCasesUsers;
+						});
+					
+					    $scope.ok = function () {
+					    	var requestData = {
+			    				      "user_name":$scope.assignto,
+			    				      "reason": $scope.reasons,
+			    				      "cmf_case":[]
+			    				};
+					    	  requestData.cmfcase[i] = {};
+					    	  for(var i =0;i<items.selectedCases.length;i++)
+					    	  {
+					    		  requestData.cmfcase[i] = items.selectedCases[i];
+					    	  };
+					    	 
+						    	OpenfacebookCaseService.saveSelectedCases(requestData).then(function(result){
+						    		
+						    	});
+						    	//$state.go('openfacebookcases');
+					    	 
+						    	$scope.close = function () {
+									$modalInstance.dismiss('close');
+							    };
+					    };
+					  
+}).controller('AddAppendNoteController', function($scope,$modal,$state,$modalInstance,selectedCases,OpenfacebookCaseService) {
+						
+						$scope.saveAppendNotes = function () {
+							
+					    	var saveAppendNotesJSON = {
+			    				      "note_description": $scope.appendnotesfb,
+			    				      "cmfcase":[]
+			    			};
+					    	saveAppendNotesJSON.cmfcase[i] = {};
+					    	for(var i =0;i<selectedCases.selectedCases.length;i++) {
+					    		saveAppendNotesJSON.cmfcase[i] = selectedCases.selectedCases[i];
+					    	};
+					    	
+					    	OpenfacebookCaseService.saveAppendNotes(saveAppendNotesJSON).then(function(result){
+					    		
+					    	});
+					    	 $modalInstance.close();
+					    };
+					  
+						$scope.close = function () {
+							$modalInstance.dismiss('close');
+					    };
+					}).controller('GroupCaseController',
+							function($scope, $modal, $state, $modalInstance,OpenfacebookCaseService) {
+						
+						OpenfacebookCaseService.getAllUsers().then(
+								function(response) {
+									$scope.users = response.data.cmfCasesUsers;
+									
+									  for(var i=0;i<$scope.users.length;i++){
+										$scope.name=$scope.users[i].firstName+"  "+$scope.users[i].lastName
+										 $scope.users[i].userName=$scope.name;
+									}
+								 
+								});
+						alert("js");
+						 $scope.ok = function () {
+						    	var requestData = {
+				    				      "case_name":$scope.casename,
+				    				      "case_priority": $scope.priority,
+				    				      "case_assignto":  $scope.assignto,
+				    				      "case_description":  $scope.description,
+				    				      "reasons_for_grouping":  $scope.reasons,
+				    				};
+						    	 alert(JSON.stringify(requestData));
+							    	OpenfacebookCaseService.saveGroupCases(requestData).then(function(result){
+							    		
+							    	});
+							    
+							    	$scope.close = function () {
+										$modalInstance.dismiss('close');
+								    };
+						    };
+			
+					}).controller('GroupCaseDetailController',
+					function($scope, $modal, $state, $modalInstance,OpenfacebookCaseService, items) {
+						
+						OpenfacebookCaseService.getAllUsers().then(
+								function(response) {
+									$scope.users = response.data.cmfCasesUsers;
+									
+									  for(var i=0;i<$scope.users.length;i++){
+										$scope.name=$scope.users[i].firstName+"  "+$scope.users[i].lastName
+										 $scope.users[i].userName=$scope.name;
+									}
+								 
+								});
+
+					});;
+
+

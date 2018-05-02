@@ -1,0 +1,35 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+
+import com.zen.smi.dao.AgentProcessDAO;
+import com.zen.smi.dao.entities.FlumeAgentsProcess;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class AgentProcessDAOImpl extends BaseDAOImpl<FlumeAgentsProcess, Serializable> implements AgentProcessDAO {
+
+	public AgentProcessDAOImpl() {
+		super(FlumeAgentsProcess.class);
+	}
+    public List<FlumeAgentsProcess> getProcessesByProcessId(Integer processId) {
+		
+		List<Criterion> criterionList = new ArrayList<Criterion>();
+		criterionList.add(Restrictions.eq("socialDataProcess.processId", processId));
+		
+		return searchCriterion(criterionList, null);
+	}
+    
+    public FlumeAgentsProcess getSpecificProcess(Integer agentId, Integer processId) throws GenericDAOException {
+		
+		List<Criterion> criterionList = new ArrayList<Criterion>();
+		criterionList.add(Restrictions.eq("flumeAgents.agentId", agentId));
+		criterionList.add(Restrictions.eq("socialDataProcess.processId", processId));
+		
+		return searchUniqueCriterion(criterionList, null);
+	}
+}

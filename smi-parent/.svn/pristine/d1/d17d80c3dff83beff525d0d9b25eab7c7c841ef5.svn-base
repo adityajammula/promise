@@ -1,0 +1,85 @@
+package com.zen.smi.controller;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.extsys.facebook.bo.Group;
+import com.zen.smi.extsys.facebook.bo.GroupList;
+import com.zen.smi.extsys.facebook.bo.GroupMetaDataBO;
+import com.zen.smi.extsys.service.FaceBookService;
+import com.zen.smi.extsys.service.TwitterService;
+
+/**
+ * FaceBookController is to fetch the groups and posts related data from facebook.
+ * 
+ * @author kalyan
+ */
+@Controller
+@RequestMapping("/users")
+public class TwitterController extends BaseController {
+
+	/**
+	 * Logger for TwitterController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(TwitterController.class);
+
+	@Autowired
+	public TwitterService twitterService;
+
+	
+	 @Autowired
+	 private Environment env;
+	/**
+	 * This method is to get all the groups  information from facebook.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return GroupList
+	 */
+	@RequestMapping(value = "/list/{user_name}", method = RequestMethod.GET)
+	public @ResponseBody String getTwitterUsersByName(@PathVariable("user_name") String userName,HttpServletRequest request,
+			HttpServletResponse response) {
+		LOGGER.info("starts getTwitterUsersByName");
+		String resultJson = null;
+		
+		
+		
+		try {
+			
+			List<Group> groups = twitterService.getUsers(userName);
+			GroupList groupList= new GroupList();
+			groupList.setGroups(groups);
+			resultJson = gson.toJson(groupList, GroupList.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		LOGGER.info("ends getTwitterUsersByName");
+		return resultJson;
+	}
+
+	
+
+
+}

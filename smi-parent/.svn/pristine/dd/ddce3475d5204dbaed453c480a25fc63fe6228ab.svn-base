@@ -1,0 +1,140 @@
+<div class="container-fluid bg-white">
+	<!-- row -->
+	<div class="row">
+	<script type="text/ng-template" id="postChannel.html">
+      <div class="modal-header">
+      <h3 class="modal-title custom-font">{{Titile}}</h3>
+      </div>
+     <div class="modal-body">
+       <div>{{comments}} </div>
+          <div class="form-group">
+			<br/> <img class="previewImg" ng-src="{{imagePreview}}" /><br />
+				</div>
+         <div>
+         <label>Post Time: </label>{{displayDt}}
+          <div class="btn-group pull-right">
+          <div  data-ng-show="channel==1||channel==3">
+          <div  data-ng-show="channel==3"><small>posting to both channel</small></div>
+          <div  data-ng-hide="channel==3"><small>posting to facebook channel</small></div>
+		  <img style="width: 17px;" src="resources/images/Facebook.png" alt="">
+          </div>
+          <div  data-ng-show="channel==2||channel==3">
+           <div  data-ng-hide="channel==3"><small>posting to Twitter channel</small></div>
+          <img style="width: 17px;" src="resources/images/Twitter.png" alt="">
+         </div>
+		  </div>
+         </div>
+      </div>
+      <div class="modal-footer">
+         <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="ok()"><i class="fa fa-arrow-right"></i>Post</button>
+         <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> Cancel</button>
+      </div>
+     </script>
+		<!-- tile -->
+		<section class="tile">
+			<!-- tile header -->
+			<div class="tile-header bg-greensea dvd dvd-btm">
+				<h1 class="custom-font">
+					<strong>Posts</strong>
+				</h1>
+			</div>
+			<!-- /tile header -->
+			<div class="tile-body">
+				<label>Have something to say? <b>Post your comment</b></label><br/>
+				<small>comments are moderated and
+					will be allowed if they are about the topic and not abusive.</small>&nbsp;&nbsp;&nbsp;
+				<br/><br/>
+				<div>
+					<textarea type="text" class="textAreaSize"
+						data-ng-model="postTitle" Placeholder="your comment" required></textarea>
+				</div>
+				<br />
+				<div class="form-group col-lg-12" style="margin-left: -29px;">
+					<div class="col-lg-3">
+						<!-- <label class="checkbox checkbox-custom-alt checkbox-custom-sm">
+							<input type="checkbox" id="checkCase" data-ng-model="isfacebook"  data-ng-click="postToFacebook()">
+							<i style="border: 2px solid #777272 !important;"></i>
+						</label> -->
+						<span><b>Select Facebook Account :</b></span>
+						<div isteven-multi-select   input-model="facebookAccount"  output-model="outputBrowsers"  button-label="social_media_accounts_accountname"         
+                         item-label="social_media_accounts_accountname"   tick-property="ticked" on-open="fOpen()" on-close="fClose()"  on-item-click="getFacebookAccountIds(data)" on-select-all="fSelectAll(facebookAccount)"    
+                         on-select-none="fSelectNone(facebookAccount)" on-reset="fReset()" on-clear="fClear()"on-search-change="fSearchChange(facebookAccount)">
+		  		    </div> 
+					</div>
+					<!-- <div class="pull-left">
+						<label id="chkRqd">Posts to Facebook</label> &nbsp;&nbsp;&nbsp 
+						<img id="addPhotosImage" class="fbImg" src="resources/images/Facebook.png"/>
+						&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;
+					</div> -->
+				 	<div class="col-lg-3">
+				 	<span><b>Select Twitter Account :</b></span>
+				 	<div isteven-multi-select   input-model="twitterAccount"  output-model="outputBrowsers"  button-label="social_media_accounts_accountname"         
+                         item-label="social_media_accounts_accountname"   tick-property="ticked" on-open="fOpen()" on-close="fClose()"  on-item-click="getTwitterAccountIds(data)" on-select-all="fSelectAll(twitterAccount)"    
+                         on-select-none="fSelectNone(twitterAccount)" on-reset="fReset()" on-clear="fClear()"on-search-change="fSearchChange(twitterAccount)">
+		  		    </div>
+					<!-- 	<label class="checkbox checkbox-custom-alt checkbox-custom-sm">
+							<input type="checkbox" id="checkCase" data-ng-model="istwitter" data-ng-click="postToTwitter()">
+							<i style="border: 2px solid #777272 !important;"></i>
+						</label> -->
+					</div>
+					<!--  <div>
+						<label id="chkRqd">Posts to Twitter</label> &nbsp;&nbsp;&nbsp 
+						<img id="addPhotosImage" class="fbImg" src="resources/images/Twitter.png"/>
+						&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;
+					</div> -->
+				</div>
+				<!-- tile body -->
+				<div class="form-group">
+					<input type="file" ng-file-select="onFileSelect($files)">
+					<div ng-show="imageSrc">
+						<b>Preview:</b><br/> <img ng-src="{{imageSrc}}" class="previewImgDiv"/><br/>
+					</div>
+				</div>
+				<div  class="col-lg-12">
+				<div class="col-lg-2 form-group" style="margin-left: -29px">
+					<select class="form-control" data-ng-model="options.name"
+						data-ng-options="options.name for options in postOptions"
+						data-ng-change="getOption(options.name)"
+						data-ng-disabled="isSelect">
+						<option value="">Select</option>
+					</select>
+				</div>
+				</div>
+				<div data-ng-hide="isShowCalendar != 'true'" class="input-group textField col-lg-12" style="margin-left: -11px;">
+					<div class="col-lg-3 calendarControl">
+						<input type="text" class="textField" datepicker-popup="{{format}}"  data-date-format="YYYY-MM-DD"
+							data-ng-model="parent.currentDate" data-is-open="endOpened" min="minEndDate"
+							max="maxEndDate" datepicker-options="dateOptions"
+							close-text="Close"/>
+						<button type="button" class="btn btn-default"
+							data-ng-click="openEnd()">
+							<i class="fa fa-calendar"></i>
+						</button>
+						<timepicker ng-model="shortTime" hour-step="1" minute-step="1" show-meridian="true"></timepicker>
+					</div>
+					
+					
+				</div>
+				<div class="pull-right">
+					<button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c"
+						ng-click="savePost()">
+						<i class="fa fa-arrow-right"></i> Post
+					</button>
+					<button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c">
+						<i class="fa fa-arrow-left"></i>Cancel
+					</button>
+				</div>
+			</div>
+			<!-- /tile body -->
+		</section>
+		<!-- /tile -->
+	</div>
+	<!-- /row -->
+</div>
+
+
+
+<!-- /page content -->
+
+
+

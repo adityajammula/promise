@@ -1,0 +1,384 @@
+package com.zen.smi.service.helper;
+
+import static com.zen.smi.generic.utils.SmiConstants.FAMILY_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.RULEGROUP_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.RULE_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.FORMULA_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.RULECOLUMN_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.RULEAPPS_PROPERTIES;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.RuleAppsBO;
+import com.zen.smi.bo.RuleBO;
+import com.zen.smi.bo.RuleColumnsBO;
+import com.zen.smi.bo.RuleFamilyBO;
+import com.zen.smi.bo.RuleFormulaBO;
+import com.zen.smi.bo.RuleGroupBO;
+import com.zen.smi.bo.RuleRulesColumnsBO;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleApps;
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleFormula;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.entities.RuleRulesColumns;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+
+public final class RuleHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for StaffHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(RuleHelper .class);
+
+	/**
+	 * Instance of StaffHelper.
+	 */
+	private static RuleHelper  instance;
+
+	/**
+	 * Private constructor
+	 */
+	private RuleHelper() {
+
+	}
+	
+	/**
+	 * Converts List of Rule entity to RuleBO objects
+	 * @param Staff staff
+	 * @return List<RuleBO>
+	 * @author tmangalapenta
+	 */
+	public List<RuleBO> convertRulesEntityToBO(List<Rule> rule) {
+		LOGGER.debug("Starts convertRuleEntityToBO...");
+		List<RuleBO> ruleBOList = new ArrayList<RuleBO>();
+		for(Rule rul:rule)
+		{	
+			RuleBO ruleBO = convertRuleEntiryToRuleBO(rul);
+			
+	            ruleBOList.add(ruleBO);
+		}
+
+		LOGGER.debug("Ends convertRuleEntityToBO...");
+		return ruleBOList;
+	}
+	
+	
+	public RuleBO convertRuleEntiryToRuleBO(Rule rul) {
+		
+		RuleBO ruleBO = new RuleBO();
+//		String[] ruleProperties = {"ruleId","ruleName","ruleDescription","createdBy","updatedBy","createdDate","updatedDate","ruleType","cloneRuleId"};
+        BeanCopyUtil.copyBeanProperties(rul, ruleBO, RULE_PROPERTIES);
+		
+        RuleGroup ruleGroup =  rul.getRuleGroup();
+        RuleGroupBO ruleGroupBO = new  RuleGroupBO();
+//        String[] ruleGroupProperties = {"ruleGroupId","ruleGroupName","ruleGroupDescription","createdBy","updatedBy","createdDate","updatedDate"};
+        BeanCopyUtil.copyBeanProperties(ruleGroup, ruleGroupBO, RULEGROUP_PROPERTIES);
+        ruleBO.setRuleGroup(ruleGroupBO);
+        
+        RuleFamily ruleFamily =  ruleGroup.getRuleFamily();
+        RuleFamilyBO ruleFamilyBO = new  RuleFamilyBO();
+//        String[] familyProperties = {"ruleFamilyId","ruleFamilyName","ruleFamilyDescription","createdBy","updatedBy","createdDate","updatedDate"};
+        BeanCopyUtil.copyBeanProperties(ruleFamily, ruleFamilyBO, FAMILY_PROPERTIES);
+        ruleGroupBO.setRuleFamily(ruleFamilyBO);
+        
+        Set<RuleFormula> ruleFormulas = rul.getRuleFormulas();
+		if(ruleFormulas != null)
+		{
+			List<RuleFormulaBO> formulaList = new ArrayList<RuleFormulaBO>();
+			ruleBO.setRuleFormulas(formulaList);
+			
+			for(RuleFormula formula:ruleFormulas)
+			{
+				if(formula != null)
+				{
+					RuleFormulaBO ruleFormulaBO = new RuleFormulaBO();
+//					String[] formulaProperties = {"ruleFormulaId","ruleFormulaName","createdBy","updatedBy","createdDate","updatedDate","ruleFormulaExpression"};
+		            BeanCopyUtil.copyBeanProperties(formula, ruleFormulaBO, FORMULA_PROPERTIES);
+		            ruleFormulaBO.setRuleFormulaShadowId(ruleFormulaBO.getRuleFormulaId());
+		            formulaList.add(ruleFormulaBO);
+				}
+				
+			}
+		}	
+
+		
+		Set<RuleRulesColumns> ruleColumns = rul.getRuleRulesColumnses();
+		if(ruleColumns != null)
+		{
+			List<RuleRulesColumnsBO> ruleColumnsList = new ArrayList<RuleRulesColumnsBO>();
+			
+			for(RuleRulesColumns ruleCol:ruleColumns)
+			{
+				RuleColumns ruleColumn = ruleCol.getRuleColumns();
+				RuleRulesColumnsBO ruleRulesColumnsBO = new RuleRulesColumnsBO();
+				if(ruleColumn != null)
+				{
+					RuleColumnsBO ruleColumnsBO = new RuleColumnsBO();
+//					String[] ruleColumnProperties = {"ruleColumnId","ruleColumnName","ruleColumnText","createdBy","createdDate","updatedDate","ruleIsGlobal","ruleColumnDesc"};
+		            BeanCopyUtil.copyBeanProperties(ruleColumn, ruleColumnsBO, RULECOLUMN_PROPERTIES);
+		            ruleColumnsBO.setRuleShadowId(ruleColumnsBO.getRuleColumnId());
+		            ruleRulesColumnsBO.setRuleColumns(ruleColumnsBO);
+		            ruleColumnsList.add(ruleRulesColumnsBO);
+				}
+			}
+			ruleBO.setRuleRulesColumnses(ruleColumnsList);
+		}
+	 return ruleBO;
+	}
+	
+	/**
+	 * 
+	 * @author Venumadhava.Reddy
+	 * @param rule
+	 * @return
+	 * 
+	 *  
+	 */
+	public RuleBO convertEditRulesEntityToBO(Rule rule) {
+		LOGGER.debug("Starts convertUserEntityToBO...");
+		RuleBO rulesBO = new RuleBO();
+	
+	// Rule information
+		
+//		String[] properties = {"ruleId","ruleName","ruleDescription","createdBy","updatedBy","createdDate","updatedDate","ruleType","cloneRuleId"};
+	 	BeanCopyUtil.copyBeanProperties(rule, rulesBO , RULE_PROPERTIES);
+	 	 
+		
+	 //Rule gropu information	
+		 RuleGroup ruleGroup =  rule.getRuleGroup();
+         RuleGroupBO ruleGroupBO = new  RuleGroupBO();
+//         String[] ruleGroupProperties = {"ruleGroupId","ruleGroupName","ruleGroupDescription","createdBy","updatedBy","createdDate","updatedDate"};
+         BeanCopyUtil.copyBeanProperties(ruleGroup, ruleGroupBO, RULEGROUP_PROPERTIES);
+         rulesBO.setRuleGroup(ruleGroupBO);
+
+      // Rule family information
+         RuleFamily ruleFamily =  ruleGroup.getRuleFamily();
+         RuleFamilyBO ruleFamilyBO = new  RuleFamilyBO();
+//         String[] familyProperties = {"ruleFamilyId","ruleFamilyName","ruleFamilyDescription","createdBy","updatedBy","createdDate","updatedDate"};
+         BeanCopyUtil.copyBeanProperties(ruleFamily, ruleFamilyBO, FAMILY_PROPERTIES);
+         rulesBO.getRuleGroup().setRuleFamily(ruleFamilyBO);
+     
+      // Formula information
+         List<RuleFormulaBO> ruleFormulas = new ArrayList<RuleFormulaBO>();
+         Set<RuleFormula> ruleFormula = rule.getRuleFormulas();
+         for(RuleFormula formula : ruleFormula) {
+        	  RuleFormulaBO formulaBO = new RuleFormulaBO();
+//        	  String[] formulaProperties = {"ruleFormulaId","ruleFormulaName","ruleFormulaExpression","createdBy","updatedBy","createdDate","updatedDate"};
+        	  BeanCopyUtil.copyBeanProperties(formula, formulaBO, FORMULA_PROPERTIES);
+        	  ruleFormulas.add(formulaBO);
+         }
+         rulesBO.setRuleFormulas(ruleFormulas);
+         
+     //Column information    
+       List<RuleRulesColumnsBO> columnsBOs = new ArrayList<RuleRulesColumnsBO>();
+       Set<RuleRulesColumns> ruleRulesColumns = rule.getRuleRulesColumnses();
+       for(RuleRulesColumns columns : ruleRulesColumns){
+    	   RuleRulesColumnsBO ruleRulesColumnsBO = new RuleRulesColumnsBO();
+    	   RuleColumnsBO columnsBO = new RuleColumnsBO();
+//    	   String[] columnProperties = {"ruleColumnId","ruleColumnName","ruleColumnText","ruleIsGlobal"};
+    	   BeanCopyUtil.copyBeanProperties(columns.getRuleColumns(), columnsBO, RULECOLUMN_PROPERTIES);
+    	   ruleRulesColumnsBO.setRuleColumns(columnsBO);
+    	   columnsBOs.add(ruleRulesColumnsBO);
+    	   
+       }
+       rulesBO.setRuleRulesColumnses(columnsBOs);
+		
+		LOGGER.debug("Ends convertUserEntityToBO...");
+		return rulesBO;
+	}
+	
+	/**
+	 * Singleton instance of StaffHelper.
+	 *
+	 * @return instance StaffHelper
+	 */
+	public static RuleHelper getInstance() {
+		if (instance == null) {
+			instance = new RuleHelper();
+		}
+		return instance;
+	}
+	
+	/**
+	 * 
+	 * @author Venumadhava.Reddy
+	 * @param rule
+	 * @return
+	 * 
+	 *  
+	 */
+	public Rule convertRuleBOToEntity(RuleBO ruleBO) {
+		LOGGER.debug("Starts convertUserEntityToBO...");
+		Rule rule = new Rule();
+	
+	// Rule information
+		
+//		String[] properties = {"ruleId","ruleName","ruleDescription","createdBy","updatedBy","createdDate","updatedDate","ruleType","cloneRuleId"};
+	 	BeanCopyUtil.copyBeanProperties(ruleBO, rule , RULE_PROPERTIES);
+		
+	 //Rule group information	
+		 RuleGroupBO ruleGroupBO =  ruleBO.getRuleGroup();
+         RuleGroup ruleGroup = new RuleGroup();
+//         String[] ruleGroupProperties = {"ruleGroupId","ruleGroupName","ruleGroupDescription","createdBy","updatedBy","createdDate","updatedDate"};
+         BeanCopyUtil.copyBeanProperties(ruleGroupBO, ruleGroup, RULEGROUP_PROPERTIES);
+         rule.setRuleGroup(ruleGroup);
+
+      // Rule family information
+         RuleFamilyBO ruleFamilyBO =  ruleGroupBO.getRuleFamily();
+         RuleFamily ruleFamily = new  RuleFamily();
+//         String[] familyProperties = {"ruleFamilyId","ruleFamilyName","ruleFamilyDescription","createdBy","updatedBy","createdDate","updatedDate"};
+         BeanCopyUtil.copyBeanProperties(ruleFamilyBO, ruleFamily, FAMILY_PROPERTIES);
+         rule.getRuleGroup().setRuleFamily(ruleFamily);
+     
+      // Formula information
+         Set<RuleFormula> ruleFormulas = new HashSet<RuleFormula>();
+         List<RuleFormulaBO> ruleFormulasBO =  ruleBO.getRuleFormulas();
+         
+         for(RuleFormulaBO formulaBO : ruleFormulasBO)
+         {
+        	 RuleFormula formula = new RuleFormula();
+//        	  String[] formulaProperties = {"ruleFormulaId","ruleFormulaName","ruleFormulaExpression"};
+        	  BeanCopyUtil.copyBeanProperties(formulaBO, formula, FORMULA_PROPERTIES);
+        	  ruleFormulas.add(formula);
+         }
+         rule.setRuleFormulas(ruleFormulas);
+         
+     //Column information    
+       List<RuleRulesColumnsBO> columnsBOs =  ruleBO.getRuleRulesColumnses();
+       Set<RuleRulesColumns> ruleRulesColumns = new TreeSet<RuleRulesColumns>();
+       
+       for(RuleRulesColumnsBO columnsBO : columnsBOs)
+       {
+    	   RuleRulesColumns ruleRulesColumn = new RuleRulesColumns();
+//    	   String[] columnProperties = {"ruleColumnId","ruleColumnName","ruleColumnText","ruleIsGlobal"};
+    	   BeanCopyUtil.copyBeanProperties(columnsBO.getRuleColumns(), ruleRulesColumn.getRuleColumns(), RULECOLUMN_PROPERTIES); 
+    	   ruleRulesColumns.add(ruleRulesColumn);
+       }
+       
+       rule.setRuleRulesColumnses(ruleRulesColumns);
+		
+		LOGGER.debug("Ends convertUserEntityToBO...");
+		return rule;
+	}
+	
+	
+	/**
+	 * 
+	 * @author Venumadhava.Reddy
+	 * @param rule
+	 * @return
+	 * 
+	 *  
+	 */
+	public Rule convertAddRuleBOToEntity(RuleBO ruleBO) {
+		LOGGER.debug("Starts convertUserEntityToBO...");
+		Rule rule = new Rule();
+	
+	// Rule information
+		
+//		String[] properties = {"ruleName","ruleDescription","createdBy","updatedBy","createdDate","updatedDate","ruleType","cloneRuleId"};
+	 	BeanCopyUtil.copyBeanProperties(ruleBO, rule , RULE_PROPERTIES);
+		
+	 //Rule group information	
+		 RuleGroupBO ruleGroupBO =  ruleBO.getRuleGroup();
+         RuleGroup ruleGroup = new RuleGroup();
+//         String[] ruleGroupProperties = {"ruleGroupId","ruleGroupName","ruleGroupDescription","createdBy","updatedBy","createdDate","updatedDate"};
+         BeanCopyUtil.copyBeanProperties(ruleGroupBO, ruleGroup, RULEGROUP_PROPERTIES);
+         rule.setRuleGroup(ruleGroup);
+
+      // Rule family information
+         RuleFamilyBO ruleFamilyBO =  ruleGroupBO.getRuleFamily();
+         RuleFamily ruleFamily = new  RuleFamily();
+//         String[] familyProperties = {"ruleFamilyId","ruleFamilyName","ruleFamilyDescription","createdBy","updatedBy","createdDate","updatedDate"};
+         BeanCopyUtil.copyBeanProperties(ruleFamilyBO, ruleFamily, FAMILY_PROPERTIES);
+         rule.getRuleGroup().setRuleFamily(ruleFamily);
+         LOGGER.debug("Ends convertUserEntityToBO...");
+		 return rule;
+	}
+
+	public RuleColumns convertRuleColumnsBOToEntity(RuleColumnsBO ruleColumns) {
+		RuleColumns ruleColumn = new RuleColumns();
+// 	   String[] columnProperties = {"ruleColumnId","ruleColumnName","ruleColumnText","createdBy","createdDate","updatedDate","ruleIsGlobal","ruleColumnDesc"};
+ 	   BeanCopyUtil.copyBeanProperties(ruleColumns, ruleColumn, RULECOLUMN_PROPERTIES); 
+ 	   return ruleColumn;
+	}
+	
+	/**
+	 * @author Venumadhava.Reddy
+	 * @param ruleBO
+	 * @return
+	 */
+	public Rule convertRuleBOToRuleEntity(RuleBO ruleBO) {
+		LOGGER.debug("Starts convertUserEntityToBO...");
+		Rule rule = new Rule();		
+//		String[] properties = {"ruleId","ruleName"};
+	 	BeanCopyUtil.copyBeanProperties(ruleBO, rule , RULE_PROPERTIES);
+	 	return rule;
+	 	
+	}
+
+	public RuleFormula convertRuleFormulasBOToEntity( 
+			RuleFormulaBO uirulesFormulas) {
+		RuleFormula ruleFormula = new RuleFormula();
+//		String[] formulaProperties = {"ruleFormulaName","ruleFormulaExpression"};
+	 	   BeanCopyUtil.copyBeanProperties(ruleFormula, uirulesFormulas, FORMULA_PROPERTIES); 
+	 	   return ruleFormula;
+	}
+
+	/**
+	 * @author Jshaik
+	 * @param ruleColumn
+	 * @return
+	 */
+	public RuleColumnsBO convertRuleColumnsEntityToBO(RuleColumns ruleColumn) {
+			RuleColumnsBO ruleColumnBO = new RuleColumnsBO();
+//	 	   String[] columnProperties = {"ruleColumnId","ruleColumnName","ruleColumnText","ruleIsGlobal","ruleColumnDesc"};
+	 	   BeanCopyUtil.copyBeanProperties(ruleColumn, ruleColumnBO, RULECOLUMN_PROPERTIES); 
+	 	   return ruleColumnBO;
+	}
+
+	public List<RuleAppsBO> convertRuleAppsEntityToBO(
+			List<RuleApps> ruleAppsList) {
+		
+		LOGGER.debug("Starts convertRuleAppsEntityToBO...");
+		List<RuleAppsBO> ruleAppsBOList = new ArrayList<RuleAppsBO>();
+		for(RuleApps ruleApps:ruleAppsList)
+		{	
+			RuleAppsBO ruleAppsBO = convertRuleAppsEntiryToRuleAppsBO(ruleApps);
+			
+			ruleAppsBOList.add(ruleAppsBO);
+		}
+
+		LOGGER.debug("Ends convertRuleAppsEntityToBO...");
+		return ruleAppsBOList;
+		
+	}
+
+	private RuleAppsBO convertRuleAppsEntiryToRuleAppsBO(RuleApps ruleApps) {
+		// RuleApps information
+		RuleAppsBO ruleAppsBO = new RuleAppsBO();
+//		String[] ruleAppsproperties = {"appId","appName","appDescription"};
+	 	BeanCopyUtil.copyBeanProperties(ruleApps, ruleAppsBO , RULEAPPS_PROPERTIES);
+	 	 
+	    
+      // RuleFamily information
+         List<RuleFamilyBO> ruleFamilys = new ArrayList<RuleFamilyBO>();
+         Set<RuleFamily> ruleFamily = ruleApps.getRuleFamilies();
+         for(RuleFamily family : ruleFamily) {
+        	 RuleFamilyBO familyBO = new RuleFamilyBO();
+//             String[] familyProperties = {"ruleFamilyId","ruleFamilyName","ruleFamilyDescription","createdBy","updatedBy","createdDate","updatedDate"};
+        	  BeanCopyUtil.copyBeanProperties(family, familyBO, FAMILY_PROPERTIES);
+        	  ruleFamilys.add(familyBO);
+         }
+         ruleAppsBO.setRuleFamilies(ruleFamilys);
+         return ruleAppsBO;
+	}
+	
+}

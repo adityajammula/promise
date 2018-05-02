@@ -1,0 +1,44 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.CmfCaseHistoryDAO;
+import com.zen.smi.dao.entities.CmfCaseHistory;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfCaseHistoryDAOImpl extends BaseDAOImpl<CmfCaseHistory, Serializable> implements CmfCaseHistoryDAO {
+
+	public CmfCaseHistoryDAOImpl() {
+		super(CmfCaseHistory.class);
+	}
+
+	public List<CmfCaseHistory> getCmfCaseHistoryByCaseId(String caseId)
+			throws GenericDAOException {
+		String query = "FROM CmfCaseHistory WHERE cmfCase ='"+caseId+"'";
+		return load(query);
+	}
+
+	public CmfCaseHistory getCaseHistoryByParentId(Integer caseHistoryId)throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("parentCaseHistoryId", caseHistoryId));
+		
+		return searchUnique(expressionList, null);
+	}
+
+	public List<Object[]> getMaxCaseHistoryByCaseId(String caseId)
+			throws GenericDAOException {
+		String query = "SELECT max(case_history_id)  as case_history_id from smi.cmf_case_history where case_id ="+"'"+caseId+"'";
+		return loadWithsql(query);
+		 
+	}
+	
+	
+	
+	
+}

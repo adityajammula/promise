@@ -1,0 +1,20 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+	
+	public class CmfCustomerSocialdataListBO {
+		
+		@SerializedName("cmf_social_data_list")
+		private List<CmfCustomerSocialDataBO> cmfCustomerSocialDataBO;
+		
+		public List<CmfCustomerSocialDataBO> getCmfCustomerBO() {
+			return cmfCustomerSocialDataBO;
+		}
+		
+		public void setCmfCustomerBO(List<CmfCustomerSocialDataBO> cmfCustomerSocialDataBO) {
+			this.cmfCustomerSocialDataBO = cmfCustomerSocialDataBO;
+		}
+	}

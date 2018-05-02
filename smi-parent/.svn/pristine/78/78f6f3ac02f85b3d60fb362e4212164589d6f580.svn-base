@@ -1,0 +1,101 @@
+package com.zen.smi.service.helper;
+
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
+import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
+import org.quartz.impl.StdSchedulerFactory;
+
+import com.zen.smi.dao.entities.ScheduleJobs;
+import com.zen.smi.dao.impl.ScheduleJobsDAOImpl;
+
+public class SchedulerHelper {
+	/**
+	 * Logger for StaffHelper class.
+	 */
+	private static final Logger LOGGER = Logger
+			.getLogger(SchedulerHelper.class);
+
+	/**
+	 * Instance of StaffHelper.
+	 */
+	private static SchedulerHelper instance;
+
+	/**
+	 * Private constructor
+	 */
+	public static Scheduler scheduler = null;
+
+	private SchedulerHelper() {
+
+	}
+
+	private static SchedulerHelper getInstance() {
+		if (instance == null) {
+			instance = new SchedulerHelper();
+			try {
+				startScheduler();
+			} catch (SchedulerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return instance;
+	}
+
+	private static void startScheduler() throws SchedulerException {
+		SchedulerFactory factory = new StdSchedulerFactory();
+
+		try {
+			scheduler = factory.getScheduler();
+			scheduler.getListenerManager().addJobListener(new SMIJobListener());
+			scheduler.start();
+			initializeJobs();
+		} catch (SchedulerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	/**
+	 * @throws SchedulerException
+	 */
+	private static void initializeJobs() throws SchedulerException {
+		LOGGER.debug("Starts initializbs....");
+		
+		List<ScheduleJobs> scheduleJobslist = null;
+		try {
+			com.zen.smi.dao.ScheduleJobsDAO schldoa = new ScheduleJobsDAOImpl();
+
+			scheduleJobslist = schldoa.getJobsByStatus("NOT_STARTED");
+			// getScheduleJobsDAO().load("from ScheduleJobs");
+			for (ScheduleJobs scheduleJob : scheduleJobslist) {
+				JobDetail job = JobBuilder
+						.newJob(SMIJob.class)
+						.withIdentity(scheduleJob.getJobParantId().toString(),
+								"SMI").build();
+				Trigger trigger = TriggerBuilder.newTrigger()
+				.withIdentity(scheduleJob.getJobParantId().toString(), "SMI")
+				.startAt(scheduleJob.getJobScheduleDateTime()).build();
+
+				SchedulerHelper.getScheduler().scheduleJob(job, trigger);
+			}
+
+		} catch (Exception e) {
+			// e.printStackTrace();
+			LOGGER.debug("Exception initializeJobs...." + e.getMessage());
+		}
+		LOGGER.debug("END initializeJobs....");
+
+	}
+	public static Scheduler getScheduler() {
+		getInstance();
+		return scheduler;
+	}
+}

@@ -1,0 +1,16 @@
+package com.zen.smi.service.helper;
+
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+
+public class SMIJob implements Job {
+
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		// TODO Auto-generated method stub
+		String name=context.getJobDetail().getKey().getName();
+		System.out.println("Hello Quartz! 123::"+name);
+		//Need to call Facebook or twitter services
+	}
+
+}

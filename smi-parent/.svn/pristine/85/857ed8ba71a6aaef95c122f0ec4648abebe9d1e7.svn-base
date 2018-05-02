@@ -1,0 +1,62 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.HashSet;
+import java.util.Set;
+
+
+public class CmfCustomerAccountBO {
+	private int crnNumber;
+	private Integer accountNumber;
+	private String accountType;
+	private Integer customerId;
+	/**
+	 * @return the crnNumber
+	 */
+	public int getCrnNumber() {
+		return crnNumber;
+	}
+	/**
+	 * @param crnNumber the crnNumber to set
+	 */
+	public void setCrnNumber(int crnNumber) {
+		this.crnNumber = crnNumber;
+	}
+	/**
+	 * @return the accountNumber
+	 */
+	public Integer getAccountNumber() {
+		return accountNumber;
+	}
+	/**
+	 * @param accountNumber the accountNumber to set
+	 */
+	public void setAccountNumber(Integer accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+	/**
+	 * @return the accountType
+	 */
+	public String getAccountType() {
+		return accountType;
+	}
+	/**
+	 * @param accountType the accountType to set
+	 */
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
+	/**
+	 * @return the customerId
+	 */
+	public Integer getCustomerId() {
+		return customerId;
+	}
+	/**
+	 * @param customerId the customerId to set
+	 */
+	public void setCustomerId(Integer customerId) {
+		this.customerId = customerId;
+	}
+
+	
+}

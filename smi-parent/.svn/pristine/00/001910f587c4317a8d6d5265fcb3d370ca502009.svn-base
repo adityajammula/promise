@@ -1,0 +1,371 @@
+<div class="container-fluid">
+	<div class="row tile">
+		<script type="text/ng-template" id="linkAccount.html">
+     <div class="modal-header">
+      <h3 class="modal-title custom-font">Link Account</h3>
+      </div>
+     <div class="modal-body">
+       <table st-table="rowCollection" class="st-table table table-striped table-custom">
+         <tbody>
+           <div class="tile-body form-validation">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">Account Type*</label>
+                <div class="col-sm-8">
+                  <input type="text"
+							name="name" id="name" class="form-control" ng-model="accounttype"
+							required>
+                 <p class="help-block">
+                </div>
+              </div>
+             <div class="form-group">
+                <label class="col-sm-3 control-label">Account  Number*</label>
+                <div class="col-sm-8">
+                  <input type="text"
+							name="name" id="name" class="form-control" ng-model="accountnumber"
+							required>
+                </div>
+              </div>
+         </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+         <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="ok()"><i class="fa fa-arrow-right"></i> Save</button>
+         <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> Close</button>
+      </div>
+     </script>
+		<!-- tile -->
+		<div class="tile-body row">
+			<div class="col-md-12">
+			<div class="col-md-2" data-ng-click="goOpenTwitter()"> 
+	           <button type="button" class="btn btn-blue btn-rounded">Back</button>
+			</div> 
+				<div class="col-md-6">
+					<label><strong>Case Number:{{casevalue}}</strong></label>
+				</div>
+
+				<!-- Search -->
+			  <div class="btn-group mr-10">
+					<div class="search" id="main-search">
+						<input type="text"  ng-model="Search" class="form-control input-sm w-sm mb-10 inline-block "
+							placeholder="Search..."><i class="icon-magnifier" data-ng-click="getSearchResults()"></i> <span>
+						</div>
+				</div>
+				<!-- Search end -->
+				<div class="btn-group col-md-1 ">
+					<button class="btn btn-default btn-sm br-2 text-right"
+						data-ng-click="onCustomerInfoRefresh()">
+						<i class="fa fa-refresh"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="demographicDiv">
+			<tabset justified="true"> <tab heading="Demographic Data">
+			<div class="col-lg-12">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="col-md-2">
+							<img src="resources/images/ici-avatar.jpg" class="img-circle"
+								alt="ici-avatar" width="50px" height="50px">
+						</div>
+						<div class="col-md-5">
+						<h6 class="custom-font filled bg-danger">Demographics Score &nbsp &nbsp	&nbsp {{demographicScore}}</h6>
+						</div>
+						<div class="col-md-5">
+						<h5 class="custom-font filled bg-greensea">Overall Score &nbsp &nbsp &nbsp {{overallScore}}</h5>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<form name="step1" role="form" novalidate class="form-validation">
+				<div class="tile-body form-validation">
+					<div class="row"></div>
+				</div>
+				<div class="row">
+					<div class="form-group col-md-6">
+						<label for="FirstName">First Name </label> <input type="text"
+							name="name" id="name" class="form-control textInput"
+							readonly="readonly" data-ng-model="firstName">
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="LastName ">Last Name </label> <input type="text"
+							name="lastname" id="lastname" class="form-control textInput"
+							readonly="readonly" data-ng-model="lastName">
+					</div>
+				</div>
+
+				<div class="row">
+
+					<div class="form-group col-md-6">
+						<label for="MiddleName">Middle Name </label> <input type="text"
+							name="middlename" id="middlename" class="form-control textInput"
+							readonly="readonly" data-ng-model="middleName">
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="LandLine">Land Line </label> <input type="text"
+							name="username" id="username" class="form-control textInput"
+							readonly="readonly" data-ng-model="landlineNumber">
+					</div>
+
+				</div>
+				<div class="row">
+
+					<div class="form-group col-md-6">
+						<label for="Mobile">Mobile </label> <input type="text"
+							name="mobile" id="mobile" class="form-control textInput"
+							readonly="readonly" data-ng-model="mobileNumber">
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="Email">Email </label> <input type="text" name="email"
+							id="email" class="form-control textInput" readonly="readonly"
+							data-ng-model="emailId">
+					</div>
+
+				</div>
+				<div class="row">
+
+					<div class="form-group col-md-6">
+						<label for="FacebookID">Facebook ID </label> <input type="text"
+							name="facebookid" id="facebookid" class="form-control textInput"
+							readonly="readonly">
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="TwitterID">Twitter ID </label> <input type="text"
+							name="twitterid" id="twitterid" class="form-control textInput"
+							readonly="readonly" data-ng-model="twitterId">
+					</div>
+
+				</div>
+
+				<div class="row">
+
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="Address">Address </label>
+							<textarea class="form-control textAreaScroll" rows="5"
+								name="address" id="address" data-ng-model="address"
+								readonly="readonly"></textarea>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="AlternateAddress">Alternate Address </label>
+							<textarea class="form-control textAreaScroll" rows="5"
+								name="alternateaddress" id="alternateaddress"
+								data-ng-model="alternateAddress" readonly="readonly"></textarea>
+						</div>
+					</div>
+				</div>
+
+			</form>
+			</tab> <tab heading="Social Data">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="col-md-2">
+							<img src="resources/images/ici-avatar.jpg" class="img-circle"
+								alt="ici-avatar" width="50px" height="50px">
+						</div>
+						<div class="col-md-5">
+							<h6 class="custom-font filled bg-danger">Social Score .29</h6>
+						</div>
+						<div class="col-md-5">
+							<h5 class="custom-font filled bg-greensea">Overall Score .15</h5>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="container-fluid">
+
+				<div class="row tile" data-ng-init="initialize()">
+					<div class="col-md-12">
+						<div class="col-md-2"></div>
+						<div class="col-md-5"></div>
+						<div class="col-md-5"></div>
+					</div>
+					<div class="col-md-12">
+						<div class="col-md-6 ">
+							<div class="form-group">
+								<label for="Likes">Likes </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="likes" id="likes" data-ng-model="likes"
+									readonly="readonly"></textarea>
+								<p class="help-block"></p>
+							</div>
+						</div>
+						<div class="col-md-6 ">
+							<div class="form-group">
+								<label for="Dislikes">Dislikes </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="Dislikes" id="Dislikes" data-ng-model="dislikes"
+									readonly="readonly"></textarea>
+								<p class="help-block"></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="col-md-6 ">
+							<div class="form-group">
+								<label for="Books">Books </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="books" id="books" data-ng-model="books"
+									readonly="readonly"></textarea>
+								<p class="help-block"></p>
+							</div>
+						</div>
+						<div class="col-md-6 ">
+							<div class="form-group">
+								<label for="Movies">Movies </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="movies" id="movies" data-ng-model="movies"
+									readonly="readonly"></textarea>
+								<p class="help-block"></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="col-md-6 ">
+							<div class="form-group">
+								<label for="Sports">Sports </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="sports" id="sports" data-ng-model="sports"
+									readonly="readonly"></textarea>
+								<p class="help-block"></p>
+							</div>
+						</div>
+						<div class="col-md-6 ">
+							<div class="form-group">
+								<label for="Shopping Preferences">Shopping Preferences </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="shoppingpreferences" id="shoppingpreferences"
+									data-ng-model="shoppingPreferences" readonly="readonly"></textarea>
+								<p class="help-block"></p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="col-md-6 ">
+							<div class="form-group">
+								<label for="Restaurent Preferences">Restaurent
+									Preferences </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="restaurentpreferences" id="restaurentpreferences"
+									placeholder="" data-ng-model="restaurantPreferences"
+									readonly="readonly"></textarea>
+								<p class="help-block"></p>
+							</div>
+						</div>
+						<div class="col-md-6 ">
+							<div class="form-group">
+								<label for="Location Travelled">Location Travelled </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="locationtravelled" id="locationtravelled"
+									data-ng-model="locationTravelled" readonly="readonly"></textarea>
+								<p class="help-block"></p>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="col-md-18">
+						<div class="col-md-12 ">
+							<div class="form-group col-md-6 mb-0 ">
+								<label for="Key Dates">Key Dates</label>
+								<div>
+									<input type="text" name="keydate1" id="keydate1"
+										class="form-control" data-ng-model="keyDate1"
+										readonly="readonly">
+									<p class="help-block"></p>
+									<input type="text" name="keydate2" id="keydate2"
+										class="form-control" data-ng-model="keyDate2"
+										readonly="readonly">
+									<p class="help-block"></p>
+									<input type="text" name="keydate3" id="keydate3"
+										class="form-control" data-ng-model="keyDate3"
+										readonly="readonly">
+									<p class="help-block"></p>
+									<input type="text" name="keydate4" id="keydate4"
+										class="form-control" data-ng-model="keyDate4"
+										readonly="readonly">
+									<p class="help-block"></p>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			</tab> <tab heading="Banking Data">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="col-md-2">
+							<img src="resources/images/ici-avatar.jpg" class="img-circle"
+								alt="ici-avatar" width="50px" height="50px">
+						</div>
+						<div class="col-md-5">
+							<h6 class="custom-font filled bg-danger">Banking Score .29</h6>
+						</div>
+						<div class="col-md-5">
+							<h5 class="custom-font filled bg-greensea">Overall Score .15</h5>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<form name="step1" role="form" novalidate class="form-validation">
+
+				<div class="tile-body form-validation">
+					<div class="row"></div>
+				</div>
+				<div class="row">
+					<div class="form-group col-md-5">
+						<label for="username">CRN Number </label> <input type="text"
+							name="crnname" id="crnnumber" class="form-control textInput"
+							data-ng-model="crnNumber" required>
+					</div>
+				</div>
+				<div class="row  text-right">
+					<i class="icon-paper-clip"></i> <a data-ng-click="linkAccount()">
+						Link Account</a>
+				</div>
+				<div class="row" data-ng-repeat="info in bankingData">
+
+					<div class="form-group col-md-5">
+						<label for="username">Account Type </label> <input type="text"
+							name="name" id="name" class="form-control textInput"
+							data-ng-model="info.accountType" required>
+					</div>
+
+					<div class="form-group col-md-5">
+						<label for="username">Account Number </label> <input type="text"
+							name="username" id="username" class="form-control textInput"
+							data-ng-model="info.accountNumber" 
+						    required>
+					</div>
+					<div class="form-group col-md-2">
+						<a class="pull-right btn remove check-toggler"
+							data-ng-class="{checked: user.checked}" data-nodrag
+							data-ng-click="deleteBankingInfo(info)"></a>
+					</div>
+				</div>
+				<div class="row  text-center">
+					<button type="button" class="btn btn-blue mb-10 btn-rounded"
+						data-ng-click="editBankingInfo(bankingData)">Save</button>
+				</div>
+			</form>
+			</tab> </tabset>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,42 @@
+angular
+		.module('smiApp')
+		.controller('NotesController',function($scope, $state, $modal,$rootScope,$log,dialogs) {
+							
+							var modalInstance = $modal.open({
+								templateUrl : 'appendNote.html',
+								controller : 'AddappendNoteController',
+								resolve: {
+									 selectedCases: function () {
+						    	        	 var obj = {};
+							        		   //obj.selectedCases=selectedCases;
+								        	   return obj;
+						    	       }
+						    	      }
+							});
+
+				}).controller('AddappendNoteController', function($scope,$modal,$state,$modalInstance,selectedCases,OpenfacebookCaseService) {
+					
+					$scope.saveAppendNotes = function () {
+						
+				    	var saveAppendNotesJSON = {
+		    				      "note_description": $scope.appendnotesfb,
+		    				      "cmfcase":[]
+		    			};
+				    /*	saveAppendNotesJSON.cmfcase[i] = {};
+				    	for(var i =0;i<selectedCases.selectedCases.length;i++) {
+				    		saveAppendNotesJSON.cmfcase[i] = selectedCases.selectedCases[i];
+				    	};*/
+				    	//alert(JSON.stringify(saveAppendNotesJSON));
+				    	
+				    	OpenfacebookCaseService.saveAppendNotes(saveAppendNotesJSON).then(function(result){
+				    		
+				    	});
+				    	$state.go('openfacebookcases');
+				    };
+				  
+					$scope.close = function () {
+						$modalInstance.dismiss('close');
+				    };
+				});
+
+

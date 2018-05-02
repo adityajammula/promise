@@ -1,0 +1,46 @@
+package com.zen.smi.cmf.service.impl;
+
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.cmf.exception.BusinessException;
+import com.zen.smi.cmf.service.CmfCaseNoteService;
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCaseNote;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.generic.utils.MessageUtil;
+
+public class CmfCaseNoteServiceImpl extends CmfBaseService implements CmfCaseNoteService {
+
+	/**
+	 * Logger for CmfCaseServiceImpl class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(CmfCaseNoteServiceImpl.class);
+	
+	public void appendNoteToSelectedCases(String noteDescription,List<String> caseIdList) throws BusinessException {
+
+		LOGGER.debug("Starts appendNoteToSelectedCases....");
+		CmfCase cmfCase = null;
+		try { 
+			
+			for (String caseId : caseIdList) {
+				cmfCase = null;
+				cmfCase = getCmfCaseDAO().findById(caseId);
+				CmfCaseNote caseNote = new CmfCaseNote();
+				caseNote.setNoteDescription(noteDescription);
+				caseNote.setCmfCase(cmfCase);
+				getCmfCaseNoteDAO().saveOrUpdate(caseNote);
+			}
+						
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends appendNoteToSelectedCases....");
+	}
+		
+}

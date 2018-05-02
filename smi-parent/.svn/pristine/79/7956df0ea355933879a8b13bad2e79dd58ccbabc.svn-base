@@ -1,0 +1,14 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.SocialTransactionCaseDAO;
+import com.zen.smi.dao.entities.StCase;
+
+public class SocialTransactionCaseDAOImpl extends BaseDAOImpl<StCase, Serializable> implements SocialTransactionCaseDAO {
+
+	public SocialTransactionCaseDAOImpl() {
+			super(StCase.class);
+		}
+
+}

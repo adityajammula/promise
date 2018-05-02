@@ -1,0 +1,457 @@
+<div class="container-fluid">
+	<div class="row tile">
+		<!-- tile -->
+		<div class="tile-body row">
+			<div class="col-md-12">
+				<div class="col-md-2">
+					<a class=" br-2 w-60"><i class="fa fa-long-arrow-left"></i></a>
+				</div>
+				<div class="col-md-6">
+					<label><strong>Case Number:Value</strong></label>
+				</div>
+
+				<!-- Search -->
+				<div class="col-md-3">
+					<div class="search" id="main-search">
+						<input type="text" class="form-control underline-input"
+							placeholder="Search..."> <span
+							class="glyphicon glyphicon-search form-control-feedback"></span>
+					</div>
+				</div>
+				<!-- Search end -->
+				<div class="btn-group col-md-1 ">
+					<button class="btn btn-default btn-sm br-2 text-right">
+						<i class="fa fa-refresh"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="demographicDiv">
+			<tabset justified="true"> <tab heading="Demographic Data">
+			<div class="col-lg-12">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="col-md-2">
+							<img src="resources/images/ici-avatar.jpg" class="img-circle"
+								alt="ici-avatar" width="50px" height="50px">
+						</div>
+						<div class="col-md-5">
+							<h6 class="custom-font filled bg-danger">Demographics Score
+								.29</h6>
+						</div>
+						<div class="col-md-5">
+							<h5 class="custom-font filled bg-greensea">Overall Score .15</h5>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			<form name="step1" role="form" novalidate class="form-validation">
+				<div class="tile-body form-validation">
+					<div class="row"></div>
+				</div>
+				<div class="row">
+					<div class="form-group col-md-6">
+						<label for="username">First Name </label> <input type="text"
+							name="name" id="name" class="form-control" readonly="readonly"
+							ng-model="user.name" required>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="username">Last Name </label> <input type="text"
+							name="username" id="username" class="form-control"
+							readonly="readonly" ng-model="user.username" ng-minlength="3"
+							ng-maxlength="8" required>
+					</div>
+				</div>
+
+				<div class="row">
+
+					<div class="form-group col-md-6">
+						<label for="username">Middle Name </label> <input type="text"
+							name="name" id="name" class="form-control" readonly="readonly"
+							ng-model="user.name" required>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="username">Land Line </label> <input type="text"
+							name="username" id="username" class="form-control"
+							readonly="readonly" ng-model="user.username" ng-minlength="3"
+							ng-maxlength="8" required>
+					</div>
+
+				</div>
+				<div class="row">
+
+					<div class="form-group col-md-6">
+						<label for="username">Mobile </label> <input type="text"
+							name="name" id="name" class="form-control" readonly="readonly"
+							ng-model="user.name" required>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="username">Email </label> <input type="text"
+							name="username" id="username" class="form-control"
+							readonly="readonly" ng-model="user.username" ng-minlength="3"
+							ng-maxlength="8" required>
+					</div>
+
+				</div>
+				<div class="row">
+
+					<div class="form-group col-md-6">
+						<label for="username">Facebook ID </label> <input type="text"
+							name="name" id="name" class="form-control" readonly="readonly"
+							ng-model="user.name" required>
+					</div>
+
+					<div class="form-group col-md-6">
+						<label for="username">Twitter ID </label> <input type="text"
+							name="username" id="username" class="form-control"
+							readonly="readonly" ng-model="user.username" ng-minlength="3"
+							ng-maxlength="8" required>
+					</div>
+
+				</div>
+
+				<div class="row">
+
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="message">Address </label>
+							<textarea class="form-control textAreaScroll" rows="5"
+								name="message" id="message" ng-model="user.message"
+								readonly="readonly"></textarea>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="message">Alternate Address </label>
+							<textarea class="form-control textAreaScroll" rows="5"
+								name="message" id="message" ng-model="user.message"
+								readonly="readonly"></textarea>
+						</div>
+					</div>
+				</div>
+
+			</form>
+			</tab> <tab heading="Social Data">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="col-md-2">
+							<img src="resources/images/ici-avatar.jpg" class="img-circle"
+								alt="ici-avatar" width="50px" height="50px">
+						</div>
+						<div class="col-md-5">
+							<h6 class="custom-font filled bg-danger">Social Score .29</h6>
+						</div>
+						<div class="col-md-5">
+							<h5 class="custom-font filled bg-greensea">Overall Score .15</h5>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="container-fluid">
+
+				<div class="row tile" data-ng-init="initialize()">
+					<div class="col-md-12">
+						<div class="col-md-2"></div>
+						<div class="col-md-5"></div>
+						<div class="col-md-5"></div>
+					</div>
+					<div class="col-md-12">
+						<div class="col-md-6 ">
+							<div class="form-group"
+								ng-class="{ 'has-error' : contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted, 'has-success' : contactForm.message.$valid && !contactForm.message.$pristine || contactForm.message.$valid && submitted}">
+								<label for="Likes">Likes </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="message" id="message" ng-model="user.message"
+									on-blur-validation required readonly="readonly"
+									style="overflow-y: scroll"></textarea>
+								<p class="help-block">
+									<span
+										ng-show="contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted">Message
+										is required.</span>
+								</p>
+							</div>
+						</div>
+						<div class="col-md-6 ">
+							<div class="form-group"
+								ng-class="{ 'has-error' : contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted, 'has-success' : contactForm.message.$valid && !contactForm.message.$pristine || contactForm.message.$valid && submitted}">
+								<label for="Dislikes">Dislikes </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="Dislikes" id="Dislikes" ng-model="user.message"
+									on-blur-validation required readonly="readonly"
+									style="overflow-y: scroll"></textarea>
+								<p class="help-block">
+									<span
+										ng-show="contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted">Message
+										is required.</span>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="col-md-6 ">
+							<div class="form-group"
+								ng-class="{ 'has-error' : contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted, 'has-success' : contactForm.message.$valid && !contactForm.message.$pristine || contactForm.message.$valid && submitted}">
+								<label for="message">Books </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="message" id="message" ng-model="user.message"
+									on-blur-validation required readonly="readonly"
+									style="overflow-y: scroll"></textarea>
+								<p class="help-block">
+									<span
+										ng-show="contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted">Message
+										is required.</span>
+								</p>
+							</div>
+						</div>
+						<div class="col-md-6 ">
+							<div class="form-group"
+								ng-class="{ 'has-error' : contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted, 'has-success' : contactForm.message.$valid && !contactForm.message.$pristine || contactForm.message.$valid && submitted}">
+								<label for="message">Movies </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="message" id="message" ng-model="user.message"
+									on-blur-validation required readonly="readonly"
+									style="overflow-y: scroll"></textarea>
+								<p class="help-block">
+									<span
+										ng-show="contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted">Message
+										is required.</span>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="col-md-6 ">
+							<div class="form-group"
+								ng-class="{ 'has-error' : contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted, 'has-success' : contactForm.message.$valid && !contactForm.message.$pristine || contactForm.message.$valid && submitted}">
+								<label for="message">Sports </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="message" id="message" ng-model="user.message"
+									on-blur-validation required readonly="readonly"
+									style="overflow-y: scroll"></textarea>
+								<p class="help-block">
+									<span
+										ng-show="contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted">Message
+										is required.</span>
+								</p>
+							</div>
+						</div>
+						<div class="col-md-6 ">
+							<div class="form-group"
+								ng-class="{ 'has-error' : contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted, 'has-success' : contactForm.message.$valid && !contactForm.message.$pristine || contactForm.message.$valid && submitted}">
+								<label for="message">Shopping Preferences </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="message" id="message" ng-model="user.message"
+									on-blur-validation required readonly="readonly"
+									style="overflow-y: scroll"></textarea>
+								<p class="help-block">
+									<span
+										ng-show="contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted">Message
+										is required.</span>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="col-md-6 ">
+							<div class="form-group"
+								ng-class="{ 'has-error' : contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted, 'has-success' : contactForm.message.$valid && !contactForm.message.$pristine || contactForm.message.$valid && submitted}">
+								<label for="message">Restaurent Preferences </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="message" id="message" placeholder=""
+									ng-model="user.message" on-blur-validation required
+									readonly="readonly" style="overflow-y: scroll"></textarea>
+								<p class="help-block">
+									<span
+										ng-show="contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted">Message
+										is required.</span>
+								</p>
+							</div>
+						</div>
+						<div class="col-md-6 ">
+							<div class="form-group"
+								ng-class="{ 'has-error' : contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted, 'has-success' : contactForm.message.$valid && !contactForm.message.$pristine || contactForm.message.$valid && submitted}">
+								<label for="Location Travelled">Location Travelled </label>
+								<textarea class="form-control textAreaScroll" rows="7"
+									name="message" id="message" placeholder=""
+									ng-model="user.message" on-blur-validation required
+									readonly="readonly" style="overflow-y: scroll"></textarea>
+								<p class="help-block">
+									<span
+										ng-show="contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted">Message
+										is required.</span>
+								</p>
+							</div>
+						</div>
+					</div>
+
+
+					<div class="col-md-18">
+						<div class="col-md-12 ">
+							<div class="form-group col-md-6 mb-0 "
+								ng-class="{ 'has-error' : contactForm.name.$invalid && !contactForm.name.$pristine, 'has-success' : contactForm.name.$valid && !contactForm.name.$pristine}">
+								<label for="name">Key Dates</label>
+								<div>
+									<input type="text" name="name" id="name" class="form-control"
+										ng-model="user.name" readonly="readonly">
+									<p class="help-block"></p>
+									<input type="text" name="name" id="name" class="form-control"
+										ng-model="user.name" readonly="readonly">
+									<p class="help-block"></p>
+									<input type="text" name="name" id="name" class="form-control"
+										ng-model="user.name" readonly="readonly">
+									<p class="help-block"></p>
+									<input type="text" name="name" id="name" class="form-control"
+										ng-model="user.name" readonly="readonly">
+									<p class="help-block">
+										<span
+											ng-show="contactForm.name.$invalid && !contactForm.name.$pristine">Name
+											is required.</span>
+									</p>
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+			</tab> <tab heading="Banking Data">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="col-md-2">
+							<img src="resources/images/ici-avatar.jpg" class="img-circle"
+								alt="ici-avatar" width="50px" height="50px">
+						</div>
+						<div class="col-md-5">
+							<h6 class="custom-font filled bg-danger">Banking Score .29</h6>
+						</div>
+						<div class="col-md-5">
+							<h5 class="custom-font filled bg-greensea">Overall Score .15</h5>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<form name="step1" role="form" novalidate class="form-validation">
+				<script type="text/ng-template" id="linkAccount.html">
+     <div class="modal-header">
+      <h3 class="modal-title custom-font">Link Account</h3>
+      </div>
+     <div class="modal-body">
+       <table st-table="rowCollection" class="st-table table table-striped table-custom">
+         <tbody>
+           <div class="tile-body form-validation">
+
+              <div class="form-group">
+                <label class="col-sm-3 control-label">Account Type*</label>
+                <div class="col-sm-8">
+                  <input type="text"
+							name="name" id="name" class="form-control" ng-model="user.accounttype"
+							required>
+                 <p class="help-block">
+                </div>
+              </div>
+             <div class="form-group">
+                <label class="col-sm-3 control-label">Account  Number*</label>
+                <div class="col-sm-8">
+                  <input type="text"
+							name="name" id="name" class="form-control" ng-model="user.accountnumber"
+							required>
+                </div>
+              </div>
+         </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+         <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="ok()"><i class="fa fa-arrow-right"></i> Save</button>
+         <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> Close</button>
+      </div>
+     </script>
+				<div class="tile-body form-validation">
+					<div class="row"></div>
+				</div>
+				<div class="row">
+					<div class="form-group col-md-5">
+						<label for="username">CRN Number </label> <input type="text"
+							name="crnname" id="crnnumber" class="form-control"
+							ng-model="user.crnname" required>
+					</div>
+				</div>
+				<div class="row  text-right">
+					<i class="icon-paper-clip"></i> <a data-ng-click="linkAccount()">
+						Link Account</a>
+				</div>
+				<div class="row">
+
+					<div class="form-group col-md-5">
+						<label for="username">Account Type </label> <input type="text"
+							name="name" id="name" class="form-control"
+							ng-model="user.accounttype" required>
+					</div>
+
+					<div class="form-group col-md-5">
+						<label for="username">Account Number </label> <input type="text"
+							name="username" id="username" class="form-control"
+							ng-model="user.accountnumber" ng-minlength="3" ng-maxlength="8"
+							required>
+					</div>
+					<div class="form-group col-md-2">
+						<i class="icon-close deleteIcon"></i>
+					</div>
+				</div>
+				<div class="row">
+
+					<div class="form-group col-md-5">
+						<label for="username">Account Type </label> <input type="text"
+							name="name" id="name" class="form-control"
+							ng-model="user.accounttypes" required>
+					</div>
+
+					<div class="form-group col-md-5">
+						<label for="username">Account Number </label> <input type="text"
+							name="username" id="username" class="form-control"
+							ng-model="user.accountnumbers" ng-minlength="3" ng-maxlength="8"
+							required>
+					</div>
+					<div class="form-group col-md-2">
+						<i class="icon-close deleteIcon"></i>
+					</div>
+
+				</div>
+				<div class="row">
+
+					<div class="form-group col-md-5">
+						<label for="username">Account Type </label> <input type="text"
+							name="name" id="name" class="form-control"
+							ng-model="user.account" required>
+					</div>
+
+					<div class="form-group col-md-5">
+						<label for="username">Account Number </label> <input type="text"
+							name="username" id="username" class="form-control"
+							ng-model="user.number" ng-minlength="3" ng-maxlength="8" required>
+					</div>
+					<div class="form-group col-md-2">
+						<i class="icon-close deleteIcon"></i>
+					</div>
+
+
+				</div>
+				<div class="row   text-center">
+					<button type="button" class="btn btn-blue mb-10 btn-rounded">Save</button>
+				</div>
+			</form>
+			</tab> </tabset>
+		</div>
+	</div>
+</div>

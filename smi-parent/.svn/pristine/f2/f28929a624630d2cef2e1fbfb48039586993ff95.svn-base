@@ -1,0 +1,916 @@
+'use strict';
+
+/**
+ * @author khaja moinuddin
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('EditRulesController', function ($scope, $stateParams,rulesServices,$modal, $log, dialogs, $state) {
+	  /**
+ * This method is used to check wheather it is Edit Rule or Add rule page to display
+ */
+   $scope.formulaData = [];
+   $scope.deletedformulaData = [];
+   $scope.rulesData = {};
+   $scope.deletedColumns = [];
+   $scope.globalRuleColumns = [];
+   $scope.rulesData.columnsData=[];
+   $scope.isCheckNobtn=true;
+   $scope.isCheckYesbtn=false;
+   $scope.isHideGlobalRuleColumns=true;
+   
+   var oldruleJson= {
+	        "rule_group": {
+	          "rule_group_id":null,
+	          "rule_family": {
+	            "rule_family_id":null
+	          }
+	        },
+	        "rule_name":null,
+	        "rule_formulas": [],
+	        "rule_columns": []
+	};
+   $scope.initialize = function() {
+   $scope.globalRuleColumns = [];
+		   if($stateParams.rule_id !=null && $stateParams.rule_id != 0){
+			   $scope.ruleName ="Edit Rule";
+			   $scope.formulaData = [];
+			   $scope.rulesData.columnsData=[];
+			   $scope.deletedformulaData = [];
+			   $scope.deletedColumns = [];
+		   }else{
+			   $scope.ruleName ="Add Rule";
+			   $stateParams.rule_id = 0;
+		   }
+		   
+/**
+ * This method is to get the data by rule id.
+ */
+		   rulesServices.getRuleDataById($stateParams.rule_id).then(function(response){
+				  if(response != null && response.data != null) {
+					 // alert(JSON.stringify(response.data));
+					  if($stateParams.rule_id != null && $stateParams.rule_id != 0){
+						  if(response.data.rule !=null){
+							 
+							  for(var i=0; i<response.data.rule.rule_columns.length;i++){
+								  var columnObj = response.data.rule.rule_columns[i].rule_column;
+								  columnObj.rule_column_shadow_id = columnObj.rule_column_id;
+								 if(columnObj.rule_is_global=="1") {
+									 columnObj.is_columnName =false;
+									 columnObj.is_selectColumnName =true;
+									 columnObj.is_text_Message=true;
+								 }
+								 else {
+									 columnObj.is_columnName =false;
+									 columnObj.is_selectColumnName =true;
+									 columnObj.is_text_Message=false;
+								 }
+								     columnObj.is_updated = "false";
+								     columnObj.is_added = "false";
+								     columnObj.is_deleted = "false";
+								     $scope.rulesData.columnsData.push(columnObj);
+								     
+							  } 
+						  }
+						  $scope.rulesData.ruleName = response.data.rule.rule_name;
+						  $scope.rulesData.rulesFamilyData = response.data.rule_families;
+						  $scope.rulesData.ruleGroupData=response.data.rule_groups;
+						  $scope.rulesData.selectedRuleFamilyId = response.data.rule.rule_group.rule_family.rule_family_id;
+						  $scope.rulesData.selectedRuleGroupId = response.data.rule.rule_group.rule_group_id; 
+						  $scope.appId=response.data.rule.rule_app_id;
+						  $scope.appData = response.data.rule_apps;
+						  $scope.appDisable=true;
+						  if(response.data.rule.rule_formulas.length >0){
+							  for(var i=0; i<response.data.rule.rule_formulas.length;i++){
+								  $scope.formulaData.push(response.data.rule.rule_formulas[i].rule_formula); 
+							  } 
+						  }
+						
+						   // get all globalColumns
+						   rulesServices.getGlobalRuleColumns().then(function(response){
+								 if(response != null && response.data != null){
+									 $scope.globalRuleColumns = response.data.rule_columns;
+									 if($scope.rulesData.columnsData.length >0){
+										 for(var i =0;i<$scope.rulesData.columnsData.length;i++)
+								      	  {
+								      		  if($scope.rulesData.columnsData[i].rule_is_global==="1")
+								      		  {
+								      			 if($scope.globalRuleColumns.length >0){
+								      				 for(var j =0;j<$scope.globalRuleColumns.length;j++)
+											      	  {
+									      				 if($scope.rulesData.columnsData[i].rule_column_id==$scope.globalRuleColumns[j].rule_column_id){
+									      					$scope.globalRuleColumns[j].ticked=true;
+									      				 }
+											      	  }
+								      			 }
+								      		  }
+								      	  }
+									 }
+								 }
+						  });
+						   
+						   // Create old JSON object for compare with new JSON object when we edit
+						   oldruleJson.rule_group.rule_group_id = response.data.rule.rule_group.rule_group_id;
+						   oldruleJson.rule_group.rule_family.rule_family_id =response.data.rule.rule_group.rule_family.rule_family_id;
+						   oldruleJson.rule_name = response.data.rule.rule_name;
+						   oldruleJson.rule_id = response.data.rule.rule_id;
+						   
+						   for(var i =0;i<response.data.rule.rule_columns.length;i++)
+					    	  {
+							     var columnObj =  response.data.rule.rule_columns[i].rule_column;
+							     columnObj.action = "Edit";
+							   
+							     oldruleJson.rule_columns[i] = {};
+							     oldruleJson.rule_columns[i].rule_column = {};
+							     var ruleColumnObj = oldruleJson.rule_columns[i].rule_column;
+							     ruleColumnObj.rule_column_id = columnObj.rule_column_id;
+							     ruleColumnObj.rule_column_name = columnObj.rule_column_name;
+							     ruleColumnObj.rule_column_text = columnObj.rule_column_text;
+							     ruleColumnObj.rule_is_global=columnObj.rule_is_global;
+							     ruleColumnObj.rule_column_shadow_id = null;
+							     ruleColumnObj.is_added = columnObj.is_added;
+							     ruleColumnObj.is_updated = columnObj.is_updated;
+							     ruleColumnObj.is_deleted = columnObj.is_deleted;
+							     ruleColumnObj.action = columnObj.action;
+					    	  }
+						   
+						   for(var i =0;i<response.data.rule.rule_formulas.length;i++)
+					    	  {
+							     var formulaObj = response.data.rule.rule_formulas[i].rule_formula;
+							     oldruleJson.rule_formulas[i] ={};
+							     oldruleJson.rule_formulas[i].rule_formula = {};
+							     oldruleJson.rule_formulas[i].rule_formula.rule_formula_id = formulaObj.rule_formula_id;
+							     oldruleJson.rule_formulas[i].rule_formula.rule_formula_name = formulaObj.rule_formula_name;
+							     oldruleJson.rule_formulas[i].rule_formula.rule_formula_expression = formulaObj.rule_formula_expression;
+							     oldruleJson.rule_formulas[i].rule_formula.action=formulaObj.action;
+							     oldruleJson.rule_formulas[i].rule_formula.rule_formula_shadow_id = null;
+					    	  }
+						   // end Creation of old JSON object
+						   
+						   
+					  }else{
+						  $scope.rulesData.selectedRuleFamilyId =null;
+						  $scope.rulesData.selectedRuleGroupId=null;
+						  if(response.data.rule_apps != null)
+						  {
+							  $scope.appData = response.data.rule_apps;
+							  $scope.appDisable=false;
+							  $scope.appId = response.data.rule_apps[0].appId;
+							  $scope.getFamilyDataBasedOnAppId($scope.appId);
+						  };
+						   // get all globalColumns
+						   rulesServices.getGlobalRuleColumns().then(function(response){
+								 if(response != null && response.data != null){
+									 $scope.globalRuleColumns = response.data.rule_columns;
+								 }
+						  });
+					  }
+				  }
+			});
+	   };
+	   /**
+		   * This method is used to get FamilyData based on application id
+		   */ 
+	$scope.getFamilyDataBasedOnAppId = function(appId) {
+		    rulesServices.getRuleFamilysByAppId(appId).then(function(response){
+				  if(response.data != null){
+					  $scope.rulesData.rulesFamilyData = response.data.rule_families;
+				  }
+		      });
+			  
+		  };
+   /**
+    * By using Family Id we get the Rule Group Data
+    */
+   $scope.changeRuleFamily = function(familyId){
+	   $scope.getRuleGroupData(familyId);
+   };
+   $scope.getRuleGroupData = function(familyId){
+	   rulesServices.groupDetails(familyId).then(function(response){
+			 if(response != null && response.data != null){
+				 $scope.rulesData.ruleGroupData = response.data.rule_groups;
+			 }
+	   });
+   };
+   // click on NO radio button
+   $scope.getNormalColumns = function(){
+	   $scope.isHideGlobalRuleColumns=true;
+   };
+   // click on Yes radio button
+   $scope.getGlobalColumns = function(){
+	   $scope.isHideGlobalRuleColumns=false;
+	
+   };
+   // click on column
+	$scope.onColumnClick = function( data ) {           
+		if(data.ticked){
+			
+			 var newColumnData = {};
+			    newColumnData.rule_column_id = data.rule_column_id;;
+			    newColumnData.rule_column_shadow_id = data.rule_column_id;
+		        newColumnData.rule_column_name =data.rule_column_name;
+			    newColumnData.rule_column_text = data.rule_column_text;
+			    /*newColumnData.is_readonly =true;*/
+			    newColumnData.is_columnName =false;
+			    newColumnData.is_selectColumnName =true;
+			    newColumnData.is_text_Message=true;
+			    newColumnData.ticked=data.ticked;
+			    newColumnData.is_added =true;
+			    newColumnData.rule_is_global=data.rule_is_global;
+			    $scope.rulesData.columnsData.push(newColumnData);
+		}
+		else{
+			 for(var i =0;i<$scope.rulesData.columnsData.length;i++)
+	      	  {
+	      		  if($scope.rulesData.columnsData[i].rule_column_shadow_id === data.rule_column_id) {
+	      			  $scope.rulesData.columnsData[i].is_deleted = true;
+	      			  $scope.deletedColumns.push($scope.rulesData.columnsData[i]);
+	      			  $scope.rulesData.columnsData.splice(i, 1);
+	      			  break;
+	      		  }
+	      	  }
+		}
+	}; 
+	
+/**
+ * This method is to bind the data to particular Columns.
+ */   
+/**
+ * This method is to add New Columns Dynamically
+ */
+   $scope.addNewColumn = function() {
+	    var newColumnData = {};
+	    newColumnData.is_added = true;
+	    newColumnData.rule_column_id = null;
+	    newColumnData.rule_column_shadow_id = new Date().getTime();
+	    newColumnData.rule_is_global="0";
+	    newColumnData.rule_column_name = null;
+	    newColumnData.rule_column_text = null;
+	    newColumnData.is_columnName =true;
+	    newColumnData.is_selectColumnName =false;
+	    newColumnData.is_text_Message=false;
+ 	    $scope.rulesData.columnsData.push(newColumnData);
+  };
+  $scope.changeColumn = function(columnObj) {
+	  for(var i =0;i<$scope.rulesData.columnsData.length;i++)
+ 	  {
+ 		  if($scope.rulesData.columnsData[i].rule_column_shadow_id === columnObj.rule_column_shadow_id) {
+ 			  $scope.rulesData.columnsData[i].is_updated = true;
+ 			   break;
+ 		  }
+ 	  }
+   };
+
+   /**
+    * This method is to Delete Columns Dynamically
+    */
+     $scope.deleteColumn = function(columnObj) {
+      var totalColumns = $scope.rulesData.columnsData.length;
+      
+      if (totalColumns == 1)
+   	  {
+       	  dialogs.error("Error","Atleast One Column is requeried",{size:'md'});
+       	  return false;
+   	  }
+      else
+	  {
+    	  var dlg = dialogs.confirm("Confirmation", "Are you sure that you want to delete this column ?",{size:'md'});
+          dlg.result.then(function (btn) {
+        	  //Yes is clicked
+        	  for(var i =0;i<$scope.rulesData.columnsData.length;i++)
+        	  {
+        		  if($scope.rulesData.columnsData[i].rule_column_shadow_id === columnObj.rule_column_shadow_id)
+        		  {
+        			  if(columnObj.rule_is_global==="1"){
+        				for(var j =0;j<$scope.globalRuleColumns.length;j++){
+        					 if($scope.globalRuleColumns[j].rule_column_id === columnObj.rule_column_shadow_id){
+        						 $scope.globalRuleColumns[j].ticked="false";
+        						 if(columnObj.is_added ==true){
+        							$scope.rulesData.columnsData.splice(i, 1);
+        							 break;
+        							 }else{
+        								  $scope.rulesData.columnsData[i].is_deleted = true;
+        	      		      			  $scope.deletedColumns.push($scope.rulesData.columnsData[i]);
+        	      		      	          $scope.rulesData.columnsData.splice(i, 1);
+        	      		      	        break;
+        								 }
+        					    }
+        					}
+        				  }
+        			  else{
+        				    if(columnObj.rule_column_id ===null){
+        				    	 $scope.rulesData.columnsData.splice(i, 1);
+        				    }else{
+        				    	 $scope.rulesData.columnsData[i].is_deleted = true;
+     		      			     $scope.deletedColumns.push($scope.rulesData.columnsData[i]);
+     		      		         $scope.rulesData.columnsData.splice(i, 1);
+        				    }
+        			  }
+        		  }
+        	  }
+          });
+	  }  	  
+    };
+    
+  $scope.colTexts = [
+                     { id: 1, name: 'A' },
+                     { id: 2, name: 'B' },
+                     { id: 3, name: 'C' },
+                     { id: 4, name: 'D' },
+                     { id: 5, name: 'E' },
+                     { id: 6, name: 'F' },
+                     { id: 7, name: 'G' },
+                     { id: 8, name: 'H' },
+                     { id: 9, name: 'I' },
+                     { id: 10, name: 'J' },
+                     { id: 11, name: 'K' },
+                     { id: 12, name: 'L' },
+                     { id: 13, name: 'M' },
+                     { id: 14, name: 'N' },
+                     { id: 15, name: 'O' },
+                     { id: 16, name: 'P' },
+                     { id: 17, name: 'Q' },
+                     { id: 18, name: 'R' },
+                     { id: 19, name: 'S' },
+                     { id: 20, name: 'T' },
+                     { id: 21, name: 'U' },
+                     { id: 22, name: 'V' },
+                     { id: 23, name: 'W' },
+                     { id: 24, name: 'X' },
+                     { id: 25, name: 'Y' },
+                     { id: 26, name: 'Z' }
+                 ];
+  
+/**
+ * This method is to bind formulas.
+ */
+
+/**
+ * This method to save Complete data at once(like update,delete,save)
+ */  
+  
+  $scope.saveRule = function() {
+	  var ruleJson= {
+		        
+		        "rule_group": {
+		          "rule_group_id":null,
+		          "rule_family": {
+		            "rule_family_id":null
+		          }
+		        },
+		        "rule_name":null,
+		        "rule_formulas": [],
+		        "rule_columns": []
+		};
+	  
+	// ruleJson=null;
+	   var groupId = $scope.rulesData.selectedRuleGroupId;
+	   var ruleName = $scope.rulesData.ruleName;
+	  
+	   if($stateParams.rule_id !=null && $stateParams.rule_id != 0){ 
+		   ruleJson.rule_group.rule_group_id = $scope.rulesData.selectedRuleGroupId;
+		   ruleJson.rule_group.rule_family.rule_family_id =$scope.rulesData.selectedRuleFamilyId;
+		   ruleJson.rule_name = $scope.rulesData.ruleName;
+		   ruleJson.rule_id = $stateParams.rule_id;
+		  // alert(JSON.stringify($scope.rulesData.columnsData));
+		   for(var i =0;i<$scope.rulesData.columnsData.length;i++)
+	    	  {
+			     var columnObj = $scope.rulesData.columnsData[i];
+			     if(columnObj.rule_column_id !=null){
+				    columnObj.action = "Edit";
+				 }
+			     else{
+			    	 columnObj.action= "New";
+			    	 columnObj.rules_is_global= "0";
+				 }
+			     ruleJson.rule_columns[i] = {};
+			     ruleJson.rule_columns[i].rule_column = {};
+			     var ruleColumnObj = ruleJson.rule_columns[i].rule_column;
+			     ruleColumnObj.rule_column_id = columnObj.rule_column_id;
+			     ruleColumnObj.rule_column_name = columnObj.rule_column_name;
+			     ruleColumnObj.rule_column_text = columnObj.rule_column_text;
+			     ruleColumnObj.rule_is_global=columnObj.rule_is_global;
+			     ruleColumnObj.rule_column_shadow_id = null;
+			     ruleColumnObj.is_added = columnObj.is_added;
+			     ruleColumnObj.is_updated = columnObj.is_updated;
+			     ruleColumnObj.is_deleted = columnObj.is_deleted;
+			     ruleColumnObj.action = columnObj.action;
+	    	  }
+		
+		   
+		   for(var i =0;i<$scope.formulaData.length;i++)
+	    	  {
+			     var formulaObj = $scope.formulaData[i];
+			     ruleJson.rule_formulas[i] ={};
+			     ruleJson.rule_formulas[i].rule_formula = {};
+			     ruleJson.rule_formulas[i].rule_formula.rule_formula_id = formulaObj.rule_formula_id;
+			     ruleJson.rule_formulas[i].rule_formula.rule_formula_name = formulaObj.rule_formula_name;
+			     ruleJson.rule_formulas[i].rule_formula.rule_formula_expression = formulaObj.rule_formula_expression;
+			     ruleJson.rule_formulas[i].rule_formula.action=formulaObj.action;
+			     ruleJson.rule_formulas[i].rule_formula.rule_formula_shadow_id = null;
+	    	  }
+		   for(var i =0;i<$scope.deletedformulaData.length;i++)
+	    	  {
+			     var formulaObj = $scope.deletedformulaData[i];
+			     ruleJson.rule_formulas[i] ={};
+			     ruleJson.rule_formulas[i].rule_formula = {};
+			     ruleJson.rule_formulas[i].rule_formula.rule_formula_id = formulaObj.rule_formula_id;
+			     ruleJson.rule_formulas[i].rule_formula.rule_formula_name = formulaObj.rule_formula_name;
+			     ruleJson.rule_formulas[i].rule_formula.rule_formula_expression = formulaObj.rule_formula_expression;
+			     ruleJson.rule_formulas[i].rule_formula.action=formulaObj.action;
+			     ruleJson.rule_formulas[i].rule_formula.rule_formula_shadow_id = null;
+	    	  }
+		  
+		   for(var i =0;i< $scope.deletedColumns.length;i++)
+	    	  {
+			   if($scope.deletedColumns[i].rule_column_id !=null){
+				   $scope.deletedColumns[i].action = "Deleted";
+				     var deltedrule ={};
+				     deltedrule.rule_column=$scope.deletedColumns[i];
+				     ruleJson.rule_columns.push(deltedrule);
+					
+			   }
+	    	 };
+	    	 // alert(JSON.stringify(ruleJson));
+		   var isValid = $scope.isValidate(ruleJson);
+		   
+		   if(isValid){
+			   $scope.checkIfRuleExistsForEdit(groupId,ruleName,ruleJson);
+		   }
+		   
+	   }else{
+		   ruleJson.rule_group.rule_group_id = $scope.rulesData.selectedRuleGroupId;
+		   ruleJson.rule_group.rule_family.rule_family_id =$scope.rulesData.selectedRuleFamilyId;
+		   ruleJson.rule_name = $scope.rulesData.ruleName;
+		   ruleJson.rule_id =  null;
+		   for(var i =0;i<$scope.rulesData.columnsData.length;i++)
+	    	  {			  
+			     var columnObj = $scope.rulesData.columnsData[i];
+			     ruleJson.rule_columns[i] = {};
+			     ruleJson.rule_columns[i].rule_column = {};
+			     var ruleColumnObj = ruleJson.rule_columns[i].rule_column;
+			     ruleColumnObj.rule_column_id = columnObj.rule_column_id;
+			     ruleColumnObj.rule_column_name = columnObj.rule_column_name;
+			     ruleColumnObj.rule_column_text = columnObj.rule_column_text;
+			     ruleColumnObj.rule_is_global=columnObj.rule_is_global;
+			     ruleColumnObj.rule_column_shadow_id = null;
+			     ruleColumnObj.is_added = columnObj.is_added;
+			     ruleColumnObj.is_updated = columnObj.is_updated;
+			     ruleColumnObj.is_deleted = columnObj.is_deleted;
+			     ruleColumnObj.action = columnObj.action;
+	    	  }
+		   for(var i =0;i<$scope.formulaData.length;i++)
+	    	  {
+			     var formulaObj = $scope.formulaData[i];
+			     ruleJson.rule_formulas[i] ={};
+			     ruleJson.rule_formulas[i].rule_formula = {};
+			     ruleJson.rule_formulas[i].rule_formula.rule_formula_id = null;
+			     ruleJson.rule_formulas[i].rule_formula.rule_formula_name = formulaObj.rule_formula_name;
+			     ruleJson.rule_formulas[i].rule_formula.rule_formula_expression = formulaObj.rule_formula_expression;
+			     ruleJson.rule_formulas[i].rule_formula.action=formulaObj.action;
+			     ruleJson.rule_formulas[i].rule_formula.rule_formula_shadow_id = null;
+	    	  }
+		//  alert(JSON.stringify(ruleJson));
+		   var isValid = $scope.isValidate(ruleJson);
+		   if (isValid)
+		   {
+			   $scope.checkIfRuleExists(groupId,ruleName,ruleJson);
+	       }			  
+	   }
+  };
+	
+  $scope.checkIfRuleExists = function(groupId,ruleName,ruleJson){
+	   rulesServices.checkIfRuleExists(groupId,ruleName).then(function(response){		   
+		       if (response != null && response.status == "SUCCESS")
+			   {
+		    	   rulesServices.addRule(ruleJson).then(function(response){
+		    		   if(response.status=="SUCCESS" ){  
+						   $scope.initialize();
+						   $state.go('viewrules');
+					   } else {
+						   var existFormulaStatus = response.status;
+						   $scope.checkFormula(existFormulaStatus,response);	
+					   }
+		    	   });
+			   }			   
+	   });
+ };
+ 
+ $scope.checkIfRuleExistsForEdit = function(groupId,ruleName,ruleJson){	 		 
+	 if(!angular.equals(ruleJson, oldruleJson)){
+		// alert(JSON.stringify("not same"));
+		 if(ruleJson.rule_name !=oldruleJson.rule_name){
+			 rulesServices.checkIfRuleExists(groupId,ruleName).then(function(response){		   
+			       if (response != null && response.status == "SUCCESS")
+				   {
+			    	   rulesServices.updateRule(ruleJson).then(function(response){
+			    		   if (response.status=="SUCCESS" ){  
+							   $scope.initialize();
+						   } else {
+							   var formulaStatus = response.status;
+							   $scope.checkFormula(formulaStatus,response);	
+						   }
+				       });
+				   }			   
+		   }); 
+		 }
+		 else{
+			 //alert(JSON.stringify(ruleJson));
+			 rulesServices.updateRule(ruleJson).then(function(response){
+	    		   if(response.status=="SUCCESS" ){  
+					   $scope.initialize();
+				   } else {
+					   var editFormulaStatus = response.status;
+					   $scope.checkFormula(editFormulaStatus,response);					   
+				   }
+		       });
+		 }
+	 }
+};
+
+$scope.checkFormula = function(formulaStatus,response){
+	if(formulaStatus == "FORMULA_ERROR" ){
+		   var testJson = JSON.parse(response.message);
+		   if (testJson.ruleTestSummaryBO.length > 0){
+			   for (var i=0; i<testJson.ruleTestSummaryBO.length; i++)
+			   {
+				   var messageStatus = testJson.ruleTestSummaryBO[i].status;
+				   if (messageStatus != 'true'){
+				    	 var messageText =  testJson.ruleTestSummaryBO[i].text;
+						 dialogs.error(messageStatus,messageText+":So please correct the formula",{size:'md'});			 
+						 return false;
+					}									   									   
+			   }								   
+		   }   							  
+	   }
+};
+  
+$scope.onResetClick = function( data ) {    
+		 if ($stateParams.rule_id !=null && $stateParams.rule_id != 0){
+			 $scope.initialize();
+		   }else{
+			  
+			   $scope.isCheckNobtn=false;
+			   $scope.isCheckYesbtn=true;
+			      $scope.initialize();
+			      $scope.rulesData.ruleName = null;
+				  $scope.rulesData.selectedRuleFamilyId = 0;
+				  $scope.rulesData.selectedRuleGroupId = 0;
+		   }
+	};
+	
+	$scope.isValidate = function(object){
+		
+		 var isValid =true;
+		 var str1 = "";		 
+		 var totalColumns = object.rule_columns.length;
+		 
+	     if (object.rule_name == null ||  object.rule_name == 'undefined' || object.rule_name == ""){
+	    	 str1 +="Please enter the rule name"+'<br/>';
+	    	 isValid= false;
+		  }	   
+	     
+		  if (object.rule_group.rule_group_id == null || object.rule_group.rule_group_id == 'undefined'){
+			  str1 +="Please select the group"+'<br/>';
+			  isValid =false;
+		  }
+		  
+		  if (object.rule_group.rule_family.rule_family_id == null){
+			  str1 +="Please select the family"+'<br/>';
+			  isValid =false;
+		  }			  
+
+	      if (totalColumns == 0)
+	   	  {
+	    	  str1 +="Atleast One Column is requeried"+'<br/>';	       	  
+	    	  isValid=false;
+	   	  }
+			//alert(JSON.stringify(object.rule_columns));
+		  for(var i =0; i < object.rule_columns.length; i++)
+		  {	
+			  var ruleColumnText = object.rule_columns[i].rule_column.rule_column_text;			 
+			  var ruleColumnName = object.rule_columns[i].rule_column.rule_column_name;
+				  
+			  if(ruleColumnName == null || ruleColumnName == 'undefined' || ruleColumnName == ""){
+				 str1 += "Please select the column name"+'<br/>';
+				 isValid =false;
+			  }
+			  if(ruleColumnText == null || ruleColumnText == 'undefined' || ruleColumnText == ""){			 
+				  if (ruleColumnName != null){
+						 str1 += "PLease enter the text for column:"+ ruleColumnName +'<br/>';
+					 }
+					 else {
+						 str1 += "PLease enter the text "+'<br/>';
+					 }	
+				 isValid =false;
+			  }	
+		  }
+		 
+		  if(object.rule_columns.length >0){
+			  for(var i =0; i < $scope.colTexts.length; i++){
+				  var count=0;
+				  var Name = $scope.colTexts[i].name;
+				  for(var j =0; j < object.rule_columns.length; j++){
+					  var rulecolumn =object.rule_columns[j].rule_column;
+					  var action =rulecolumn.action;		
+					  if(action != 'Deleted'){
+						var ruleColumnName = object.rule_columns[j].rule_column.rule_column_name;
+						  if(Name ==ruleColumnName)
+						  {
+					    	count=count+1;
+					    	if(count==2){
+					    		 str1 += "Column names should be unique please select different column names"+'<br/>';
+					    		 isValid =false;
+					    		 break;
+					    	}
+						  }
+						  
+					  }
+					   
+				  }
+			  }
+		  }
+		  
+		 if(isValid==false){
+			dialogs.error("Error",str1);			
+			return isValid;
+		 }
+		  return isValid;
+	};
+		  
+  /**
+   * This method to Delete Formulas
+   */
+   $scope.deleteFormula = function(formulaObj) {
+	
+     var dlg = dialogs.confirm("Confirmation", "Are you sure that you want to delete this Formula ?",{size:'md'});
+     dlg.result.then(function (btn) {
+     //Yes is clicked
+     for(var i =0;i<$scope.formulaData.length;i++) {
+  	   
+  	  if($scope.formulaData[i].rule_formula_shadow_id == formulaObj.rule_formula_shadow_id  ) {
+  		 if($scope.formulaData[i].action =="New") {
+  	       $scope.formulaData.splice(i, 1);
+  		 }else{
+  			 $scope.formulaData[i].action="Deleted";
+  			 $scope.deletedformulaData.push($scope.formulaData[i]);
+  			 $scope.formulaData.splice(i, 1);
+  		 }
+  	     break;
+  	  }
+  	}
+    });
+   };
+ 
+ /*This method to navigate back to Previous*/
+ 
+ $scope.goViewRule= function(){
+	  $state.go('viewrules');
+ };
+ 
+ $scope.resetEditRule = function(){
+	 alert("data");
+};
+ 
+/**
+ * This method to Add Formulas
+ */	  
+ $scope.addFormula = function() {
+	   var modalInstance = $modal.open({
+	       templateUrl:'addFormula.html',
+	       controller :'AddFormulaController',
+	       resolve: {
+	           items: function () {
+	        		   var obj = {};
+	        		   obj.isEditOrAdd="Add";
+	        		   obj.data=$scope.formulaData;
+		        	   return obj;
+	           }
+	         }
+	  	 });
+ };
+/**
+ * This method to Edit Formulas
+ */	
+$scope.editFormula = function(reqFormula) {
+	   var modalInstance = $modal.open({
+	   templateUrl:'addFormula.html',
+	   controller :'AddFormulaController',
+	   resolve: {
+	           items: function () {
+	           var obj = {};
+     		   obj.isEditOrAdd="edit";
+     		   obj.single=reqFormula;
+     		   obj.data=$scope.formulaData;
+	        	   return obj;
+	            }
+	         }
+	   });
+};
+/**
+ * This method to Test the Rule
+ */	  
+ $scope.testRule = function() {
+	 if (($scope.rulesData.columnsData.length == 0) ||  ($scope.formulaData.length == 0)){
+		 dialogs.error("ERROR","Please Add Columns and formulas",{size:'md'});					
+		 return false;
+	 }
+	   var modalInstance = $modal.open({
+	       templateUrl:'testRule.html',
+	       controller :'TestRuleController',
+	       resolve: {
+	    	   columns: function(){
+	    		   var colObj = {};
+	    		   colObj.columnData = $scope.rulesData.columnsData;
+	    		   return colObj;
+	    	   },
+	           items: function () {
+	        	   var obj = {};
+	     		   obj.selectedRuleFamilyId= $scope.rulesData.selectedRuleFamilyId;
+	     		   obj.selectedGroupId=$scope.rulesData.selectedRuleGroupId;
+	     		   obj.selectedRuleId=$stateParams.rule_id;
+	     		   obj.appId=$scope.appId;
+	     		   obj.formulaData =$scope.formulaData;	     		   
+		         return obj ;
+	           }
+	         }
+	  	 });
+ };
+ 
+ 
+ /**
+  * This controller is to add formula
+  */	   
+
+  }).controller('AddFormulaController', function ($scope, $modalInstance, $rootScope, items) {
+	  if (items.isEditOrAdd == "Add") {
+			$scope.titile ="Add Formula Name & Formula";
+} else {
+	$scope.formulaName = items.single.rule_formula_name;
+	$scope.formula = items.single.rule_formula_expression;
+	$scope.formulaId = items.single.rule_formula_id;
+	$scope.titile = "Edit Formula Name & Formula";
+}
+$scope.ok = function() {
+
+	if (items.isEditOrAdd == "Add") {
+		if ($scope.formulaName == null || $scope.formulaName == undefined) {
+			alert("Please Enter Formula Name ");
+			return false;
+		}
+		$scope.formulaData = {};
+		$scope.formulaData["rule_formula_name"] = $scope.formulaName;
+		$scope.formulaData["rule_formula_expression"] = $scope.formula;
+		$scope.formulaData["rule_formula_shadow_id"] = new Date().getTime();
+		$scope.formulaData["action"] = "New";
+		items.data.push($scope.formulaData);
+	//  alert(JSON.stringify(items.data));
+		$modalInstance.close();
+} else {
+		for ( var i = 0; i < items.data.length; i++) {
+			var object = items.data[i];
+			if (object.rule_formula_shadow_id == items.single.rule_formula_shadow_id) {
+				items.data[i].rule_formula_name = $scope.formulaName;
+				items.data[i].rule_formula_expression = $scope.formula;
+				if($scope.formulaId ==null){
+					items.data[i].action = "New";
+					items.data[i].rule_formula_shadow_id = new Date().getTime();
+				}else{
+					items.data[i].action = "Edit";
+					items.data[i].rule_formula_id = $scope.formulaId;
+				}
+				$modalInstance.close();
+				break;
+			}
+		}
+	 }
+   };
+       $scope.cancel = function () {
+       $modalInstance.dismiss('cancel');
+    };
+  }).controller('TestRuleController', function ($scope, $modalInstance, $rootScope, $stateParams, dialogs, rulesServices, items, columns) {
+	  $scope.familyData = [];
+	  $scope.ruleGroupData = [];
+	  $scope.ruleData=[];
+	  $scope.selectedRuleFamilyId=items.selectedRuleFamilyId;
+	  $scope.selectedGroupId=items.selectedGroupId;
+	  $scope.selectedRuleId=items.selectedRuleId;
+	  $scope.appId = items.appId;
+	  $scope.formulaData=items.formulaData;
+	  $scope.columnData = columns.columnData;
+	  
+	  rulesServices.getRuleFamilysByAppId($scope.appId).then(function(response){
+		  if(response != null && response.data != null) {
+			  $scope.familyData = response.data.rule_families;
+		      }
+		  });
+	  	
+		if( $scope.selectedRuleFamilyId !=null){
+			 rulesServices.groupDetails($scope.selectedRuleFamilyId).then(function(response){
+						 if(response != null && response.data != null) {
+							 $scope.ruleGroupData = response.data.rule_groups;
+						 }
+				   });
+		  }
+		  if( $scope.selectedGroupId !=null){
+			  rulesServices.rulesByGroupId($scope.selectedGroupId).then(function(response){
+					 if(response != null && response.data != null) {
+						 $scope.ruleData = response.data.rules;
+					 }
+			   });
+		  }
+	  /**
+	    * By using Family Id we get the Rule Group Data
+	    */
+		  $scope.changeRuleFamily = function(familyId){
+		   $scope.getRuleGroupData(familyId);
+			 };
+		  $scope.getRuleGroupData = function(familyId){
+				   rulesServices.groupDetails(familyId).then(function(response){
+						 if(response != null && response.data != null) {
+							 $scope.ruleGroupData = response.data.rule_groups;
+						 }
+				   });
+			   };
+		  $scope.changeRuleGroup = function(groupId){
+			//  alert(JSON.stringify(groupId));
+			  if(groupId !=null){
+				  rulesServices.rulesByGroupId(groupId).then(function(response){
+						 if(response != null && response.data != null){
+							 $scope.ruleData = response.data.rules;
+						 }
+				   });
+			  }
+			  else  {
+				  $scope.ruleData=null;
+				  }
+				   
+			 };
+	  
+		  /**
+		   * This method to Test Rule with all Expressions
+		   */  
+			$scope.test = function() { 
+				
+			    var ruleTestJson= {
+			    		"message":null,
+			  	        "rule_formulas":[],
+			  	        "rule_columns":[],		  	       
+			  	};
+			    
+				if ($scope.ruleText == null || $scope.ruleText == undefined) {
+					 dialogs.error("ERROR","Please enter the text",{size:'md'});					
+					 return false;
+				}
+			    if($stateParams.rule_id !=null && $stateParams.rule_id != 0){
+			    	ruleTestJson.rule_id = $stateParams.rule_id;
+			    	ruleTestJson.message =$scope.ruleText;
+			    	var formulaJson = {
+				    		"rule_formula":{}
+				    };
+			    	var columnJson = {
+				    		"rule_column":{}
+				    };
+			    	for (var i=0; i < $scope.formulaData.length; i++)
+		    		{
+			    		formulaJson = {};
+			    		formulaJson.rule_formula = $scope.formulaData[i];	
+			    		ruleTestJson.rule_formulas.push(formulaJson);
+		    		}
+			    	for (var i=0; i < $scope.columnData.length; i++)
+		    		{	 
+			    		columnJson = {};
+			    		columnJson.rule_column = $scope.columnData[i];
+			    		ruleTestJson.rule_columns.push(columnJson);
+		    		}		    				    	
+			    }
+	
+			   rulesServices.testRuleEdit(ruleTestJson).then(function(response){
+				   if(response !=null && response.data !=null){ 
+					   if(response.data.ruleTestSummaryBO.length > 0){ 
+						   if ($scope.formulaData.length > 0){
+							   $scope.formulaData = [];
+							   for(var i=0; i<response.data.ruleTestSummaryBO.length;i++){
+								   $scope.formulaData.push(response.data.ruleTestSummaryBO[i]);
+							   }
+						   } else {
+							   for(var i=0; i<response.data.ruleTestSummaryBO.length;i++){
+								   $scope.formulaData.push(response.data.ruleTestSummaryBO[i]);
+							   }
+						   }							  
+				        } else {			
+							$scope.formulaData = [];
+							dialogs.error("ERROR","No Rules/Formula found",{size:'md'});					
+						}
+				   }
+		       });
+				//$modalInstance.close();
+       };
+     $scope.cancel = function () {
+     $modalInstance.dismiss('cancel');
+  };
+});

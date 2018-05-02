@@ -1,0 +1,55 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.google.gson.annotations.SerializedName;
+
+
+public class CmfDashBoardGraphBO {
+	@SerializedName("dash_board_graph_type")
+	String dashBoardGraphType;
+	@SerializedName("from_date")
+	Date fromDate;
+	@SerializedName("to_date")
+	Date toDate;
+	/**
+	 * @return the dashBoardGraphType
+	 */
+	public String getDashBoardGraphType() {
+		return dashBoardGraphType;
+	}
+	/**
+	 * @param dashBoardGraphType the dashBoardGraphType to set
+	 */
+	public void setDashBoardGraphType(String dashBoardGraphType) {
+		this.dashBoardGraphType = dashBoardGraphType;
+	}
+	/**
+	 * @return the fromDate
+	 */
+	public Date getFromDate() {
+		return fromDate;
+	}
+	/**
+	 * @param fromDate the fromDate to set
+	 */
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+	/**
+	 * @return the toDate
+	 */
+	public Date getToDate() {
+		return toDate;
+	}
+	/**
+	 * @param toDate the toDate to set
+	 */
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
+	}
+	
+	
+}

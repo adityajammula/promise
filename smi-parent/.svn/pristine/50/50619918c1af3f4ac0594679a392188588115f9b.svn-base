@@ -1,0 +1,7 @@
+'use strict';
+
+/* Services */
+
+var AppDirectives = angular.module('smiApp.directives', []);
+
+AppServices.value('version', '0.1');

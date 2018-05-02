@@ -1,0 +1,44 @@
+<div class="container-fluid">
+    <!-- row -->
+    <div class="row">
+        <!-- tile -->
+        <section class="tile">
+          <!-- tile header -->
+          <div class="tile-header bg-greensea dvd dvd-btm">
+            <h1 class="custom-font"><strong>Global Column Configuration</strong></h1>
+           <!--  <ul class="controls">
+              <li>
+                <a href ng-click="showColumn()"><i class="fa fa-plus"></i> Add New Column</a>
+              </li></ul> -->
+          </div>
+          <!-- /tile header -->
+          <!-- tile body -->
+          <div class="tile-body">
+           <div class="pull-right">
+                   <button type="button" id="btnNewColumn" class="btn btn-blue btn-rounded"  ng-click="showColumn()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add New Column</button>
+		   </div>
+            <table datatable="ng" class="st-table table table-striped table-custom row-border hover">
+	             <thead>
+		              <tr>
+		                <th st-sort-default class="sorting" style="width: 70px;">Columns</th>
+		                <th class="sorting">Description</th>
+		                <th class="sorting">Values</th>
+		              </tr>
+	               </thead>
+	              <tbody class="table-hover">
+			              <tr data-ng-click="showColumn({{columns}})" data-ng-repeat="columns in globalColumnsData">
+			                <td class="pointer">{{columns.rule_column_name}}</td>
+			                 <td class="pointer">{{columns.rule_column_desc }}</td>
+			                <td class="pointer">{{columns.rule_column_text}}</td> 
+			              </tr>
+	              </tbody>
+            </table>
+          </div>
+          <!-- /tile body -->
+        </section>
+        <!-- /tile -->
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /page content -->
+</div>

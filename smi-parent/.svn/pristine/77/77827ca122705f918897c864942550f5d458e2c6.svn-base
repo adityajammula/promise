@@ -1,0 +1,34 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('GlobalColumnsController', function ($scope, $rootScope, rulesServices, $state) {
+	/**
+	 * This method is to Show the Global Columns in the table.
+	 */  
+	$scope.globalColumnsData = [];
+	$rootScope.initializeViewGlobalColumnsController = function(){
+		rulesServices.getGlobalRuleColumns().then(function(response){
+			if(response.data != null) {
+			   $scope.globalColumnsData = response.data.rule_columns;
+			}
+		});
+	};
+		  
+	/**
+	 * This method will take you to Add/Edit Column Page.
+	 */
+	 $scope.showColumn = function(columns) {
+	 	var params = {};
+	 	if(columns != null) {
+	 	  params.rule_column_id = columns.rule_column_id;
+	 	}
+	    $state.go('editglobalcolumns', params);
+	 };
+});

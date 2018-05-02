@@ -1,0 +1,24 @@
+ div.demoGraphicDiv>tabset>.nav-tabs{
+	background-color:#ffffff !important;
+} 
+
+div>demoGraphicDiv>tabset>.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+  -webkit-box-shadow: inset 0 0px 0 #ffffff  !important; 
+  box-shadow: inset 0 0px 0 #ffffff !important;
+  background-color: #ffffff  !important;
+}
+
+.nav-tabs > li.active:after{
+	border-top:none;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+	 -webkit-box-shadow: none !important;
+ 	  box-shadow: none !important;
+}
+.textAreaScroll{
+	resize:none;
+}
+.deleteIcon{
+	 color: red;
+}

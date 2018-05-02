@@ -1,0 +1,10 @@
+package com.zen.smi.extsys.service;
+
+import java.util.List;
+
+import com.zen.smi.extsys.facebook.bo.Group;
+
+public interface SMSService {
+  
+	void sendAccountBalanceSMS(String accountBalance);
+}

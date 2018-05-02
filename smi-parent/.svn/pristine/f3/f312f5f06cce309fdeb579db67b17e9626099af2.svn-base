@@ -1,0 +1,21 @@
+package com.zen.smi.service.helper;
+
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+
+public class SMIJob implements Job {
+
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		// TODO Auto-generated method stub
+		String name=context.getJobDetail().getName();
+		System.out.println("Hello Quartz! 123::"+name);
+		if(name.equalsIgnoreCase("dummyJobName2")){
+			throw new JobExecutionException("Testing Exception");
+
+		}else{
+			System.out.println("Done:::::::::::::::::::::::::");
+		}
+	}
+
+}

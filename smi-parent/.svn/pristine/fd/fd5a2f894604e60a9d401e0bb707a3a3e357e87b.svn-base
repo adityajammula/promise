@@ -1,0 +1,102 @@
+package com.zen.smi.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zen.smi.bo.FlumeAgentsProcessBO;
+import com.zen.smi.bo.FlumeAgentsProcessListBO;
+import com.zen.smi.bo.RuleBO;
+import com.zen.smi.bo.RuleColumnsBO;
+import com.zen.smi.bo.RuleEngineBO;
+import com.zen.smi.bo.RuleListBO;
+import com.zen.smi.bo.SocialMediaAccountsBO;
+import com.zen.smi.bo.SocialMediaAccountsListBO;
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.FlumeAgentsProcessService;
+import com.zen.smi.service.RuleService;
+import com.zen.smi.service.SocialMediaAccountsService;
+
+/**
+ * RulesPageController class manage rule related data. Data from screens is
+ * transferred to the controller and passed to services/dao.
+ * 
+ * @author kalyan
+ */
+@Controller
+@RequestMapping("/flumeAgentsProcess")
+public class FlumeAgentsProcessController extends BaseController {
+
+	/**
+	 * Logger for FlumeAgentsProcessController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(FlumeAgentsProcessController.class);
+
+	@Autowired
+	public FlumeAgentsProcessService flumeAgentsProcessService;
+
+	/**
+	 * This method is to get all the rules information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return FlumeAgentsProcessBO
+	 */
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public @ResponseBody String getFlumeAgentsProcessData(HttpServletRequest request,
+			HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			
+			List<FlumeAgentsProcessBO> flumeAgentsProcess = flumeAgentsProcessService.getAllFlumeAgentsProcess();
+			
+			FlumeAgentsProcessListBO agentsProcessListBO = new FlumeAgentsProcessListBO();
+			agentsProcessListBO.setAgentProcesses(flumeAgentsProcess);
+			resultJson = gson.toJson(agentsProcessListBO, FlumeAgentsProcessListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	@RequestMapping(value = "/start/{agentProcessId}", method = RequestMethod.GET)
+	public @ResponseBody String startAgent(@PathVariable("agentProcessId") int agentProcessId, HttpServletRequest request,
+			HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			
+			System.out.println("agentProcessId: "+agentProcessId);
+			
+//		} catch (BusinessException be) {
+//			be.printStackTrace();
+//			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+
+
+}

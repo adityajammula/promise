@@ -1,0 +1,49 @@
+package com.zen.smi.cmf.bo;
+
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCaseNote;
+
+public class CmfCaseNoteRefBO {
+	private Integer id;
+	private int noteId;
+	private CmfCaseNoteBO cmfCaseNoteBO;
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	/**
+	 * @return the noteId
+	 */
+	public int getNoteId() {
+		return noteId;
+	}
+	/**
+	 * @param noteId the noteId to set
+	 */
+	public void setNoteId(int noteId) {
+		this.noteId = noteId;
+	}
+	/**
+	 * @return the cmfCaseNoteBO
+	 */
+	public CmfCaseNoteBO getCmfCaseNoteBO() {
+		return cmfCaseNoteBO;
+	}
+	/**
+	 * @param cmfCaseNoteBO the cmfCaseNoteBO to set
+	 */
+	public void setCmfCaseNoteBO(CmfCaseNoteBO cmfCaseNoteBO) {
+		this.cmfCaseNoteBO = cmfCaseNoteBO;
+	}
+	
+	
+}

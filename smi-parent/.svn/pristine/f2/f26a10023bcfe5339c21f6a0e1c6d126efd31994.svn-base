@@ -1,0 +1,41 @@
+package com.zen.smi.bo;
+
+import com.google.gson.annotations.SerializedName;
+
+public class OtherCommentsBO {
+	@SerializedName("social_profile_id")
+	private Integer accountTypeId;
+	@SerializedName("message")
+	private String  message;
+	@SerializedName("facebook_id")
+	private String  facebookId;
+	@SerializedName("twitter_id")
+	private String  twitterId;
+	
+	public Integer getAccountTypeId() {
+		return accountTypeId;
+	}
+	public void setAccountTypeId(Integer accountTypeId) {
+		this.accountTypeId = accountTypeId;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	public String getFacebookId() {
+		return facebookId;
+	}
+	public void setFacebookId(String facebookId) {
+		this.facebookId = facebookId;
+	}
+	public String getTwitterId() {
+		return twitterId;
+	}
+	public void setTwitterId(String twitterId) {
+		this.twitterId = twitterId;
+	}
+	
+
+}

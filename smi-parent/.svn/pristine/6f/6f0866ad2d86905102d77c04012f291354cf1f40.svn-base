@@ -1,0 +1,19 @@
+.searchButton{
+	 width: 92% !important;
+}
+
+.modalHeaderAccount{
+	visibility: none  !important;
+}
+
+.margin{
+	margin-left: -31px !important;
+	width: 100% !important;
+}
+.groupImage {
+	float: left;
+	padding-right: 17px;
+}
+.groupImageIcon {
+	width: 55px;
+}

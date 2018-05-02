@@ -1,0 +1,92 @@
+package com.zen.smi.extsys.service.impl;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.gson.Gson;
+import com.zen.smi.extsys.facebook.bo.Group;
+import com.zen.smi.extsys.facebook.bo.GroupMetaDataBO;
+import com.zen.smi.extsys.facebook.bo.GroupPage;
+import com.zen.smi.extsys.service.FaceBookService;
+
+public class FaceBookServiceImpl implements FaceBookService {
+
+	@Autowired
+	public Gson gson;
+
+	public List<Group> getGroups(String initialUrl) throws Exception {
+	
+		boolean lastPage = false;
+		String nextUrl = null;
+		String json = null;
+		List<Group> groupsList = new ArrayList<Group>();
+		json = readUrl(initialUrl);
+		GroupPage page = gson.fromJson(json, GroupPage.class);
+		List<Group> groups = page.getData();
+		groupsList.addAll(groups);
+
+	/*	if (page.getPaging().getNext().equals("empty")) {
+			lastPage = true;
+		} else {
+
+			nextUrl = page.getPaging().getNext();
+
+			while (!lastPage) {
+
+				json = readUrl(nextUrl);
+				GroupPage pageNext = gson.fromJson(json, GroupPage.class);
+				List<Group> groupsNext = pageNext.getData();
+				groupsList.addAll(groupsNext);
+
+				if ((pageNext.getPaging() != null)
+						&& (!pageNext.getPaging().getNext().equals("empty"))) {
+					nextUrl = pageNext.getPaging().getNext();
+
+				} else {
+
+					lastPage = true;
+				}
+
+			}
+		}
+*/
+		return groupsList;
+	}
+	
+	
+	public GroupMetaDataBO getGroupMetaData(String groupId,String accessToken)throws Exception{
+		
+		GroupMetaDataBO metaData=null;
+		String url="https://graph.facebook.com/"+groupId+"?access_token="+accessToken+"";
+		
+			String json=readUrl(url);
+			metaData=gson.fromJson(json,GroupMetaDataBO.class);
+			
+		return metaData;
+	}
+
+	private static String readUrl(String urlString) throws Exception {
+		BufferedReader reader = null;
+		try {
+			URL url = new URL(urlString);
+			reader = new BufferedReader(new InputStreamReader(url.openStream()));
+			StringBuffer buffer = new StringBuffer();
+			int read;
+			char[] chars = new char[1024];
+			while ((read = reader.read(chars)) != -1)
+				buffer.append(chars, 0, read);
+
+			return buffer.toString();
+		} finally {
+			if (reader != null)
+				reader.close();
+		}
+
+	}
+
+}

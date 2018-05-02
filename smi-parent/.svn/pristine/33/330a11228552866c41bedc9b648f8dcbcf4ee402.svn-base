@@ -1,0 +1,126 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.google.gson.annotations.SerializedName;
+
+public class CmfCasePriorityBO {
+	
+	@SerializedName("priority_id")	
+	private Integer priorityId;
+	@SerializedName("priority_name")
+	private String priorityName;
+	@SerializedName("priority_description")
+	private String priorityDescription;
+	@SerializedName("created_date")
+	private Date createdDate;
+	@SerializedName("updated_date")
+	private Date updatedDate;
+	private List<CmfCaseBO> cmfCasesBO = new ArrayList<CmfCaseBO>(0);
+	private List<CmfGroupCaseBO> cmfGroupCasesBO = new ArrayList<CmfGroupCaseBO>(0);
+	@SerializedName("issue_count_by_priority_id")	
+	private Long issueCount;
+	
+	/**
+	 * @return the priorityId
+	 */
+	public Integer getPriorityId() {
+		return priorityId;
+	}
+	/**
+	 * @param priorityId the priorityId to set
+	 */
+	public void setPriorityId(Integer priorityId) {
+		this.priorityId = priorityId;
+	}
+	/**
+	 * @return the priorityName
+	 */
+	public String getPriorityName() {
+		return priorityName;
+	}
+	/**
+	 * @param priorityName the priorityName to set
+	 */
+	public void setPriorityName(String priorityName) {
+		this.priorityName = priorityName;
+	}
+	/**
+	 * @return the priorityDescription
+	 */
+	public String getPriorityDescription() {
+		return priorityDescription;
+	}
+	/**
+	 * @param priorityDescription the priorityDescription to set
+	 */
+	public void setPriorityDescription(String priorityDescription) {
+		this.priorityDescription = priorityDescription;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the updatedDate
+	 */
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	/**
+	 * @param updatedDate the updatedDate to set
+	 */
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	/**
+	 * @return the cmfCasesBO
+	 */
+	public List<CmfCaseBO> getCmfCasesBO() {
+		return cmfCasesBO;
+	}
+	/**
+	 * @param cmfCasesBO the cmfCasesBO to set
+	 */
+	public void setCmfCasesBO(List<CmfCaseBO> cmfCasesBO) {
+		this.cmfCasesBO = cmfCasesBO;
+	}
+	/**
+	 * @return the cmfGroupCasesBO
+	 */
+	public List<CmfGroupCaseBO> getCmfGroupCasesBO() {
+		return cmfGroupCasesBO;
+	}
+	/**
+	 * @param cmfGroupCasesBO the cmfGroupCasesBO to set
+	 */
+	public void setCmfGroupCasesBO(List<CmfGroupCaseBO> cmfGroupCasesBO) {
+		this.cmfGroupCasesBO = cmfGroupCasesBO;
+	}
+	/**
+	 * @return the issueCount
+	 */
+	public Long getIssueCount() {
+		return issueCount;
+	}
+	/**
+	 * @param issueCount the issueCount to set
+	 */
+	public void setIssueCount(Long issueCount) {
+		this.issueCount = issueCount;
+	}
+	
+	
+}

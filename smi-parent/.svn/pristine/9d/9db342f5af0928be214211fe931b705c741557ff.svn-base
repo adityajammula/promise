@@ -1,0 +1,151 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('DashboardController', function ($scope, dashboardService,$interval,$moment) {
+    
+	  dashboardService.getDashboardInitData().then(function(data) {
+			
+	  });
+	  $scope.basicData = [
+	                      { year: '2009', a: 15,  b: 5 },
+	                      { year: '2010', a: 20,  b: 10 },
+	                      { year: '2011', a: 35,  b: 25 },
+	                      { year: '2012', a: 40, b: 30 }
+	                    ];
+	  
+	  
+	  
+	  var data = [],
+      totalPoints = 300;
+  $scope.getRandomData =  function() {
+    if (data.length > 0) {
+      data = data.slice(1);
+    }
+
+    // Do a random walk
+
+    while (data.length < totalPoints) {
+
+      var prev = data.length > 0 ? data[data.length - 1] : 50,
+          y = prev + Math.random() * 10 - 5;
+
+      if (y < 0) {
+        y = 0;
+      } else if (y > 100) {
+        y = 100;
+      }
+
+      data.push(y);
+    }
+
+    // Zip the generated y values with the x values
+
+    var res = [];
+  /*for (var i = 0; i < data.length; ++i) {
+      res.push([i, data[i]]);
+    }*/
+     res= [[2000,-20],[2004,40],[2005,0],[2009,10]];
+    return res;
+  };
+
+  var updateInterval = 1000;
+
+  $interval(function() {
+    $scope.dataset = [{
+      data: $scope.getRandomData()
+    }];
+    $scope.getRandomData();
+  }, updateInterval);
+
+  $scope.dataset = [{
+    data: $scope.getRandomData()
+  }];
+ 
+  $scope.options = {
+    colors: ['#a2d200'],
+    series: {
+      shadowSize: 0,
+      lines: {
+        show: true,
+        fill: 0.1,
+        color: '#FF0000',
+        width: 22,
+        value: .80 * 0 // Need to set this probably as a var.
+      }
+    },
+   
+    xaxis:{
+    	plotLines: [{
+    	    color: 'red', // Color value
+    	    dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+    	    value: 3, // Value of where the line will appear
+    	    width: 2 // Width of the line    
+    	  }]
+    },
+    yaxis: {
+    	plotLines: [{
+    	    color: 'red', // Color value
+    	    dashStyle: 'longdashdot', // Style of the plot line. Default to solid
+    	    value: 3, // Value of where the line will appear
+    	    width: 2 // Width of the line    
+    	  }]
+    },
+  
+    grid: {
+      hoverable: true,
+      clickable: true,
+      borderWidth: 0,
+      color: '#ccc'
+    },
+    tooltip: true,
+    tooltipOpts: {
+      content: '%y%',
+      defaultTheme: false,
+      shifts: {
+        x: 0,
+        y: 20
+      }
+    }
+  };
+  
+  $scope.startDate = $moment().format('MMMM D, YYYY');
+  $scope.endDate = $moment().format('MMMM D, YYYY');
+  $scope.rangeOptions = {
+    ranges: {
+      Today: [$moment(), $moment()],
+      Yesterday: [$moment().subtract(1, 'days'), $moment().subtract(1, 'days')],
+      'Last 7 Days': [$moment().subtract(6, 'days'), $moment()],
+      'Last 30 Days': [$moment().subtract(29, 'days'), $moment()],
+      'This Month': [$moment().startOf('month'), $moment().endOf('month')],
+      'Last Month': [$moment().subtract(1, 'month').startOf('month'), $moment().subtract(1, 'month').endOf('month')]
+    },
+    opens: 'left',
+    startDate: $moment().subtract(29, 'days'),
+    endDate: $moment(),
+    parentEl: '#content'
+  };
+    $scope.$watch('startDate', function() {
+    $scope.changeCase($scope.caseStatisticVal);
+     }, true);
+    $scope.$watch('endDate', function() {
+    $scope.changeCase($scope.caseStatisticVal); }, true);
+
+    $scope.formatDate = function(date){
+       	    var d = new Date(date),
+		        month = '' + (d.getMonth() + 1),
+		        day = '' + d.getDate(),
+		        year = d.getFullYear();
+
+		    if (month.length < 2) month = '0' + month;
+		    if (day.length < 2) day = '0' + day;
+		    return [year, month, day].join('-');
+     };
+  
+});

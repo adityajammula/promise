@@ -1,0 +1,14 @@
+.searchButton{
+	  margin-top: 26px;
+	  margin-left: -7px !important;
+}
+
+.modalHeaderAccount{
+	visibility: none  !important;
+}
+
+.margin{
+	margin-left: -31px !important;
+	width: 52.2% !important;
+}
+

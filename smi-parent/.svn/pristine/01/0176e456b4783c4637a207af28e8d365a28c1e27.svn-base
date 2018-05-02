@@ -1,0 +1,17 @@
+package com.zen.smi.extsys.service;
+ 
+ 
+public interface HadoopAppService {
+
+	void newAgent() throws Exception;
+	
+	void stopAgent(int agentProcessId) throws Exception;
+	
+	void startAgent(int agentProcessId) throws Exception;
+
+	
+}
+ 
+ 
+
+

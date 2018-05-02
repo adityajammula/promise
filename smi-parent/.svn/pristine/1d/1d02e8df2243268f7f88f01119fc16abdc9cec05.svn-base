@@ -1,0 +1,109 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+import com.zen.smi.socialtransactions.bo.StCaseBO;
+import com.zen.smi.socialtransactions.bo.StCaseBalanceEnquiryBO;
+import com.zen.smi.socialtransactions.bo.StCaseTransactionBO;
+
+public class CmfCaseListBO {
+	
+	private List<CmfCaseBO> cmfCaseBO;
+	private List<UserBO> cmfCasesUsers;
+	List<DashBoardJSONObjectBO> dashBoardJSONObjectBOList;
+	List<CmfCaseNoteBO> cmfCaseNoteListBO;
+	List<StCaseBO> stCaseBOList;
+	List<StCaseTransactionBO> stCaseTransactionBOList;
+	List<StCaseBalanceEnquiryBO> stCaseBalanceEnquiryBOList;
+	
+	/**
+	 * @return the stCaseBalanceEnquiryBOList
+	 */
+	public List<StCaseBalanceEnquiryBO> getStCaseBalanceEnquiryBOList() {
+		return stCaseBalanceEnquiryBOList;
+	}
+
+	/**
+	 * @param stCaseBalanceEnquiryBOList the stCaseBalanceEnquiryBOList to set
+	 */
+	public void setStCaseBalanceEnquiryBOList(
+			List<StCaseBalanceEnquiryBO> stCaseBalanceEnquiryBOList) {
+		this.stCaseBalanceEnquiryBOList = stCaseBalanceEnquiryBOList;
+	}
+
+	/**
+	 * @return the stCaseTransactionBOList
+	 */
+	public List<StCaseTransactionBO> getStCaseTransactionBOList() {
+		return stCaseTransactionBOList;
+	}
+
+	/**
+	 * @param stCaseTransactionBOList the stCaseTransactionBOList to set
+	 */
+	public void setStCaseTransactionBOList(
+			List<StCaseTransactionBO> stCaseTransactionBOList) {
+		this.stCaseTransactionBOList = stCaseTransactionBOList;
+	}
+
+	
+	public List<CmfCaseBO> getCmfCaseBO() {
+		return cmfCaseBO;
+	}
+
+	public void setCmfCaseBO(List<CmfCaseBO> cmfCaseBO) {
+		this.cmfCaseBO = cmfCaseBO;
+	}
+
+	/**
+	 * @return the cmfCasesUsers
+	 */
+	public List<UserBO> getCmfCasesUsers() {
+		return cmfCasesUsers;
+	}
+
+	/**
+	 * @param cmfCasesUsers the cmfCasesUsers to set
+	 */
+	public void setCmfCasesUsers(List<UserBO> cmfCasesUsers) {
+		this.cmfCasesUsers = cmfCasesUsers;
+	}
+
+	/**
+	 * @return the cmfCaseNoteListBO
+	 */
+	public List<CmfCaseNoteBO> getCmfCaseNoteListBO() {
+		return cmfCaseNoteListBO;
+	}
+
+	/**
+	 * @param cmfCaseNoteListBO the cmfCaseNoteListBO to set
+	 */
+	public void setCmfCaseNoteListBO(List<CmfCaseNoteBO> cmfCaseNoteListBO) {
+		this.cmfCaseNoteListBO = cmfCaseNoteListBO;
+	}
+
+	public List<DashBoardJSONObjectBO> getDashBoardJSONObjectBOList() {
+		return dashBoardJSONObjectBOList;
+	}
+
+	public void setDashBoardJSONObjectBOList(
+			List<DashBoardJSONObjectBO> dashBoardJSONObjectBOList) {
+		this.dashBoardJSONObjectBOList = dashBoardJSONObjectBOList;
+	}
+
+	/**
+	 * @return the stCaseBOList
+	 */
+	public List<StCaseBO> getStCaseBOList() {
+		return stCaseBOList;
+	}
+
+	/**
+	 * @param stCaseBOList the stCaseBOList to set
+	 */
+	public void setStCaseBOList(List<StCaseBO> stCaseBOList) {
+		this.stCaseBOList = stCaseBOList;
+	}
+
+}

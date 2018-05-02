@@ -1,0 +1,948 @@
+package com.zen.smi.service.impl;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+
+import com.google.gson.Gson;
+import com.zen.rules.bo.InputBO;
+import com.zen.rules.eval.RuleEval;
+import com.zen.smi.bo.RuleAppsBO;
+import com.zen.smi.bo.RuleBO;
+import com.zen.smi.bo.RuleColumnsBO;
+import com.zen.smi.bo.RuleEngineBO;
+import com.zen.smi.bo.RuleFamilyBO;
+import com.zen.smi.bo.RuleFormulaBO;
+import com.zen.smi.bo.RuleFormulasBO;
+import com.zen.smi.bo.RuleGroupBO;
+import com.zen.smi.bo.RuleListBO;
+import com.zen.smi.bo.RuleRulesColumnsBO;
+import com.zen.smi.bo.RuleTestSummaryBO;
+import com.zen.smi.dao.RulesDAO;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleApps;
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleFormula;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.entities.RuleRulesColumns;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.dao.impl.RulesDAOImpl;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.exception.UserException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.RuleService;
+import com.zen.smi.service.helper.FamilyHelper;
+import com.zen.smi.service.helper.RuleGroupHelper;
+import com.zen.smi.service.helper.RuleHelper;
+
+public class RuleServiceImpl extends BaseService implements RuleService {
+
+	/**
+	 * Logger for RuleServiceImpl class.
+	 */
+	private static final Logger LOGGER = Logger
+			.getLogger(RuleServiceImpl.class);
+
+	/**
+	 * {@inheritDoc}
+	/**
+	 * Get the All Rules from the database.
+	 * @param null
+	 * @return List of RuleBO objects
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	public List<RuleBO> getRules(int ruleAppId) throws BusinessException {
+		LOGGER.debug("Starts getRules....");
+		List<Rule> rules = null;
+		List<Rule> rulesList = null;
+		List<RuleBO> ruleBO = null;
+		try {
+			rules = getRulesDAO().getRulesByRuleAppId(ruleAppId);
+			if (rules != null) {
+				rulesList = new ArrayList<Rule>(0);
+				for (Rule rule : rules) {
+					rule = getRuleSubEntity(rule);
+					rulesList.add(rule);
+				}
+
+				ruleBO = RuleHelper.getInstance().convertRulesEntityToBO(
+						rulesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getRules....");
+		return ruleBO;
+	}
+
+	/**
+	 * @author Venumadhava.Reddy
+	 */
+	public void deleteRule(RuleBO ruleBO) throws BusinessException {
+		LOGGER.debug("Starts deleteRule....");
+		Rule rule = null;
+		if (ruleBO != null) {
+			List<RuleFormulaBO> formulaList = null;
+			rule = RuleHelper.getInstance().convertRuleBOToRuleEntity(ruleBO);
+			if (rule != null) {
+				RuleBO formulaBO = getFormulasByRuleId(rule.getRuleId());
+				if (formulaBO != null) {
+					formulaList = formulaBO.getRuleFormulas();
+
+				}
+			}
+			if (formulaList == null || formulaList.isEmpty()) {
+				throw new BusinessException(MessageUtil.getInstance()
+						.getMessage("TODO-ERROR", null));
+			}
+			try {
+
+				getRulesDAO().delete(rule);
+
+			} catch (GenericDAOException gde) {
+				throw new BusinessException(gde.getMessageBO());
+			} catch (Exception e) {
+				throw new BusinessException(MessageUtil.getInstance()
+						.getMessage("UNKNOWN_EXCEPTION", null), e);
+			}
+
+		}
+		LOGGER.debug("Ends deleteRules....");
+	}
+
+	/**
+	 * This Method is used to save new rule
+	 *
+	 * @author
+	 * 
+	 */
+	public void saveRule(RuleBO ruleBO) throws BusinessException {
+		LOGGER.debug("Starts saveRule....");
+		Rule rule = null;
+		if (ruleBO != null) {
+			rule = RuleHelper.getInstance().convertAddRuleBOToEntity(ruleBO);
+			try {
+				if (getRulesDAO().isRuleNameExist(rule)) {
+					throw new BusinessException(MessageUtil.getInstance()
+							.getMessage("DUPLICATE_RULE", null));
+				} else {
+					getRulesDAO().saveRule(rule);
+					Set<RuleRulesColumns> ruleColumnsList = null;
+					Set<RuleFormula> ruleFormulasList = null;
+
+					ruleColumnsList = addRuleColumns(rule, ruleBO);
+					ruleFormulasList = addRuleFormula(rule, ruleBO);
+
+					if (rule != null) {
+
+						rule.setRuleRulesColumnses(ruleColumnsList);
+						rule.setRuleFormulas(ruleFormulasList);
+						getRulesDAO().saveOrUpdate(rule);
+					}
+
+				}
+			} catch (GenericDAOException e) {
+				throw new BusinessException(e.getMessageBO());
+			} catch (Exception e) {
+				throw new BusinessException(MessageUtil.getInstance()
+						.getMessage("UNKNOWN_EXCEPTION", null), e);
+			}
+
+			LOGGER.debug("Ends saveRule....");
+		}
+
+	}
+
+	public RuleBO getFormulasByRuleId(int ruleId) throws BusinessException {
+
+		LOGGER.debug("Starts getFormulasByRuleId....");
+		RuleBO rulesBO = null;
+
+		try {
+
+			Rule rule = getRulesDAO().getFormulasByRuleId(ruleId);
+			if (rule != null) {
+				rulesBO = RuleHelper.getInstance().convertEditRulesEntityToBO(
+						rule);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends getFormulasByRuleId....");
+
+		return rulesBO;
+	}
+
+	/**
+	 * Get the All Rule dependency objects from the database.
+	 * @param null
+	 * @return Rule object
+	 * @throws BusinessException 
+	 * @author tmangalapenta
+	 */
+	private Rule getRuleSubEntity(Rule rule) throws BusinessException {
+		LOGGER.debug("Starts getRuleSubEntity....");
+		try {
+			Set<RuleRulesColumns> rrColumnsList = new HashSet<RuleRulesColumns>(
+					0);
+			RuleGroup rg = getRuleGroupDAO().getRuleGroupByRuleID(
+					rule.getRuleId());
+			RuleFamily rf = getFamilyDAO().getRuleFamilyByGroupID(
+					rg.getRuleGroupId());
+			rg.setRuleFamily(rf);
+			rule.setRuleGroup(rg);
+
+			List<RuleFormula> ruleFormulas = getRuleFormulaDAO()
+					.getRuleFormulasByRuleId(rule.getRuleId());
+			Set<RuleFormula> ruleFormulasList = new HashSet<RuleFormula>(
+					ruleFormulas);
+			rule.setRuleFormulas(ruleFormulasList);
+
+			List<RuleRulesColumns> ruleRulesColumns = getRuleRuleColumnsDAO()
+					.getRuleColumnsByRuleId(rule.getRuleId());
+			Set<RuleRulesColumns> ruleRulesColumnsList = new HashSet<RuleRulesColumns>(
+					ruleRulesColumns);
+			for (RuleRulesColumns rrColumns : ruleRulesColumnsList) {
+				RuleColumns rulesColumns = getRuleColumnsDAO()
+						.getRuleColumnByRulesID(
+								rrColumns.getRuleRulesColumnId());
+				rrColumns.setRuleColumns(rulesColumns);
+				rrColumnsList.add(rrColumns);
+			}
+
+			rule.setRuleRulesColumnses(rrColumnsList);
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends getRuleSubEntity....");
+		return rule;
+	}
+
+	/**
+	 * Get the Rule for ruleId from the database.
+	 * 
+	 * @param ruleId
+	 * @return RuleEngineBO
+	 * @throws BusinessException
+	 * @author tmangalapenta
+	 */
+	public RuleEngineBO getRule(int ruleId) throws BusinessException {
+		LOGGER.debug("Starts getRule....");
+		Rule rule = null;
+		RuleBO ruleBO = null;
+		List<RuleFamily> ruleFamily = null;
+		List<RuleFamilyBO> ruleFamilyBO = null;
+		List<RuleGroup> ruleGroups = null;
+		List<RuleGroupBO> ruleGroupBO = null;
+		RuleEngineBO ruleEngineBO = new RuleEngineBO();
+		List<RuleFormulasBO> ruleFormulasListBO = new ArrayList<RuleFormulasBO>();
+		try {
+			
+			if (ruleId != 0) {
+					rule = getRulesDAO().getRuleByRuleId(ruleId);
+					if (rule != null) {
+						rule = getRuleSubEntity(rule);
+					}
+					ruleEngineBO.setRuleAppsBOs(getAllRuleApps());
+				
+	
+				if (rule != null) {
+					ruleBO = RuleHelper.getInstance().convertRuleEntiryToRuleBO(
+							rule);
+					ruleBO.setRuleAppId(rule.getRuleGroup().getRuleFamily().getRuleApps().getAppId());
+					for (RuleFormulaBO ruleFormulaBO : ruleBO.getRuleFormulas()) {
+						RuleFormulasBO ruleFormulasBO = new RuleFormulasBO();
+						ruleFormulasBO.setRuleFormulaBO(ruleFormulaBO);
+						ruleFormulasListBO.add(ruleFormulasBO);
+					}
+					ruleBO.setRuleRulesFormulas(ruleFormulasListBO);
+				}
+				ruleEngineBO.setRuleBO(ruleBO);
+				
+				ruleFamily = getFamilyDAO().getRuleFamilysByAppId(rule.getRuleGroup().getRuleFamily().getRuleApps().getAppId());
+				if (ruleFamily != null) {
+					ruleFamilyBO = FamilyHelper.getInstance()
+							.convertRuleFamilyEntityToBO(ruleFamily);
+				}
+				ruleEngineBO.setRuleFamilyBOs(ruleFamilyBO);
+				
+				ruleGroups = getRuleGroupDAO().getGroup(rule.getRuleGroup().getRuleFamily().getRuleFamilyId());
+				if (ruleGroups != null) {
+					ruleGroupBO = RuleGroupHelper.getInstance()
+							.convertRuleGroupEntityToBO(ruleGroups);
+				}
+				ruleEngineBO.setRuleGroupBOs(ruleGroupBO);
+			} else{
+				ruleEngineBO.setRuleAppsBOs(getAllRuleApps());
+			}
+
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getRule....");
+		return ruleEngineBO;
+	}
+
+	/**
+	 * @author tmangalapenta
+	 * @param EditRuleBO
+	 * @return
+	 * @throws BusinessException
+	 */
+	public void editRule(RuleBO editRuleBO) throws BusinessException {
+		LOGGER.debug("Starts editRule....");
+
+		Set<RuleRulesColumns> ruleColumnsList = null;
+		Set<RuleFormula> ruleFormulasList = null;
+
+		try {
+			RuleGroup ruleGroup = getRuleGroupDAO().findById(
+					editRuleBO.getRuleGroup().getRuleGroupId());
+			Rule rule = getRulesDAO().findById(editRuleBO.getRuleId());
+			ruleColumnsList = manageRuleColumns(rule, editRuleBO);
+			ruleFormulasList = manageRuleFormula(rule, editRuleBO);
+
+			if (rule != null) {
+				rule.setRuleName(editRuleBO.getRuleName());
+				rule.setRuleDescription(editRuleBO.getRuleDescription());
+				rule.setRuleGroup(ruleGroup);
+				rule.setRuleRulesColumnses(ruleColumnsList);
+				rule.setRuleFormulas(ruleFormulasList);
+				getRulesDAO().editRule(rule);
+			}
+
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends editRule....");
+
+	}
+
+	private Set<RuleFormula> manageRuleFormula(Rule rule, RuleBO editRuleBO)
+			throws BusinessException {
+		Set<RuleFormula> ruleFormulaList = new HashSet<RuleFormula>(0);
+		try {
+			for (RuleFormulaBO uirulesFormulas : editRuleBO.getRuleFormulas()) {
+				if (("New").equals(uirulesFormulas.getAction())) {
+					// RuleFormula rf =
+					// RuleHelper.getInstance().convertRuleFormulasBOToEntity(uirulesFormulas);
+					RuleFormula rf = new RuleFormula();
+					rf.setRuleFormulaName(uirulesFormulas.getRuleFormulaName());
+					rf.setRuleFormulaExpression(uirulesFormulas
+							.getRuleFormulaExpression());
+					rf.setRule(rule);
+					getRuleFormulaDAO().saveRuleFormula(rf);
+					ruleFormulaList.add(rf);
+				} else if (("Edit").equals(uirulesFormulas.getAction())) {
+					RuleFormula rf = getRuleFormulaDAO().findById(
+							uirulesFormulas.getRuleFormulaId());
+					rf.setRuleFormulaName(uirulesFormulas.getRuleFormulaName());
+					rf.setRuleFormulaExpression(uirulesFormulas
+							.getRuleFormulaExpression());
+					getRuleFormulaDAO().updateRuleFormula(rf);
+					ruleFormulaList.add(rf);
+				} else if (("Deleted").equals(uirulesFormulas.getAction())) {
+					RuleFormula rf = getRuleFormulaDAO().findById(
+							uirulesFormulas.getRuleFormulaId());
+					getRuleFormulaDAO().delete(rf);
+				}
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends editRule....");
+		return ruleFormulaList;
+	}
+
+	private Set<RuleFormula> addRuleFormula(Rule rule, RuleBO editRuleBO)
+			throws BusinessException {
+		LOGGER.debug("starts addRuleFormula....");
+		Set<RuleFormula> ruleFormulaList = new HashSet<RuleFormula>(0);
+		try {
+			for (RuleFormulasBO uiRulerulesFormulas : editRuleBO.getRuleRulesFormulas()) {
+
+				RuleFormula rf = new RuleFormula();// RuleHelper.getInstance().convertRuleFormulasBOToEntity(uirulesFormulas);
+				RuleFormulaBO uirulesFormulas = uiRulerulesFormulas.getRuleFormulaBO();
+				rf.setRuleFormulaExpression(uirulesFormulas
+						.getRuleFormulaExpression());
+				rf.setRuleFormulaName(uirulesFormulas.getRuleFormulaName());
+				rf.setRule(rule);
+				getRuleFormulaDAO().saveRuleFormula(rf);
+				ruleFormulaList.add(rf);
+
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends addRuleFormula....");
+		return ruleFormulaList;
+	}
+
+	private Set<RuleRulesColumns> manageRuleColumns(Rule rule, RuleBO editRuleBO)
+			throws BusinessException {
+
+		Set<RuleRulesColumns> ruleColumnsList = new HashSet<RuleRulesColumns>(0);
+		try {
+			for (RuleRulesColumnsBO uirulesColumns : editRuleBO
+					.getRuleRulesColumnses()) {
+				if (("Deleted").equals(uirulesColumns.getRuleColumns()
+						.getAction())) {
+					RuleRulesColumns rrc = getRuleRuleColumnsDAO()
+							.getRuleRuleColumn(
+									uirulesColumns.getRuleColumns().getRuleColumnId(),
+									rule.getRuleId());
+					RuleColumns rc = getRuleColumnsDAO().getRuleColumn(uirulesColumns.getRuleColumns().getRuleColumnId());
+					if (null != rc.getRuleIsGlobal()
+							&& 0 < Integer.valueOf(rc.getRuleIsGlobal())) {
+						getRuleRuleColumnsDAO().delete(rrc);
+					} else {
+						getRuleRuleColumnsDAO().delete(rrc);
+						getRuleColumnsDAO().deleteRuleColumns(rc);
+					}
+				} else {
+					if (("New").equals(uirulesColumns.getRuleColumns()
+							.getAction())) {
+						RuleColumns rc = RuleHelper.getInstance()
+								.convertRuleColumnsBOToEntity(
+										uirulesColumns.getRuleColumns());
+						getRuleColumnsDAO().saveRuleColumns(rc);
+						RuleRulesColumns ruleRulesColumns = new RuleRulesColumns();
+						ruleRulesColumns.setRule(rule);
+						ruleRulesColumns.setRuleColumns(rc);
+						getRuleRuleColumnsDAO().saveRuleRuleColumns(
+								ruleRulesColumns);
+						ruleColumnsList.add(ruleRulesColumns);
+					} else if (("Edit").equals(uirulesColumns.getRuleColumns()
+							.getAction())) {
+						RuleColumns rc = getRuleColumnsDAO().getRuleColumn(
+								uirulesColumns.getRuleColumns()
+										.getRuleColumnId());
+						rc.setRuleColumnName(uirulesColumns.getRuleColumns()
+								.getRuleColumnName());
+						rc.setRuleColumnText(uirulesColumns.getRuleColumns()
+								.getRuleColumnText());
+						getRuleColumnsDAO().updateRuleColumns(rc);
+						RuleRulesColumns ruleRulesColumns = getRuleRuleColumnsDAO()
+								.getRuleRuleColumn(
+										uirulesColumns.getRuleColumns()
+												.getRuleColumnId(),
+										rule.getRuleId());
+						if (null != ruleRulesColumns) {
+							ruleRulesColumns.setRule(rule);
+							ruleRulesColumns.setRuleColumns(rc);
+							getRuleRuleColumnsDAO().saveRuleRuleColumns(
+									ruleRulesColumns);
+						} else {
+							ruleRulesColumns = new RuleRulesColumns();
+							ruleRulesColumns.setRule(rule);
+							ruleRulesColumns.setRuleColumns(rc);
+							getRuleRuleColumnsDAO().saveRuleRuleColumns(
+									ruleRulesColumns);
+						}
+						ruleColumnsList.add(ruleRulesColumns);
+					} else {
+						throw new BusinessException(MessageUtil.getInstance()
+								.getMessage("UNKNOWN_EXCEPTION", null), null);
+					}
+				}
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends editRule....");
+		return ruleColumnsList;
+	}
+
+	private Set<RuleRulesColumns> addRuleColumns(Rule rule, RuleBO editRuleBO)
+			throws BusinessException {
+		LOGGER.debug("starts addRuleColumns....");
+		Set<RuleRulesColumns> ruleColumnsList = new HashSet<RuleRulesColumns>(0);
+		try {
+			for (RuleRulesColumnsBO uirulesColumns : editRuleBO
+					.getRuleRulesColumnses()) {
+				RuleColumns rc = null;
+				if (null != uirulesColumns.getRuleColumnId()) {
+					rc = getRuleColumnsDAO().getRuleColumn(
+							uirulesColumns.getRuleColumnId());
+				}
+				if (null != rc) {
+					rc.setRuleColumnName(uirulesColumns.getRuleColumns()
+							.getRuleColumnName());
+					rc.setRuleColumnText(uirulesColumns.getRuleColumns()
+							.getRuleColumnText());
+					getRuleColumnsDAO().updateRuleColumns(rc);
+					RuleRulesColumns ruleRulesColumns = getRuleRuleColumnsDAO()
+							.getRuleRuleColumn(
+									uirulesColumns.getRuleColumns()
+											.getRuleColumnId(),
+									rule.getRuleId());
+					if (null != ruleRulesColumns) {
+						ruleRulesColumns.setRule(rule);
+						ruleRulesColumns.setRuleColumns(rc);
+						getRuleRuleColumnsDAO().saveRuleRuleColumns(
+								ruleRulesColumns);
+					} else {
+						ruleRulesColumns = new RuleRulesColumns();
+						ruleRulesColumns.setRule(rule);
+						ruleRulesColumns.setRuleColumns(rc);
+						getRuleRuleColumnsDAO().saveRuleRuleColumns(
+								ruleRulesColumns);
+					}
+					ruleColumnsList.add(ruleRulesColumns);
+				} else {
+					rc = RuleHelper.getInstance().convertRuleColumnsBOToEntity(
+							uirulesColumns.getRuleColumns());
+					getRuleColumnsDAO().saveRuleColumns(rc);
+					RuleRulesColumns ruleRulesColumns = new RuleRulesColumns();
+					ruleRulesColumns.setRule(rule);
+					ruleRulesColumns.setRuleColumns(rc);
+					getRuleRuleColumnsDAO().saveRuleRuleColumns(
+							ruleRulesColumns);
+					ruleColumnsList.add(ruleRulesColumns);
+				}
+
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends addRuleColumns....");
+		return ruleColumnsList;
+	}
+
+	/**
+	 * This is used to get the Global Column data.
+	 * @throws UserException
+	 * @return ruleColumnsBO
+	 */
+	public List<RuleColumnsBO> getGlobalRuleColumns() throws BusinessException {
+		LOGGER.debug("Starts getRules....");
+		List<RuleColumnsBO> ruleColumnsBO = new ArrayList<RuleColumnsBO>();
+		List<RuleColumns> rulesColumnsList = null;
+		try {
+			rulesColumnsList = getRuleColumnsDAO().getGlobalRuleColumns();
+			if (rulesColumnsList != null) {
+				for (RuleColumns ruleColumn : rulesColumnsList) {
+					ruleColumnsBO.add(RuleHelper.getInstance()
+							.convertRuleColumnsEntityToBO(ruleColumn));
+				}
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getRules....");
+		return ruleColumnsBO;
+	}
+
+	/**
+	 * Static values of Drop Down
+	 * @return ruleColumnsBOFilter
+	 */
+	public Set<String> getStaticValuesSet() {
+		Set<String> ruleColumnsBOFilter = new HashSet<String>();
+		ruleColumnsBOFilter.add("GA");
+		ruleColumnsBOFilter.add("GB");
+		ruleColumnsBOFilter.add("GC");
+		ruleColumnsBOFilter.add("GD");
+		ruleColumnsBOFilter.add("GE");
+		ruleColumnsBOFilter.add("GF");
+		ruleColumnsBOFilter.add("GG");
+		ruleColumnsBOFilter.add("GH");
+		ruleColumnsBOFilter.add("GI");
+		ruleColumnsBOFilter.add("GJ");
+		ruleColumnsBOFilter.add("GK");
+		ruleColumnsBOFilter.add("GL");
+		ruleColumnsBOFilter.add("GM");
+		ruleColumnsBOFilter.add("GN");
+		ruleColumnsBOFilter.add("GO");
+		ruleColumnsBOFilter.add("GP");
+		ruleColumnsBOFilter.add("GQ");
+		ruleColumnsBOFilter.add("GR");
+		ruleColumnsBOFilter.add("GS");
+		ruleColumnsBOFilter.add("GT");
+		ruleColumnsBOFilter.add("GU");
+		ruleColumnsBOFilter.add("GV");
+		ruleColumnsBOFilter.add("GW");
+		ruleColumnsBOFilter.add("GX");
+		ruleColumnsBOFilter.add("GY");
+		ruleColumnsBOFilter.add("GZ");
+		ruleColumnsBOFilter.add("GAA");
+		ruleColumnsBOFilter.add("GAB");
+		ruleColumnsBOFilter.add("GAC");
+		ruleColumnsBOFilter.add("GAD");
+		ruleColumnsBOFilter.add("GAE");
+		ruleColumnsBOFilter.add("GAF");
+		ruleColumnsBOFilter.add("GAG");
+		ruleColumnsBOFilter.add("GAH");
+		ruleColumnsBOFilter.add("GAI");
+		ruleColumnsBOFilter.add("GAJ");
+		ruleColumnsBOFilter.add("GAK");
+		ruleColumnsBOFilter.add("GAL");
+		ruleColumnsBOFilter.add("GAM");
+		ruleColumnsBOFilter.add("GAN");
+		ruleColumnsBOFilter.add("GAO");
+		ruleColumnsBOFilter.add("GAP");
+		ruleColumnsBOFilter.add("GAQ");
+		ruleColumnsBOFilter.add("GAR");
+		ruleColumnsBOFilter.add("GAS");
+		ruleColumnsBOFilter.add("GAT");
+		ruleColumnsBOFilter.add("GAU");
+		ruleColumnsBOFilter.add("GAV");
+		ruleColumnsBOFilter.add("GAW");
+		ruleColumnsBOFilter.add("GAX");
+		ruleColumnsBOFilter.add("GAY");
+		ruleColumnsBOFilter.add("GAZ");
+		return ruleColumnsBOFilter;
+
+	}
+    /**
+     * To get the new Drop down values after validation.
+     * @return staticValueSet
+     * @throws UserException
+     */
+	public Set<String> getNewDropDownValues() throws BusinessException {
+		List<RuleColumnsBO> globalRuleColumns = getGlobalRuleColumns();
+		Set<String> staticValuesSet = getStaticValuesSet();
+		for (RuleColumnsBO ruleColumn : globalRuleColumns) {
+			if (!staticValuesSet.add(ruleColumn.getRuleColumnName())) {
+				staticValuesSet.remove(ruleColumn.getRuleColumnName());
+			}
+		}
+		return staticValuesSet;
+	}
+
+	/**
+	 * @author Jshaik
+	 * @param globalCoulmn
+	 * @return
+	 * @throws UserException
+	 */
+
+	public void saveGlobalColumn(RuleColumnsBO globalColumn)
+			throws BusinessException {
+
+		int columnSize = getGlobalColumnByName(globalColumn.getRuleColumnName());
+		RuleColumns globalRuleColumn = RuleHelper.getInstance().convertRuleColumnsBOToEntity(globalColumn);
+		try {
+			if (columnSize > 0) {
+				throw new BusinessException(MessageUtil.getInstance()
+						.getMessage("BUSINESS_EXCEPTION_GLOBAL_COLUMN", null),
+						null);
+			} else {
+				getGlobalColumnDAO().saveOrUpdate(globalRuleColumn);
+			}
+
+		} catch (GenericDAOException e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+	}
+
+	/**
+	 * @author Jshaik
+	 * @param globalCoulmn
+	 * @return
+	 * @throws UserException
+	 */
+
+	public void updateGlobalColumn(RuleColumnsBO globalColumn)
+			throws BusinessException {
+
+		RuleColumns globalRuleColumn = RuleHelper.getInstance()
+				.convertRuleColumnsBOToEntity(globalColumn);
+		try {
+
+			getGlobalColumnDAO().saveOrUpdate(globalRuleColumn);
+
+		} catch (GenericDAOException e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+	}
+
+	/**
+	 * @author Jshaik
+	 * @param ruleColumnId Integer
+	 * @return globalRuleColumn
+	 * @throws UserException
+	 */
+	public RuleColumnsBO getGlobalColumnById(Integer ruleColumnId)
+			throws BusinessException {
+		String relationColumn="";
+		RuleColumnsBO globalRuleColumn = null;
+		List<String> listrelationColumn= new ArrayList<String>();
+		try {
+			RuleColumns rule = getGlobalColumnDAO().getGlobalColumnById(
+					ruleColumnId);
+			globalRuleColumn = RuleHelper.getInstance()
+					.convertRuleColumnsEntityToBO(rule);
+			List<Object[]> ruleColumns =getGlobalColumnDAO().getExistingRelationshipsOfGlobalColumnById(ruleColumnId);
+			if(ruleColumns.size() >0){
+				for(int i = 0; i < ruleColumns.size(); i++) {
+					Object[] value=ruleColumns.get(i);
+					 if ((String)value[0] != null  && (String)value[1] != null && (String)value[2] != null ) {
+						 relationColumn=(String)value[0] +" "+">>"+" "+(String)value[1]+" "+">>"+" "+(String)value[2];
+						 listrelationColumn.add(relationColumn);
+					 }
+				}
+				globalRuleColumn.setRelationColumns(listrelationColumn);
+			}
+		} catch (GenericDAOException e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		return globalRuleColumn;
+	}
+
+	/**
+	 * @param name String
+	 * @return columnsSize
+	 * @throws UserException
+	 */
+	public int getGlobalColumnByName(String name) throws BusinessException {
+		int columnsSize = 0;
+
+		try {
+			List<RuleColumns> ruleColumns = getGlobalColumnDAO().getGlobalColumnByName(name);
+			columnsSize = ruleColumns.size();
+
+		} catch (GenericDAOException e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		return columnsSize;
+	}
+
+	public List<RuleBO> getRulesByGroupId(Integer ruleGroupId)
+			throws BusinessException {
+		LOGGER.debug("Starts getRulesByGroupId....");
+		List<Rule> rules = null;
+		List<Rule> rulesList = null;
+		List<RuleBO> ruleBO = null;
+		try {
+			rules = getRulesDAO().getRulesByGroupId(ruleGroupId);
+			if (rules != null) {
+				rulesList = new ArrayList<Rule>(0);
+				for (Rule rule : rules) {
+					rule = getRuleSubEntity(rule);
+					rulesList.add(rule);
+				}
+
+				ruleBO = RuleHelper.getInstance().convertRulesEntityToBO(
+						rulesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getRulesByGroupId....");
+		return ruleBO;
+	}
+
+	public RuleAppsBO getRuleAppById(Integer appId) throws BusinessException {
+		LOGGER.debug("Starts getRuleAppById....");
+		RuleAppsBO ruleAppsBO = null;
+		RuleApps ruleApp = null;
+		try {
+			ruleApp = getRuleAppsDAO().getRuleAppById(appId);
+			if (ruleApp != null) {
+				ruleAppsBO = RuleHelper.getInstance()
+						.convertRuleAppsEntiryToRuleAppsBO(ruleApp, false);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends getRuleAppById....");
+		return ruleAppsBO;
+	}
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<RuleAppsBO> getAllRuleApps() throws BusinessException {
+		LOGGER.debug("Starts getAllRuleApps....");
+		List<RuleApps> ruleApps = null;
+		List<RuleApps> ruleAppsList = null;
+		List<RuleAppsBO> ruleAppsBO = null;
+		try {
+			ruleApps = getRuleAppsDAO().load("from RuleApps");
+			if (ruleApps != null) {
+				ruleAppsList = new ArrayList<RuleApps>(0);
+				for (RuleApps ruleApp : ruleApps) {
+					ruleApp = getRuleAppsSubEntity(ruleApp);
+					ruleAppsList.add(ruleApp);
+				}
+
+				ruleAppsBO = RuleHelper.getInstance()
+						.convertRuleAppsEntityToBO(ruleAppsList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllRuleApps....");
+		return ruleAppsBO;
+	}
+
+	private RuleApps getRuleAppsSubEntity(RuleApps ruleApp)
+			throws BusinessException {
+		LOGGER.debug("Starts getRuleSubEntity....");
+		try {
+
+			List<RuleFamily> ruleFamilys = getFamilyDAO()
+					.getRuleFamilysByAppId(ruleApp.getAppId());
+			Set<RuleFamily> ruleFamilyList = new HashSet<RuleFamily>(
+					ruleFamilys);
+			ruleApp.setRuleFamilies(ruleFamilyList);
+
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends getRuleSubEntity....");
+		return ruleApp;
+	}
+
+	public List<RuleTestSummaryBO> ruleTest(RuleTestSummaryBO ruleTestBO)
+			throws BusinessException {
+		List<RuleTestSummaryBO> ruleTestSummary = new ArrayList<RuleTestSummaryBO>(
+				0);
+
+		RuleTestSummaryBO ruleTestBO0 = new RuleTestSummaryBO();
+		ruleTestBO0.setRuleId(ruleTestBO.getRuleId());
+		ruleTestBO0.setRuleFormulaName("Substitute");
+		ruleTestBO0.setRuleFormulaExpression("A and B");
+		ruleTestBO0.setStatus("success");
+		ruleTestSummary.add(ruleTestBO0);
+		RuleTestSummaryBO ruleTestBO1 = new RuleTestSummaryBO();
+		ruleTestBO1.setRuleId(ruleTestBO.getRuleId());
+		ruleTestBO1.setRuleFormulaName("Chain Rule");
+		ruleTestBO1.setRuleFormulaExpression("A union B include All");
+		ruleTestBO1.setStatus("fail");
+		ruleTestSummary.add(ruleTestBO1);
+		RuleTestSummaryBO ruleTestBO2 = new RuleTestSummaryBO();
+		ruleTestBO2.setRuleId(ruleTestBO.getRuleId());
+		ruleTestBO2.setRuleFormulaName("Trigonometric Functions");
+		ruleTestBO2.setRuleFormulaExpression("Z null Z");
+		ruleTestBO2.setStatus("Success");
+		ruleTestSummary.add(ruleTestBO2);
+		RuleTestSummaryBO ruleTestBO3 = new RuleTestSummaryBO();
+		ruleTestBO3.setRuleId(ruleTestBO.getRuleId());
+		ruleTestBO3.setRuleFormulaName("Divide Rule");
+		ruleTestBO3.setRuleFormulaExpression("C include V");
+		ruleTestBO3.setStatus("fail");
+		ruleTestSummary.add(ruleTestBO3);
+
+		return ruleTestSummary;
+	}
+
+	
+	public void checkIfRuleExists(String ruleName, int ruleGroupId)
+			throws BusinessException {
+		LOGGER.debug("Starts checkIfRuleExists....");
+		Rule rule = null;
+		try {
+			rule = getRulesDAO().getRulesByNameAndGroupId(ruleName,ruleGroupId);
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+        if(rule != null) {
+        	throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"RULE_ALREADY_EXIST", null));
+        }
+		LOGGER.debug("Ends checkIfRuleExists....");
+	
+	}
+	
+	/**
+	 * @author kalyan, Venu
+	 * Method used to test the rule applied are not for the formulas 
+	 * Formulas and column data passed as JSON  
+	 * @param json
+	 * @return
+	 * @throws BusinessException
+	 */
+	public String  getRuleEngineResults(String json)
+			throws BusinessException {
+		
+		RuleEval ruleEval=new RuleEval();
+		
+		String result= ruleEval.validateByJson(json);
+		
+		return result;
+	}
+
+	/**
+	 * @author kalyan, Venu
+	 * Method used to test the rules applied are not for the family , rule group and rule
+	 * @param json
+	 * @return
+	 * @throws BusinessException
+	 */
+	public String getRuleEngineResultsById(String json)throws BusinessException {
+		RuleEval ruleEval=new RuleEval();
+		String relults = null;
+		Gson gson = new Gson();
+		InputBO inputBO = gson.fromJson(json, InputBO.class);
+		try {
+			relults = ruleEval.validateById(inputBO);
+		} catch (com.zen.rules.exception.BusinessException e) {
+			throw new BusinessException(e);			 
+		}
+		return relults;
+	}
+}

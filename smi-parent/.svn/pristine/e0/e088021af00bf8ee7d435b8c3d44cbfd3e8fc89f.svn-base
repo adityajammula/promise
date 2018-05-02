@@ -1,0 +1,7 @@
+angular.module('smiApp')
+.controller('RuleEngineController', function ($scope,rulesService) {
+	 rulesService.getRulesPageData().then(function(data){
+		    $scope.rulesData = data.ruleBOs;
+	 	 	
+	 });
+});

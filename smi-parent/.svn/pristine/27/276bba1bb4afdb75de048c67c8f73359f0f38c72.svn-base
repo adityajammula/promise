@@ -1,0 +1,116 @@
+package com.zen.smi.bo;
+
+import java.util.Date;
+
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.dao.entities.SocialProfiles;
+
+public class SocialDataAnalysisBO {
+	private Integer id;
+	private Integer socialProfilesId;
+	private Integer socialMediaAccountsId;
+	private String sentimentScore;
+	private String post;
+	private Date createdDate;
+	private String postId;
+	private String period;
+	
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	/**
+	 * @return the socialProfilesId
+	 */
+	public Integer getSocialProfilesId() {
+		return socialProfilesId;
+	}
+	/**
+	 * @param socialProfilesId the socialProfilesId to set
+	 */
+	public void setSocialProfilesId(Integer socialProfilesId) {
+		this.socialProfilesId = socialProfilesId;
+	}
+	/**
+	 * @return the socialMediaAccountsId
+	 */
+	public Integer getSocialMediaAccountsId() {
+		return socialMediaAccountsId;
+	}
+	/**
+	 * @param socialMediaAccountsId the socialMediaAccountsId to set
+	 */
+	public void setSocialMediaAccountsId(Integer socialMediaAccountsId) {
+		this.socialMediaAccountsId = socialMediaAccountsId;
+	}
+	/**
+	 * @return the sentimentScore
+	 */
+	public String getSentimentScore() {
+		return sentimentScore;
+	}
+	/**
+	 * @param sentimentScore the sentimentScore to set
+	 */
+	public void setSentimentScore(String sentimentScore) {
+		this.sentimentScore = sentimentScore;
+	}
+	/**
+	 * @return the post
+	 */
+	public String getPost() {
+		return post;
+	}
+	/**
+	 * @param post the post to set
+	 */
+	public void setPost(String post) {
+		this.post = post;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the postId
+	 */
+	public String getPostId() {
+		return postId;
+	}
+	/**
+	 * @param postId the postId to set
+	 */
+	public void setPostId(String postId) {
+		this.postId = postId;
+	}
+	/**
+	 * @return the period
+	 */
+	public String getPeriod() {
+		return period;
+	}
+	/**
+	 * @param period the period to set
+	 */
+	public void setPeriod(String period) {
+		this.period = period;
+	}
+	
+	
+}

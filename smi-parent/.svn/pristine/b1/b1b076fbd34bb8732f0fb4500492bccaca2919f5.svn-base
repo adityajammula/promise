@@ -1,0 +1,162 @@
+package com.zen.smi.cmf.bo;
+
+import com.google.gson.annotations.SerializedName;
+
+
+public class CmfGroupCaseBO {
+	
+	@SerializedName("group_case_id")	
+	private Integer groupCaseId;
+	private UserBO userBO;
+	private CmfCasePriorityBO cmfCasePriorityBO;
+	@SerializedName("case_description")	
+	private String caseDescription;
+	@SerializedName("create_reason")	
+	private String createReason;
+	@SerializedName("assign_reason")	
+	private String assignReason;
+	@SerializedName("resolution_commets")	
+	private String resolutionCommets;
+	@SerializedName("created_by")	
+	private String createdBy;
+	@SerializedName("updated_by")	
+	private String updatedBy;
+	@SerializedName("created_date")	
+	private String createdDate;
+	@SerializedName("updated_date")	
+	private String updatedDate;
+	/**
+	 * @return the groupCaseId
+	 */
+	public Integer getGroupCaseId() {
+		return groupCaseId;
+	}
+	/**
+	 * @param groupCaseId the groupCaseId to set
+	 */
+	public void setGroupCaseId(Integer groupCaseId) {
+		this.groupCaseId = groupCaseId;
+	}
+	/**
+	 * @return the userBO
+	 */
+	public UserBO getUserBO() {
+		return userBO;
+	}
+	/**
+	 * @param userBO the userBO to set
+	 */
+	public void setUsersBO(UserBO userBO) {
+		this.userBO = userBO;
+	}
+	/**
+	 * @return the cmfCasePriorityBO
+	 */
+	public CmfCasePriorityBO getCmfCasePriorityBO() {
+		return cmfCasePriorityBO;
+	}
+	/**
+	 * @param cmfCasePriorityBO the cmfCasePriorityBO to set
+	 */
+	public void setCmfCasePriorityBO(CmfCasePriorityBO cmfCasePriorityBO) {
+		this.cmfCasePriorityBO = cmfCasePriorityBO;
+	}
+	/**
+	 * @return the caseDescription
+	 */
+	public String getCaseDescription() {
+		return caseDescription;
+	}
+	/**
+	 * @param caseDescription the caseDescription to set
+	 */
+	public void setCaseDescription(String caseDescription) {
+		this.caseDescription = caseDescription;
+	}
+	/**
+	 * @return the createReason
+	 */
+	public String getCreateReason() {
+		return createReason;
+	}
+	/**
+	 * @param createReason the createReason to set
+	 */
+	public void setCreateReason(String createReason) {
+		this.createReason = createReason;
+	}
+	/**
+	 * @return the assignReason
+	 */
+	public String getAssignReason() {
+		return assignReason;
+	}
+	/**
+	 * @param assignReason the assignReason to set
+	 */
+	public void setAssignReason(String assignReason) {
+		this.assignReason = assignReason;
+	}
+	/**
+	 * @return the resolutionCommets
+	 */
+	public String getResolutionCommets() {
+		return resolutionCommets;
+	}
+	/**
+	 * @param resolutionCommets the resolutionCommets to set
+	 */
+	public void setResolutionCommets(String resolutionCommets) {
+		this.resolutionCommets = resolutionCommets;
+	}
+	/**
+	 * @return the createdBy
+	 */
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	/**
+	 * @return the updatedBy
+	 */
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	/**
+	 * @param updatedBy the updatedBy to set
+	 */
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public String getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(String createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the updatedDate
+	 */
+	public String getUpdatedDate() {
+		return updatedDate;
+	}
+	/**
+	 * @param updatedDate the updatedDate to set
+	 */
+	public void setUpdatedDate(String updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	
+}

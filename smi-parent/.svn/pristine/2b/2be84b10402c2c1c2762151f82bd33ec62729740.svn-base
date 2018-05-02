@@ -1,0 +1,47 @@
+package com.zen.smi.service;
+
+import java.util.List;
+
+import com.zen.smi.bo.FinancialInstitutionsBO;
+import com.zen.smi.bo.ParentBO;
+import com.zen.smi.exception.BusinessException;
+
+/**
+ * @author Venumadhava.Reddy
+ *
+ */
+
+ 
+public interface FinancialInstitutionsService {
+
+	/**
+	 * Method to get all account relation ships
+	 * @return
+	 * @throws BusinessException
+	 */
+	List<ParentBO> getAllAccountRelations() throws BusinessException;
+	 /**
+	  * This method is to save relation ships 
+	  * @param financialInstitutionsBO
+	  * @throws BusinessException
+	  */
+	 void saveAccountRelations(FinancialInstitutionsBO financialInstitutionsBO) throws BusinessException;
+	 
+	 /**
+	  * This method is to get account relation ships by Id
+	  * @param id
+	  * @return
+	  * @throws BusinessException
+	  */
+	 
+	 List<ParentBO> getAccountRelationsById(Integer id) throws BusinessException;
+	 
+	 /**
+	  * 
+	  * @return
+	  * @throws BusinessException
+	  */
+	 ParentBO getAccountRelationById(FinancialInstitutionsBO financialInstitutionsBO)  throws BusinessException; 
+	 
+	 void deleteRelation(FinancialInstitutionsBO financialInstitutionsBO) throws BusinessException; 
+}

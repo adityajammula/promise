@@ -1,0 +1,71 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.SocialMediaPostsDAO;
+import com.zen.smi.dao.entities.SocialMediaAccountPosts;
+import com.zen.smi.dao.entities.SocialMediaPosts;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class SocialMediaPostsDAOImpl extends BaseDAOImpl<SocialMediaPosts, Serializable> implements SocialMediaPostsDAO {
+
+	public SocialMediaPostsDAOImpl() {
+		super(SocialMediaPosts.class);
+	}
+
+	
+
+	public List<SocialMediaPosts> getSocialMediaPosts()
+			throws GenericDAOException {
+		List<SocialMediaPosts> SocialMediaPosts=load("from SocialMediaPosts");
+		
+		return SocialMediaPosts;
+	}
+
+	
+
+	public SocialMediaPosts getSocialMediaPostsId(int id)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("id", id));
+		
+		return searchUnique(expressionList, null);
+	}
+
+	public void editPost(SocialMediaPosts socialMediaPosts)
+			throws GenericDAOException {
+		saveOrUpdate(socialMediaPosts);
+		
+	}
+
+	public void savePost(SocialMediaPosts socialMediaPosts)
+			throws GenericDAOException {
+		saveOrUpdate(socialMediaPosts);
+		
+	}
+
+	public void deletePost(SocialMediaPosts socialMediaPosts)
+			throws GenericDAOException {
+		delete(socialMediaPosts);
+		
+	}
+
+	public List<SocialMediaPosts> getSocialMediaPostsByChannel(int channel)
+			throws GenericDAOException {
+		List<SocialMediaPosts> socialMediaPosts=load("from SocialMediaPosts where channel="+channel+"");
+		return socialMediaPosts;
+	}
+	
+}

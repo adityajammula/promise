@@ -1,0 +1,112 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.Date;
+
+public class CmfCaseNoteBO {
+	private Integer noteId;
+	private CmfCaseBO cmfCaseBO;
+	private String noteDescription;
+	private Integer parentNoteId;
+	private String createdBy;
+	private String updatedBy;
+	private Date createdDate;
+	private Date updatedDate;
+	/**
+	 * @return the noteId
+	 */
+	public Integer getNoteId() {
+		return noteId;
+	}
+	/**
+	 * @param noteId the noteId to set
+	 */
+	public void setNoteId(Integer noteId) {
+		this.noteId = noteId;
+	}
+	/**
+	 * @return the cmfCaseBO
+	 */
+	public CmfCaseBO getCmfCaseBO() {
+		return cmfCaseBO;
+	}
+	/**
+	 * @param cmfCaseBO the cmfCaseBO to set
+	 */
+	public void setCmfCaseBO(CmfCaseBO cmfCaseBO) {
+		this.cmfCaseBO = cmfCaseBO;
+	}
+	/**
+	 * @return the noteDescription
+	 */
+	public String getNoteDescription() {
+		return noteDescription;
+	}
+	/**
+	 * @param noteDescription the noteDescription to set
+	 */
+	public void setNoteDescription(String noteDescription) {
+		this.noteDescription = noteDescription;
+	}
+	/**
+	 * @return the parentNoteId
+	 */
+	public Integer getParentNoteId() {
+		return parentNoteId;
+	}
+	/**
+	 * @param parentNoteId the parentNoteId to set
+	 */
+	public void setParentNoteId(Integer parentNoteId) {
+		this.parentNoteId = parentNoteId;
+	}
+	/**
+	 * @return the createdBy
+	 */
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	/**
+	 * @return the updatedBy
+	 */
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	/**
+	 * @param updatedBy the updatedBy to set
+	 */
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the updatedDate
+	 */
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	/**
+	 * @param updatedDate the updatedDate to set
+	 */
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	
+	
+}

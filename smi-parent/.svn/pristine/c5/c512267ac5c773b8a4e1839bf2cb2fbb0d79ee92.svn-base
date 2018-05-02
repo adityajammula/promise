@@ -1,0 +1,375 @@
+/**
+* This is the Main controller for Home page screen.
+* inside scope variables via this conroller class.
+*
+* @class HomePage Controller
+* @author amantri
+*/
+
+
+'use strict';
+
+var smiApp = {};
+
+var App = angular.module(
+		'smiApp',[
+		          
+		          'smiApp.utility',
+                  'smiApp.services',
+		          'ngAnimate',
+		          'ngCookies',
+		          'ngResource',
+		          'ngSanitize',
+		          'ngTouch',
+		          'picardy.fontawesome',
+		          'ui.bootstrap',
+		          'ui.router',
+		          'ui.utils',
+		          'angular-loading-bar',
+		          'angular-momentjs',
+		          'FBAngular',
+		          'toastr',
+		          'angularBootstrapNavTree',
+		          'oc.lazyLoad',
+		          'ui.select',
+		          'ui.tree',
+		          'textAngular',
+		          'colorpicker.module',
+		          'angularFileUpload',
+		          'ngImgCrop',
+		          'datatables',
+		          'datatables.bootstrap',
+		          'datatables.colreorder',
+		          'datatables.colvis',
+		          'datatables.tabletools',
+		          'datatables.scroller',
+		          'datatables.columnfilter',
+		          'dialogs.main',
+		          'ui.grid',
+		          'ui.grid.resizeColumns',
+		          'ui.grid.edit',
+		          'ui.grid.moveColumns',
+		          'ngTable',
+		          'smart-table',
+		          'angular-flot',
+		          'angular-rickshaw',
+		          'easypiechart',
+		          'uiGmapgoogle-maps',
+		          'ui.calendar',
+		          'multi-select',
+		          'isteven-multi-select',
+		          'angularCharts',
+		          'customNavTree'
+		        ]
+		).controller('MainController', function($scope) {
+					 $scope.main = {
+						      title: 'Social Banker',
+						      settings: {
+						        navbarHeaderColor: 'scheme-default',
+						        sidebarColor: 'scheme-default',
+						        brandingColor: 'scheme-default',
+						        activeColor: 'default-scheme-color',
+						        headerFixed: true,
+						        asideFixed: true,
+						        rightbarShow: false
+						      }
+					 };
+	      	
+}).run(['$rootScope', '$state', '$stateParams', function($rootScope, $state, $stateParams) {
+    $rootScope.$state = $state;
+    $rootScope.$stateParams = $stateParams;
+    $rootScope.$on('$stateChangeSuccess', function(event, toState) {
+
+      event.targetScope.$watch('$viewContentLoaded', function () {
+
+        angular.element('html, body, #content').animate({ scrollTop: 0 }, 200);
+
+        setTimeout(function () {
+          angular.element('#wrap').css('visibility','visible');
+
+          if (!angular.element('.dropdown').hasClass('open')) {
+            angular.element('.dropdown').find('>ul').slideUp();
+          }
+          if(toState.name == "viewrules") {
+        	  $rootScope.initializeViewRulesController();
+          }
+          if(toState.name == "configrules") {
+        	  $rootScope.initializeRulesController(null);
+          }
+          if(toState.name == "globalcolumns") {
+        	  $rootScope.initializeViewGlobalColumnsController();
+          }
+          if(toState.name == "viewgroups") {
+        	  $rootScope.initializeViewGroupsController();
+          }
+          if(toState.name == "processes") {
+        	  $rootScope.initializeNewProcessController();
+          }
+          if(toState.name == "openfacebookcases") {
+        	  $rootScope.initializeOpenFacebookCasesController();
+          }
+          if(toState.name == "opentwittercases") {
+        	  $rootScope.initializeOpenTwitterCasesController();
+          }
+          if(toState.name == "viewindividualcasedetails.viewcustomerhistoryfb") {
+        	  $rootScope.initializeCustomerHistoryController();
+          }
+          if(toState.name == "viewindividualcasedetailstwitter.viewcustomerhistorytwitter") {
+        	  $rootScope.initializeCustomerHistoryController();
+          }
+          if(toState.name == "viewindividualcasedetails.customerinformation") {
+        	  $rootScope.initializeCustomerInfoController();
+          }
+          if(toState.name == "viewindividualcasedetailstwitter.customerinformationtwitter") {
+        	  $rootScope.initializeCustomerInfoController();
+          }
+          if(toState.name == "cmfspamcases") {
+        	  $rootScope.initializespamCasesController();
+          }
+          if(toState.name == "resolvedcases") {
+        	  $rootScope.initializeResolvedCasesController();
+          }
+          if(toState.name == "closedcases") {
+        	  $rootScope.initializeClosedCasesController();
+          }
+          if(toState.name == "viewindividualcasedetails") {
+        	  $rootScope.caseDetails();
+          }
+          if(toState.name == "viewindividualcasedetailstwitter") {
+        	  $rootScope.twitterCaseDetails();
+          }
+          if(toState.name == "facebooktransactions") {
+        	  $rootScope.initializeFacebookTransactionsController();
+          }
+          if(toState.name == "twittertransactions") {
+        	  $rootScope.initializeTwitterTransactionsController();
+          }
+          if(toState.name == "viewfbtrasactiondetails") {
+        	  $rootScope.initializeFbTransactionDetailsController();
+          }
+          if(toState.name == "viewtwittertrasactiondetails") {
+        	  $rootScope.initializeTwitterTransactionDetailsController();
+          }
+        }, 200);
+      });
+      $rootScope.containerClass = toState.containerClass;
+    });
+  }]).config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider) {
+
+	    $urlRouterProvider.otherwise("/dashboard");
+	    $stateProvider
+	    //dashboard
+	    .state('dashboard', {
+	    	  url: '/dashboard',
+		      controller: 'DashboardController',
+		      templateUrl: 'dashboard',
+		})
+		//view rules
+		.state('viewrules', {
+	    	  url: '/viewrules',
+		      controller: 'ViewRulesController',
+		      templateUrl: 'viewrules',
+		})
+		//edit rules
+		.state('editrules', {
+	    	  url: '/editrules',
+		      controller: 'EditRulesController',
+		      templateUrl: 'editrules',
+		      params:{'rule_id':null}
+		})
+		//Config Rules
+		.state('configrules', {
+	    	  url: '/configrules',
+		      controller: 'ConfigRulesController',
+		      templateUrl: 'configrules',
+		})
+		//Global Columns
+		.state('globalcolumns', {
+	    	  url: '/globalcolumns',
+		      controller: 'GlobalColumnsController',
+		      templateUrl: 'globalcolumns',
+		})
+		//Test Rules
+		.state('testrules', {
+	    	  url: '/testrules',
+		      controller: 'TestRulesController',
+		      templateUrl: 'testrules',
+		})
+		//Edit Columns
+		.state('editglobalcolumns', {
+	    	  url: '/editglobalcolumns',
+		      controller: 'EditGlobalColumnsController',
+		      templateUrl: 'editglobalcolumns',
+		      params:{'rule_column_id':null}
+		})
+		
+		//view groups
+		.state('viewgroups', {
+	    	  url: '/viewgroups',
+		      controller: 'ViewGroupsController',
+		      templateUrl: 'viewgroups',
+		})
+		//edit groups
+		.state('editgroups', {
+	    	  url: '/editgroups',
+		      controller: 'EditGroupsController',
+		      templateUrl: 'editgroups',
+		      params:{}
+		})
+		//customer information
+		.state('viewindividualcasedetails.customerinformation', {
+	    	  url: '/customerinformation',
+		      controller: 'CustomerInformationController',
+		      templateUrl: 'customerinformation',
+		})
+		
+		//AssignCase 
+		.state('viewindividualcasedetails.notes', {
+	    	  url: '/notes',
+		      controller: 'NotesController',
+		      templateUrl: 'notes',
+		})
+		
+		//NOTE 
+		.state('viewindividualcasedetails.caseassignfacebook', {
+	    	  url: '/caseassignfacebook',
+		      controller: 'AssignCaseController',
+		      templateUrl: 'caseassignfacebook',
+		})
+		
+		
+		//process page
+		.state('processes', {
+	    	  url: '/processes',
+		      controller: 'ProcessesController',
+		      templateUrl: 'processes',
+		})
+		//Agents
+		.state('agents', {
+	    	  url:'/agents',
+		      controller:'AgentController',
+		      templateUrl:'agents',
+		})
+		//ViewCustomerHistoryFacebook
+		.state('viewindividualcasedetails.viewcustomerhistoryfb', {
+	    	  url:'/viewcustomerhistoryfb',
+	    	  controller:'ViewCustomerHistoryFBController',
+	    	  templateUrl:'viewcustomerhistoryfb',
+		})
+		//ViewCustomerHistoryTwitter
+		.state('viewindividualcasedetailstwitter.viewcustomerhistorytwitter', {
+	    	  url:'/viewcustomerhistorytwitter',
+	    	  controller:'ViewCustomerHistoryTwitterController',
+	    	  templateUrl:'viewcustomerhistorytwitter',
+		})
+		//AcountRela
+		.state('accountRelationship', {
+	    	  url: '/accountRelationship',
+		      controller: 'AccountRelationshipController',
+		      templateUrl: 'accountRelationship',
+		      params:{'social_media_accounts_id':null}
+		})
+		//Open case management dashboard page
+		.state('casemanagement', {
+	    	  url: '/casemanagement',
+		      controller: 'CaseManagementController',
+		      templateUrl: 'casemanagement',
+		})
+		//Open facebook cases page
+		.state('openfacebookcases', {
+	    	  url: '/openfacebookcases',
+		      controller: 'OpenFacebookCasesController',
+		      templateUrl: 'openfacebookcases',
+		      params:{'keyValue' : null}
+		})
+		//Viewing Individual Case Details 
+		.state('viewindividualcasedetails', {
+	    	  url: '/viewindividualcasedetails',
+		      controller: 'ViewIndividualCaseDetailsController',
+		      templateUrl: 'viewindividualcasedetails',
+		      params:{'case_id':null}
+		})
+		//Viewing append notes
+		.state('viewindividualcasedetails.appendnotes', {
+	    	  url: '/appendnotes',
+		      controller: 'AppendNotesController',
+		      templateUrl: 'appendnotes',
+		})
+		//Open twitter cases page
+		.state('opentwittercases', {
+	    	  url: '/opentwittercases',
+		      controller: 'OpenTwitterCasesController',
+		      templateUrl: 'opentwittercases',
+		      params:{'keyValue' : null}
+		})
+		//Viewing Individual Case Details  for Twitter
+		.state('viewindividualcasedetailstwitter', {
+	    	  url: '/viewindividualcasedetailstwitter',
+		      controller: 'ViewIndividualCaseDetailsTwitterController',
+		      templateUrl: 'viewindividualcasedetailstwitter',
+		      params:{'case_id':null}
+		})
+		
+		//customer information  for Twitter
+		.state('viewindividualcasedetailstwitter.customerinformationtwitter', {
+	    	  url: '/customerinformationtwitter',
+		      controller: 'TwitterCustomerInformationController',
+		      templateUrl: 'customerinformationtwitter',
+		})
+		//Open resolved cases page
+		.state('resolvedcases', {
+	    	  url: '/resolvedcases',
+		      controller: 'ResolvedCasesController',
+		      templateUrl: 'resolvedcases',
+		})
+		//Open closed cases page
+		.state('closedcases', {
+	    	  url: '/closedcases',
+		      controller: 'ClosedCasesController',
+		      templateUrl: 'closedcases',
+		})
+		//facebook transactions page
+		.state('facebooktransactions', {
+	    	  url: '/facebooktransactions',
+		      controller: 'FacebookTransactionsController',
+		      templateUrl: 'facebooktransactions',
+		})
+		//twitter transactions page
+		.state('twittertransactions', {
+	    	  url: '/twittertransactions',
+		      controller: 'TwitterTransactionsController',
+		      templateUrl: 'twittertransactions',
+		})
+		//twitter transactions page
+		.state('viewfbtrasactiondetails', {
+	    	  url: '/viewfbtrasactiondetails',
+		      controller: 'TransactionFbDetailsController',
+		      templateUrl: 'viewfbtrasactiondetails',
+		      params:{'stCase_id':null}
+		})
+		//twitter transactions page
+		.state('viewtwittertrasactiondetails', {
+	    	  url: '/viewtwittertrasactiondetails',
+		      controller: 'TransactionTwitterDetailsController',
+		      templateUrl: 'viewtwittertrasactiondetails',
+		      params:{'stCase_id':null}
+		})
+		//Span Cases page in CMF
+		.state('cmfspamcases', {
+	    	  url: '/cmfspamcases',
+		      controller: 'SpamCasesController',
+		      templateUrl: 'cmfspamcases',
+		})
+		.state('registration', {
+	    	  url: '/registration',
+		      controller: 'RegistrationController',
+		      templateUrl: 'registration',
+		})
+		.state('usersign', {
+	    	  url: '/usersign',
+		      controller: 'UserSignController',
+		      templateUrl: 'usersign',
+		})
+		
+  }]);
+

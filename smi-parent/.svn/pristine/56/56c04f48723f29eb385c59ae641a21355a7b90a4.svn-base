@@ -1,0 +1,14 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+import com.zen.smi.dao.entities.SocialDataAnalysis;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public interface SocialDataAnalysisDAO extends BaseDAO<SocialDataAnalysis, Serializable> {
+
+	List<SocialDataAnalysis> getScoreByAccountId(Integer profileId,Date fromDate , Date toDate) throws GenericDAOException;
+	
+}

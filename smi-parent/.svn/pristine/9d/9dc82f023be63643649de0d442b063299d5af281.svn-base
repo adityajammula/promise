@@ -1,0 +1,161 @@
+angular.module('smiApp')
+		.controller('EditPostsController',function($scope,$rootScope,dialogs,fileReader,$timeout,$modal, $filter, smiGenUtil,socialMediaAccountsServices,$stateParams) {
+			$scope.isShowCalendar = true.toString();
+			$scope.facebookAccount = [];
+			$scope.twitterAccount = [];
+			$scope.postOptions = [ { id : 1, name : 'Post Now'}, 
+			                       { id : 2, name : 'Post Later'} ];
+			$rootScope.initializeEditPostController = function() {
+				if($stateParams.post_id != null && $stateParams.post_id != 0) {
+					socialMediaAccountsServices.getPostDetails($stateParams.post_id).then(function(response){
+						$scope.postTitle = response.data.text;
+						$scope.imageSrc = "resources/ext-data/"+response.data.imageName;
+						$scope.parent.currentDate = $filter('date')(new Date(response.data.createdDate), 'yy-MM-dd');
+						$scope.id  = 2;
+						$scope.shortTime = new Date(response.data.createdDate);
+					});
+				}
+			};
+			
+			 $scope.mytime = new Date();
+			 $scope.hours =  $scope.mytime.getMinutes();
+			 $scope.minutes =  $scope.mytime.getHours();
+			 $scope.istwitter = false;
+			    $scope.updateFilePath = function () {
+			        fileReader.readAsDataUrl($scope.selectedFiles[0], $scope).then(function(result) {
+	                          $scope.imageSrc = result;
+						});
+			    };
+			    
+			    $scope.start = new Date();
+			    $scope.shortTime = new Date();
+			    $scope.minStartDate = 0; //fixed date
+			    $scope.maxStartDate = $scope.end; //init value
+			    $scope.minEndDate = $scope.start; //init value
+			    $scope.maxEndDate = $scope.end; //fixed date same as $scope.maxStartDate init value
+			    $scope.parent = {currentDate:$filter('date')(new Date(), 'yyyy-MM-dd')};
+			    $scope.$watch('start', function(v){
+			      $scope.minEndDate = v;
+			    });
+			    $scope.$watch('end', function(v){
+			      $scope.maxStartDate = v;
+			    });
+
+
+			    $scope.openEnd = function() {
+			    	
+			      $timeout(function() {
+			        $scope.endOpened = true;
+			      });
+			     
+			    };
+
+			    $scope.dateOptions = {
+			      'year-format': "'yy'",
+			      'starting-day': 1
+			    };
+			    $scope.start = "";
+			    $scope.getOption = function(id) {
+			    	if(options != null) {
+			    	if(id ==2) {
+			    	$scope.isShowCalendar = true.toString();
+			    	} else if(id ==1){
+			    	$scope.isShowCalendar = false;
+			    	};
+			    	} else {
+			    	$scope.isShowCalendar = false;
+			    	}
+			    	};
+			$scope.updatePost= function(){
+				$scope.postTime = $filter('date')($scope.shortTime, 'HH:mm');
+		    	if ($scope.isShowCalendar) {
+		    		$scope.date = $scope.parent.currentDate;
+		    	} else {
+		    		$scope.date = new Date();
+		    	}
+		    	$scope.date = $filter('date')($scope.date, 'yyyy-MM-dd');
+		    	
+		    	var parts = $scope.postTime.split(':');
+		    	$scope.date = smiGenUtil.updateDateHHmm(smiGenUtil.getDateFromYYYYMMDD($scope.date), parts[0], parts[1]);
+		    	  var modalInstance = $modal.open({
+				  templateUrl:'postChannel.html',
+				  controller :'EditPostChannelController',
+				  resolve: {
+					   items: function () {
+					        var obj = {};
+					        obj.id = $stateParams.post_id;
+				            obj.postTitle = $scope.postTitle;
+				            obj.imageSrc =$scope.imageSrc;
+				            obj.imageFile = $scope.selectedFiles[0],
+				            obj.date =$scope.date;
+				            obj.channel = $scope.channel;
+				            obj.accounts = $scope.accounts;
+					       return obj;
+					       }
+					   }
+				  });
+				  if ($scope.postTitle == null || $scope.postTitle == undefined) {
+				    	dialogs.error("Error !", "Please Enter comments.");
+				    	return false;
+				    	} else if ($scope.postTitle != null && $scope.postTitle.length > 500) {
+				    	dialogs.error("Error !","post should be maximum 500 characters.");
+				    	return false;
+				    	} 
+			};
+			socialMediaAccountsServices.getSocialMediaAccounts(2).then(function(response){
+				for(var i=0;i<response.data.social_media_accounts.length ;i++) {
+					if(response.data.social_media_accounts[i].social_profiles.social_profile_accounts_type == "FACEBOOK") {
+						$scope.facebookAccount.push(response.data.social_media_accounts[i]);
+					} else if(response.data.social_media_accounts[i].social_profiles.social_profile_accounts_type == "TWITTER") {
+						$scope.twitterAccount.push(response.data.social_media_accounts[i]);
+					}
+				}
+			});
+			$scope.accounts = [];
+			$scope.getFacebookAccountIds = function(data) {
+				var account = {
+						"account_id" : data.social_media_accounts_id,
+						"account_type" : data.social_profiles.social_profile_accounts_type
+				};
+				$scope.accounts.push(account);
+			};
+			
+			$scope.getTwitterAccountIds = function(data) {
+				var account = {
+						"account_id" : data.social_media_accounts_id,
+						"account_type" : data.social_profiles.social_profile_accounts_type
+				};
+				$scope.accounts.push(account);
+			};
+}).controller('EditPostChannelController', function ($scope, $modalInstance,$rootScope, $filter, items,socialMediaAccountsServices) {
+		$scope.Title="Post";
+		$scope.comments=items.postTitle;
+		$scope.imagePreview=items.imageSrc;
+		$scope.date=items.date;
+		$scope.displayDt = $filter('date')($scope.date, 'dd MMM yyyy HH:mm');
+		// $scope.channel=items.channel;
+		$scope.imageFile=items.imageFile;
+		$scope.accounts=items.accounts;
+		var fileName = items.imageFile.name;
+		var extn = fileName.split(".").pop();
+		$scope.ok = function () {
+			 var postData = {
+					  "id" : items.id,
+				      "text": $scope.comments,
+				     // "channel": $scope.channel,				      
+				      "imageName":fileName,
+				      "createdDateString":$scope.date.getTime(),
+				      "extension":extn,
+				      "account" : $scope.accounts
+				     };
+			 socialMediaAccountsServices.updatePost($scope.imageFile, postData).then(function(response) {
+		    		  
+		 });
+		 $modalInstance.close();
+	};
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+  });
+
+

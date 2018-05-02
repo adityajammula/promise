@@ -1,0 +1,191 @@
+package com.zen.smi.service.helper;
+
+import java.util.ArrayList;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.RuleBO;
+import com.zen.smi.bo.RuleFamilyBO;
+import com.zen.smi.bo.RuleGroupBO;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+import static com.zen.smi.generic.utils.SmiConstants.FAMILY_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.RULEGROUP_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.RULE_PROPERTIES;
+
+public final class FamilyHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for StaffHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(FamilyHelper .class);
+
+	/**
+	 * Instance of StaffHelper.
+	 */
+	private static FamilyHelper  instance;
+
+	public static FamilyHelper getInstance() {
+		if (instance == null) {
+			instance = new FamilyHelper();
+		}
+		return instance;
+	}
+
+	public static void setInstance(FamilyHelper instance) {
+		FamilyHelper.instance = instance;
+	}
+
+	/**
+	 * Private constructor
+	 */
+	private FamilyHelper() {
+
+	}
+	
+	/**
+	 * @author tmangalapenta
+	 * Converts RuleFamily entity to RuleFamilyBO object
+	 * @param RuleFamily list
+	 * @return List of RuleFamilyBO
+	 */
+	public List<RuleFamilyBO> convertRulesEntityToBO(List<RuleFamily> ruleFamilList) {
+		LOGGER.debug("Starts convertRuleEntityToBO...");
+		List<RuleFamilyBO> ruleFamilyBOList = new ArrayList<RuleFamilyBO>();
+		for(RuleFamily ruleFamily:ruleFamilList) {
+				RuleFamilyBO ruleFamilyBO = new RuleFamilyBO();
+//				String[] familyProperties = {"ruleFamilyId","ruleFamilyName","ruleFamilyDescription","createdBy","updatedBy","createdDate","updatedDate"};
+	            BeanCopyUtil.copyBeanProperties(ruleFamily, ruleFamilyBO, FAMILY_PROPERTIES);
+	        
+	            //setting Rule group properties
+	            Set<RuleGroup> ruleGroups =   ruleFamily.getRuleGroups();
+	            Set<Rule> rules = null;
+	            Set<RuleGroupBO> groupBOs = new HashSet<RuleGroupBO>();  
+//	            String[] ruleGroupProperties = {"ruleGroupId","ruleGroupName","ruleGroupDescription","createdBy","updatedBy","createdDate","updatedDate"};
+//	            String[] ruleProperties = {"ruleId","ruleName","ruleDescription","createdBy","updatedBy","createdDate","updatedDate","ruleType","cloneRuleId"};
+	            for(RuleGroup ruleGroup : ruleGroups)
+	            {
+	            	RuleGroupBO ruleGroupBO = new  RuleGroupBO();
+	            	BeanCopyUtil.copyBeanProperties(ruleGroup, ruleGroupBO, RULEGROUP_PROPERTIES);          	
+	            	Set<RuleBO> ruleBOs = new HashSet<RuleBO>();		            
+	            	 rules =  ruleGroup.getRules();
+	            	 for(Rule rule : rules)
+	            	 {
+	            		 RuleBO ruleBO = new RuleBO();
+	            		 BeanCopyUtil.copyBeanProperties(rule, ruleBO, RULE_PROPERTIES);
+	            		 ruleBOs.add(ruleBO);
+	            		 
+	            	 }	            	
+	            	 ruleGroupBO.setRules(ruleBOs);
+	            	 groupBOs.add(ruleGroupBO);
+	            }
+	            
+	            ruleFamilyBO.setRuleGroups(groupBOs);
+	            ruleFamilyBOList.add(ruleFamilyBO);
+		}
+
+		LOGGER.debug("Ends convertRuleEntityToBO...");
+		return ruleFamilyBOList;
+	}
+	
+	/**
+	 * Converts Staff entity to StaffBO object
+	 * @param Staff staff
+	 * @return StaffBO
+	 */
+	public List<RuleFamilyBO> convertRuleFamilyEntityToBO(List<RuleFamily> ruleFamily) {
+		LOGGER.debug("Starts convertRuleEntityToBO...");
+		List<RuleFamilyBO> ruleFamilyBOList = new ArrayList<RuleFamilyBO>();
+		for(RuleFamily rul:ruleFamily) {
+				RuleFamilyBO ruleFamilyBO = new RuleFamilyBO();
+//				String[] familyProperties = {"ruleFamilyId","ruleFamilyName","ruleFamilyDescription","createdBy","updatedBy","createdDate","updatedDate"};
+	            BeanCopyUtil.copyBeanProperties(rul, ruleFamilyBO, FAMILY_PROPERTIES);
+	            ruleFamilyBOList.add(ruleFamilyBO);
+		}
+
+		LOGGER.debug("Ends convertRuleEntityToBO...");
+		return ruleFamilyBOList;
+	}
+	
+	/**
+	 * Converts Staff entity to StaffBO object
+	 * @param Staff staff
+	 * @return StaffBO
+	 * @Author kalyan
+	 */
+	public RuleFamily convertFamilyBOToEntity(RuleFamilyBO ruleFamilyBO) {
+		LOGGER.debug("Starts family bo to entity...");
+		RuleFamily ruleFamily=new RuleFamily();
+		ruleFamily.setRuleFamilyName(ruleFamilyBO.getRuleFamilyName());
+		ruleFamily.setRuleFamilyDescription(ruleFamilyBO.getRuleFamilyDescription());
+		ruleFamily.setCreatedBy(ruleFamilyBO.getCreatedBy());
+		ruleFamily.setUpdatedBy(ruleFamilyBO.getUpdatedBy());
+		ruleFamily.setCreatedDate(ruleFamilyBO.getCreatedDate());
+		ruleFamily.setUpdatedDate(ruleFamilyBO.getUpdatedDate());
+		if(ruleFamilyBO.getRuleFamilyId()!=null){
+			ruleFamily.setRuleFamilyId(ruleFamilyBO.getRuleFamilyId());
+			
+		}
+		
+		LOGGER.debug("ends family bo to entity...");
+		return ruleFamily;
+	}
+	
+	
+	/**
+	 * Converts Staff entity to StaffBO object
+	 * @param Staff staff
+	 * @return StaffBO
+	 * @Author kalyan
+	 */
+	public RuleGroup convertGroupBOToEntity(RuleGroupBO ruleGroupBO) {
+		LOGGER.debug("Starts family bo to entity...");
+		RuleGroup ruleGroup=new RuleGroup();
+	//	RuleFamily ruleFamily=new RuleFamily();
+		ruleGroup.setCreatedBy(ruleGroupBO.getCreatedBy());
+		ruleGroup.setCreatedDate(ruleGroupBO.getUpdatedDate());
+		ruleGroup.setRuleGroupDescription(ruleGroupBO.getRuleGroupDescription());
+		ruleGroup.setRuleGroupName(ruleGroupBO.getRuleGroupName());
+		ruleGroup.setUpdatedBy(ruleGroupBO.getUpdatedBy());
+		ruleGroup.setUpdatedDate(ruleGroupBO.getUpdatedDate());
+		if(ruleGroupBO.getRuleGroupId()!=null){
+			
+			ruleGroup.setRuleGroupId(ruleGroupBO.getRuleGroupId());
+		}
+		//ruleFamily.setRuleFamilyId(ruleGroupBO.getRuleFamily().getRuleFamilyId());
+		//ruleGroup.setRuleFamily(ruleFamily);
+		LOGGER.debug("ends family bo to entity...");
+		return ruleGroup;
+	}
+	/**
+	 * Converts Staff entity to StaffBO object
+	 * @param Staff staff
+	 * @return StaffBO
+	 * @Author kalyan
+	 */
+	public RuleGroup convertGroupBOToEntityForSave(RuleGroupBO ruleGroupBO) {
+		LOGGER.debug("Starts family bo to entity...");
+		RuleGroup ruleGroup=new RuleGroup();
+		RuleFamily ruleFamily=new RuleFamily();
+		ruleGroup.setCreatedBy(ruleGroupBO.getCreatedBy());
+		ruleGroup.setCreatedDate(ruleGroupBO.getUpdatedDate());
+		ruleGroup.setRuleGroupDescription(ruleGroupBO.getRuleGroupDescription());
+		ruleGroup.setRuleGroupName(ruleGroupBO.getRuleGroupName());
+		ruleGroup.setUpdatedBy(ruleGroupBO.getUpdatedBy());
+		ruleGroup.setUpdatedDate(ruleGroupBO.getUpdatedDate());
+		if(ruleGroupBO.getRuleGroupId()!=null){
+			
+			ruleGroup.setRuleGroupId(ruleGroupBO.getRuleGroupId());
+		}
+		ruleFamily.setRuleFamilyId(ruleGroupBO.getRuleFamily().getRuleFamilyId());
+		ruleGroup.setRuleFamily(ruleFamily);
+		LOGGER.debug("ends family bo to entity...");
+		return ruleGroup;
+	}
+}

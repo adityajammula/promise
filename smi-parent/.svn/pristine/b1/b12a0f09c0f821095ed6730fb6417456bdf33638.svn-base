@@ -1,0 +1,136 @@
+<div class="container-fluid openFbCases">
+
+  <div class="tbox tbox-sm">
+
+    <!-- left side -->
+    <div class="tcol w-md bg-tr-white lt b-r">
+
+      <!-- left side header-->
+      <div>
+
+        <label class="text-strong">Case Categories</label>
+
+      </div>
+      <!-- /left side header -->
+      <!-- left side body -->
+      <div class="p-15 hidden-sm hidden-xs" id="mail-nav">
+
+        <ul class="nav nav-pills nav-stacked nav-sm" id="mail-folders">
+          <li><div class="casePriorityImage"><img class ="imageSize" src="resources/images/Debit Card.png" alt=""></div>
+          <div class="casePriorityLabel">Debit Card</div></li>
+          <li><div class="casePriorityImage"><img class ="imageSize" src="resources/images/Credit Card.png" alt="" ></div>
+          <div class="casePriorityLabel">Credit Cards</div></li>
+          <li><div class="casePriorityImage"><img class ="imageSize" src="resources/images/ATM.png" alt=""></div>
+          <div class="casePriorityLabel">ATM</div></li>
+          <li><div class="casePriorityImage"><img class ="imageSize" src="resources/images/Channel Outage.png" alt=""></div>
+          <div class="casePriorityLabel">Channel Outage</div></li>
+          <li><div class="casePriorityImage"><img class ="imageSize" src="resources/images/Cheque.png" alt=""></div>
+          <div class="casePriorityLabel">Cheque</div></li>
+          <li><div class="casePriorityImage"><img class ="imageSize" src="resources/images/Miscellaneous.png" alt=""></div>
+          <div class="casePriorityLabel">Miscellaneous</div></li>
+           <li>
+          <div class="img-circle bg-default casePriorityIcons">A</div>
+          <div class="casePriorityLabel" >All</div></li>
+        </ul>
+        <h5 class="b-b p-10 text-strong">Case Priority</h5>
+        <ul class="nav nav-pills nav-stacked nav-sm" id="mail-labels">
+          <li class="caseCategoryLi">
+        <div class="img-circle bg-lightred casePriorityIcons">C</div>
+         <div class="casePriorityLabel">Critical</div></li>
+  			<li class="caseCategoryLi">
+         <div class="img-circle bg-orange casePriorityIcons">H</div>
+          <div class="casePriorityLabel">High</div></li>
+          <li class="caseCategoryLi">
+         <div class="img-circle bg-primary casePriorityIcons">M</div>
+          <div class="casePriorityLabel">Medium</div></li>
+          <li class="caseCategoryLi">
+         <div class="img-circle bg-greensea casePriorityIcons">L</div>
+          <div class="casePriorityLabel">Low</div></li>
+          <li  class="caseCategoryLi">
+          <div class="img-circle bg-default casePriorityIcons">A</div>
+          <div class="casePriorityLabel">All</div></li>
+        </ul>
+        
+         <h5 class="b-b p-10 text-strong">Social Accounts</h5>
+        <ul class="nav nav-pills nav-stacked nav-sm" id="mail-labels">
+          <li>
+         <div class="casePriorityLabel">Account1</div></li>
+  			<li class="caseCategoryLi">
+          <div class="casePriorityLabel">Account2</div></li>
+           <li class="caseCategoryLi">
+          <div class="img-circle bg-default casePriorityIcons">A</div>
+          <div class="casePriorityLabel">All</div></li>
+        </ul>
+      </div>
+      <!-- /left side body -->
+    </div>
+    <!-- /left side -->
+  </div>
+   <!-- right side -->
+   
+  <div class="btn-group pull-right caseCategoryDesc">
+      <div class="row tile">
+      <div class=" tile-body">
+       <div class="col-md-12">
+           <div class="col-md-3 ">
+            <label class="checkbox checkbox-custom checkbox-custom-sm m-0 mail-select">
+        <input type="checkbox"><i></i> Select All</label>
+       <!--   <a  class=" br-2 w-60"><i class="fa fa-long-arrow-left"></i></a>-->
+        </div>
+        <div class="col-md-4 "> 
+         <input id="filter"  class="form-control input-sm w-sm mb-10 inline-block " placeholder="search "> 
+         <i class="icon-magnifier"></i>
+        </div>
+     <div class="btn-group col-md-1 ">
+ <button class="btn btn-default btn-sm br-2 text-right"><i class="fa fa-refresh"></i></button>
+ </div>
+ <div class ="col-md-2">
+ <select
+	class="form-control" data-ng-model="a.name"
+	data-ng-options="a.name for a in moreOptions">
+	<option value="">More</option>
+</select>
+</div>
+</div>
+</div> 
+<div class="col-md-12" data-ng-click="caseDetails()"> 
+<ul class="list-group no-radius no-border" id="mails-list">
+   <li ng-repeat="case in fbCases" class="list-group-item b-{{mail.label.color}}">
+ 
+     <div class="media">
+    
+       <div class="pull-left">
+        <label class="checkbox checkbox-custom checkbox-custom-sm m-0 mail-select">
+        <input type="checkbox"><i></i></label>
+         <div class="thumb thumb-sm">
+           <img src="{{case.image}}" class="img-circle" > 
+         </div>
+       </div>
+       <div class="media-body">
+         <div class="media-heading m-0">
+           <a class="mr-5">{{case.customerName}}</a>
+           <span class="pull-right text-sm text-muted">
+             <span class="hidden-xs">{{ case.date }}</span>
+           </span>
+         </div>
+         <small>{{case.content}}</small>
+       </div>
+       
+        <div class="form-group col-md-12 tile-body ">
+        <label  class="col-md-4 "><b>Case Priority : {{case.casePriority}}</b></label>
+        <label class="col-md-4 "><b>Social Account : {{case.socialAccount}}</b></label>
+        <label class="col-md-4 "><b>Case Status :  {{case.caseStatus}}</b></label>
+</div>
+    </div>
+   </li>
+ </ul>
+</div>
+ 
+</div>
+
+<!-- right side body -->
+<div>
+</div>
+  </div>
+  </div>
+  <!-- /page content -->

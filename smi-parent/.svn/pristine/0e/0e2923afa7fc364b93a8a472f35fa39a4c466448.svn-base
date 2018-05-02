@@ -1,0 +1,20 @@
+AppServices.factory('processesService',function($http, $q, smiGenUtil){
+	
+    return{
+    	
+    	 // Start getProcessData 
+    	getpostDataById: function(){
+    		   	var deferred = $q.defer();
+	       		$http.get('processes/posts',
+	       			{headers: { 'Content-Type': 'application/json; charset=UTF-8'}})
+	       		.success(function(response, status, headers) {
+	            	   deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	    }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	    });
+	       	 return deferred.promise;
+	     },// end getProcessData 
+	     
+        };
+});

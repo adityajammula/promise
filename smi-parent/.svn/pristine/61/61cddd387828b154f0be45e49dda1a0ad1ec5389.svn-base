@@ -1,0 +1,58 @@
+package com.zen.smi.service.impl;
+
+import java.util.Date;
+
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SimpleTrigger;
+
+import com.zen.smi.service.SMISchedulerService;
+import com.zen.smi.service.helper.SMIJob;
+import com.zen.smi.service.helper.SchedulerHelper;
+
+public class SMISchedulerServiceImpl implements SMISchedulerService {
+
+	SchedulerHelper schedulerHelper;
+	JobDetail jobDetail;
+	SimpleTrigger simpleTrigger;
+
+	public void addJobToScheduler(String jobId, String date)
+			throws SchedulerException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void deleteJobFromScheduler(String jobId, String date)
+			throws SchedulerException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateJobToScheduler(String jobId, String date)
+			throws SchedulerException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void initializeJobs() throws SchedulerException {
+		// TODO Auto-generated method stub
+		Scheduler scheduler =schedulerHelper.getScheduler();
+		//Here we need to call the  service and load all the job for first time
+		for(int i=0;i<5;i++){
+			
+			jobDetail= new JobDetail();
+			simpleTrigger= new SimpleTrigger();
+			jobDetail.setName("TEST"+i);
+			jobDetail.setJobClass(SMIJob.class);
+			simpleTrigger.setStartTime(new Date(System.currentTimeMillis()));
+			scheduler.scheduleJob(jobDetail, simpleTrigger);
+		}
+	}
+
+
+
+
+	
+
+}

@@ -1,0 +1,27 @@
+'use strict';
+
+/**
+ * @ngdoc directive
+ * @name smiApp.directive:activateButton
+ * @description
+ * # activateButton
+ */
+angular.module('smiApp')
+.directive("ngFileSelect",function(){
+
+  return {
+    link: function($scope,el){
+      
+      el.bind("change", function(e){
+      
+        $scope.selectedFiles = (e.srcElement || e.target).files;
+        $scope.updateFilePath();
+      })
+      
+    }
+    
+  }
+  
+  
+});
+

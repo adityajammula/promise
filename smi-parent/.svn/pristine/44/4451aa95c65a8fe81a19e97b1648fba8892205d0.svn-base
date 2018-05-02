@@ -1,0 +1,178 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.HashSet;
+import java.util.Set;
+
+
+public class CmfCustomerBO {
+	private int customerId;
+	private String firstName;
+	private String lastName;
+	private String middleName;
+	private String mobileNumber;
+	private String emailId;
+	private String landlineNumber;
+	private String crnNumber;
+	/**
+	 * @return the crnNumber
+	 */
+	public String getCrnNumber() {
+		return crnNumber;
+	}
+	/**
+	 * @param crnNumber the crnNumber to set
+	 */
+	public void setCrnNumber(String crnNumber) {
+		this.crnNumber = crnNumber;
+	}
+	private String facebookId;
+	private String twitterId;
+	private String address;
+	private String alternateAddress;
+	private Set<CmfCaseBO> cmfCasesBO = new HashSet<CmfCaseBO>(0);
+	/**
+	 * @return the customerId
+	 */
+	public int getCustomerId() {
+		return customerId;
+	}
+	/**
+	 * @param customerId the customerId to set
+	 */
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+	/**
+	 * @return the firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+	/**
+	 * @param firstName the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+	/**
+	 * @param lastName the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	/**
+	 * @return the middleName
+	 */
+	public String getMiddleName() {
+		return middleName;
+	}
+	/**
+	 * @param middleName the middleName to set
+	 */
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
+	/**
+	 * @return the mobileNumber
+	 */
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+	/**
+	 * @param mobileNumber the mobileNumber to set
+	 */
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+	/**
+	 * @return the emailId
+	 */
+	public String getEmailId() {
+		return emailId;
+	}
+	/**
+	 * @param emailId the emailId to set
+	 */
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+	/**
+	 * @return the landlineNumber
+	 */
+	public String getLandlineNumber() {
+		return landlineNumber;
+	}
+	/**
+	 * @param landlineNumber the landlineNumber to set
+	 */
+	public void setLandlineNumber(String landlineNumber) {
+		this.landlineNumber = landlineNumber;
+	}
+	/**
+	 * @return the facebookId
+	 */
+	public String getFacebookId() {
+		return facebookId;
+	}
+	/**
+	 * @param facebookId the facebookId to set
+	 */
+	public void setFacebookId(String facebookId) {
+		this.facebookId = facebookId;
+	}
+	/**
+	 * @return the twitterId
+	 */
+	public String getTwitterId() {
+		return twitterId;
+	}
+	/**
+	 * @param twitterId the twitterId to set
+	 */
+	public void setTwitterId(String twitterId) {
+		this.twitterId = twitterId;
+	}
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	/**
+	 * @return the alternateAddress
+	 */
+	public String getAlternateAddress() {
+		return alternateAddress;
+	}
+	/**
+	 * @param alternateAddress the alternateAddress to set
+	 */
+	public void setAlternateAddress(String alternateAddress) {
+		this.alternateAddress = alternateAddress;
+	}
+	/**
+	 * @return the cmfCasesBO
+	 */
+	public Set<CmfCaseBO> getCmfCasesBO() {
+		return cmfCasesBO;
+	}
+	/**
+	 * @param cmfCasesBO the cmfCasesBO to set
+	 */
+	public void setCmfCasesBO(Set<CmfCaseBO> cmfCasesBO) {
+		this.cmfCasesBO = cmfCasesBO;
+	}
+	
+}

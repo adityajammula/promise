@@ -1,0 +1,20 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.StStatusDAO;
+import com.zen.smi.dao.entities.CmfCaseStatus;
+import com.zen.smi.dao.entities.StStatus;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class StStatusDAOImpl extends BaseDAOImpl<StStatus, Serializable> implements StStatusDAO {
+
+	public StStatusDAOImpl() {
+		super(StStatus.class);
+	}
+	public StStatus getStCaseStatusByStCase(int stCaseStatusId)
+			throws GenericDAOException {
+		 String query = "FROM StStatus WHERE stStatusId="+stCaseStatusId;
+		  return load(query).get(0);
+	}
+}

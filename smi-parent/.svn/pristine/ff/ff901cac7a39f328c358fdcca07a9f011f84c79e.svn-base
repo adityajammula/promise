@@ -1,0 +1,84 @@
+package com.zen.smi.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zen.smi.cmf.bo.CmfCustomerBO;
+import com.zen.smi.cmf.bo.CmfCustomerListBO;
+import com.zen.smi.cmf.bo.CmfCustomerSocialDataBO;
+import com.zen.smi.cmf.bo.CmfCustomerSocialdataListBO;
+import com.zen.smi.cmf.service.CmfCustomerService;
+
+
+@Controller
+@RequestMapping("/cmfcustomer")
+public class CmfCustomerController extends BaseController {
+
+	/**
+	 * Logger for CmfCustomerController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(CmfCustomerController.class);
+
+	@Autowired
+	public CmfCustomerService cmfCustInfoService;
+
+	/**
+	 * This method is to get all the rules information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return RuleListBO
+	 */
+	@RequestMapping(value = "/{customer_id}", method = RequestMethod.GET)
+	public @ResponseBody
+	String getCustomerInformation(@PathVariable("customer_id") int custId,
+			HttpServletRequest request, HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			
+			List<CmfCustomerBO> cmfCustomerBO = cmfCustInfoService.getCustInfo(custId);
+			CmfCustomerListBO cmfCustomerListBO = new CmfCustomerListBO();
+			cmfCustomerListBO.setCmfCustomerBO(cmfCustomerBO);
+			resultJson = gson.toJson(cmfCustomerListBO, CmfCustomerListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	/*@RequestMapping(value = "/{social_data_customer_id}", method = RequestMethod.GET)
+	public @ResponseBody
+	String getSocialMediaInformation(@PathVariable("social_data_customer_id") int custId,
+			HttpServletRequest request, HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			
+			List<CmfCustomerSocialDataBO> cmfCustomerSocialDataBO = cmfCustInfoService.getCustomerSocialData(custId);
+//			com.zen.smi.cmf.bo.CmfCustomerSocialdataListBO cmfCustomerSocialDataListBO = new com.zen.smi.cmf.bo.CmfCustomerSocialdataListBO();
+			CmfCustomerSocialdataListBO cmfCustomerSocialDataListBO = new CmfCustomerSocialdataListBO();
+			cmfCustomerSocialDataListBO.setCmfCustomerBO(cmfCustomerSocialDataBO);
+			resultJson = gson.toJson(cmfCustomerSocialDataListBO, CmfCustomerSocialdataListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}*/
+	
+}

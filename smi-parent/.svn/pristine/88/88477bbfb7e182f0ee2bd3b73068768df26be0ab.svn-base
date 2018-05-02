@@ -1,0 +1,31 @@
+.wrapper {
+    text-align: center;
+}
+.textAreaSize{
+	width: 45%;
+    height: 8em;
+}
+#chkRqd{
+	color: red;
+	padding-left:5px;
+	margin-top: 10px;
+}
+.fbImg{
+	height: 21px;
+}
+.channelImg{
+	height: 21px;
+	margin-left: 127px;
+	margin-top: 93px
+}
+.channel{
+    width: 20px;
+    float: left;
+}
+.channels{
+    margin-left: 172px;
+    margin-top: -215px;
+}
+.textField{
+	height: 32px;
+}

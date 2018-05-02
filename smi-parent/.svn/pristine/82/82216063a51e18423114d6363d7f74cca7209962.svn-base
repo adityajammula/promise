@@ -1,0 +1,153 @@
+package com.zen.smi.helper;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import com.zen.rules.entities.Message;
+import com.zen.rules.entities.TweetMessage;
+import com.zen.rules.eval.RuleEngine;
+import com.zen.rules.events.DataEvent;
+import com.zen.rules.events.Event;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+import com.zen.smi.web.bo.RuleTestMessageResponse;
+import com.zen.smi.web.bo.RulesMessageBO;
+import com.zen.smi.web.bo.RulesTestMessageBO;
+
+public final class RulesHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for StaffHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(RulesHelper .class);
+
+	/**
+	 * Instance of StaffHelper.
+	 */
+	private static RulesHelper  instance;
+
+	public static RulesHelper getInstance() {
+		if (instance == null) {
+			instance = new RulesHelper();
+		}
+		return instance;
+	}
+
+	public static void setInstance(RulesHelper instance) {
+		RulesHelper.instance = instance;
+	}
+
+	/**
+	 * Private constructor
+	 */
+	private RulesHelper() {
+
+	}
+	
+	public void processMessages(Map<String, RulesTestMessageBO> rulesTestMessageMap) {
+		 LOGGER.debug("Starts processMessages...");
+		 
+		 Collection<RulesTestMessageBO> messageList = rulesTestMessageMap.values();
+		 try {
+			 RuleEngine engine = new RuleEngine();
+			 //put in iteration
+			 for(RulesTestMessageBO rulesTestMessage: messageList)
+			 {
+				 engine.handle(rulesTestMessage.getMessage());
+			 }
+			 Map<String , List<Event>> eventsMap = engine.getEventsMap();
+			 if(!eventsMap.isEmpty())
+			 {
+				 StringBuffer bufferString = new StringBuffer();
+				 Iterator<String> eventsMapKeyIterator = eventsMap.keySet().iterator();
+				 while(eventsMapKeyIterator.hasNext())
+				 {
+					bufferString.setLength(0);
+					String messageId =  eventsMapKeyIterator.next();
+					List<Event> eventsList = eventsMap.get(messageId);
+					if(eventsList != null && !eventsList.isEmpty())
+					{
+						 for(Event currentEvent : eventsList)
+						 {
+							 DataEvent dataEvent = (DataEvent)currentEvent;
+							 String formula = dataEvent.getFormulaName();
+							 bufferString.append(formula);
+						 }
+					}
+					//Per message 
+					if(bufferString.length() > 0)
+					{
+						//Formula Applied
+						RulesTestMessageBO finalMessage = rulesTestMessageMap.get(messageId);
+						if(finalMessage != null)
+						{ 
+							//Update the object in the list
+							finalMessage.setFormulaApplied(bufferString.toString());
+						}
+					}
+				 }//while completed
+			 }
+		 
+		 } catch (Exception e) {
+			e.printStackTrace();
+		}
+    	 
+    	 LOGGER.debug("Ends processMessages...");
+		
+	}
+	public RuleTestMessageResponse createResponse(Collection<RulesTestMessageBO> messageList) {
+		 LOGGER.debug("Starts createResponse...");
+		 RuleTestMessageResponse response = new RuleTestMessageResponse();
+		 if(messageList != null)
+		 {
+			 List<RulesMessageBO> rulesAppliedList = new ArrayList<RulesMessageBO>();
+			 List<RulesMessageBO> rulesNotAppliedList = new ArrayList<RulesMessageBO>();
+			 response.setRulesAppliedList(rulesAppliedList);
+			 response.setRulesNotAppliedList(rulesNotAppliedList);
+			 
+			 for(RulesTestMessageBO msgBO : messageList)
+			 {
+				 String messageText = msgBO.getMessage().getText();
+				 String formula = msgBO.getFormulaApplied();
+				 RulesMessageBO newMessageBO = new RulesMessageBO();
+				 newMessageBO.setMessage(messageText);
+				 newMessageBO.setFormulaApplied(formula);
+				 if(formula != null)
+				 {
+					 rulesAppliedList.add(newMessageBO);
+				 }else
+				 {
+					 rulesNotAppliedList.add(newMessageBO);
+				 }
+			 }
+		 }
+		 
+		 
+    	 LOGGER.debug("Ends createResponse...");
+		return response;
+    	 
+	}
+	/**
+	 * @param id String
+	 * @param messageText String
+	 * @return TweetMessage
+	 */
+	public TweetMessage createRulesMessage(String messageText, String id, String appName) {
+		 LOGGER.debug("Starts createRulesMessage...");
+		
+		 TweetMessage tweetMessage = new TweetMessage(messageText, id);
+		 tweetMessage.setPostType("public"); 
+		 tweetMessage.setSocialAccountType("TWITTER");
+		 tweetMessage.setAppName(appName);
+		 
+     	 LOGGER.debug("Ends createRulesMessage...");
+		
+     	 return tweetMessage;
+	}
+}

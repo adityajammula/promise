@@ -1,0 +1,79 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.zen.smi.dao.entities.FlumeAgentsProcess;
+
+public class FlumeAgentsBO {
+	private Integer agentId;
+	private String name;
+	private String description;
+	private String status;
+	private List<FlumeAgentsProcess> flumeAgentsProcesses = new ArrayList<FlumeAgentsProcess>(0);
+	/**
+	 * @return the agentId
+	 */
+	public Integer getAgentId() {
+		return agentId;
+	}
+	/**
+	 * @param agentId the agentId to set
+	 */
+	public void setAgentId(Integer agentId) {
+		this.agentId = agentId;
+	}
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	/**
+	 * @return the flumeAgentsProcesses
+	 */
+	public List<FlumeAgentsProcess> getFlumeAgentsProcesses() {
+		return flumeAgentsProcesses;
+	}
+	/**
+	 * @param flumeAgentsProcesses the flumeAgentsProcesses to set
+	 */
+	public void setFlumeAgentsProcesses(
+			List<FlumeAgentsProcess> flumeAgentsProcesses) {
+		this.flumeAgentsProcesses = flumeAgentsProcesses;
+	}
+	
+	
+}

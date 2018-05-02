@@ -1,0 +1,20 @@
+package com.zen.smi.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class RuleColumnsListBO {
+	
+	@SerializedName("rule_columns")
+	private List<RuleColumnsBO> ruleColumnsBO;
+
+	public List<RuleColumnsBO> getRuleColumnsBO() {
+		return ruleColumnsBO;
+	}
+
+	public void setRuleColumnsBO(List<RuleColumnsBO> ruleColumnsBO) {
+		this.ruleColumnsBO = ruleColumnsBO;
+	}
+
+}

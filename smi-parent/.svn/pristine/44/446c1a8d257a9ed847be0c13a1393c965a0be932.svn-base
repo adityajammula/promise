@@ -1,0 +1,331 @@
+AppServices.factory('OpenfacebookCaseService', function($http, $q, smiGenUtil) {
+
+	return {
+
+		// Start getStaticData 
+		getStaticData : function() {
+			var deferred = $q.defer();
+			$http.get('cmfcases/staticdata', {
+				headers : {
+					'Content-Type' : 'application/json; charset=UTF-8'
+				}
+			}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function() {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// end getStaticData 
+
+		// Start getOpenCases
+		getOpenCases : function(account_type) {
+			var deferred = $q.defer();
+			$http.get('cmfcases/openCasesByAccountType/' + account_type + '',
+					{}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function() {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// end getOpenCases 
+		// Start getOpenCasesByCategory 
+		getOpenCasesByCategory : function(category_type) {
+			var deferred = $q.defer();
+			$http.get('cmfcases/openCasesByCategory/' + category_type + '', {})
+					.success(function(response, status, headers) {
+						deferred.resolve(response);
+						smiGenUtil.handleSuccess(response);
+					}).error(function() {
+						smiGenUtil.handleError(response);
+					});
+			return deferred.promise;
+		},// end getOpenCasesByCategory 
+
+		// Start getOpenCasesByCategory 
+		getOpenCasesByPriority : function(priority_type) {
+			var deferred = $q.defer();
+			$http.get('cmfcases/openCasesByPriority/' + priority_type + '', {})
+					.success(function(response, status, headers) {
+						deferred.resolve(response);
+						smiGenUtil.handleSuccess(response);
+					}).error(function() {
+						smiGenUtil.handleError(response);
+					});
+			return deferred.promise;
+		},// end getOpenCasesByCategory 
+
+		// Start getOpenCasesByPriority 
+		getOpenCasesByPriority : function(priority_type) {
+			var deferred = $q.defer();
+			$http.get('cmfcases/openCasesByPriority/' + priority_type + '', {})
+					.success(function(response, status, headers) {
+						deferred.resolve(response);
+						smiGenUtil.handleSuccess(response);
+					}).error(function() {
+						smiGenUtil.handleError(response);
+					});
+			return deferred.promise;
+		},// ends getOpenCasesByPriority 
+
+		// Start getCustomerHistory 
+		getCustomerHistory : function(customer_id) {
+			var deferred = $q.defer();
+			$http.get('cmfcases/casesByCustomer/' + customer_id + '', {})
+					.success(function(response, status, headers) {
+						deferred.resolve(response);
+						smiGenUtil.handleSuccess(response);
+					}).error(function() {
+						smiGenUtil.handleError(response);
+					});
+			return deferred.promise;
+		},
+		// Start getOpenCasesByAccount
+		getOpenCasesByAccount : function(socialMediaAccounts_type) {
+			var deferred = $q.defer();
+			$http.get(
+					'cmfcases/openCasesBySocialMediaAccounts/'
+							+ socialMediaAccounts_type + '', {}).success(
+					function(response, status, headers) {
+						deferred.resolve(response);
+						smiGenUtil.handleSuccess(response);
+					}).error(function() {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// ends getOpenCasesByPriority 
+
+		// Start getOpenCasesByCriteria
+		getOpenCasesByCriteria : function(requestData) {
+			var deferred = $q.defer();
+			$http.post('cmfcases/openCasesByCriteria',
+					JSON.stringify(requestData), {
+						headers : {
+							'Content-Type' : 'application/json; charset=UTF-8'
+						}
+					}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function(response) {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},
+		// Start getIndividualCaseDetails
+		getIndividualCaseDetails : function(case_id) {
+			var deferred = $q.defer();
+			$http.get('cmfcases/casesdetails/' + case_id + '', {}).success(
+					function(response, status, headers) {
+						deferred.resolve(response);
+						smiGenUtil.handleSuccess(response);
+					}).error(function() {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// ends getOpenCasesByPriority 
+
+		// Start getUserData 
+		getAllUsers : function() {
+			var deferred = $q.defer();
+			$http.get('cmfcases/users', {
+				headers : {
+					'Content-Type' : 'application/json; charset=UTF-8'
+				}
+			}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function() {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// end getStaticData 
+
+		//Starts the Add AppendNotes
+		saveAppendNotes : function(requestData) {
+			var deferred = $q.defer();
+			$http.post('cmfcases/note/appendnote', JSON.stringify(requestData),
+					{
+						headers : {
+							'Content-Type' : 'application/json; charset=UTF-8'
+						}
+					}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function(response) {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// End Add AppendNotes
+
+		//Starts the saveSelectedCases
+		saveSelectedCases : function(requestData) {
+			var deferred = $q.defer();
+			$http.post('cmfcases/assign', JSON.stringify(requestData), {
+				headers : {
+					'Content-Type' : 'application/json; charset=UTF-8'
+				}
+			}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function(response) {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// End Add saveSelectedCases
+
+		//Starts the saveGroupCases
+		saveGroupCases : function(requestData) {
+			var deferred = $q.defer();
+			$http.post('cmfcases/createCase', JSON.stringify(requestData), {
+				headers : {
+					'Content-Type' : 'application/json; charset=UTF-8'
+				}
+			}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function(response) {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// End the saveGroupCases
+
+		// Start getDemoGraphicData
+		getGroupCases : function(case_id) {
+			var deferred = $q.defer();
+			$http.get('cmfcases/casesdetails/' + case_id + '', {}).success(
+					function(response, status, headers) {
+						deferred.resolve(response);
+						smiGenUtil.handleSuccess(response);
+					}).error(function() {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// end getDemoGraphicData 
+
+		// Start getnoteHistory
+		getnoteHistory : function(case_id) {
+			var deferred = $q.defer();
+			$http.get('cmfcases/note/casenotedetails/' + case_id + '', {})
+					.success(function(response, status, headers) {
+						deferred.resolve(response);
+						smiGenUtil.handleSuccess(response);
+					}).error(function() {
+						smiGenUtil.handleError(response);
+					});
+			return deferred.promise;
+		},// ends getnoteHistory 
+		//Starts saveResolvedCase
+		saveResolvedCase : function(requestData) {
+			var deferred = $q.defer();
+			$http.post('cmfcases/resolved', JSON.stringify(requestData), {
+				headers : {
+					'Content-Type' : 'application/json; charset=UTF-8'
+				}
+			}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function(response) {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// End saveResolvedCase
+
+		//Starts getSearchResults
+		getSearchResults : function(requestData) {
+			var deferred = $q.defer();
+			$http.post('cmfcases/search', JSON.stringify(requestData), {
+				headers : {
+					'Content-Type' : 'application/json; charset=UTF-8'
+				}
+			}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function(response) {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// End getSearchResults
+
+		// Start getPopulateData 
+		getPopulateData : function() {
+			var deferred = $q.defer();
+			$http.get('cmfcases/populate', {
+				headers : {
+					'Content-Type' : 'application/json; charset=UTF-8'
+				}
+			}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function() {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// end getPopulateData 
+
+		//Starts saveNewCase
+		saveNewCase : function(requestData) {
+			var deferred = $q.defer();
+			$http.post('cmfcases/createCase', JSON.stringify(requestData), {
+				headers : {
+					'Content-Type' : 'application/json; charset=UTF-8'
+				}
+			}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function(response) {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// End saveNewCase
+
+		// Start getGroupCaseNumbers 
+		getGroupCaseNumbers : function(account_type) {
+			var deferred = $q.defer();
+			$http.get('cmfcases/cases/list/' + account_type + '', {
+				headers : {
+					'Content-Type' : 'application/json; charset=UTF-8'
+				}
+			}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function() {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// end getGroupCaseNumbers 
+		
+		//Starts saveIndividualGroupCase
+		saveIndividualGroupCase : function(requestData) {
+			var deferred = $q.defer();
+			$http.post('cmfcases/assigntogroupcase', JSON.stringify(requestData), {
+				headers : {
+					'Content-Type' : 'application/json; charset=UTF-8'
+				}
+			}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function(response) {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// End saveIndividualGroupCase
+		
+		//Starts moveToSpam
+		saveSpamCases : function(requestData) {
+			var deferred = $q.defer();
+			$http.post('cmfcases/moveToSpam', JSON.stringify(requestData), {
+				headers : {
+					'Content-Type' : 'application/json; charset=UTF-8'
+				}
+			}).success(function(response, status, headers) {
+				deferred.resolve(response);
+				smiGenUtil.handleSuccess(response);
+			}).error(function(response) {
+				smiGenUtil.handleError(response);
+			});
+			return deferred.promise;
+		},// End moveToSpam
+
+	};
+});

@@ -1,0 +1,178 @@
+<div class="container-fluid">
+    <!-- row -->
+    <div class="row">
+        <!-- tile -->
+        <section class="tile">
+          <!-- tile header -->
+          <div class="tile-header bg-greensea dvd dvd-btm">
+            <h1 class="custom-font"><strong>Process Management</strong></h1>
+          </div>
+          <tabset justified="true" type="pills">
+                <tab  heading="New Processes">
+                	<div class="tile-body">
+            <table class="st-table table table-custom row-border hover"  >
+	             <thead>
+		              <tr>
+		              <th></th>
+		                <th>Account Name</th>
+		                <th>Account Owner</th>
+		                <th> Account Type</th>
+		                 <th>Status</th>
+		                 <th>Scheduled Date & Time</th>
+		              </tr>
+	               </thead>
+	               <tbody class="table-hover">
+			        <tr ng-repeat-start="process in newProcessData">
+            <td>
+              <button ng-if="process.expanded" data-ng-click="process.expanded = false">-</button>
+              <button ng-if="!process.expanded" data-ng-click="process.expanded = true;showNewProcessDetails(process)">+</button>
+            </td>
+            <td>{{process.social_media_accounts_accountname}}</td>
+            <td>{{process.financial_institutions.financial_institutions_accountowner}}</td>
+            <td>{{process.social_profiles.social_profile_accounts_type}}</td>
+            <td class="newprocesstdwidth"><label data-ng-hide="process.processStatus =='NOT_STARTED'">{{process.processStatus}}</label><br> 
+             
+		 <progressbar data-ng-show="process.processStatus =='IN_PROGRESS'" class="progress-striped active not-rounded" animate="true" value="process.processPercentage" type="dutch"><b>{{process.processPercentage}}%</b></progressbar>
+ 		 <progressbar style="background-color: #99A7BB !important;" data-ng-show="process.processStatus =='NOT_STARTED'" animate="false" value="" type="#16a085"><b>{{process.processStatus}}</b></progressbar>
+ 		 <progressbar data-ng-show="process.processStatus =='GROUP_POSTS_CRASHED'" animate="false" value="100" type="red"></progressbar>
+ 		 </td>
+             <td>{{process.scheduledDate}}</td>
+          </tr>
+          <tr ng-if="process.expanded && process.social_profiles.social_profile_accounts_type == 'TWITTER'">
+          <td></td>
+            <td><b>Tweets &nbsp&nbsp : &nbsp&nbsp{{twitterData.likes}}</b></td>
+            <td><b>Following &nbsp&nbsp : &nbsp&nbsp {{twitterData.were_here_count}}</b></td>
+            <!-- <td>Tweets:{{data.Tweets}}</td> -->
+          </tr>
+           <tr ng-if="process.expanded && process.social_profiles.social_profile_accounts_type == 'FACEBOOK'" ng-repeat-end="">
+          <td></td>
+            <td><b>Likes:{{facebookData.likes}}</b></td>
+          </tr>
+	              </tbody> 
+            </table>
+          </div>
+                </tab>
+                <tab heading="Existing Processes">
+                <div class="tile-body">
+            <table class="st-table table table-custom row-border hover">
+	             <thead>
+		              <tr>
+		                <th>Account Type</th>
+		                 <th>Status</th>
+		                 <th>Scheduled Date & Time</th>
+		              </tr>
+	               </thead>
+	               <tbody class="table-hover">
+	                 <tr ng-repeat="processes in existingProcessData" data-ng-click ="showDetails(processes)">
+		            <td>{{processes.AccountType}}</td>
+          </tr>
+	       </tbody> 
+            </table>
+            <div>
+             <div class="row" data-ng-show="showProcessDetails">
+					<div class="col-md-3">
+						<div class="form-group">
+							<label class="col-md-8">Account Name*</label> <select
+								class="form-control" data-ng-model="a.accountname"
+								data-ng-options="a.accountname for a in socialMediaAccounts" data-ng-change="">
+								<option value="">Select</option>
+							</select>
+						</div>
+					</div>
+					 <div class="col-md-4">
+						<div class="form-group">
+							<label class="col-md-8">Date</label>
+			                <p class="datePicker">
+			                  <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="'1990-01-01'" max-date="'2015-06-22'" datepicker-options="dateOptions"  ng-required="true" close-text="Close" />
+			                  <span class="input-group-btn">
+			                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="fa fa-calendar"></i></button>
+			                  </span>
+			                </p>
+						</div>
+					</div>
+					</div>
+					<div data-ng-show="showFacebookDetails">
+					<div class="col-md-12">
+					<label class="col-md-3">Shares</label>
+					<label class="col-md-3">Blocks</label> 
+					<label class="col-md-3">Reports</label>
+					</div>
+					 <table class="st-table table table-striped table-custom row-border hover">
+	             <thead>
+		              <tr>
+		              <th></th>
+		                <th>Post</th>
+		                 <th>Likes</th>
+		                 <th>Comments</th>
+		                 <th>Shares </th>
+		              </tr>
+	               </thead>
+	               <tbody>
+	               <tr  data-ng-repeat ="data in postsData">
+	               <td>{{data.postName}}</td>
+	               <td>{{data.likes}} &nbsp&nbsp <i data-ng-show="data.likes > 0" class="fa fa-2x fa-lg fa-sort-asc text-greensea">     
+	               </i><i data-ng-show="data.likes<0" class="fa fa-2x fa-lg fa-sort-desc text-lightred"></i>
+	               <i data-ng-show="data.likes==0" class="fa fa-circle" style="color: #00CCFF"></i></td></td>
+	               <td>{{data.comments}} &nbsp&nbsp <i data-ng-show="data.comments > 0" class="fa fa-2x fa-lg fa-sort-asc text-greensea">
+	               </i><i data-ng-show="data.comments < 0" class="fa fa-2x fa-lg fa-sort-desc text-lightred"></i>
+	               <i data-ng-show="data.comments == 0" class="fa fa-circle" style="color: #00CCFF"></i></td>
+	               <td>{{data.shares}} &nbsp&nbsp <i data-ng-show="data.shares>0" class="fa fa-2x fa-lg fa-sort-asc text-greensea">
+	               </i><i data-ng-show="data.shares<0" class="fa fa-2x fa-lg fa-sort-desc text-lightred" ></i>
+	               <i data-ng-show="data.shares==0" class="fa fa-circle" style="color: #00CCFF"></i></td>
+	                <td>{{data.shares}} &nbsp&nbsp<i data-ng-show="data.shares>0" class="fa fa-2x fa-lg fa-sort-asc text-greensea">
+	               </i><i data-ng-show="data.shares<0" class="fa fa-2x fa-lg fa-sort-desc text-lightred"></i>
+	               <i data-ng-show="data.shares==0" class="fa fa-circle" style="color: #00CCFF"></i></td>
+	               </tr>
+	              </tbody> 
+            </table>
+            </div>
+            	<div data-ng-show="showTwitterDetails">
+					<div class="col-md-12">
+					<label class="col-md-3" >New Followers &nbsp&nbsp <i class="fa fa-2x fa-lg fa-sort-asc text-greensea"></i>20</label> 
+					<label class="col-md-3">Unfollow &nbsp&nbsp <i class="fa fa-2x fa-lg fa-sort-desc text-lightred"></i> 20</label>
+					<label class="col-md-3">Blocked &nbsp&nbsp <i class="fa fa-circle" style="color: #00CCFF"></i>0</label> 
+					<label class="col-md-3">Mute &nbsp&nbsp <i class="fa fa-2x fa-lg fa-sort-asc text-greensea" ></i>20</label>
+					</div>
+					 <table class="st-table table table-striped table-custom row-border hover">
+	             <thead>
+		              <tr>
+		                <th>Post</th>
+		                 <th>Replies</th>
+		                 <th>Retweets</th>
+		                 <th>Favroites</th>
+		                 <th>Reports</th>
+		              </tr>
+	               </thead>
+	               <tbody>
+	               <tr  data-ng-repeat ="data in postsData">
+	               <td>{{data.postName}}</td>
+	               <td>{{data.likes}} &nbsp&nbsp <i data-ng-show="data.likes > 0" class="fa fa-2x fa-lg fa-sort-asc text-greensea">     
+	               </i><i data-ng-show="data.likes<0" class="fa fa-2x fa-lg fa-sort-desc text-lightred"></i>
+	               <i data-ng-show="data.likes==0" class="fa fa-circle" style="color: #00CCFF"></i></td>
+	               <td>{{data.comments}} &nbsp&nbsp <i data-ng-show="data.comments > 0" class="fa fa-2x fa-lg fa-sort-asc text-greensea" >
+	               </i><i data-ng-show="data.comments < 0" class="fa fa-2x fa-lg fa-sort-desc text-lightred"></i>
+	               <i data-ng-show="data.comments == 0" class="fa fa-circle" style="color: #00CCFF"></i></td>
+	               <td>{{data.shares}} &nbsp&nbsp <i data-ng-show="data.shares>0" class="fa fa-2x fa-lg fa-sort-asc text-greensea">
+	               </i><i data-ng-show="data.shares<0" class="fa fa-2x fa-lg fa-sort-desc text-lightred"></i>
+	               <i data-ng-show="data.shares==0" class="fa fa-circle" style="color: #00CCFF"></i></td>
+	                <td>{{data.shares}} &nbsp&nbsp <i data-ng-show="data.shares>0" class="fa fa-2x fa-lg fa-sort-asc text-greensea">
+	               </i><i data-ng-show="data.shares<0" class="fa fa-2x fa-lg fa-sort-desc text-lightred"></i>
+	               <i data-ng-show="data.shares==0" class="fa fa-circle" style="color: #00CCFF"></i></td>
+	              </tbody> 
+            </table>
+            </div>
+            </div>
+          </div> 
+          </tab>
+              </tabset>
+          <!-- /tile header -->
+          <!-- tile body -->
+          
+          <!-- /tile body -->
+        </section>
+        <!-- /tile -->
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /page content -->
+</div>

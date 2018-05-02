@@ -1,0 +1,59 @@
+package com.zen.smi.service.helper;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.RuleBO;
+import com.zen.smi.bo.RuleFamilyBO;
+import com.zen.smi.bo.RuleGroupBO;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+
+public final class EditRuleHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for StaffHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(EditRuleHelper .class);
+
+	/**
+	 * Instance of StaffHelper.
+	 */
+	private static EditRuleHelper  instance;
+
+	public static EditRuleHelper getInstance() {
+		if (instance == null) {
+			instance = new EditRuleHelper();
+		}
+		return instance;
+	}
+
+	
+
+	/**
+	 * Private constructor
+	 */
+	private EditRuleHelper() {
+
+	}
+	
+		
+	/**
+	 * Converts Staff entity to StaffBO object
+	 * @param Staff staff
+	 * @return StaffBO
+	 * @author tmangalapenta 
+	 */
+	public RuleGroup convertGroupBOToEntity(RuleGroupBO ruleGroupBO) {
+		LOGGER.debug("Starts convertRuleEntityToBO...");
+		
+		return null;
+	}
+	
+}

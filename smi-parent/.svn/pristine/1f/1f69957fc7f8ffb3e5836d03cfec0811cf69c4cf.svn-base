@@ -1,0 +1,52 @@
+angular
+		.module('smiApp')
+		.controller('AssignCaseController',function($scope, $state, $modal, OpenfacebookCaseService,$rootScope,$log,dialogs) {
+			
+							var modalInstance = $modal.open({
+								templateUrl : 'assignCase.html',
+								controller : 'AddassignCaseController',
+							
+							 resolve: {
+							        items: function () {
+							        	 var obj = {};
+						      		     obj.assignto= $scope.assignto;
+						      		     obj.reasons= $scope.reasons;
+						      		    /* obj.selectedCases=$rootScope.cases;
+						      		     alert("popup");
+						      			alert( obj.selectedCases);*/
+							             return obj;
+							       }
+							      }
+							});
+
+				}).controller('AddassignCaseController',  function ($scope, $modalInstance,$rootScope,OpenfacebookCaseService,items ) {
+					
+					$scope.getAssignedUserId= function(user) {
+						$scope.user=user
+					};
+					OpenfacebookCaseService.getAllUsers().then(function(response) {
+						$scope.users = response.data.cmfCasesUsers;
+						});
+					
+					    $scope.ok = function () {
+					    	var requestData = {
+			    				      "user_name":$scope.assignto,
+			    				      "reason_assign": $scope.reasons,
+			    				      "Case":[]
+			    				};
+					    	 /* requestData.Case[i] = {};
+					    	  for(var i =0;i<items.selectedCases.length;i++)
+					    	  {
+					    		  requestData.Case[i] = items.selectedCases[i];
+					    	  };*/
+						    	OpenfacebookCaseService.saveSelectedCases(requestData).then(function(result){
+						    		
+						    	});
+						    	//$state.go('openfacebookcases');
+					    	 
+						    	$scope.close = function () {
+									$modalInstance.dismiss('close');
+							    };
+					    };
+					  
+					})

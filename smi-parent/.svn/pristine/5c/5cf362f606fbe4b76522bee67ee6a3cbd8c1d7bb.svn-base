@@ -1,0 +1,133 @@
+package com.zen.smi.bo;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.zen.smi.dao.entities.FlumeAgentsProcess;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+
+public class SocialDataProcessBO {
+	private Integer processId;
+	private SocialMediaAccountsBO socialMediaAccountsBO;
+	private String name;
+	private String status;
+	private Date startDate;
+	private Date endDate;
+	private String statistics;
+	private String processData;
+	private List<FlumeAgentsProcessBO> flumeAgentsProcesses = new ArrayList<FlumeAgentsProcessBO>(0);
+	/**
+	 * @return the processId
+	 */
+	public Integer getProcessId() {
+		return processId;
+	}
+	/**
+	 * @param processId the processId to set
+	 */
+	public void setProcessId(Integer processId) {
+		this.processId = processId;
+	}
+	/**
+	 * @return the socialMediaAccountsBO
+	 */
+	public SocialMediaAccountsBO getSocialMediaAccountsBO() {
+		return socialMediaAccountsBO;
+	}
+	/**
+	 * @param socialMediaAccountsBO the socialMediaAccountsBO to set
+	 */
+	public void setSocialMediaAccountsBO(SocialMediaAccountsBO socialMediaAccountsBO) {
+		this.socialMediaAccountsBO = socialMediaAccountsBO;
+	}
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	/**
+	 * @return the startDate
+	 */
+	public Date getStartDate() {
+		return startDate;
+	}
+	/**
+	 * @param startDate the startDate to set
+	 */
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	/**
+	 * @return the endDate
+	 */
+	public Date getEndDate() {
+		return endDate;
+	}
+	/**
+	 * @param endDate the endDate to set
+	 */
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	/**
+	 * @return the statistics
+	 */
+	public String getStatistics() {
+		return statistics;
+	}
+	/**
+	 * @param statistics the statistics to set
+	 */
+	public void setStatistics(String statistics) {
+		this.statistics = statistics;
+	}
+	/**
+	 * @return the processData
+	 */
+	public String getProcessData() {
+		return processData;
+	}
+	/**
+	 * @param processData the processData to set
+	 */
+	public void setProcessData(String processData) {
+		this.processData = processData;
+	}
+	/**
+	 * @return the flumeAgentsProcesses
+	 */
+	public List<FlumeAgentsProcessBO> getFlumeAgentsProcesses() {
+		return flumeAgentsProcesses;
+	}
+	/**
+	 * @param flumeAgentsProcesses the flumeAgentsProcesses to set
+	 */
+	public void setFlumeAgentsProcesses(
+			List<FlumeAgentsProcessBO> flumeAgentsProcesses) {
+		this.flumeAgentsProcesses = flumeAgentsProcesses;
+	}
+
+	
+}

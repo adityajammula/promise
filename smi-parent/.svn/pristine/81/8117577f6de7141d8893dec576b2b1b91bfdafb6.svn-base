@@ -1,0 +1,26 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.zen.smi.dao.CmfCustomerDAO;
+import com.zen.smi.dao.FlumeAgentsDAO;
+import com.zen.smi.dao.entities.CmfCustomer;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfCustomerDAOImpl extends BaseDAOImpl<CmfCustomer, Serializable> implements CmfCustomerDAO {
+
+	public CmfCustomerDAOImpl() {
+		super(CmfCustomer.class);
+	}
+
+	public CmfCustomer getCmfCustomerByCmfCase(String caseId)
+			throws GenericDAOException {
+		String query = "FROM CmfCustomer as cmfc INNER  JOIN FETCH  cmfc.cmfCases as cc WHERE cc.caseId="+caseId;
+		  return load(query).get(0);
+	}
+	
+}

@@ -1,0 +1,345 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASE_CREATED_STATUS;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASE_CLOSED_STATUS;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASE_SPAM_STATUS;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.CmfCaseDAO;
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.RuleRulesColumns;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.generic.utils.MessageUtil;
+
+public class CmfCaseDAOImpl extends BaseDAOImpl<CmfCase, Serializable> implements CmfCaseDAO {
+
+	public CmfCaseDAOImpl() {
+		super(CmfCase.class);
+	}
+
+	public List<CmfCase> getAllCmfCasesByCriteria(Integer priorityTypeId,Integer categoryId,Integer accountTypeId,int statusTypeId) throws GenericDAOException {
+		String fromClause = "FROM CmfCase WHERE (groupCaseId ='' or groupCaseId is null) and cmfCaseStatus.caseStatusId ="+statusTypeId;
+		StringBuffer whereClause = new StringBuffer();
+		whereClause.append(fromClause);
+		if(null != categoryId && categoryId>0) {
+			whereClause.append(" and cmfCaseCategory="+categoryId);
+		}
+		if(null != priorityTypeId && priorityTypeId>0) {
+			whereClause.append(" and cmfCasePriority.priorityId = "+priorityTypeId);
+		}
+		if(null != accountTypeId && accountTypeId>0) {
+			whereClause.append(" and socialProfiles="+accountTypeId);
+		}
+		return load(whereClause.toString());
+	}
+
+	public List<CmfCase> getAllCmfClosedCases() throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("cmfCaseStatus.caseStatusId", CMF_CASE_CLOSED_STATUS));
+		
+		return search(expressionList, null);
+	}
+	public List<CmfCase> getAllCmfCasesByGroupCaseId(String caseId) throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("groupCaseId", caseId));
+		
+		return search(expressionList, null);
+	}
+	
+	public List<CmfCase> getAllCmfCasesBySearch(String keyword,String sourceId,String currentStatus) throws GenericDAOException {
+	/*	List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		if(null!=sourceId){
+			expressionList.add(Restrictions.eq("socialProfiles.profileId", Integer.parseInt(sourceId)));
+		}
+		expressionList.add(Restrictions.eq("cmfCaseStatus.caseStatusId", Integer.parseInt(currentStatus)));
+		expressionList.add(Restrictions.like("caseId", keyword));
+		return search(expressionList, null);
+		*/
+		Session session = getSessionFactory().openSession();
+		Query query=null;
+		if(null!=sourceId){
+		 query = session.createQuery("FROM CmfCase WHERE (groupCaseId ='' or groupCaseId is null) and socialProfiles="+sourceId+" and cmfCaseStatus.caseStatusId ="+currentStatus+" and caseId like :sf");
+				}else{
+		 query = session.createQuery("FROM CmfCase WHERE (groupCaseId ='' or groupCaseId is null) and cmfCaseStatus.caseStatusId ="+currentStatus+" and caseId like :sf");
+		}
+		 query.setString("sf",'%'+keyword+'%');
+		List<CmfCase> cmfCases=query.list();
+		return cmfCases; 
+	}
+	public List<CmfCase> getAllCmfSpamCases() throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("cmfCaseStatus.caseStatusId", CMF_CASE_SPAM_STATUS));
+		
+		return search(expressionList, null);
+	}
+
+	public Long getCountOfCmfOpenCasesByAccountType(int accountTypeId,int statusTypeId)
+			throws GenericDAOException {
+		
+		String query = "FROM CmfCase WHERE (groupCaseId ='' or groupCaseId is null) and socialProfiles="+accountTypeId+" and cmfCaseStatus.caseStatusId ="+statusTypeId;
+
+		return Long.valueOf(""+load(query).size()); 
+		
+	}
+
+	public Long getCountOfCmfCasesByStatusType(int statusTypeId) throws GenericDAOException {
+		Session session = null;
+		Long results = null;
+		
+		try{
+        	session = getSessionFactory().openSession();
+    		Criteria crit = session.createCriteria(CmfCase.class);
+    		crit.setProjection(Projections.rowCount());
+    		//crit.add( Restrictions.eq("cmfCaseStatus.caseStatusId", statusTypeId));
+    		results = (Long) crit.uniqueResult();
+		}
+        catch (HibernateException ex){
+            if(session!=null && session.getTransaction()!=null){
+                session.getTransaction().rollback();
+            }
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+        
+		return results; 
+	}
+
+	
+	public List<CmfCase> getAllCmfCriticalCases() throws GenericDAOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Long getCountOfCmfAllCases() throws GenericDAOException {
+		Session session = null;
+		Long results = null;
+		
+		try{
+        	session = getSessionFactory().openSession();
+    		Criteria crit = session.createCriteria(CmfCase.class);
+    		crit.setProjection(Projections.rowCount());
+    		results = (Long) crit.uniqueResult();
+		}
+        catch (HibernateException ex){
+            if(session!=null && session.getTransaction()!=null){
+                session.getTransaction().rollback();
+            }
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+        
+		return results; 
+	}
+
+	public Long getCountOfCmfCurrentUserCases(int userId) throws GenericDAOException {
+		Session session = null;
+		Long results = null;
+		
+		try{
+        	session = getSessionFactory().openSession();
+    		Criteria crit = session.createCriteria(CmfCase.class);
+    		crit.setProjection(Projections.rowCount());
+    		crit.add( Restrictions.eq("users.userId", userId));
+    		
+    		results = (Long) crit.uniqueResult();
+		}
+        catch (HibernateException ex){
+            if(session!=null && session.getTransaction()!=null){
+                session.getTransaction().rollback();
+            }
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+        
+		return results; 
+	}
+
+	public List<CmfCase> getAllCmfOpenCasesByAccountType(int accountTypeId,
+			int statusTypeId) throws GenericDAOException {
+		String query = "FROM CmfCase WHERE (groupCaseId ='' or groupCaseId is null or groupCaseId= '0') and socialProfiles="+accountTypeId+" and cmfCaseStatus.caseStatusId ="+statusTypeId;
+		return load(query);
+	}
+	public List<CmfCase> getAllCmfOpenCasesByAccountType(int accountTypeId) throws GenericDAOException {
+		String query = "FROM CmfCase WHERE socialProfiles="+accountTypeId;
+		return load(query);
+	}
+	
+	public List<CmfCase> getAllCmfOpenCasesByFinancialInstitutionsType(int financialInstitutionTypeId) throws GenericDAOException {
+		String query = "FROM CmfCase WHERE financialInstitutions="+financialInstitutionTypeId;
+		return load(query);
+	}
+	
+	public Long getCountOfCmfCurrentUserCasesByPriority(int userId, int priority)
+			throws GenericDAOException {
+		Session session = null;
+		Long results = null;
+		
+		try{
+        	session = getSessionFactory().openSession();
+    		Criteria crit = session.createCriteria(CmfCase.class);
+    		crit.setProjection(Projections.rowCount());
+    		crit.add( Restrictions.eq("users.userId", userId));
+    		crit.add( Restrictions.eq("cmfCasePriority.priorityId", priority));
+    		
+    		results = (Long) crit.uniqueResult();
+		}
+        catch (HibernateException ex){
+            if(session!=null && session.getTransaction()!=null){
+                session.getTransaction().rollback();
+            }
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+        
+		return results; 
+	}
+
+	public List<CmfCase> getAllCmfOpenCasesByCategory(int categoryId)
+			throws GenericDAOException {
+		
+		String query = "FROM CmfCase WHERE cmfCaseCategory="+categoryId;
+		return load(query);
+	}
+
+	public List<CmfCase> getAllCmfOpenCasesByPriority(int priorityTypeId)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("cmfCasePriority.priorityId", priorityTypeId));
+
+		return search(expressionList, null);
+	}
+
+	public Long getCountOfCmfCasesByCategoryType(Integer categoryId)
+			throws GenericDAOException {
+		Session session = null;
+		Long results = null;
+		
+		try{
+        	session = getSessionFactory().openSession();
+    		Criteria crit = session.createCriteria(CmfCase.class);
+    		crit.setProjection(Projections.rowCount());
+    		crit.add( Restrictions.eq("cmfCaseCategory.categoryId", categoryId));
+    		
+    		results = (Long) crit.uniqueResult();
+		}
+        catch (HibernateException ex){
+            if(session!=null && session.getTransaction()!=null){
+                session.getTransaction().rollback();
+            }
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+        
+		return results;
+	}
+	
+	public List<CmfCase> getAllCmfOpenCasesByCriteria(Integer priorityTypeId,Integer categoryId,Integer socialMediaAccountsId,Integer accountTypeId,int statusTypeId)
+			throws GenericDAOException {
+		String fromClause = "FROM CmfCase WHERE (groupCaseId ='' or groupCaseId is null) and cmfCaseStatus.caseStatusId ="+statusTypeId;
+		StringBuffer whereClause = new StringBuffer();
+		whereClause.append(fromClause);
+		if(null != categoryId && categoryId>0) {
+			whereClause.append(" and cmfCaseCategory="+categoryId);
+		}
+		if(null != priorityTypeId && priorityTypeId>0) {
+			whereClause.append(" and cmfCasePriority.priorityId = "+priorityTypeId);
+		}
+		if(null != socialMediaAccountsId && socialMediaAccountsId>0) {
+			whereClause.append(" and socialMediaAccounts="+socialMediaAccountsId);
+		}
+		if(null != accountTypeId && accountTypeId>0) {
+			whereClause.append(" and socialProfiles="+accountTypeId);
+		}
+		return load(whereClause.toString());
+		
+	}
+
+	public Long getCountOfCmfCasesByDateCriteria(Integer priorityTypeId,Integer categoryId,Integer accountTypeId,Date startDate, Date endDate) throws GenericDAOException {
+		Session session = null;
+		Long results = null;
+		
+		try{
+        	session = getSessionFactory().openSession();
+    		Criteria crit = session.createCriteria(CmfCase.class);
+    		crit.setProjection(Projections.rowCount());
+    		if(null != categoryId && categoryId>0) {
+    			crit.add( Restrictions.eq("cmfCaseCategory.categoryId", categoryId));
+    		}
+    		if(null != priorityTypeId && priorityTypeId>0) {
+    			crit.add( Restrictions.eq("cmfCasePriority.priorityId", priorityTypeId));
+    		}
+    	    crit.add(Restrictions.le("createdDate",endDate));
+    	    crit.add(Restrictions.ge("createdDate",startDate));
+    		
+//    		if(null != accountTypeId && accountTypeId>0) {
+//    			crit.add( Restrictions.eq("cmfCaseStatus.caseStatusId", accountTypeId));
+//    		}
+    		results = (Long) crit.uniqueResult();
+		}
+        catch (HibernateException ex){
+            if(session!=null && session.getTransaction()!=null){
+                session.getTransaction().rollback();
+            }
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+        
+		return results; 
+	}
+//	Criteria powerCriteria= session.createCriteria(TimeSeriesPowerPK.class);
+//    powerCriteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+//
+//    powerCriteria.add(Restrictions.le("dateTime",currentDateObject));
+//    powerCriteria.add(Restrictions.ge("dateTime",userEnteredDateObject));
+//
+//    return powerCriteria.list();
+    
+	public List<CmfCase> getAllCmfCasesByCustomer(int customerId)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("cmfCustomer.customerId", customerId));
+
+		return search(expressionList, null);
+//		String query = "FROM CmfCase WHERE cmfCustomer.customerId="+customerId;
+//		return load(query);
+	}
+
+
+}

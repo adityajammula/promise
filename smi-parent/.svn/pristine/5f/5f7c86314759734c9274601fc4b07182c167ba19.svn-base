@@ -1,0 +1,346 @@
+<div class="container-fluid openFbCases">
+<div class="row tile">
+	<script type="text/ng-template" id="appendNote.html">
+     <div class="modal-header">
+      <h3 class="modal-title custom-font">Append Note</h3>
+      </div>
+     <div class="modal-body">                              
+       <table st-table="rowCollection" class="st-table table table-striped table-custom">
+         <tbody>
+            <tr>
+                <td>Note Description*</td>
+                <td><textarea class="form-control" rows="2" name="message"
+								id="message" on-blur-validation ng-model="appendnotesfb" required></textarea></td>
+            </tr>
+         </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+         <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="saveAppendNotes()"><i class="fa fa-arrow-right"></i> Save</button>
+         <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="close()"><i class="fa fa-arrow-left"></i>Close</button>
+      </div>
+     </script>
+     <script type="text/ng-template" id="assignCase.html">
+<div class="modal-header">
+	<h3 class="modal-title custom-font">Case Assignment</h3>
+</div>
+<div class="modal-body">
+<div class="col-lg-12">
+	<label class="col-lg-2 text-right">Assign To</label>
+		<select data-ng-change="getAssignedUserId(user)" class="form-control mb-10 col-lg-8" data-ng-model="assignto"
+			data-ng-options="user.userName as user.userName  for user in users">
+<option value="">Select</option>
+		</select>
+	</div>
+	<div class="col-lg-12">
+		<label class="col-lg-4">Reasons for Assigning</label>{{items.selectedUsers}}
+		<textarea class="form-control col-lg-6" rows="2" name="message" id="message"
+			placeholder="Type your message" ng-model="reasons" 
+			required></textarea>
+	</div>
+	<div class="modal-footer tile-body">
+		<button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c"
+			ng-click="ok()">
+			<i class="fa fa-arrow-right"></i> Save
+		</button>
+		<button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c"
+			ng-click="close()">
+			<i class="fa fa-arrow-left"></i> Cancel
+		</button>
+	</div>
+</div>
+     </script>
+<script type="text/ng-template" id="groupCase.html">
+<div class="modal-header">
+	<h3 class="modal-title custom-font">Group Case</h3>
+</div>
+<div class="modal-body">
+<div class="col-lg-6">
+	<label class="col-lg3">Case Number</label>
+		<input   class="form-control mb-10 col-lg-8"  readonly="readonly" data-ng-model="casenumber">
+	</div>
+<div class="col-lg-6">
+	<label class="col-lg3">Case Name</label>
+		<input   class="form-control mb-10 col-lg-8" data-ng-model="casename">
+	</div>
+<div class="col-lg-6">
+	<label class="col-lg-2 text-right">Priority*</label>
+		<select data-ng-change="changed" class="form-control mb-10 col-lg-8" data-ng-model="priority" data-ng-options="priority.priority_id as priority.priority_name for priority in prioritees">
+        <option value="">Select</option>
+		</select>
+	</div><div class="col-lg-6">
+	<label class="col-lg-2 text-right">AssignTo*</label>
+		<select data-ng-change="" class="form-control mb-10 col-lg-8" data-ng-model="assignUserName"
+			data-ng-options="user.userId as user.userName for user in users">
+        <option value="">Select</option>
+		</select>
+	</div>
+     <div class="col-lg-12">
+		<label class="col-lg-4">Case Description*</label>
+		<textarea class="form-control col-lg-6" style="resize:none;" rows="2" name="message" id="message"
+			placeholder="Type your message" ng-model="description" 
+			required ></textarea>
+	</div>
+	<div class="col-lg-12">
+		<label class="col-lg-4">Reasons for Grouping*</label>
+		<textarea class="form-control col-lg-6" style="resize:none;" rows="2" name="message" id="message"
+			placeholder="Type your message" ng-model="reasons"></textarea>
+	</div>
+     <div class="tile-body p-0">
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>
+           <div class="controls">
+				<label
+			   class="checkbox checkbox-custom checkbox-custom-sm m-0 mail-select">
+			<input type="checkbox" id="checkCase"  data-ng-checked="checked"  data-ng-click="clicked()" ><i></i>
+			Ungroup</label>
+			</div></th>
+                  <th>Case Number</th>
+                  <th>Case Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr   data-ng-repeat="caseDetails in selectedCaseDetails">
+                  <td>
+              <div class="controls">
+				<label
+			   class="checkbox checkbox-custom checkbox-custom-sm m-0 mail-select">
+			<input type="checkbox" id="checkCase"  data-ng-checked="checked"  data-ng-click="clicked()" ><i></i>
+			</label>
+			</div>
+                 </td>
+                  <td>{{caseDetails.case_id}}</td>
+                  <td>{{caseDetails.description}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+       	<div class="modal-footer tile-body">
+		<button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c"
+			ng-click="ok()">
+			<i class="fa fa-arrow-right"></i> Save
+		</button>
+		<button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c"
+			ng-click="close()">
+			<i class="fa fa-arrow-left"></i> Close
+		</button>
+	</div>
+</div>
+    </script>
+    <script type="text/ng-template" id="groupCaseDetail.html">
+<div class="modal-header">
+	<h3 class="modal-title custom-font">Group Case</h3>
+</div>
+<div class="modal-body">
+<div class="col-lg-6">
+	<label class="col-lg3">Case Number</label>
+		<input   class="form-control mb-10 col-lg-8"  readonly="readonly" data-ng-model="obj.case_id">
+	</div>
+<div class="col-lg-6">
+	<label class="col-lg3">Case Name</label>
+		<input   class="form-control mb-10 col-lg-8" data-ng-model="obj.name">
+	</div>
+<div class="col-lg-6">
+	<label class="col-lg-2 text-right">Priority*</label>
+		<select  class="form-control mb-10 col-lg-8" data-ng-model="priorityValue" data-ng-options="priority.priority_id as priority.priority_name for priority in prioritees">
+        <option value="">Select</option>
+		</select>
+	</div><div class="col-lg-6">
+	<label class="col-lg-2 text-right">AssignTo*</label>
+		<select data-ng-change="chnged"  class="form-control mb-10 col-lg-8" data-ng-model="assignedToValue"
+			data-ng-options="user.userId as user.userName for user in users">
+        <option value="">Select</option>
+		</select>
+	</div>
+     <div class="col-lg-12">
+		<label class="col-lg-4">Case Description*</label>
+		<textarea class="form-control col-lg-6" style="resize:none;" rows="2" name="message" id="message"
+			placeholder="Type your message" ng-model="obj.description" 
+			required></textarea>
+	</div>
+	<div class="col-lg-12">
+		<label class="col-lg-4">Resons for Grouping*</label>
+		<textarea class="form-control col-lg-6" style="resize:none;" rows="2" name="message" id="message"
+			placeholder="Type your message" ng-model="obj.noteDescription" 
+			required></textarea>
+	</div>
+       <div class="tile-body p-0">
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>
+           <div class="controls">
+				<label
+			   class="checkbox checkbox-custom checkbox-custom-sm m-0 mail-select">
+			<input type="checkbox" id="checkCase"  data-ng-checked="checked"  data-ng-click="clicked()" ><i></i>
+			Ungroup</label>
+			</div></th>
+                  <th>Case Number</th>
+                  <th>Case Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr   data-ng-repeat="details in individualCaseDetails">
+                  <td>
+              <div class="controls">
+				<label
+			   class="checkbox checkbox-custom checkbox-custom-sm m-0 mail-select">
+			<input type="checkbox" id="checkCase"  data-ng-checked="checked"  data-ng-click="clicked()" ><i></i>
+			</label>
+			</div>
+                 </td>
+                  <td>{{details.case_id}}</td>
+                  <td>{{details.description}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+       	<div class="modal-footer tile-body">
+		<button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c"
+			ng-click="ok()">
+			<i class="fa fa-arrow-right"></i> Save
+		</button>
+		<button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c"
+			ng-click="close()">
+			<i class="fa fa-arrow-left"></i> Close
+		</button>
+	</div>
+</div>
+    </script>
+     
+
+	<div class="tbox tbox-sm">
+		<!-- left side -->
+		<div class="tcol w-md bg-tr-white lt b-r">
+			<!-- left side header-->
+			<div>
+				<label class="text-strong">Case Categories</label>
+			</div>
+			<!-- /left side header -->
+			<!-- left side body -->
+			<div class="p-10 hidden-sm hidden-xs" id="mail-nav">
+				<ul class="nav nav-pills nav-stacked nav-sm" id="mail-folders" data-ng-repeat="category in categories">
+					<li style="cursor: pointer;"class="caseCategoryLi"data-ng-click="getOpenCasesByAccountCategory(category.category_id);sethighliteCategory($index)" data-ng-class="{'selected':$index == highliteCategory}">
+					<div data-ng-show="category.category_name=='DEBIT CARD'"class="casePriorityImage caseCategoryLi"><img class="imageSize" src="resources/images/Debit Card.png"alt=""></div>
+					<div data-ng-show="category.category_name=='CREDIT CARDS'" class="casePriorityImage"><img class="imageSize" src="resources/images/Credit Card.png"alt=""></div>
+					<div data-ng-show="category.category_name=='ATM'" class="casePriorityImage"><img class="imageSize" src="resources/images/ATM.png" alt=""></div>
+					<div data-ng-show="category.category_name=='CHANNEL OUTAGE'" class="casePriorityImage"><img class="imageSize" src="resources/images/Channel Outage.png"alt=""></div>
+					<div data-ng-show="category.category_name=='CHEQUE'" class="casePriorityImage"><img class="imageSize" src="resources/images/Cheque.png" alt=""></div>
+					<div data-ng-show="category.category_name=='MISCELLANEOUS'" class="casePriorityImage"><img class="imageSize" src="resources/images/Miscellaneous.png"alt=""></div> 
+				    <div class="casePriorityLabel">{{category.category_name}}</div></li>
+				</ul>
+					<div class="caseCategoryLi" data-ng-click="getAllCategories()">
+						<div class="img-circle bg-default casePriorityIcons">A</div>
+						<div class="casePriorityLabel">All</div>
+					</div>
+				<h5 class="b-b p-10 text-strong">Case Priority</h5>
+				<ul class="nav nav-pills nav-stacked nav-sm" id="mail-labels" data-ng-repeat="priority in priorities">
+					<li class="caseCategoryLi" data-ng-click="getOpenCasesByPriority(priority.priority_id);sethighlitePriority($index)" data-ng-class="{'selected':$index == highlitePriority}">
+						<div class="img-circle casePriorityIcons" data-ng-class="priority.priority_name == 'HIGH' ? 'bg-orange' :(priority.priority_name == 'MEDIUM' ? 'bg-blue' : (priority.priority_name == 'CRITICAL' ? 'bg-lightred' :'bg-greensea'))">
+						<span>{{priority.priorityImage}}</span>
+						</div>
+						<div class="casePriorityLabel">{{priority.priority_name}}</div>
+					</li>
+				</ul>
+				<div class="caseCategoryLi" data-ng-click="getAllPriorities()">
+						<div class="img-circle bg-default casePriorityIcons">A</div>
+						<div class="casePriorityLabel">All</div>
+					</div>
+
+				<h5 class="b-b p-10 text-strong">Social Accounts</h5>
+				<ul class="nav nav-pills nav-stacked nav-sm" id="mail-labels" data-ng-repeat="account in accounts">
+					<li class="caseCategoryLi" data-ng-click="getOpenCasesByAccount(account.social_media_accounts_id);sethighliteAccount($index)" data-ng-class="{'selected':$index == highliteAccount}">
+						<div class="casePriorityLabel">{{account.social_media_accounts_accountname}}</div>
+					</li>
+				</ul>
+				<div class="caseCategoryLi" data-ng-click="getAllAccounts()">
+						<div class="img-circle bg-default casePriorityIcons">A</div>
+						<div class="casePriorityLabel">All</div>
+					</div>
+			</div>
+			<!-- /left side body -->
+		</div>
+		<!-- /left side -->
+	</div>
+	<!-- right side -->
+
+	<div class="btn-group pull-right caseCategoryDesc">
+		<div class="row tile">
+			<div class="tile-body">
+				<div class="col-md-12">
+					<div class="col-md-3 ">
+						<label
+							class="checkbox checkbox-custom checkbox-custom-sm m-0 mail-select">
+							<input type="checkbox" data-ng-model="ischecked"><i></i> Select All
+						</label>
+					</div>
+						<div class="col-md-3 ">
+							<input id="filter" type="search" data-ng-model="Search"
+								class="form-control input-sm w-sm mb-10 inline-block "
+								placeholder="search"> <i class="icon-magnifier"></i>
+						</div>
+						<div class="btn-group col-md-1 ">
+						<button class="btn btn-default btn-sm br-2 text-right" data-ng-click="refreshOpenCategories()">
+							<i class="fa fa-refresh"></i>
+						</button>
+					</div>
+					<div class="col-md-2" >
+						<select class="form-control" data-ng-model="id" data-ng-options="options.id as options.name for options in moreOptions"data-ng-change="getOption(id)" data-ng-disabled="isSelect">
+							<option value="">More</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<ul class="list-group no-radius no-border" id="mails-list">
+					<li data-ng-repeat="case in fbCases|filter:search"
+						class="list-group-item b-{{mail.label.color}}">
+						<div class="media">
+							<div class="pull-left">
+							  <div class="controls">
+								<label
+									class="checkbox checkbox-custom checkbox-custom-sm m-0 mail-select">
+									<input type="checkbox" id="checkCase"  data-ng-model="case.isChecked"  data-ng-click="getSelectedValue(case.case_id,case, $index,case.isChecked)"><i></i>
+								</label>
+							   </div>
+							   <div class="thumb thumb-sm">
+								   <img src="{{case.image}}" class="img-circle">
+							   </div>
+							  </div>
+							  <div class="media-body" data-ng-click="caseDetails(case)">
+								<div class="media-heading m-0">
+									<a class="mr-5">{{case.cmfCustomerBO.firstName}}  {{case.cmfCustomerBO.lastName}}</a>
+									   <span class="pull-right text-sm text-muted"> 
+									       <span class="hidden-xs">{{ case.created_date }}</span>
+									   </span>
+								</div>
+										<small>{{case.description | limitTo:150}}</small>
+								<div class="tile-body col-md-12">
+										<label class="col-md-4 "><b>Case Priority :</b>&nbsp<b data-ng-class="case.cmfCasePriorityBO.priority_name == 'HIGH' ? 'text-orange' :(case.cmfCasePriorityBO.priority_name == 'MEDIUM' ? 'text-blue' : (case.cmfCasePriorityBO.priority_name == 'CRITICAL' ? 'text-lightred' :'text-greensea'))">{{case.cmfCasePriorityBO.priority_description}}</b></label>
+										<label class="col-md-4 "><b>Social Account : {{case.cmfCustomerBO.facebookId}}</b></label>
+										<label class="col-md-4 "><b>Assigned To : {{case.userBO.userName}}</b></label>
+								</div>
+							</div>
+							<div class="tile-body col-md-12 text-right">  
+							<a  data-ng-click="getGroupCaseDetails(case)"   data-ng-show="case.group_case_flag=='yes' ">
+							<img src="resources/images/Group Cases.png" alt="" width="30px" height="30px">
+							</a>
+							</div>
+							
+						</div>
+					</li>
+				</ul>
+			</div>
+
+		</div>
+
+		<!-- right side body -->
+		<div></div>
+	</div>
+	</div>
+</div>
+<!-- /page content -->

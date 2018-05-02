@@ -1,0 +1,13 @@
+package com.zen.smi.service;
+
+
+import java.util.Date;
+
+import org.quartz.SchedulerException;
+
+public interface SMISchedulerService {
+
+	void addJobToScheduler(String jobId,Date date, Class jobImplClass) throws SchedulerException;
+	void deleteJobFromScheduler(String jobId) throws SchedulerException;
+	void updateJobToScheduler(String jobId, Date date) throws SchedulerException;
+}

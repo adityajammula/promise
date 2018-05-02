@@ -1,0 +1,46 @@
+package com.zen.smi.bo;
+
+
+public class SocialMediaAccountPostsBO {
+	private Integer id;
+	private SocialMediaPostsBO socialMediaPostsBO;
+	private SocialMediaAccountsBO socialMediaAccountsBO;
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	/**
+	 * @return the socialMediaPostsBO
+	 */
+	public SocialMediaPostsBO getSocialMediaPostsBO() {
+		return socialMediaPostsBO;
+	}
+	/**
+	 * @param socialMediaPostsBO the socialMediaPostsBO to set
+	 */
+	public void setSocialMediaPostsBO(SocialMediaPostsBO socialMediaPostsBO) {
+		this.socialMediaPostsBO = socialMediaPostsBO;
+	}
+	/**
+	 * @return the socialMediaAccountsBO
+	 */
+	public SocialMediaAccountsBO getSocialMediaAccountsBO() {
+		return socialMediaAccountsBO;
+	}
+	/**
+	 * @param socialMediaAccountsBO the socialMediaAccountsBO to set
+	 */
+	public void setSocialMediaAccountsBO(SocialMediaAccountsBO socialMediaAccountsBO) {
+		this.socialMediaAccountsBO = socialMediaAccountsBO;
+	}
+	
+	
+}

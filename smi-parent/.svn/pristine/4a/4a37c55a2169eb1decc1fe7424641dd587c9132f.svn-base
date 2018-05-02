@@ -1,0 +1,16 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.entities.StTransactionType;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public interface StTransactionTypeDAO extends BaseDAO<StTransactionType, Serializable> {
+
+
+	StTransactionType  getStTransactionTypeByName(String name) throws GenericDAOException;
+
+	public StTransactionType getStTransactionTypeByStCase(int stTransactionTypeId)
+			throws GenericDAOException;
+
+}

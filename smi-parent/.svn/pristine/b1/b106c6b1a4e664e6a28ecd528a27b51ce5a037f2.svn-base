@@ -1,0 +1,52 @@
+	<div class="container-fluid">
+    <!-- row -->
+    <div class="row">
+        <!-- tile -->
+        <section class="tile">
+          <!-- tile header -->
+          <div class="tile-header bg-greensea dvd dvd-btm">
+            <h1 class="custom-font"><strong>RULE ENGINE</strong></h1>
+            <!-- <ul class="controls">
+              <li>
+                <a href ng-click="showRule()"><i class="fa fa-plus"></i> Add New Rule</a>
+              </li></ul> -->
+          </div>
+          <!-- /tile header -->
+          <!-- tile body -->
+          <div class="tile-body">
+            <div class="dvd dvd-btm col-sm-12 tile-body">
+               <label class="col-lg-1 text-right">Application</label>
+		        <div class="col-lg-2">
+		           <select class="form-control mb-10"  data-ng-model="appId" data-ng-options="rulesApps.appId as rulesApps.appName for rulesApps in appData" data-ng-change="getRulesBasedOnAppId(appId)">
+		            <option value="">Select</option>
+		           </select>
+		        </div>
+		        <div class="pull-right">
+                   <button type="button" id="btnNewColumn" class="btn btn-blue btn-rounded"  ng-click="showRule()"><i class="glyphicon glyphicon-plus"></i>&nbsp;Add New Column</button>
+		        </div>
+		     </div>
+            <table datatable="ng" class="st-table table table-striped table-custom row-border hover">
+	             <thead>
+		              <tr>
+		                <th  st-sort-default class="sorting">Rule</th>
+		                <th class="sorting">Rule Group</th>
+		                <th class="sorting">Family</th>
+		              </tr>
+	               </thead>
+	              <tbody class="table-hover">
+			              <tr data-ng-repeat="rules in rulesData">
+			                <td ><a class="pointer ruleTitle" data-ng-click="showRule({{rules}})" >{{rules.rule_name}}</a></td>
+			                 <td >{{rules.rule_group.rule_group_name }}</td>
+			                <td >{{rules.rule_group.rule_family.rule_family_name }}</td> 
+			              </tr>
+	              </tbody>
+            </table>
+          </div>
+          <!-- /tile body -->
+        </section>
+        <!-- /tile -->
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /page content -->
+</div>

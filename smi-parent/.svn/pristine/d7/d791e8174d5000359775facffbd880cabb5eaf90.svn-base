@@ -1,0 +1,42 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+
+import com.zen.smi.dao.FlumeAgentsDAO;
+import com.zen.smi.dao.FlumeAgentsProcessDAO;
+import com.zen.smi.dao.SocialDataProcessDAO;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.entities.FlumeAgentsProcess;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.entities.SocialDataProcess;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class SocialDataProcessDAOImpl extends BaseDAOImpl<SocialDataProcess, Serializable> implements SocialDataProcessDAO {
+
+	public SocialDataProcessDAOImpl() {
+		super(SocialDataProcess.class);
+	}
+	/**to retrieve the SocialDataProcess By FlumeAgentsProcessID
+	 * @param flumeAgentsProcessId
+	 * @return SocialDataProcess
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	public SocialDataProcess getSocialDataProcessByFlumeAgentsProcessID(
+			int flumeAgentsProcessId) throws GenericDAOException {
+		 String query = "FROM SocialDataProcess as sdp LEFT JOIN FETCH  sdp.flumeAgentsProcesses fas WHERE fas.agentProcessId="+flumeAgentsProcessId;
+		  return load(query).get(0);
+	}
+	
+	public SocialDataProcess getSocialDataProcessByAccountId(int socialMediaActId) throws GenericDAOException {
+		List<Criterion> criterionList = new ArrayList<Criterion>();
+		criterionList.add(Restrictions.eq("socialMediaAccounts.id", socialMediaActId));
+		
+		return searchUniqueCriterion(criterionList, null);
+	}
+}

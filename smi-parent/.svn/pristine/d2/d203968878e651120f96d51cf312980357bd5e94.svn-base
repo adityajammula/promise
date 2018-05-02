@@ -1,0 +1,80 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.RuleColumnsDAO;
+import com.zen.smi.dao.RuleFormulaDAO;
+import com.zen.smi.dao.RuleGroupDAO;
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleFormula;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.entities.RuleRulesColumns;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+/**
+ * @author tmangalapenta 
+ *
+ */
+public class RuleFormulaDAOImpl extends BaseDAOImpl<RuleFormula, Serializable> implements RuleFormulaDAO {
+
+	public RuleFormulaDAOImpl() {
+			super(RuleFormula.class);
+		}
+	/**to retrieve the Rule Formulas
+	 * @return List of Rule Formulas
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	public List<RuleFormula> getRuleFormulasByRuleId(int ruleId)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("rule.ruleId", ruleId));
+		
+		return search(expressionList, null);
+	}
+	/**to Save the Rule Formulas
+	 * @return Void
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	public void saveRuleFormula(RuleFormula ruleFormula)
+			throws GenericDAOException {
+		saveOrUpdate(ruleFormula);
+		
+	}
+	/**to Delete the Rule Formula
+	 * @return Void
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	public void deleteRuleFormula(RuleFormula ruleFormula)
+			throws GenericDAOException {
+		delete(ruleFormula);
+		
+	}
+	/**to Update the Rule Formula
+	 * @return Void
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	public void updateRuleFormula(RuleFormula ruleFormula)
+			throws GenericDAOException {
+		saveOrUpdate(ruleFormula);
+		
+	}
+
+	
+}
+	
+
+

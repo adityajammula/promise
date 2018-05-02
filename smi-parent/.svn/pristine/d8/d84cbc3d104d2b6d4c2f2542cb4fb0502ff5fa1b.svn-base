@@ -1,0 +1,69 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.zen.smi.dao.entities.CmfCaseHistory;
+
+
+public class CmfCaseDetailsBO {
+	private Integer id;
+	private String createdUserId;
+	private Date createdDate;
+	private List<CmfCaseHistoryBO> cmfCaseHistories = new ArrayList<CmfCaseHistoryBO>(
+			0);
+	/**
+	 * @return the id
+	 */
+	public Integer getId() {
+		return id;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	/**
+	 * @return the createdUserId
+	 */
+	public String getCreatedUserId() {
+		return createdUserId;
+	}
+	/**
+	 * @param createdUserId the createdUserId to set
+	 */
+	public void setCreatedUserId(String createdUserId) {
+		this.createdUserId = createdUserId;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the cmfCaseHistories
+	 */
+	public List<CmfCaseHistoryBO> getCmfCaseHistories() {
+		return cmfCaseHistories;
+	}
+	/**
+	 * @param cmfCaseHistories the cmfCaseHistories to set
+	 */
+	public void setCmfCaseHistories(List<CmfCaseHistoryBO> cmfCaseHistories) {
+		this.cmfCaseHistories = cmfCaseHistories;
+	}
+	
+	
+}

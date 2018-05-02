@@ -1,0 +1,21 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+	
+	public class CmfPriorityListBO {
+		
+		private List<CmfCasePriorityBO> casePriorityBOs;
+
+		public List<CmfCasePriorityBO> getCasePriorityBOs() {
+			return casePriorityBOs;
+		}
+
+		public void setCasePriorityBOs(List<CmfCasePriorityBO> casePriorityBOs) {
+			this.casePriorityBOs = casePriorityBOs;
+		}
+		
+		
+	}

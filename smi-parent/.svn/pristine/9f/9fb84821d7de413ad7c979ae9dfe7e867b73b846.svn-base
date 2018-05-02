@@ -1,0 +1,88 @@
+<div class="row tile col-sm-12" data-ng-init="initializeViewRulesController()">
+	<div class="tile-header bg-greensea dvd dvd-btm ">
+		<h1 class="custom-font ">
+			<strong>Test Rule</strong>
+		</h1>
+	</div>
+	<div class="modal-body">
+		<table st-table="rowCollection" 
+			class="st-table table table-striped table-custom">
+			<tbody>
+				<tr>
+					<td class="col-lg-2">Text*</td>
+					<td class="col-lg-3 "><textarea class="form-control col-top" rows="2" name="ruleText"
+							id="ruleText" placeholder="Type your message" ng-model="ruleText"
+							on-blur-validation required></textarea></td>
+				</tr>
+				<tr>
+					<td>Application*</td>
+					<td><select class="form-control mb-10" data-ng-model="appId"
+						data-ng-options="rulesApps.appId as rulesApps.appName for rulesApps in appData"
+						data-ng-change="getFamilyDataBasedOnAppId(appId)">
+							<option value="">Select</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td>Apply Family*</td>
+					<td><select class="form-control mb-10"
+						data-ng-model="rulesData.selectedRuleFamilyId"
+						data-ng-options="rulesFamily.rule_family_id as rulesFamily.rule_family_name for rulesFamily in rulesData.rulesFamilyData"
+						data-ng-change="changeRuleFamily(rulesData.selectedRuleFamilyId)">
+							<option value="">Select</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td>Apply Rule Group</td>
+					<td><select class="form-control mb-10"
+						data-ng-model="rulesData.selectedRuleGroupId"
+						data-ng-options="ruleGroup.rule_group_id as ruleGroup.rule_group_name for ruleGroup in rulesData.ruleGroupData"
+						data-ng-change="changeRuleGroup(rulesData.selectedRuleGroupId)">
+							<option value="">Select</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td>Apply Rule</td>
+					<td><select class="form-control mb-10"
+						data-ng-model="rulesData.selectedRuleId"
+						data-ng-options="ruleGroup.rule_id as ruleGroup.rule_name for ruleGroup in rulesData.ruleNameData"
+						data-ng-change="changeRule(rulesData.selectedRuleId)">
+							<option value="">Select</option>
+					</select></td>
+					<td>
+						<button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c"
+							ng-click="test()">
+							<i class="fa fa-arrow-right"></i> Test
+						</button>
+					</td>
+				</tr>
+				<tr>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="modal-header">
+		<h3 class="modal-title custom-font">Test Summary</h3>
+	</div>
+	<div class="modal-body">
+		<table st-table="rowCollection"
+			class="st-table table table-striped table-custom">
+			<thead>
+				<tr class="tile-header bg-greensea dvd dvd-btm">
+					<th>Formula Name</th>
+					<th>Formula Expression</th>
+					<th>Status</th>
+				</tr>
+			</thead>
+			<tbody class="table-hover">
+				<tr data-ng-repeat="testSummary in formulaData">
+					<td>{{testSummary.rule_formula_name}}</td>
+					<td>{{testSummary.rule_formula_expression}}</td>
+					<td> 
+						<i data-ng-show="testSummary.status == 'true'" class="fa fa-check-circle formula-status"></i>
+						<i data-ng-show="testSummary.status == 'false'" class="fa fa-times-circle formula-false-status"></i>						
+					</td>
+			</tbody>
+		</table>
+	</div>
+</div>

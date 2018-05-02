@@ -1,0 +1,42 @@
+.navigationDropdown  {
+	  padding: 8px 32px !important;
+}
+.casePriorityLabel {
+	display: table-cell !important;
+	padding-left: 12px;
+	font-size: 13.5px;
+}
+.casePriorityImage {
+	display: table-cell !important;
+}
+.casePriorityIcons {
+	width: 27px;
+    height: 27px;
+    font-size: 17px;
+    padding: 1px 8px;
+    display: table-cell !important;
+}
+.openFbCases .tbox{
+	width: 20% !important;
+	float: left;
+}
+.caseCategoryDesc {
+	width: 74.6%;
+}
+.imageSize {
+	width: 28px;
+}
+.caseCategoryLi {
+	padding: 5px;
+	cursor: pointer;
+}
+.bankDetails {
+	text-align: right;
+	color: #337ab7;
+	font-weight: 700;
+}
+.caseDetailsCustomer {
+	text-align: right;
+	 color: #337ab7; 
+	 font-weight: 700;
+}

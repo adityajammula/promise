@@ -1,0 +1,129 @@
+AppServices.factory('editGroupService',function($http, $q, smiGenUtil){
+	
+    return{
+    	
+    	 // Start getFcebookDataData 
+    	 getFcebookData: function(requestData){
+    		   	var deferred = $q.defer();
+    		   	if(requestData.group_type=="FaceBook") {
+	       		$http.get('groups/list/'+requestData.group_name+'',	       			
+			 	 	   {headers: { 'Content-Type': 'application/json; charset=UTF-8'},
+	               }).success(function(response, status, headers) {
+		            	  
+		       			deferred.resolve(response);
+		       			smiGenUtil.handleSuccess(response);
+		       	    }).error(function() {
+		       	    	smiGenUtil.handleError(response);
+		       	    });
+	               } else {
+	            	   $http.get('users/list/'+requestData.group_name+'',	       			
+	    			 	 	   {headers: { 'Content-Type': 'application/json; charset=UTF-8'},
+	    	               }).success(function(response, status, headers) {
+	    		            	  
+	    		       			deferred.resolve(response);
+	    		       			smiGenUtil.handleSuccess(response);
+	    		       	    }).error(function() {
+	    		       	    	smiGenUtil.handleError(response);
+	    		       	    });
+	               }
+	       	 return deferred.promise;
+	     },// end getFcebookDataData 
+	     
+	     
+	     
+	  // Start getFcebookDataData for facebook
+	     getFaceBookMetaData: function(requestData){
+	    	 var id=requestData.account_id;
+    		   	var deferred = $q.defer();
+	       		$http.get('groups/'+id+'',	       			
+			 	 	   {headers: { 'Content-Type': 'application/json; charset=UTF-8'},
+	               }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	    }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	    });
+	       	 return deferred.promise;
+	     },// end getFcebookDataData  for facebook
+	     
+	     // Start getFcebookDataData for twitter
+	     getMetaData: function(requestData){
+	    	 var id=requestData.account_id;
+    		   	var deferred = $q.defer();
+	       		$http.get('users/'+id+'',	       			
+			 	 	   {headers: { 'Content-Type': 'application/json; charset=UTF-8'},
+	               }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	    }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	    });
+	       	 return deferred.promise;
+	     },// end getFcebookDataData for twitter
+	     
+	     /**
+	      * This method is to bind data of account relations
+	      */
+	     getSocialMediaAccountsRealtions: function(){
+ 		   	var deferred = $q.defer();
+	       		$http.get('socialMediaAccounts/account_relations',
+	       			{headers: { 'Content-Type': 'application/json; charset=UTF-8'}})
+	       		.success(function(response, status, headers) {
+	       			//alert(JSON.stringify(response));
+	            	   deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	    }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	    });
+	       	 return deferred.promise;
+	     },//End
+	     
+	     /**
+	      * This method is to save branch of account relations
+	      */
+	     saveSocialMediaAccountsRealtions: function(requestData){
+	    	var deferred = $q.defer();
+	       		$http.post('socialMediaAccounts/update', JSON.stringify(requestData),
+	       				{headers: { 'Content-Type': 'application/json; charset=UTF-8'}})
+	       		.success(function(response, status, headers) {
+	     			deferred.resolve(response);
+	     		 	smiGenUtil.handleSuccess(response);
+	     	 		}).error(function(response) {
+	     	 		 	smiGenUtil.handleError(response);
+	     	 		});
+	     	 		 return deferred.promise;
+	     	 	},// End
+	     
+	     /**
+	      * This method is to delete branch of account relations
+	      */
+	     deleteSocialMediaAccountsRealtions: function(requestData){
+ 		   	var deferred = $q.defer();
+	       		$http.post('socialMediaAccounts/destroy/'+requestData.id,
+	       				{headers: { 'Content-Type': 'application/json; charset=UTF-8'}})
+	       		.success(function(response, status, headers) {
+	            	   deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	    }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	    });
+	       	 return deferred.promise;
+	     },//End
+	     // StartcreateTree
+	     createTree: function(requestData){
+		 	 	var deferred = $q.defer();
+		        $http.post('socialMediaAccounts/save', 
+		 	    JSON.stringify(requestData),
+		 	 	   {headers: { 'Content-Type': 'application/json; charset=UTF-8'},
+		 	 	}).success(function(response, status, headers) {
+		 	 	   deferred.resolve(response);
+		 	 	   smiGenUtil.handleSuccess(response);
+		 	 	}).error(function() {
+		 	 	smiGenUtil.handleError(response);
+		        });
+		 	    return deferred.promise;
+		 },// end createTree
+	     
+	    
+    }; 	 
+});

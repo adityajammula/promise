@@ -1,0 +1,24 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.CmfCaseHistory;
+import com.zen.smi.dao.entities.CmfCaseNote;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * @author tmangalapenta
+ *
+ */
+public interface CmfCaseHistoryDAO extends BaseDAO<CmfCaseHistory, Serializable> {
+
+	List<CmfCaseHistory> getCmfCaseHistoryByCaseId(String caseId) throws GenericDAOException;
+
+	CmfCaseHistory getCaseHistoryByParentId(Integer caseHistoryId)throws GenericDAOException;	
+	
+	List<Object[]> getMaxCaseHistoryByCaseId(String caseId)throws GenericDAOException;
+	
+	
+}

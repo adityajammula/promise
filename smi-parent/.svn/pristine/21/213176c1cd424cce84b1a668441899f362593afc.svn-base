@@ -1,0 +1,17 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.entities.CmfCaseDetails;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+
+
+/**
+ * @author tmangalapenta
+ *
+ */
+public interface CmfCaseDetailsDAO extends BaseDAO<CmfCaseDetails, Serializable> {
+
+}

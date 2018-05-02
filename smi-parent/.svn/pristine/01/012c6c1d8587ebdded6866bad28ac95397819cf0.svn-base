@@ -1,0 +1,119 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.Date;
+
+import com.zen.smi.dao.entities.CmfCase;
+
+
+public class CmfCaseHistoryBO {
+	private Integer caseHistoryId;
+	private String caseHistoryDescription;
+	private String createdBy;
+	private Date createdDate;
+	private CmfCaseHistoryBO childCmfCaseHistoryBO;
+	private String postType;
+	private String caseId;
+	private String postId;
+	private Boolean isPrivate;
+	
+	
+	public String getPostId() {
+		return postId;
+	}
+	public void setPostId(String postId) {
+		this.postId = postId;
+	}
+	/**
+	 * @return the caseHistoryId
+	 */
+	public Integer getCaseHistoryId() {
+		return caseHistoryId;
+	}
+	/**
+	 * @param caseHistoryId the caseHistoryId to set
+	 */
+	public void setCaseHistoryId(Integer caseHistoryId) {
+		this.caseHistoryId = caseHistoryId;
+	}
+	/**
+	 * @return the caseHistoryDescription
+	 */
+	public String getCaseHistoryDescription() {
+		return caseHistoryDescription;
+	}
+	/**
+	 * @param caseHistoryDescription the caseHistoryDescription to set
+	 */
+	public void setCaseHistoryDescription(String caseHistoryDescription) {
+		this.caseHistoryDescription = caseHistoryDescription;
+	}
+	
+	/**
+	 * @return the createdBy
+	 */
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the childCmfCaseHistoryBO
+	 */
+	public CmfCaseHistoryBO getChildCmfCaseHistoryBO() {
+		return childCmfCaseHistoryBO;
+	}
+	/**
+	 * @param childCmfCaseHistoryBO the childCmfCaseHistoryBO to set
+	 */
+	public void setChildCmfCaseHistoryBO(CmfCaseHistoryBO childCmfCaseHistoryBO) {
+		this.childCmfCaseHistoryBO = childCmfCaseHistoryBO;
+	}
+	/**
+	 * @return the postType
+	 */
+	public String getPostType() {
+		return postType;
+	}
+	/**
+	 * @param postType the postType to set
+	 */
+	public void setPostType(String postType) {
+		this.postType = postType;
+	}
+	public String getCaseId() {
+		return caseId;
+	}
+	public void setCaseId(String caseId) {
+		this.caseId = caseId;
+	}
+	/**
+	 * @return the isPrivate
+	 */
+	public Boolean getIsPrivate() {
+		return isPrivate;
+	}
+	/**
+	 * @param isPrivate the isPrivate to set
+	 */
+	public void setIsPrivate(Boolean isPrivate) {
+		this.isPrivate = isPrivate;
+	}
+	
+	
+}

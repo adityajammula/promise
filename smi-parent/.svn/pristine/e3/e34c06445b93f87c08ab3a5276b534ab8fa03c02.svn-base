@@ -1,0 +1,17 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+public class CmfCaseListBO {
+	
+	private List<CmfCaseBO> cmfCaseBO;
+
+	public List<CmfCaseBO> getCmfCaseBO() {
+		return cmfCaseBO;
+	}
+
+	public void setCmfCaseBO(List<CmfCaseBO> cmfCaseBO) {
+		this.cmfCaseBO = cmfCaseBO;
+	}
+
+}

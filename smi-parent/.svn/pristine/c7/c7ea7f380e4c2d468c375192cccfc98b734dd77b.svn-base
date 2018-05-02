@@ -1,0 +1,29 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.Date;
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class DashBoardJSONObjectBO {
+
+	private List<DashBoardGraphBO> dashBoardGraphBOList;
+	@SerializedName("lable")	
+	private String lable;
+	public List<DashBoardGraphBO> getDashBoardGraphBOList() {
+		return dashBoardGraphBOList;
+	}
+	public void setDashBoardGraphBOList(List<DashBoardGraphBO> dashBoardGraphBOList) {
+		this.dashBoardGraphBOList = dashBoardGraphBOList;
+	}
+	public String getLable() {
+		return lable;
+	}
+	public void setLable(String lable) {
+		this.lable = lable;
+	}
+	
+	
+	
+	
+}

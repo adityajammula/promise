@@ -1,0 +1,45 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class FinancialInstitutionsBO {
+	@SerializedName("financial_institutions_id")	
+	private Integer id;
+	@SerializedName("financial_institutions_accountowner")
+	private String accountOwner;
+	@SerializedName("financial_institutions_parentid")
+	private Integer parentId;
+	@SerializedName("social_media_accounts")
+	private List<SocialMediaAccountsBO> socialMediaAccounts = new ArrayList<SocialMediaAccountsBO>(0);
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getAccountOwner() {
+		return accountOwner;
+	}
+	public void setAccountOwner(String accountOwner) {
+		this.accountOwner = accountOwner;
+	}
+	public Integer getParentId() {
+		return parentId;
+	}
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+	public List<SocialMediaAccountsBO> getSocialMediaAccounts() {
+		return socialMediaAccounts;
+	}
+	public void setSocialMediaAccounts(
+			List<SocialMediaAccountsBO> socialMediaAccounts) {
+		this.socialMediaAccounts = socialMediaAccounts;
+	}
+	
+
+	
+}

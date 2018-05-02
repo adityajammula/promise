@@ -1,0 +1,74 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.RuleColumnsDAO;
+import com.zen.smi.dao.RuleGroupDAO;
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.entities.RuleRulesColumns;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+/**
+ * @author tmangalapenta 
+ *
+ */
+public class RuleColumnsDAOImpl extends BaseDAOImpl<RuleColumns, Serializable> implements RuleColumnsDAO {
+
+	public RuleColumnsDAOImpl() {
+			super(RuleColumns.class);
+		}
+
+	public void saveRuleColumns(RuleColumns ruleColumns)
+			throws GenericDAOException {
+		saveOrUpdate(ruleColumns);		
+	}
+
+	public void deleteRuleColumns(RuleColumns ruleColumns)
+			throws GenericDAOException {
+		delete(ruleColumns);
+		
+	}
+
+	public void updateRuleColumns(RuleColumns ruleColumns)
+			throws GenericDAOException {
+		saveOrUpdate(ruleColumns);
+		
+	}
+
+	public RuleColumns getRuleColumn(int columnId) throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("ruleColumnId", columnId));
+		
+		return searchUnique(expressionList, null);
+	}
+
+
+	public List<RuleColumns> getGlobalRuleColumns() throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("ruleIsGlobal", "1"));
+		
+		return search(expressionList, null);
+	}
+
+	public RuleColumns getRuleColumnByRulesID(Integer ruleRulesColumnId)
+			throws GenericDAOException {
+		 String query = "FROM RuleColumns as rc LEFT JOIN FETCH  rc.ruleRulesColumnses as rrc WHERE rrc.ruleRulesColumnId="+ruleRulesColumnId;
+		  return load(query).get(0);
+	}
+
+	
+}
+	
+
+

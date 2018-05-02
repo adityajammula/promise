@@ -1,0 +1,37 @@
+package com.zen.smi.service;
+
+import java.util.List;
+
+import com.zen.smi.bo.SocialMediaAccountsBO;
+import com.zen.smi.bo.SocialProfilesBO;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.exception.BusinessException;
+
+
+public interface SocialMediaAccountsService {
+
+	/**
+	 *Get Social Media Accounts from the database.
+	 * @param null
+	 * @return List of SocialMediaAccountsBO objects
+	 * @throws BusinessException 
+	 * @author 
+	 */
+	List<SocialMediaAccountsBO> getSocialMediaAccounts() throws BusinessException;
+	
+	
+	public List<SocialMediaAccountsBO> getSocialMediaAccountsByAccountType(int accountTypeId) throws BusinessException;
+	
+	/**
+	 * This method is to save or update social media account  
+	 * @author Venumadhava.Reddy
+	 * @param socialMediaAccounts
+	 * @throws BusinessException
+	 */
+	public void saveSocialMediaAccount(SocialMediaAccountsBO socialMediaAccountsBo) throws BusinessException;
+	
+	
+	public SocialProfilesBO getSocialProfileById(Integer accountType )throws BusinessException;
+	
+	public  List<SocialMediaAccountsBO> getSocialMediaAccountsByFinanceInstitutionId(int id) throws BusinessException;
+}

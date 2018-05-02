@@ -1,0 +1,84 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public interface RulesDAO extends BaseDAO<Rule, Serializable> {
+
+	/**
+	 * this method is to get the list of Rule by RuleApp Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of Rule
+	 */
+	List<Rule> getRulesByRuleAppId(int ruleAppId)  throws GenericDAOException;
+	
+	/**
+	 * this method is to get the Rule by Rule Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return Rule
+	 */
+	Rule getRuleByRuleId(int ruleId)  throws GenericDAOException;
+	
+	
+	/**
+	 * this method is to get the list of Rule by RuleGroup Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of Rule
+	 */
+	List<Rule> getRulesByGroupId (int groupId) throws GenericDAOException;
+
+	/**
+	 * this method is to get the list of Rule by Rule Name and RuleGroup Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return Rule
+	 */
+	public Rule getRulesByNameAndGroupId(String ruleName,int ruleGroupId) throws GenericDAOException;
+	/**
+	 * @author Venumadhava.Reddy
+	 * @param ruleId
+	 * @return
+	 * @throws GenericDAOException
+	 */
+	Rule getFormulasByRuleId(int ruleId ) throws GenericDAOException;
+	/**
+	 * @author tmangalapenta
+	 * @param Rule Entity
+	 * @return
+	 * @throws GenericDAOException
+	 */
+	void editRule(Rule editRule) throws GenericDAOException;
+	
+	/**
+	 * @author Venumadhava.Reddy
+	 * @param Rule
+	 * @return
+	 * @throws GenericDAOException
+	 */
+	void saveRule(Rule rule) throws GenericDAOException;
+	
+	/**
+	 * This method is to check same rule name in same rulegroup
+	 * @author Venumadhava.Reddy
+	 * @param rule
+	 * @return
+	 * @throws GenericDAOException
+	 */
+	 boolean isRuleNameExist(Rule rule) throws GenericDAOException;
+
+}

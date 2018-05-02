@@ -1,0 +1,70 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+
+public class CmfCaseCriteriaBO {
+	
+	@SerializedName("account_type")
+	String accountType;
+	@SerializedName("category_type")
+	String categoryType;
+	@SerializedName("priority_type")
+	String priorityType;
+	@SerializedName("social_media_accounts_id")
+	String socialMediaAccountsId;
+	/**
+	 * @return the accountType
+	 */
+	public String getAccountType() {
+		return accountType;
+	}
+	/**
+	 * @param accountType the accountType to set
+	 */
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
+	/**
+	 * @return the categoryType
+	 */
+	public String getCategoryType() {
+		return categoryType;
+	}
+	/**
+	 * @param categoryType the categoryType to set
+	 */
+	public void setCategoryType(String categoryType) {
+		this.categoryType = categoryType;
+	}
+	/**
+	 * @return the priorityType
+	 */
+	public String getPriorityType() {
+		return priorityType;
+	}
+	/**
+	 * @param priorityType the priorityType to set
+	 */
+	public void setPriorityType(String priorityType) {
+		this.priorityType = priorityType;
+	}
+	/**
+	 * @return the socialMediaAccountsId
+	 */
+	public String getSocialMediaAccountsId() {
+		return socialMediaAccountsId;
+	}
+	/**
+	 * @param socialMediaAccountsId the socialMediaAccountsId to set
+	 */
+	public void setSocialMediaAccountsId(String socialMediaAccountsId) {
+		this.socialMediaAccountsId = socialMediaAccountsId;
+	}
+
+	
+}

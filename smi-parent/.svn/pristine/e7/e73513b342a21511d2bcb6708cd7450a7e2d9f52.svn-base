@@ -1,0 +1,149 @@
+package com.zen.smi.bo;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.google.gson.annotations.SerializedName;
+import com.zen.smi.dao.entities.RuleRulesColumns;
+
+
+public class RuleColumnsBO {
+	@SerializedName("rule_column_id")	
+	private Integer ruleColumnId;
+	@SerializedName("rule_column_name")	
+	private String ruleColumnName;
+	@SerializedName("rule_column_text")	
+	private String ruleColumnText;
+	@SerializedName("created_by")
+	private String createdBy;
+	@SerializedName("updated_by")	
+	private String updatedBy;
+	@SerializedName("created_date")
+	private Date createdDate;
+	@SerializedName("updated_date")
+	private Date updatedDate;
+	@SerializedName("rule_is_global")
+	private String ruleIsGlobal;
+	@SerializedName("rule_column_desc")
+	private String ruleColumnDesc;
+	@SerializedName("action")	
+	private String action;
+	@SerializedName("rule_column_shadow_id")
+	private Integer ruleShadowId;
+	@SerializedName("is_added")
+	private boolean isAdded=false;
+	@SerializedName("is_deleted")
+	private boolean isDeleted=false;
+	@SerializedName("is_updated")
+	private boolean isUpdated=false;
+	@SerializedName("relation_Columns")
+	private List<String> relationColumns;
+
+
+	public List<String> getRelationColumns() {
+		return relationColumns;
+	}
+	public void setRelationColumns(List<String> relationColumns) {
+		this.relationColumns = relationColumns;
+	}
+	public Integer getRuleShadowId() {
+		return ruleShadowId;
+	}
+	public void setRuleShadowId(Integer ruleShadowId) {
+		this.ruleShadowId = ruleShadowId;
+	}
+	public boolean isAdded() {
+		return isAdded;
+	}
+	public void setAdded(boolean isAdded) {
+		this.isAdded = isAdded;
+	}
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+	public boolean isUpdated() {
+		return isUpdated;
+	}
+	public void setUpdated(boolean isUpdated) {
+		this.isUpdated = isUpdated;
+	}
+	//private Set<RuleRulesColumns> ruleRulesColumnses = new HashSet<RuleRulesColumns>(0);
+	public Integer getRuleColumnId() {
+		return ruleColumnId;
+	}
+	public void setRuleColumnId(Integer ruleColumnId) {
+		this.ruleColumnId = ruleColumnId;
+	}
+	public String getRuleColumnName() {
+		return ruleColumnName;
+	}
+	public void setRuleColumnName(String ruleColumnName) {
+		this.ruleColumnName = ruleColumnName;
+	}
+	public String getRuleColumnText() {
+		return ruleColumnText;
+	}
+	public void setRuleColumnText(String ruleColumnText) {
+		this.ruleColumnText = ruleColumnText;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	public String getRuleIsGlobal() {
+		return ruleIsGlobal;
+	}
+	public void setRuleIsGlobal(String ruleIsGlobal) {
+		this.ruleIsGlobal = ruleIsGlobal;
+	}
+	/**
+	 * @return The Rule Column Description
+	 */
+	public String getRuleColumnDesc() {
+		return ruleColumnDesc;
+	}
+	/**
+	 * @param Set the Rule Column Description
+	 */
+	public void setRuleColumnDesc(String ruleColumnDesc) {
+		this.ruleColumnDesc = ruleColumnDesc;
+	}
+	/**
+	 * @return the action
+	 */
+	public String getAction() {
+		return action;
+	}
+	/**
+	 * @param action the action to set
+	 */
+	public void setAction(String action) {
+		this.action = action;
+	}
+	
+}

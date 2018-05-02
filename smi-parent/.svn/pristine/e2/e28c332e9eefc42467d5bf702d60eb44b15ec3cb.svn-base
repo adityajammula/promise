@@ -1,0 +1,18 @@
+package com.zen.smi.cmf.service;
+
+import java.util.List;
+
+import com.zen.smi.cmf.bo.CmfCaseNoteBO;
+import com.zen.smi.cmf.bo.UserBO;
+import com.zen.smi.cmf.exception.BusinessException;
+import com.zen.smi.dao.entities.Users;
+
+
+
+public interface CmfCaseNoteService {
+
+	public void appendNoteToSelectedCases(String noteDescription,List<String> caseIdList) throws BusinessException;
+
+	public List<CmfCaseNoteBO> getCaseNoteDetails(String caseId) throws BusinessException;
+	
+}

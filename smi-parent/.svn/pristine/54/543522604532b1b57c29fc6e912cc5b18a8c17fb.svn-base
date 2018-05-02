@@ -1,0 +1,57 @@
+package com.zen.smi.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.zen.smi.bo.OtherCommentsBO;
+import com.zen.smi.bo.OtherCommentsBOList;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.OtherCommentsService;
+
+
+@Controller
+@RequestMapping("/other_comments")
+public class OtherCommentsController extends BaseController {
+	
+	/**
+	 * Logger for OtherCommentsController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(OtherCommentsController.class);
+
+	@Autowired
+	public OtherCommentsService otherCommentsService;
+	@Autowired
+	public Gson gson;
+	
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public @ResponseBody String getOtherComments(HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			OtherCommentsBOList OtherCommentsBOList=new OtherCommentsBOList();
+			List<OtherCommentsBO> commentsBO=otherCommentsService.getOtherCommentsBO();
+//			int size=commentsBO.size();
+			OtherCommentsBOList.setOtherCommentsBO(commentsBO);
+//			OtherCommentsBOList.setSize(size);
+			resultJson=	gson.toJson(OtherCommentsBOList, OtherCommentsBOList.class);
+		    resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage(" ", null));
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+
+}

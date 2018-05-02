@@ -1,0 +1,117 @@
+package com.zen.smi.generic.senti.analysis;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.HashMap;
+
+public class SentimentResult {
+	// Create a HashMap with single key and Multivalue
+	static HashMap<String, SentimentWords> map = new HashMap<String, SentimentWords>();
+	
+	private static SentimentResult instance = null;
+	private SentimentResult() {
+		
+	}
+	
+	public static SentimentResult getInstance() {
+		if (instance == null) {
+			instance = new SentimentResult();
+		}
+		return instance;
+	}
+	public static void main(String[] args) {
+		String message = "@Callux it was my birthday yesterday";
+		
+		SentimentResult result = SentimentResult.getInstance();
+		result.initialize();
+		result.calculate(message);
+	}
+	public float calculate(String message) {
+		String wordsArray[] = message.split(" ");
+		float finalScore = 0;
+		for (int i = 0; i < wordsArray.length; i++) {
+
+			String word = wordsArray[i];
+			word = word.toLowerCase();
+			if(map.containsKey(word))
+			{
+				SentimentWords sentiWord = map.get(word);
+				float neg = sentiWord.getNegtiveScore();
+				float pos = sentiWord.getPositiveScore();
+				finalScore += pos + neg;
+			}
+		}
+		System.out.println("finalScore: "+finalScore);
+		return finalScore;
+	}
+
+	
+	public void initialize() {
+		Connection connection = null;
+		Statement stmt = null;
+		try {
+			connection = SentiDBFactory.getConnection();
+			connection.setAutoCommit(false);
+			System.out.println("Opened database successfully");
+
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM SENTIMENT;");
+			while (rs.next()) {
+				float posScore = rs.getFloat("POSSCORE");
+				float negScore = rs.getFloat("NEGSCORE");
+				String word = rs.getString("SYNSETTERMS");
+				if(word.indexOf("#") > 0)
+				{
+					String wordsArray[] = word.split("#");
+					word = wordsArray[0];
+				}
+				word = word.toLowerCase();
+				SentimentWords sentiWord = new SentimentWords();
+				
+				if(negScore != 0)
+				{
+					sentiWord.setNegtiveScore(-1*negScore);
+				}
+				sentiWord.setPositiveScore(posScore);
+				sentiWord.setWord(word);
+				map.put(sentiWord.getWord(), sentiWord);
+			}
+			rs.close();
+			stmt.close();
+			connection.close();
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
+		System.out.println("Operation done successfully");
+
+	}
+
+	
+
+	public class SentimentWords {
+
+		private float positiveScore;
+		private float negtiveScore;
+		private String word;
+		public float getPositiveScore() {
+			return positiveScore;
+		}
+		public void setPositiveScore(float positiveScore) {
+			this.positiveScore = positiveScore;
+		}
+		public float getNegtiveScore() {
+			return negtiveScore;
+		}
+		public void setNegtiveScore(float negtiveScore) {
+			this.negtiveScore = negtiveScore;
+		}
+		public String getWord() {
+			return word;
+		}
+		public void setWord(String word) {
+			this.word = word;
+		}
+	}
+
+}

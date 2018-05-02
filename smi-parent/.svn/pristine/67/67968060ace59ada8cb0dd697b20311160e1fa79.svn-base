@@ -1,0 +1,19 @@
+AppServices.factory('ClosedCasesServices',function($http, $q, smiGenUtil){
+	
+    return{
+    	
+    	 //Starts the getClosedCasesByCriteria
+	 	getAllCmfClosedCasesByCriteria: function(requestData){
+		 	var deferred = $q.defer();
+		 	$http.post('cmfcases/closedcasesbycriteria',  JSON.stringify(requestData),
+			{headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+			deferred.resolve(response);
+			smiGenUtil.handleSuccess(response);
+		 	}).error(function(response) {
+		 	   smiGenUtil.handleError(response);
+		    });
+		 		 return deferred.promise;
+		 	}, 
+	     
+        };
+});

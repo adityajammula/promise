@@ -1,0 +1,110 @@
+<div class="container-fluid">
+  <!-- page content -->
+  <div class="pagecontent">
+    <!-- row -->
+    <div class="row tile" data-ng-init="initialize()">
+     <div class="tile-header bg-greensea dvd dvd-btm">
+	    <h1 class="custom-font"><strong>{{globalColumnName}}</strong></h1>
+     </div>
+      <!-- col -->
+      <div class="col-md-6">
+         <div class="tile-body form-validation">
+              <div class="form-group">
+                <label class="col-sm-4 control-label">Column Name* :</label>
+                <div class="col-sm-8" data-ng-show = "!isEdit">
+                 <select name="f2" class="form-control mb-10" data-ng-model="globalColumnsData.columnName" required>
+                     <option value="">Select option...</option>
+		             <option ng-repeat="globalColumnName in globalColumnNames">{{globalColumnName}}</option>
+                  </select>
+                </div>
+                <div class="col-sm-8" data-ng-show = "isEdit">
+                   <label>{{globalColumnsData.columnName}}</label>           
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-4 control-label">Description* :</label>
+                <div class="col-sm-8">
+                <textarea style="width: 100%;" rows="7" name="message" id="message" placeholder="Type your message" ng-model="globalColumnsData.columnDesc"  on-blur-validation required></textarea>
+                <p class="help-block">
+                  <span ng-show="contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted">Message is required.</span>
+                </p>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-4 control-label">Column Values* :</label>
+                <div class="col-sm-8">
+                <textarea style="width: 100%;" rows="7" name="message" id="message" placeholder="Type your message" ng-model="globalColumnsData.columnValues"  on-blur-validation required></textarea>
+                <p class="help-block">
+                  <span ng-show="contactForm.message.$invalid && !contactForm.message.$pristine || contactForm.message.$invalid && submitted">Message is required.</span>
+                </p>
+                </div>
+              </div>
+      </div>
+      <!-- /col -->
+    </div>
+    <!-- col -->
+  <!--    <div class="col-md-6" data-ng-show = "isEdit"  >
+     	<div class="bg-greensea dvd dvd-btm">
+				<label colspan="3" class="tile-header">Existing Relationships</label>
+		</div>
+		<div>
+            <table  class="table table-striped tableborder" data>
+				<thead class="tile-header bg-greensea dvd dvd-btm">
+					<tr><th>Existing Relationships</th></tr>
+				</thead>
+				<tbody>
+					<tr data-ng-repeat="relationData in globalColumnsRelationData track by $index">
+					<td>{{relationData}}</td>
+					</tr>
+					
+				</tbody>
+			</table>
+      </div>
+      </div> -->
+      <div class="col-lg-15 col-md-6">
+					<div class="bg-greensea dvd dvd-btm">
+							<label colspan="3" class="tile-header">Existing Relationships</label>
+						</div>
+						<div class="tile-body p-0"  style="max-height: 420px;overflow:auto;" slimscroll="{height: '100%'}">
+							<table 
+								class="table table-striped tableborder">
+								<thead>
+								</thead>
+								<tbody class="scroll" >
+									<tr data-ng-repeat="relationData in globalColumnsRelationData track by $index">
+										<td class="pointer">{{relationData}}</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+      
+      
+     <!-- /col -->
+     <!----row -->
+     <div class="row">
+     <!-- <div  class="col-md-12 form-group">
+		   			<div class=" col-sm-2 text-center">
+						<button type="button" class="btn btn-success btn-ef btn-ef-5 btn-ef-5a" data-ng-click="goViewGlobalColumns()">Back All</button>
+				   </div> 
+				    <div class="col-sm-1 text-center" data-ng-show = "!isEdit">
+						<button type="button" class="btn btn-primary mb-10" ng-click="saveGlobalColumn()">Save All</button>
+				   </div>
+				    <div class="col-sm-1 text-center" data-ng-show = "isEdit">
+						<button type="button" class="btn btn-primary mb-10" ng-click="updateGlobalColumn()">Update All</button>
+				   </div>
+				  <div class="col-sm-1 text-center">
+						<button type="button" class="btn btn-warning btn-ef btn-ef-5 btn-ef-5a" data-ng-click="resetValues()">Reset All</button>
+				   </div> 
+		 </div> -->
+	<div class="col-md-12 form-group">
+		 <button class="col-sm-1 btn btn-success btn-ef btn-ef-5 btn-ef-5a buttonsalign" ng-click="goViewGlobalColumns()"> <i class="fa fa-reply"></i> <span>Back</span> </button> 
+		 <button class="col-sm-1 btn btn-primary btn-ef btn-ef-5 btn-ef-5a buttonalignment" ng-click="saveGlobalColumn()" data-ng-show = "!isEdit"> <i class="glyphicon glyphicon-ok"></i> <span>Save</span> </button>
+		 <button class="col-sm-1 btn btn-primary btn-ef btn-ef-5 btn-ef-5a buttonalignment" ng-click="updateGlobalColumn()" data-ng-show = "isEdit"> <i class="glyphicon glyphicon-ok"></i> <span>Update</span> </button>
+		 <button class="col-sm-1 btn btn-warning btn-ef btn-ef-5 btn-ef-5a buttonalignment" ng-click="resetValues()"> <i class="fa fa-history"></i> <span>Reset</span> </button> 
+	</div>
+	</div>
+	<!----/row -->
+  <!-- /page content -->
+</div>
+

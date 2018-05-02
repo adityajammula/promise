@@ -1,0 +1,113 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+
+import com.zen.smi.dao.FlumeAgentsProcessDAO;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.entities.FlumeAgentsProcess;
+import com.zen.smi.dao.entities.SocialDataProcess;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class FlumeAgentsProcessDAOImpl extends BaseDAOImpl<FlumeAgentsProcess, Serializable> implements FlumeAgentsProcessDAO {
+
+	/**
+	 * Logger for FlumeAgentsProcessDAOImpl class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(FlumeAgentsProcessDAOImpl.class);
+	
+	public FlumeAgentsProcessDAOImpl() {
+		super(FlumeAgentsProcess.class);
+	}
+	
+    public List<FlumeAgentsProcess> getAllFlumeAgents() throws GenericDAOException {
+		
+		List<FlumeAgentsProcess> flumeAgentsProcessList = new ArrayList<FlumeAgentsProcess>();
+		 String query = "SELECT fa.name as agent_name, sdp.name as process_name, fap.* FROM"
+		 		+ " flume_agents fa, flume_agents_process fap, social_data_process sdp"
+		 		+ " where fap.agent_id = fa.agent_id and fap.process_id = sdp.process_id";
+		  
+		 List<Object[]> results = loadWithsql(query);
+		 if(results != null && !results.isEmpty())
+		 {
+			 for(Object[] resultArray : results)
+			 {
+				 FlumeAgentsProcess flumeAgentsProcesses = new FlumeAgentsProcess();
+				 
+				 Integer agentId = (Integer)resultArray[3];
+				 String agentName = (String)resultArray[0];
+				 FlumeAgents flumeAgent = new FlumeAgents();
+				 flumeAgent.setAgentId(agentId);
+				 flumeAgent.setName(agentName);
+				 flumeAgentsProcesses.setFlumeAgents(flumeAgent);
+				 
+				 String processName = (String)resultArray[1];
+				 Integer processId = (Integer)resultArray[4];
+				 SocialDataProcess socialDataProcess = new SocialDataProcess();
+				 socialDataProcess.setName(processName);
+				 socialDataProcess.setProcessId(processId);
+				 flumeAgentsProcesses.setSocialDataProcess(socialDataProcess);
+				 
+				 Integer agentProcessId = (Integer)resultArray[2];
+				 flumeAgentsProcesses.setAgentProcessId(agentProcessId);
+				 
+				 Timestamp startDt = (Timestamp)resultArray[5];
+				 flumeAgentsProcesses.setStartDate(startDt);
+				 
+				 Timestamp endDt = (Timestamp)resultArray[6];
+				 flumeAgentsProcesses.setEndDate(endDt);
+				 
+				 String status = (String)resultArray[7];
+				 flumeAgentsProcesses.setStatus(status);
+				 
+				 String processData = (String)resultArray[8];
+				 flumeAgentsProcesses.setProcessData(processData);
+				 
+				 String stats = (String)resultArray[9];
+				 flumeAgentsProcesses.setStatistics(stats);
+				 
+				 String stacktrace = (String)resultArray[10];
+				 flumeAgentsProcesses.setStacktrace(stacktrace);
+				 
+				 String sysProcessId = (String)resultArray[11];
+				 flumeAgentsProcesses.setSystemProcessId(sysProcessId);
+				 
+				 flumeAgentsProcessList.add(flumeAgentsProcesses);
+			 }
+		 }
+	
+		 return flumeAgentsProcessList;
+	}
+	
+	
+    public List<FlumeAgentsProcess> getRunningAgents() throws GenericDAOException {
+		
+		List<FlumeAgentsProcess> processList = null;
+		Session session = null;
+		try{
+			session = this.getSessionFactory().openSession();
+			Criteria criteria = session.createCriteria(FlumeAgentsProcess.class);
+			Criterion criterion= Restrictions.and(Restrictions.eq("status", "IN_PROGRESS"), 
+			           Restrictions.in("flumeAgents.agentId", Arrays.asList(1,2,3)));
+			criteria.add(criterion);
+			processList = criteria.list();
+        }
+        catch (HibernateException ex){
+            throw ex;
+        }
+		
+		return processList;
+	}
+	
+    
+}

@@ -1,0 +1,15 @@
+angular
+		.module('smiApp')
+		.controller('TransactionTwitterDetailsController',function($scope,$rootScope,$state,SocialTransactionsServices,$stateParams) {
+
+			 $rootScope.initializeTwitterTransactionDetailsController = function(){
+				 SocialTransactionsServices.getIndividualTransactionDetails($stateParams.stCase_id).then(function(response){
+					 $scope.caseDetails = response.data;
+				 }); 
+			 };
+			 $scope.goTwitterTransactionsPage = function(){
+				 $state.go('twittertransactions');
+			};
+});
+
+

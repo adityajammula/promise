@@ -1,0 +1,138 @@
+<div class="container-fluid">
+	<div class="row  tile">
+		<!-- tile -->
+		<div class="tile-header bg-greensea dvd dvd-btm">
+			<h1 class="custom-font">
+				<strong>Add New Social Account</strong>
+			</h1>
+		</div>
+		<div class="col-md-12" data-ng-hide="exactAccountName!=true">
+		    <label>Account Name:{{accountname}}</label>
+		    </div>
+		<div class="col-md-12">
+			<tabset class="tab-animation tab-container tab-wizard"
+				justified="true" set-ng-animate="true"
+				ng-init="steps={step1:true, step2:false, step3:false, step4:false, step5: false}">
+
+			<tab active="steps.step1"> <tab-heading> Account
+			Details <span class="badge badge-default pull-right wizard-step">1</span>
+			</tab-heading>
+			<form name="step1" role="form" novalidate class="form-validation">
+				<div class=" form-group col-md-12">
+					<div class="row col-md-2">
+							<label for="username">Account Name* </label>
+							</div> 
+						<div class="row col-md-2">
+						<input type="text" name="name" id="name"  data-ng-model="accountName" class="form-control">
+						</div>
+					<div class="row col-md-2"style="padding-left: 66px;">
+							<label>Account Type*</label> 
+							</div>
+							<div class="row col-md-2">
+							<select
+								class="form-control form-control-inline" data-ng-model="accounttype.name"
+								data-ng-options="a.name for a in accounttype" data-ng-change="resetData()">
+								<option value="">Select</option>
+							</select>
+					</div>
+					<div class="col-md-2">
+							<button type="submit" class="btn btn-rounded btn-primary btn-sm searchButton" data-ng-click="onSearch(accountName,accounttype.name)">Search</button>
+
+					</div>
+				</div>
+
+				<!-- tile -->
+				<section class="col-md-12" fullscreen="isFullscreen05">
+
+					<!-- tile body -->
+					<div class="col-md-6 text-left margin">
+
+						<table datatable="ng" class="table table-hover">
+							<thead>
+								<tr>
+									<th>Search Results</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr data-ng-repeat="groupname in groupData">
+									<td> <div style="float: left;">
+										 <label class="checkbox checkbox-custom-alt">
+                       				<input name="facebook" type="radio"  data-ng-click="onOptions(groupname)"><i style="border: 2px solid #3D3939!important;"></i>
+                       				</label>
+										</div>
+										<div class="groupImage">
+										<img class="groupImageIcon" src="{{groupname.picture.data.url}}"alt="">
+										</div>
+										<div>
+										<b style="color: #3b5998;">{{groupname.name}}</b>&nbsp &nbsp
+										<i class="glyphicon glyphicon-ok-sign text-blue" data-ng-show="groupname.is_verified=='true'"></i><br>
+										<small data-ng-show="accounttype.name.name=='FaceBook'">{{groupname.category}} &nbsp &nbsp</small>  <small data-ng-show="accounttype.name.name=='FaceBook'"><b><i>likes:{{groupname.likes}}</i></b></small>
+										<small data-ng-hide="accounttype.name.name=='FaceBook'"><b><i>Followers:{{groupname.likes}}</i></b></small>
+										<br>
+										<span>{{groupname.group_location}}</span>
+										</div></td>
+										
+								</tr>
+							</tbody>
+						</table>
+				<!-- 	</div>
+					<div class="col-md-6 text-right"  data-ng-hide="!isClick">
+					<div class="row">
+						<div class="col-md-1">
+							<img src="{{metaData.cover.source}}" height="42" width="40"  class="text-left" id="myImage" />
+						</div>
+						<div class="col-md-8 text-left">
+						 		<label class="col-md-12">{{metaData.name}}</label>							
+						 		<label class="col-md-4"> Followers:{{metaData.were_here_count}}</label>
+							    <label class="col-md-1">{{likes}}:{{metaData.likes}}</label>
+				         </div>
+					</div>
+					
+					
+					</div> -->
+					
+					<!-- /tile body -->
+					</div>
+				</section>
+				<!-- /tile -->
+				
+				           
+				<div class="form-group">
+					<button type="submit" data-ng-disabled="step1.$invalid||isClick!=true"
+						class="btn btn-default" data-ng-click="steps.step2=true;onNext()">Next</button>
+				</div>
+
+			</form>
+			
+			</tab> 
+			<tab active="steps.step2" disabled="step1.$invalid"> <tab-heading>
+			Account Relationships <span
+				class="badge badge-default pull-right wizard-step">2</span> </tab-heading>
+			<form name="step2" role="form" novalidate>
+			
+			<!-- tile -->
+				<section class="tile" fullscreen="isFullscreen05">
+
+					<!-- tile body -->
+					<div class="tile-body p-0">
+				<div class="page page-tree" data-ng-controller="ViewGroupsController">
+					<div class="b-a bg-default lter">
+						<abn-tree tree-data="my_data" tree-control="my_tree"  on-select="my_tree_handler(branch)"
+							expand-level="2" icon-leaf="fa fa-file-o"
+							icon-expand="fa fa-plus" icon-collapse="fa fa-minus"></abn-tree>
+					</div>
+				</div>
+				</div>
+				</section>
+				<div class="col-md-6 form-group">
+					<button type="submit" 
+						class="btn btn-default " data-ng-click="steps.step1=true">Previous</button>
+						<button type="submit" 
+						class="btn btn-rounded btn-primary btn-md"  data-ng-click="onCreate(accounttype.name)">Create</button>
+				</div>
+			</form>
+			</tab> 
+			</tabset>
+		</div>
+	</div>
+</div>

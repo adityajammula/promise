@@ -1,0 +1,27 @@
+package com.zen.smi.service;
+
+import java.util.List;
+
+import com.zen.smi.bo.SocialMediaPostsBO;
+import com.zen.smi.exception.BusinessException;
+
+
+public interface SocialMediaPostsService {
+	
+	
+	
+
+	List<SocialMediaPostsBO> getSocialMediaPosts() throws BusinessException;
+
+	List<SocialMediaPostsBO> getSocialMediaPostsByChannel(int postId ) throws BusinessException;	
+	
+	SocialMediaPostsBO getSocialMediaPostsId(int postId ) throws BusinessException;
+	
+	void editPost(SocialMediaPostsBO socialMediaPostsBO) throws BusinessException;
+	
+	void savePost(SocialMediaPostsBO socialMediaPostsBO) throws BusinessException;
+	
+	void deletePost(SocialMediaPostsBO socialMediaPostsBO) throws BusinessException;
+	
+	
+}

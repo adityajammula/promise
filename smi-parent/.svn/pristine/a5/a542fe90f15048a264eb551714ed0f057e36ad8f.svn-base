@@ -1,0 +1,27 @@
+'use strict';
+
+/**
+ * @author Sowjanya.Pathakamuri
+ * @ngdoc function
+ * @name smiApp.controller:TwitterCustomerInformationController
+ * @description
+ * # CustomerInformationController
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('TwitterCustomerInformationController', function ($scope, $rootScope, $state,$modal) {
+
+	  $scope.linkAccount = function() {
+				var modalInstance = $modal.open({
+					templateUrl : 'linkAccount.html',
+					controller : 'LinkAccountController',
+				});
+
+		};
+	  
+	 
+	  
+}).controller('LinkAccountController', function() {
+	
+	
+});

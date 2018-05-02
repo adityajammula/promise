@@ -1,0 +1,143 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('EditGlobalColumnsController', function ($scope,rulesServices,$stateParams,$state,dialogs) {
+	  $scope.globalColumnsData = [];
+	  $scope.globalColumnsRelationData = [];
+	  $scope.globalColumnNames = [];
+      $scope.columnDesc = null;
+	  $scope.columnValues = null;
+     /**
+	   * Based on Id it will navigate Add or Edit Global Column Page.If id is passed then it will take you to the 
+	   * Edit Global Column page.If id is not passed then it will take you the Add new global Column Page.
+	   */
+	  $scope.initialize = function() {
+		  $scope.resetValues();
+		  if($stateParams.rule_column_id !=null && $stateParams.rule_column_id != 0){
+			   $scope.globalColumnName ="Edit Global Column";
+			   $scope.isEdit = true;
+		  }else{
+			   $scope.globalColumnName ="Add Global Column";
+			   $stateParams.rule_column_id = 0;
+			   $scope.isEdit = false;
+		  }
+		  $scope.getNewDropDownValues();
+		   
+	  };	   
+       /**
+		* This method is to get the NonDuplicateDropDownValues.
+		*/
+	     $scope.getNewDropDownValues = function() {
+	    	 rulesServices.getNewDropDownValues().then(function(response){
+			      $scope.globalColumnNames = response.data.globalColumns;
+			      $scope.getGlobalColumnById();
+			 });
+	     }
+	     $scope.resetValues = function() {
+	    	 if($scope.isEdit  == true) {
+	    		   $scope.globalColumnsData.columnDesc = $scope.columnDesc;
+				   $scope.globalColumnsData.columnValues = $scope.columnValues;
+	    	 }else{
+	    		  $scope.globalColumnsData.columnName = "";
+				   $scope.globalColumnsData.columnDesc =  "";
+				   $scope.globalColumnsData.columnValues =  "";
+	    	 }
+			  
+		 };
+			
+		/**
+		 * This method is to get the data by rule column id.
+		 */	
+	     $scope.getGlobalColumnById = function() {
+	    	
+	    	 rulesServices.getGlobalColumnById($stateParams.rule_column_id).then(function(response){
+		     	 if(response != null && response.data != null){
+			    	if($stateParams.rule_column_id != null && $stateParams.rule_column_id != 0){
+					   $scope.globalColumnsData.columnName = response.data.rule_column_name;
+					   $scope.globalColumnsData.columnDesc = response.data.rule_column_desc;
+					   $scope.globalColumnsData.columnValues = response.data.rule_column_text;
+					   $scope.globalColumnsRelationData=response.data.relation_Columns;
+					   $scope.columnDesc = response.data.rule_column_desc;
+					   $scope.columnValues = response.data.rule_column_text;
+				    }
+			    }
+		    });
+	     };
+	  
+	  /**
+	   * This method is to update the Global Column.
+	   */
+	  $scope.updateGlobalColumn = function(){
+		 if($stateParams.rule_column_id != null && $stateParams.rule_column_id != 0){
+		 var updateGolbalColumnJson= {
+				"rule_is_global" : 1,
+				"rule_column_id" :$stateParams.rule_column_id,
+			    "rule_column_name": $scope.globalColumnsData.columnName ,
+			    "rule_column_desc": $scope.globalColumnsData.columnDesc,
+			    "rule_column_text": $scope.globalColumnsData.columnValues
+			 }
+		 rulesServices.updateGolbalColumn(updateGolbalColumnJson).then(function(result){
+	       });
+		   $state.go('globalcolumns');
+		 }
+	  }
+	 
+	  /**
+		* This method is to Save the Global Column.
+		*/
+	   $scope.saveGlobalColumn = function() {
+		var addGolbalColumnJson= {
+				"rule_is_global" : 1,
+			    // "rule_column_id" :$stateParams.rule_column_id,
+				"rule_column_name": $scope.globalColumnsData.columnName ,
+				"rule_column_desc": $scope.globalColumnsData.columnDesc,
+				"rule_column_text": $scope.globalColumnsData.columnValues
+			   }
+		var isValid = $scope.isValidate(addGolbalColumnJson);
+		   if(isValid){
+			   rulesServices.addGolbalColumn(addGolbalColumnJson).then(function(result){
+				});
+			  $state.go('globalcolumns');
+		   }
+		};
+		
+		/**
+		 * When we click on Back button it will take you to the View Global Columns Page
+		 */
+		$scope.goViewGlobalColumns= function(){
+			  $state.go('globalcolumns');
+		 };
+	  	
+			$scope.isValidate = function(addGolbalColumnJson){		 
+			    var isValid =true;
+				 var str1 = "";
+			     if(addGolbalColumnJson.rule_column_name == null || addGolbalColumnJson.rule_column_name == undefined || addGolbalColumnJson.rule_column_name == ""){
+			    	 str1 +="Please Select Colume name"+'<br/>';
+			    	 isValid= false;
+				  }	   
+			     
+				  if(addGolbalColumnJson.rule_column_desc == null  || addGolbalColumnJson.rule_column_desc == ""){
+					  str1 +="Please Enter Column description"+'<br/>';
+					  isValid =false;
+				  }
+				  
+				  if(addGolbalColumnJson.rule_column_text == null || addGolbalColumnJson.rule_column_text == "" ){
+					  str1 +="Please Enter Column Values"+'<br/>';
+					  isValid =false;
+				  }	
+				  if(isValid==false){
+						dialogs.error("Error",str1);			
+						return isValid;
+					 }
+					  return isValid;
+			}
+		/*	*/
+		
+	 });

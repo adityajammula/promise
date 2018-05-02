@@ -1,0 +1,37 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.ScheduleJobsDAO;
+
+import com.zen.smi.dao.entities.ScheduleJobs;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class ScheduleJobsDAOImpl extends BaseDAOImpl<ScheduleJobs, Serializable> implements ScheduleJobsDAO{
+
+	public ScheduleJobsDAOImpl() {
+		super(ScheduleJobs.class);
+	}
+	
+	
+	public ScheduleJobs getJobsById(int jobId ) throws GenericDAOException{		 
+		
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("jobParantId", jobId));
+		return searchUnique(expressionList, null);
+	}
+	
+	public List<ScheduleJobs> getJobsByStatus(String status) throws GenericDAOException {		 
+		
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("jobStatus", status));
+		return search(expressionList, null);
+	}
+	
+	
+}

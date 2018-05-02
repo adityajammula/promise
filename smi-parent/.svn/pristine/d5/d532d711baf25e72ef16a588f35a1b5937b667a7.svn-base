@@ -1,0 +1,26 @@
+package com.zen.smi.web.bo;
+
+import com.zen.rules.entities.Message;
+
+
+public class RulesTestMessageBO {
+
+	private Message message;
+	private String formulaApplied;
+	
+	public Message getMessage() {
+		return message;
+	}
+	public void setMessage(Message message) {
+		this.message = message;
+	}
+	public String getFormulaApplied() {
+		return formulaApplied;
+	}
+	public void setFormulaApplied(String formulaApplied) {
+		this.formulaApplied = formulaApplied;
+	}
+	
+	
+	
+}

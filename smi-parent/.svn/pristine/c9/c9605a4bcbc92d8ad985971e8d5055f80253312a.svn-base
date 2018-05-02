@@ -1,0 +1,38 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+
+public class SocialProfilesBO {
+	
+	@SerializedName("social_profile_accounts_id")	
+	private Integer profileId;
+	@SerializedName("social_profile_accounts_type")
+	private String accountType;
+	@SerializedName("social_media_accounts")
+	private List<SocialMediaAccountsBO> socialMediaAccounts = new ArrayList<SocialMediaAccountsBO>(0);
+	public Integer getProfileId() {
+		return profileId;
+	}
+	public void setProfileId(Integer profileId) {
+		this.profileId = profileId;
+	}
+	public String getAccountType() {
+		return accountType;
+	}
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
+	public List<SocialMediaAccountsBO> getSocialMediaAccounts() {
+		return socialMediaAccounts;
+	}
+	public void setSocialMediaAccounts(
+			List<SocialMediaAccountsBO> socialMediaAccounts) {
+		this.socialMediaAccounts = socialMediaAccounts;
+	}
+	
+	
+}

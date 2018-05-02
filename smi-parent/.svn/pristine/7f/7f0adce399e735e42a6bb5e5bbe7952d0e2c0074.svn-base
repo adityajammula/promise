@@ -1,0 +1,77 @@
+AppServices.factory('CustomerInformationService',function($http, $q, smiGenUtil){
+	
+    return{
+    	
+	     // Start getDemoGraphicData
+	     getDemoGraphicData:function(custId_id){
+		  		 var deferred = $q.defer();
+		  		 $http.get('cmfcustomer/'+custId_id+'',{
+		  		 }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	     }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	     });
+		  		return deferred.promise; 
+		 },// end getDemoGraphicData 
+		 
+		// Start getSocialData
+	     getSocialData:function(social_data_customer_id){
+		  		 var deferred = $q.defer();
+		  		 $http.get('cmfcustomer/socialDataByCustomerId/'+social_data_customer_id+'',{
+		  		 }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	     }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	     });
+		  		return deferred.promise; 
+		 },// end getSocialData 
+		 
+		 
+		// Start getBankingData
+	     getBankingData:function(customer_Accounts_By_CustomerId){
+		  		 var deferred = $q.defer();
+		  		 $http.get('cmfcustomer/customerAccountsByCustomerId/'+customer_Accounts_By_CustomerId+'',{
+		  		 }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	     }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	     });
+		  		return deferred.promise; 
+		 },// end getBankingData 
+		 
+		 //Starts saveAccount
+		 saveAccount: function(requestData){
+		 	 	 var deferred = $q.defer();
+		 	 	 $http.post('cmfcustomer/addCustomerAccounts',  JSON.stringify(requestData),
+		 	 	 {headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+		 	 	 deferred.resolve(response);
+	 	 		 smiGenUtil.handleSuccess(response);
+		 	 	 }).error(function(response) {
+		 	 	 	 smiGenUtil.handleError(response);
+		 	 	 });
+		 	 	 return deferred.promise;
+		 	},// End saveAccount
+		 
+	
+		 // Start  updateBankingAccount 
+		 updateBankingAccount: function(requestData){
+		 	 	var deferred = $q.defer();
+		        $http.post('cmfcustomer/saveCustomerAccounts', 
+		 	    JSON.stringify(requestData),
+		 	 	   {headers: { 'Content-Type': 'application/json; charset=UTF-8'},
+		 	 	}).success(function(response, status, headers) {
+		 	 	   deferred.resolve(response);
+		 	 	   smiGenUtil.handleSuccess(response);
+		 	 	}).error(function() {
+		 	 		 alert(JSON.stringify(response));
+		 	 	smiGenUtil.handleError(response);
+		        });
+		 	    return deferred.promise;
+		 }, // end  updateBankingAccount
+		 
+		 
+        };
+});

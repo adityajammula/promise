@@ -1,0 +1,43 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+
+import com.zen.smi.dao.FlumeAgentsDAO;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class FlumeAgentsDAOImpl extends BaseDAOImpl<FlumeAgents, Serializable> implements FlumeAgentsDAO {
+
+	public FlumeAgentsDAOImpl() {
+		super(FlumeAgents.class);
+	}
+	/**
+	 * this method is to get FlumeAgents based on FlumeAgentsProcessID.
+	 * 
+	 * @author tmangalapenta
+	 * @param flumeAgentsProcessId
+	 * @return FlumeAgents
+	 */
+	public FlumeAgents getFlumeAgentsByFlumeAgentsProcessID(
+			int flumeAgentsProcessId) throws GenericDAOException {
+		 String query = "FROM FlumeAgents as fa LEFT JOIN FETCH  fa.flumeAgentsProcesses fas WHERE fas.agentProcessId="+flumeAgentsProcessId;
+		  return load(query).get(0);
+	}
+	
+	
+	public FlumeAgents getAgentByName(String name) throws GenericDAOException {
+		
+		List<Criterion> criterionList = new ArrayList<Criterion>();
+		criterionList.add(Restrictions.eq("name", name));
+		criterionList.add(Restrictions.eq("status", "ACTIVE"));
+		FlumeAgents flumeAgents = searchUniqueCriterion(criterionList, null);
+		
+		return flumeAgents;
+	}
+	
+}

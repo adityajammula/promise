@@ -1,0 +1,45 @@
+package com.zen.smi.socialtransactions.bo;
+
+public class StTransactionTypeBO {
+	private Integer stTransactionTypeId;
+	private String stTransactionCode;
+	private String stTransactionDescription;
+	/**
+	 * @return the stTransactionTypeId
+	 */
+	public Integer getStTransactionTypeId() {
+		return stTransactionTypeId;
+	}
+	/**
+	 * @param stTransactionTypeId the stTransactionTypeId to set
+	 */
+	public void setStTransactionTypeId(Integer stTransactionTypeId) {
+		this.stTransactionTypeId = stTransactionTypeId;
+	}
+	/**
+	 * @return the stTransactionCode
+	 */
+	public String getStTransactionCode() {
+		return stTransactionCode;
+	}
+	/**
+	 * @param stTransactionCode the stTransactionCode to set
+	 */
+	public void setStTransactionCode(String stTransactionCode) {
+		this.stTransactionCode = stTransactionCode;
+	}
+	/**
+	 * @return the stTransactionDescription
+	 */
+	public String getStTransactionDescription() {
+		return stTransactionDescription;
+	}
+	/**
+	 * @param stTransactionDescription the stTransactionDescription to set
+	 */
+	public void setStTransactionDescription(String stTransactionDescription) {
+		this.stTransactionDescription = stTransactionDescription;
+	}
+	
+	
+}

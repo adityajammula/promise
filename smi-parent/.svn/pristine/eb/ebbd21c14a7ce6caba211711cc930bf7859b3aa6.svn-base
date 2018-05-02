@@ -1,0 +1,27 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.Date;
+
+import com.google.gson.annotations.SerializedName;
+
+public class DashBoardGraphBO {
+
+	@SerializedName("type_period")	
+	private String typePeriod;
+	@SerializedName("type_count")	
+	private Long typeCount;
+	public String getTypePeriod() {
+		return typePeriod;
+	}
+	public void setTypePeriod(String typePeriod) {
+		this.typePeriod = typePeriod;
+	}
+	public Long getTypeCount() {
+		return typeCount;
+	}
+	public void setTypeCount(Long typeCount) {
+		this.typeCount = typeCount;
+	}
+	
+	
+}

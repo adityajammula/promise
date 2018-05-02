@@ -1,0 +1,16 @@
+'use strict';
+
+/**
+ * @author Sowjanya.Pathakamuri
+ * @ngdoc function
+ * @name smiApp.controller:CustomerInformationController
+ * @description
+ * # CustomerInformationController
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('CustomerInformationControllerTwitter', function ($scope, $rootScope, $state) {
+	 
+	 
+	  
+});

@@ -1,0 +1,28 @@
+package com.zen.smi.extsys.service;
+ 
+import java.io.File;
+import java.util.List;
+
+import twitter4j.TwitterException;
+
+import com.zen.smi.extsys.facebook.bo.Account;
+import com.zen.smi.extsys.facebook.bo.Group;
+import com.zen.smi.extsys.facebook.bo.PostMessageBO;
+import com.zen.smi.extsys.facebook.bo.SocialMediaPostsBO;
+import com.zen.smi.extsys.facebook.bo.TwitterMessageBO;
+ 
+public interface TwitterService {
+	
+
+	 public List<Group> getUsers(String keyword) throws Exception;
+
+	 public void postToTwitterAccount(PostMessageBO postMessageBO, String handle);
+	 
+	 public String postMessage(TwitterMessageBO twitterMessageBO, String handle);
+	 
+	 String postToUserTimeLine(Account accountBO, String message, File imageFile) throws TwitterException;
+}
+ 
+ 
+
+

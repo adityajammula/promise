@@ -1,0 +1,73 @@
+angular.module('smiApp')
+		.controller('PostsController',function($scope,dialogs,fileReader,$timeout) {
+			$scope.IsShowCalendar = false;
+			$scope.isFacebook = false;
+			$scope.isTwitter = false;
+			$scope.postOptions = [ { id : 1, name : 'Post Now'}, 
+			                       { id : 2, name : 'Post Later'} ];
+			 $scope.mytime = new Date();
+			 $scope.hours =  $scope.mytime.getMinutes();
+			 $scope.minutes =  $scope.mytime.getHours();
+			// console.log(fileReader);
+			 $scope.istwitter = false;
+			    $scope.getFile = function () {
+			        //$scope.progress = 0;
+			        fileReader.readAsDataUrl($scope.file, $scope).then(function(result) {
+	                          $scope.imageSrc = result;
+						});
+			    	};
+			    
+			    $scope.start = new Date();
+			    $scope.end = "";
+			    $scope.minStartDate = 0; //fixed date
+			    $scope.maxStartDate = $scope.end; //init value
+			    $scope.minEndDate = $scope.start; //init value
+			    $scope.maxEndDate = $scope.end; //fixed date same as $scope.maxStartDate init value
+			    
+			   $scope.$watch('start', function(v){
+			      $scope.minEndDate = v;
+			    });
+			    $scope.$watch('end', function(v){
+			      $scope.maxStartDate = v;
+			    });
+
+
+			    $scope.openEnd = function() {
+			      $timeout(function() {
+			        $scope.endOpened = true;
+			      });
+			    };
+
+			    $scope.dateOptions = {
+			      'year-format': "'yy'",
+			      'starting-day': 1
+			    };
+			 
+			
+			$scope.savePost= function(){
+				$scope.istwitter = true;
+  	    	   if($scope.postTitle == null || $scope.postTitle == undefined)
+	    		   {
+  	    		 dialogs.error("Error !","Please Enter comments.");
+  	    		   return false;
+	    		   }
+  	    	   if($scope.postTitle != null&&$scope.istwitter == true && $scope.postTitle.length > 140)
+	    		   {
+  	    		 dialogs.error("Error !","post should be maximum 140 characters.");
+  	    		   return false;
+	    		   }
+			};
+			$scope.getOption = function(options) {
+				if(options != null) {
+				if($scope.options.name.name =="Post Later") {
+					$scope.IsShowCalendar = true;
+				} else if($scope.options.name.name =="Post Now"){
+					$scope.IsShowCalendar = false;
+				}
+				} else {
+					$scope.IsShowCalendar = false;
+				}
+			};
+});
+
+

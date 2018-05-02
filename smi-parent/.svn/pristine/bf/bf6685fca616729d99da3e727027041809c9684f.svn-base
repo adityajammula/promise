@@ -1,0 +1,125 @@
+package com.zen.smi.service.impl;
+
+import java.util.Date;
+import java.util.List;
+
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SimpleTrigger;
+
+import com.zen.smi.dao.entities.ScheduleJobs;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.service.SMISchedulerService;
+import com.zen.smi.service.helper.SMIJob;
+import com.zen.smi.service.helper.SchedulerHelper;
+
+public class SMISchedulerServiceImpl extends BaseService implements SMISchedulerService {
+
+	SchedulerHelper schedulerHelper;
+	JobDetail jobDetail;
+	SimpleTrigger simpleTrigger;
+
+	public void addJobToScheduler(String jobId, String date)
+			throws SchedulerException {
+		// TODO Auto-generated method stub save
+		ScheduleJobs scheduleJobs = new ScheduleJobs();
+		if(null!=jobId && !"".equals(jobId)){
+		scheduleJobs.setJobId(Integer.parseInt(jobId));
+		}
+		if(null!=jobId && !"".equals(jobId)){
+		scheduleJobs.setJobParantId(Integer.parseInt(""));
+		}
+		scheduleJobs.setJobName("FB_TW_SCHEDULER_JOB_"+jobId);
+		scheduleJobs.setJobStatus("");
+		if(null!=date && !"".equals(date)){
+		scheduleJobs.setJobScheduleDateTime(new Date(date));
+		}
+		scheduleJobs.setCreateDate(new Date());
+		scheduleJobs.setLstUpdtDtm(new Date());
+		
+		try {
+			getScheduleJobsDAO().saveOrUpdate(scheduleJobs);
+		} catch (GenericDAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void deleteJobFromScheduler(String jobId, String date)
+			throws SchedulerException {
+		// TODO Auto-generated method stub update
+		ScheduleJobs scheduleJobs = new ScheduleJobs();
+		if(null!=jobId && !"".equals(jobId)){
+		scheduleJobs.setJobId(Integer.parseInt(jobId));
+		}
+		if(null!=date && !"".equals(date)){
+			scheduleJobs.setJobScheduleDateTime(new Date(date));
+			}
+		
+		try {
+			getScheduleJobsDAO().delete(scheduleJobs);
+		} catch (GenericDAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void updateJobToScheduler(String jobId, String date)
+			throws SchedulerException {
+		// TODO Auto-generated method stub 
+		ScheduleJobs scheduleJobs = new ScheduleJobs();
+		if(null!=jobId && !"".equals(jobId)){
+			scheduleJobs.setJobId(Integer.parseInt(jobId));
+			}
+		if(null!=date && !"".equals(date)){
+			scheduleJobs.setJobScheduleDateTime(new Date(date));
+			}
+		try {
+			getScheduleJobsDAO().saveOrUpdate(scheduleJobs);
+		} catch (GenericDAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void initializeJobs() throws SchedulerException {
+		// TODO Auto-generated method stub
+		Scheduler scheduler =schedulerHelper.getScheduler();
+		//Here we need to call the  service and load all the job for first time
+		List<ScheduleJobs>  scheduleJobslist = null;
+		try{
+		scheduleJobslist = getScheduleJobsDAO().load("from schedule_jobs");
+		for(ScheduleJobs scheduleJob:scheduleJobslist){
+			scheduleJob.getJobId();
+			scheduleJob.getJobName();
+			scheduleJob.getJobScheduleDateTime();
+			scheduleJob.getJobStatus();
+			//scheduleJob.
+			
+		}
+		
+		for(int i=0;i<5;i++){
+			
+			jobDetail= new JobDetail();
+			simpleTrigger= new SimpleTrigger();
+			jobDetail.setName("TEST"+i);
+			jobDetail.setJobClass(SMIJob.class);
+			simpleTrigger.setStartTime(new Date(System.currentTimeMillis()));
+			scheduler.scheduleJob(jobDetail, simpleTrigger);
+		}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+
+
+
+	
+
+}

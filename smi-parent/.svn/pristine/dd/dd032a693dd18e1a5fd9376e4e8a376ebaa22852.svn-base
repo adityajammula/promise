@@ -1,0 +1,5 @@
+package com.zen.smi.service.impl;
+
+public class SocialMediaAccountsServiceImpl {
+
+}

@@ -1,0 +1,45 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+/**
+ * @author Jshaik
+ *
+ */
+public interface FamilyDAO extends BaseDAO<RuleFamily, Serializable> {
+
+	
+	/**to save the rule family
+	 * @return void
+	 * @throws GenericDAOException
+	 * @Author kalyan
+	 */
+	void saveFamilyDetails(RuleFamily ruleFamily) throws GenericDAOException;
+	
+	/**
+	 * this method is to get Rule Family based on groupid.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return RuleFamily
+	 */
+	RuleFamily getRuleFamilyByGroupID(int groupId) throws GenericDAOException;
+
+	/**
+	 * this method is to get all the families by App Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of RuleFamily
+	 */
+	List<RuleFamily> getRuleFamilysByAppId(Integer appId)throws GenericDAOException;
+	
+	List<RuleFamily> getAllFamillies() throws GenericDAOException;
+}

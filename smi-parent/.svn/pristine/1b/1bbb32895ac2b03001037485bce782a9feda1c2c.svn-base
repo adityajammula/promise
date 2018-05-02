@@ -1,0 +1,65 @@
+package com.zen.smi.bo;
+
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.zen.smi.dao.entities.RuleFamily;
+
+public class RuleAppsBO {
+	private Integer appId;
+	private String appName;
+	private String appDescription;
+	private List<RuleFamilyBO> ruleFamilies = new ArrayList<RuleFamilyBO>(0);
+	/**
+	 * @return the appId
+	 */
+	public Integer getAppId() {
+		return appId;
+	}
+	/**
+	 * @param appId the appId to set
+	 */
+	public void setAppId(Integer appId) {
+		this.appId = appId;
+	}
+	/**
+	 * @return the appName
+	 */
+	public String getAppName() {
+		return appName;
+	}
+	/**
+	 * @param appName the appName to set
+	 */
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+	/**
+	 * @return the appDescription
+	 */
+	public String getAppDescription() {
+		return appDescription;
+	}
+	/**
+	 * @param appDescription the appDescription to set
+	 */
+	public void setAppDescription(String appDescription) {
+		this.appDescription = appDescription;
+	}
+	/**
+	 * @return the ruleFamilies
+	 */
+	public List<RuleFamilyBO> getRuleFamilies() {
+		return ruleFamilies;
+	}
+	/**
+	 * @param ruleFamilies the ruleFamilies to set
+	 */
+	public void setRuleFamilies(List<RuleFamilyBO> ruleFamilies) {
+		this.ruleFamilies = ruleFamilies;
+	}
+	
+	
+}

@@ -1,0 +1,43 @@
+<div class="container-fluid">
+    <!-- row -->
+    <div class="row">
+        <!-- tile -->
+        <section class="tile">
+          <!-- tile header -->
+          <div class="tile-header bg-greensea dvd dvd-btm">
+            <h1 class="custom-font"><strong>Social Media Accounts</strong></h1>
+            <ul class="controls">
+              <li>
+                <a href ng-click="addNewAccount(row)"><i class="fa fa-plus"></i> Add New Account</a>
+              </li></ul>
+          </div>
+          <!-- /tile header -->
+          <!-- tile body -->
+          <div class="tile-body">
+            <table datatable="ng" class="st-table table table-striped table-custom row-border hover">
+	             <thead>
+		              <tr>
+		                <th  st-sort-default class="sorting">Account Name/ID</th>
+		                <th class="sorting">Account Type</th>
+		                <th class="sorting">Account  Owner</th>
+		                 <th class="sorting">Account  Relationships</th>
+		              </tr>
+	               </thead>
+	              <tbody>
+			              <tr data-ng-repeat="accounts in accountsData">
+			                 <td  class="pointer"><a class="pointer ruleTitle" data-ng-click="showAccount({{accounts}})" >{{accounts.social_media_accounts_accountname}}</a></td>
+			                 <td  class="pointer">{{accounts.social_profiles.social_profile_accounts_type}}</td>
+			                 <td  class="pointer">{{accounts.financial_institutions.financial_institutions_accountowner}}</td>
+			                 <td  class="pointer">{{accounts.accountRealtion }}</td>  
+			              </tr>
+	              </tbody>
+            </table>
+          </div>
+          <!-- /tile body -->
+        </section>
+        <!-- /tile -->
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /page content -->
+</div>

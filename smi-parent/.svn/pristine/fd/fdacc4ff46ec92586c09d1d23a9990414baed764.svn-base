@@ -1,0 +1,143 @@
+package com.zen.smi.bo;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.google.gson.annotations.SerializedName;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleFamily;
+/**
+ * This class contains Rule Group Business data.
+ *
+ * @author Tirumala Vasu
+ */
+public class RuleGroupBO {
+
+	
+	@SerializedName("rule_group_id")
+	private Integer ruleGroupId;
+	@SerializedName("rule_family")
+	private RuleFamilyBO ruleFamily;
+	@SerializedName("rule_group_name")
+	private String ruleGroupName;
+	@SerializedName("rule_group_description")
+	private String ruleGroupDescription;
+	@SerializedName("created_by")	
+	private String createdBy;
+	@SerializedName("updated_by")	
+	private String updatedBy;
+	@SerializedName("created_date")
+	private Date createdDate;
+	@SerializedName("updated_date")
+	private Date updatedDate;
+	//modified RULE to RUlEBO --Venu
+	@SerializedName("rules")
+	private Set<RuleBO> rules = new HashSet<RuleBO>(0);
+	/**
+	 * @return the ruleGroupId
+	 */
+	public Integer getRuleGroupId() {
+		return ruleGroupId;
+	}
+	/**
+	 * @param ruleGroupId the ruleGroupId to set
+	 */
+	public void setRuleGroupId(Integer ruleGroupId) {
+		this.ruleGroupId = ruleGroupId;
+	}
+
+	/**
+	 * @return the ruleGroupName
+	 */
+	public String getRuleGroupName() {
+		return ruleGroupName;
+	}
+	/**
+	 * @param ruleGroupName the ruleGroupName to set
+	 */
+	public void setRuleGroupName(String ruleGroupName) {
+		this.ruleGroupName = ruleGroupName;
+	}
+	/**
+	 * @return the ruleGroupDescription
+	 */
+	public String getRuleGroupDescription() {
+		return ruleGroupDescription;
+	}
+	/**
+	 * @param ruleGroupDescription the ruleGroupDescription to set
+	 */
+	public void setRuleGroupDescription(String ruleGroupDescription) {
+		this.ruleGroupDescription = ruleGroupDescription;
+	}
+	/**
+	 * @return the createdBy
+	 */
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	/**
+	 * @return the updatedBy
+	 */
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	/**
+	 * @param updatedBy the updatedBy to set
+	 */
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the updatedDate
+	 */
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	/**
+	 * @param updatedDate the updatedDate to set
+	 */
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	 
+	/**
+	 * @return the ruleFamily
+	 */
+	public RuleFamilyBO getRuleFamily() {
+		return ruleFamily;
+	}
+	/**
+	 * @param ruleFamily the ruleFamily to set
+	 */
+	public void setRuleFamily(RuleFamilyBO ruleFamily) {
+		this.ruleFamily = ruleFamily;
+	}
+	public Set<RuleBO> getRules() {
+		return rules;
+	}
+	public void setRules(Set<RuleBO> rules) {
+		this.rules = rules;
+	}
+	
+	
+}

@@ -1,0 +1,37 @@
+package com.zen.smi.cmf.service;
+
+import java.util.List;
+
+import com.zen.smi.cmf.bo.CmfCaseBO;
+import com.zen.smi.cmf.bo.CmfCaseManagementDashboardBO;
+import com.zen.smi.cmf.bo.CmfCaseStaticDataBO;
+import com.zen.smi.cmf.bo.CmfCustomerAccountBO;
+import com.zen.smi.cmf.bo.CmfCustomerBO;
+import com.zen.smi.cmf.bo.CmfCustomerSocialDataBO;
+import com.zen.smi.cmf.exception.BusinessException;
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+
+public interface CmfCustomerService {
+
+	
+	public List<CmfCustomerBO> getCustInfo(int custId) throws BusinessException;
+	
+	public List<CmfCustomerAccountBO> getCustomerAccounts(int custId) throws BusinessException;
+	
+	public List<CmfCustomerSocialDataBO> getCustomerSocialData(int custId) throws BusinessException;
+	
+	public void addCustomerAccounts(List<CmfCustomerAccountBO> cmfCustomerAccountBOList) throws BusinessException;
+	
+	public void updateCustomerAccounts(List<CmfCustomerAccountBO> cmfCustomerAccountBOList) throws BusinessException;
+	
+	public void deleteCustomerAccounts(List<CmfCustomerAccountBO> cmfCustomerAccountBOList) throws BusinessException;
+	public void customerRegistration(CmfCustomerBO cmfCustomerBO) throws BusinessException;
+	public void verifyOTP(Integer customerId,String otpString) throws BusinessException;
+	
+	public CmfCustomerBO getCustomerByTwitterAccountId(String twitterAccountId) throws BusinessException;
+	
+	
+}

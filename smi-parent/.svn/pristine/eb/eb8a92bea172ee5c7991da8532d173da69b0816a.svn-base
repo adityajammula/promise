@@ -1,0 +1,323 @@
+<div class="container-fluid"  ng-controller="CaseManagementController">
+    <!-- row -->
+    <div class="row">
+        <!-- tile -->
+        <section class="tile">
+          <!-- tile header -->
+          <div class="tile-header bg-greensea dvd dvd-btm">
+            <h1 class="custom-font"><strong>DashBoard</strong></h1>
+          </div>
+          <!-- /tile header -->
+          <!-- tile body -->
+          <div class="tile-body">
+            <!-- cards row -->
+  <div class="row">
+
+    <!-- col -->
+    <div class="card-container col-lg-4 col-sm-6 col-sm-12">
+      <div class="card">
+        <div class="front bg-greensea">
+
+          <!-- row -->
+          <div class="row">
+            <!-- col -->
+            <div class="col-xs-4">
+              <i class="fa fa-users fa-4x"></i>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-8">
+              <p class="text-elg text-strong mb-0">3 659</p>
+              <span>New Users</span>
+            </div>
+            <!-- /col -->
+          </div>
+          <div class="clearfix" style="height: 14px"></div>
+          <!-- /row -->
+
+        </div>
+        <div class="back bg-greensea">
+
+          <!-- row -->
+          <div class="row">
+            <!-- col -->
+            <div class="col-xs-6">
+              <a href=javascript:;><img src="resources/images/Facebook.png" alt="fb" width="30px" height="30px">Settings</a>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-6">
+              <a href=javascript:;><img src="resources/images/Twitter.png" alt="twitter" width="30px" height="30px"> Content</a>
+            </div>
+            <!-- /col -->
+           
+          </div>
+          <!-- /row -->
+
+        </div>
+      </div>
+    </div>
+    <!-- /col -->
+
+    <!-- col -->
+    <div class="card-container col-lg-4 col-sm-6 col-sm-12">
+      <div class="card">
+        <div class="front bg-lightred">
+
+          <!-- row -->
+          <div class="row">
+            <!-- col -->
+            <div class="col-xs-4">
+              <i class="fa fa-shopping-cart fa-4x"></i>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-8">
+              <p class="text-elg text-strong mb-0">19 364</p>
+              <span>New Orders</span>
+            </div>
+            <!-- /col -->
+          </div>
+          <div class="clearfix" style="height: 14px"></div>
+          <!-- /row -->
+
+        </div>
+        <div class="back bg-lightred">
+
+          <!-- row -->
+          <div class="row">
+            <!-- col -->
+            <div class="col-xs-3">
+              <a href=javascript:;>Critical 12 cases</a>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-3">
+              <a href=javascript:;>High 34 cases</a>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-3">
+              <a href=javascript:;>Medium 40 cases</a>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-3">
+              <a href=javascript:;>Low      10 cases</a>
+            </div>
+            <!-- /col -->
+          </div>
+          <!-- /row -->
+
+        </div>
+      </div>
+    </div>
+    <!-- /col -->
+
+    <!-- col -->
+    <div class="card-container col-lg-4 col-sm-6 col-sm-12">
+      <div class="card">
+         <!-- tile -->
+      <section class="tile tile-simple bg-blue" style="min-height: 100px; overflow: hidden;">
+        <!-- tile header -->
+        <div class="tile-header">
+          <h1 class="custom-font">Critical Cases</h1>
+        
+        </div>
+        <!-- /tile header -->
+
+        <!-- tile body -->
+        <div class="tile-body">
+
+          <wrap-owlcarousel class="owl-carousel" data-options="{
+          autoPlay: 5000,
+          stopOnHover: true,
+          slideSpeed : 300,
+          paginationSpeed : 400,
+          singleItem : true}">
+
+            <div>
+              <div class="progress-list">
+                <div class="details">
+                  <div class="title"><img src="resources/images/Facebook.png" alt="fb" width="20px" height="20px"><span class="text-md">Release update</span></div>
+                  <div class="description text-transparent-white text-lowercase">high priority, started at: 12.08.2014</div>
+                </div>
+               
+              </div>
+           
+            </div>
+
+            <div>
+              <div class="progress-list">
+                <div class="details">
+                  <div class="title"><img src="resources/images/Twitter.png" alt="twitter" width="20px" height="20px"><span class="text-md">Fix navigation</span></div>
+                  <div class="description text-transparent-white text-lowercase">normal priority, started at: 20.09.2014</div>
+                </div>
+             
+              </div>
+           
+            </div>
+
+            <div>
+              <div class="progress-list">
+                <div class="details">
+                  <div class="title"><img src="resources/images/Facebook.png" alt="fb" width="20px" height="20px"><span class="text-md">Remove dependencies</span></div>
+                  <div class="description text-transparent-white text-lowercase">high priority, started at: 26.10.2014</div>
+                </div>
+              
+              </div>
+            
+            </div>
+               <div>
+              <div class="progress-list">
+                <div class="details">
+                  <div class="title"><img src="resources/images/Facebook.png" alt="fb" width="20px" height="20px"><span class="text-md">Remove dependencies</span></div>
+                  <div class="description text-transparent-white text-lowercase">high priority, started at: 26.10.2014</div>
+                </div>
+              
+              </div>
+            
+            </div>
+               <div>
+              <div class="progress-list">
+                <div class="details">
+                  <div class="title"><img src="resources/images/Twitter.png" alt="twitter" width="20px" height="20px"><span class="text-md">Remove dependencies</span></div>
+                  <div class="description text-transparent-white text-lowercase">high priority, started at: 26.10.2014</div>
+                </div>
+              
+              </div>
+            
+            </div>
+          </wrap-owlcarousel>
+        </div>
+        <!-- /tile body -->
+      </section>
+      <!-- /tile -->
+      </div>
+    </div>
+    <!-- /col -->
+  </div>
+  <!-- /row -->
+ </div>
+<!-- /tile body -->
+</section>
+<!-- /tile -->
+</div>
+<!-- /row -->
+<!-- row -->
+<div class="row">
+  <!-- col -->
+    <div class="col-md-6">
+
+      <!-- tile -->
+      <section class="tile" fullscreen="isFullscreen02">
+
+        <!-- tile header -->
+        <div class="tile-header dvd dvd-btm">
+          <h1 class="custom-font"><strong>Case </strong>Category</h1>
+        </div>
+        <!-- /tile header -->
+
+        <!-- tile widget -->
+        <div class="tile-widget">
+          <div morris-donut-chart donut-data='caseCategoryData' style="height: 250px"></div>
+        </div>
+        <!-- /tile widget -->
+
+        
+      </section>
+      <!-- /tile -->
+
+    </div>
+    <!-- /col -->
+   <!-- col -->
+    <div class="col-md-6">
+
+      <!-- tile -->
+      <section class="tile" fullscreen="isFullscreen02">
+
+        <!-- tile header -->
+        <div class="tile-header dvd dvd-btm">
+          <h1 class="custom-font"><strong>Case</strong>Priority</h1>
+        </div>
+        <!-- /tile header -->
+
+        <!-- tile widget -->
+        <div class="tile-widget">
+          <div morris-donut-chart donut-data='casePriorityData' style="height: 250px"></div>
+        </div>
+        <!-- /tile widget -->
+
+        
+      </section>
+      <!-- /tile -->
+
+    </div>
+    <!-- /col -->
+  </div>
+  <div class="row">
+     <!-- col -->
+    <div class="col-md-12">
+
+      <!-- tile -->
+      <section class="tile" fullscreen="isFullscreen01">
+
+        <!-- tile header -->
+        <div class="tile-header bg-greensea dvd dvd-btm">
+          <h1 class="custom-font"><strong>Statistics </strong>Graph</h1>
+          <ul class="controls">
+            <li >
+              <a href="javascript:;" daterangepicker="rangeOptions" date-begin="startDate" date-end="endDate">
+                <span>June 4, 2015 - July 6, 2015</span>&nbsp;&nbsp;<i class="fa fa-angle-down"></i>
+              </a>
+            </li>
+            <li class="dropdown" dropdown on-toggle="toggled(open)">
+
+              <a href dropdown-toggle class="dropdown-toggle settings"><i class="fa fa-cog"></i></a>
+
+              <ul class="dropdown-menu pull-right with-arrow animated littleFadeInUp">
+                <li>
+                  <a href tile-control-toggle>
+                    <span class="minimize"><fa name="angle-down"></fa>&nbsp;&nbsp;&nbsp;Minimize</span>
+                    <span class="expand"><fa name="angle-up"></fa>&nbsp;&nbsp;&nbsp;Expand</span>
+                  </a>
+                </li>
+                <li>
+                  <a href tile-control-refresh ng-click="ajaxFaker()">
+                    <fa name="refresh"></fa> Refresh
+                  </a>
+                </li>
+                <li>
+                  <a href tile-control-fullscreen ng-click="isFullscreen01 = !isFullscreen01">
+                    <fa name="expand"></fa> Fullscreen
+                  </a>
+                </li>
+
+              </ul>
+
+            </li>
+            <li class="remove"><a href tile-control-close><i class="fa fa-times"></i></a></li>
+          </ul>
+        </div>
+        <!-- /tile header -->
+
+        <!-- tile widget -->
+        <div class="tile-widget bg-greensea">
+           <input name="customRadio" type="radio"><i></i>Case Category
+           <input name="customRadio" type="radio"><i></i>Case Priority
+           <input name="customRadio" type="radio"><i></i>Social Channel
+          <flot dataset="dataset" options="options" height="250px"></flot>
+          
+
+        </div>
+        <!-- /tile widget -->
+
+      
+      </section>
+      <!-- /tile -->
+
+    </div>
+    <!-- /col -->
+</div>
+<!-- /page content -->
+</div>

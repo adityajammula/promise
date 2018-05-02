@@ -1,0 +1,69 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.Date;
+
+import com.google.gson.annotations.SerializedName;
+
+public class DashBoardGraphBO {
+
+	@SerializedName("period")	
+	private Integer period;
+	@SerializedName("type_count")	
+	private Long typeCount;
+	@SerializedName("periodName")	
+	private String periodName;
+	@SerializedName("period_number")	
+	private int periodNumber;
+	
+	
+	/**
+	 * @return the period
+	 */
+	public Integer getPeriod() {
+		return period;
+	}
+	/**
+	 * @param period the period to set
+	 */
+	public void setPeriod(Integer period) {
+		this.period = period;
+	}
+	/**
+	 * @return the typeCount
+	 */
+	public Long getTypeCount() {
+		return typeCount;
+	}
+	/**
+	 * @param typeCount the typeCount to set
+	 */
+	public void setTypeCount(Long typeCount) {
+		this.typeCount = typeCount;
+	}
+	/**
+	 * @return the periodName
+	 */
+	public String getPeriodName() {
+		return periodName;
+	}
+	/**
+	 * @param periodName the periodName to set
+	 */
+	public void setPeriodName(String periodName) {
+		this.periodName = periodName;
+	}
+	/**
+	 * @return the periodNumber
+	 */
+	public int getPeriodNumber() {
+		return periodNumber;
+	}
+	/**
+	 * @param periodNumber the periodNumber to set
+	 */
+	public void setPeriodNumber(int periodNumber) {
+		this.periodNumber = periodNumber;
+	}
+	
+	
+}

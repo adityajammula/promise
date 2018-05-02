@@ -1,0 +1,21 @@
+package com.zen.smi.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class RuleFamilyListBO {
+	
+	
+	@SerializedName("rule_families")
+	private List<RuleFamilyBO> ruleFamilyBO;
+
+	public List<RuleFamilyBO> getRuleFamilyBO() {
+		return ruleFamilyBO;
+	}
+
+	public void setRuleFamilyBO(List<RuleFamilyBO> ruleFamilyBO) {
+		this.ruleFamilyBO = ruleFamilyBO;
+	}
+
+}

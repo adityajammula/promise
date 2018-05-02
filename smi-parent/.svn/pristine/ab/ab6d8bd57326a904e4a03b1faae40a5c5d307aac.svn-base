@@ -1,0 +1,66 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+
+import com.zen.smi.dao.SocialDataAnalysisDAO;
+import com.zen.smi.dao.entities.SocialDataAnalysis;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class SocialDataAnalysisDAOImpl  extends BaseDAOImpl<SocialDataAnalysis, Serializable> implements SocialDataAnalysisDAO {
+
+	public SocialDataAnalysisDAOImpl() {
+		super(SocialDataAnalysis.class);
+	}
+
+	public List<SocialDataAnalysis> getScoreByAccountId(Integer profileId,Date fromDate , Date toDate) throws GenericDAOException {
+
+		Session session = null;
+		List<SocialDataAnalysis> socialDataAnalysisList = null;
+		
+		try{
+			Map<String, Object> parameterNameAndValues = new HashMap<String, Object>();		
+			parameterNameAndValues.put("startDate", fromDate);
+			parameterNameAndValues.put("endDate", toDate);
+        	session = getSessionFactory().openSession();
+    		String hqlQuery = "FROM SocialDataAnalysis WHERE socialProfiles="+profileId+" and createdDate BETWEEN :startDate AND :endDate";
+        	 Query query = session.createQuery(hqlQuery);
+        	 for (Entry<String, Object> e : parameterNameAndValues.entrySet()) {
+        		 query.setParameter(e.getKey(), e.getValue());
+        	 }
+    		
+        	 socialDataAnalysisList =  query.list();
+		
+			
+		}
+        catch (HibernateException ex){
+            if(session!=null && session.getTransaction()!=null){
+                session.getTransaction().rollback();
+            }
+            throw ex;
+        }
+        finally {
+            if(session!=null){
+                session.close();
+            }
+        }
+        
+		return socialDataAnalysisList; 
+	}
+	
+  
+	
+	private Date getPreviousWeekDate(){
+	     return new Date(System.currentTimeMillis()-7*24*60*60*1000);
+	}
+	
+
+}

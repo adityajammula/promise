@@ -1,0 +1,248 @@
+package com.zen.smi.socialtransaction.service.helper;
+
+import static com.zen.smi.generic.utils.SmiConstants.CMFCUSTOMER_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.SOCIALMEDIAACCOUNTS_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.SOCIALPROFILES_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.SOCIAL_TRANSACTIONCATEGORY_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.SOCIAL_TRANSACTIONSTATUS_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.STCASE_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.STTRANSACTIONCASEHISTORY_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.CUSTOMER_ACCOUNTS;
+import static com.zen.smi.generic.utils.SmiConstants.FTCASE_PROPERTIES;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.cmf.bo.CmfCustomerAccountBO;
+import com.zen.smi.cmf.bo.CmfCustomerBO;
+import com.zen.smi.cmf.bo.SocialMediaAccountsBO;
+import com.zen.smi.cmf.bo.SocialProfilesBO;
+import com.zen.smi.dao.entities.CmfCustomer;
+import com.zen.smi.dao.entities.CmfCustomerAccount;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.dao.entities.SocialProfiles;
+import com.zen.smi.dao.entities.StCase;
+import com.zen.smi.dao.entities.StCaseTransaction;
+import com.zen.smi.dao.entities.StStatus;
+import com.zen.smi.dao.entities.StTransactionCaseHistory;
+import com.zen.smi.dao.entities.StTransactionType;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+import com.zen.smi.socialtransactions.bo.StCaseBO;
+import com.zen.smi.socialtransactions.bo.StCaseTransactionBO;
+import com.zen.smi.socialtransactions.bo.StStatusBO;
+import com.zen.smi.socialtransactions.bo.StTransactionCaseHistoryBO;
+import com.zen.smi.socialtransactions.bo.StTransactionTypeBO;
+import com.zen.smi.socialtransactions.bo.TransactionCategoryBO;
+import com.zen.smi.socialtransactions.bo.TransactionStatusBO;
+
+public final class SocialTransactionHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for StaffHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(SocialTransactionHelper .class);
+
+	/**
+	 * Instance of StaffHelper.
+	 */
+	private static SocialTransactionHelper  instance;
+
+	/**
+	 * Private constructor
+	 */
+	private SocialTransactionHelper() {
+
+	}
+	
+	/**
+	 * Singleton instance of StaffHelper.
+	 *
+	 * @return instance StaffHelper
+	 */
+	public static SocialTransactionHelper getInstance() {
+		if (instance == null) {
+			instance = new SocialTransactionHelper();
+		}
+		return instance;
+	}
+
+	public List<TransactionCategoryBO> convertTransactionCategoryEntityToBO(
+			List<StTransactionType> transactionCategoryList) {
+		LOGGER.debug("Starts convertTransactionCategoryEntityToBO...");
+		List<TransactionCategoryBO> transactionCategoryBOList = new ArrayList<TransactionCategoryBO>();
+		for(StTransactionType stTransactionType:transactionCategoryList)
+		{	
+			TransactionCategoryBO transactionCategoryBO = convertTransactionCategoryToBO(stTransactionType);
+			transactionCategoryBOList.add(transactionCategoryBO);
+		}
+
+		LOGGER.debug("Ends convertTransactionCategoryEntityToBO...");
+		return transactionCategoryBOList;
+	}
+
+	public List<TransactionStatusBO> convertStStatusEntityToBO(
+			List<StStatus> transactionStatusList) {
+		LOGGER.debug("Starts convertStStatusEntityToBO...");
+		List<TransactionStatusBO> transactionStatusBOList = new ArrayList<TransactionStatusBO>();
+		for(StStatus transactionStatus:transactionStatusList)
+		{	
+			TransactionStatusBO transactionStatusBO = convertTransactionStatusToBO(transactionStatus);
+			transactionStatusBOList.add(transactionStatusBO);
+		}
+
+		LOGGER.debug("Ends convertStStatusEntityToBO...");
+		return transactionStatusBOList;
+	}
+
+	private TransactionStatusBO convertTransactionStatusToBO(
+			StStatus transactionStatus) {
+		TransactionStatusBO transactionStatusBO = new TransactionStatusBO();
+        BeanCopyUtil.copyBeanProperties(transactionStatus, transactionStatusBO, SOCIAL_TRANSACTIONSTATUS_PROPERTIES);
+        return transactionStatusBO;
+	}
+
+	private TransactionCategoryBO convertTransactionCategoryToBO(
+			StTransactionType stTransactionType) {
+		TransactionCategoryBO transactionCategoryBO = new TransactionCategoryBO();
+        BeanCopyUtil.copyBeanProperties(stTransactionType, transactionCategoryBO, SOCIAL_TRANSACTIONCATEGORY_PROPERTIES);
+        return transactionCategoryBO;
+	}
+
+	public List<StCaseBO> convertStCaseEntityToBO(List<StCase> stCasesList) {
+		LOGGER.debug("Starts convertStCaseEntityToBO...");
+		List<StCaseBO> stCaseBOList = new ArrayList<StCaseBO>();
+		for(StCase stCase:stCasesList)
+		{	
+			StCaseBO stCaseBO = convertStCaseEntiryToCmfCaseBO(stCase);
+			
+			stCaseBOList.add(stCaseBO);
+		}
+
+		LOGGER.debug("Ends convertStCaseEntityToBO...");
+		return stCaseBOList;
+	}
+
+	public StCaseBO convertStCaseEntiryToCmfCaseBO(StCase stCase) {
+		StCaseBO stCaseBO = new StCaseBO();
+        BeanCopyUtil.copyBeanProperties(stCase, stCaseBO, STCASE_PROPERTIES);
+        SocialProfiles socialProfiles = stCase.getSocialProfiles();
+        SocialProfilesBO socialProfilesBO = new SocialProfilesBO();
+        BeanCopyUtil.copyBeanProperties(socialProfiles, socialProfilesBO, SOCIALPROFILES_PROPERTIES);
+        StStatusBO stStatusBO = new StStatusBO();
+        BeanCopyUtil.copyBeanProperties(stCase.getStStatus(), stStatusBO, SOCIAL_TRANSACTIONSTATUS_PROPERTIES);
+        stCaseBO.setStStatusBO(stStatusBO);
+        stCaseBO.setSocialProfilesBO(socialProfilesBO);
+        CmfCustomer cmfCustomer  = stCase.getCmfCustomerByStCustomerId();
+        if(null != cmfCustomer) {
+			CmfCustomerBO cmfCustomerBO  = new CmfCustomerBO();
+			BeanCopyUtil.copyBeanProperties(cmfCustomer, cmfCustomerBO, CMFCUSTOMER_PROPERTIES);
+			Set<CmfCustomerAccount> customerAccounts = cmfCustomer.getCmfCustomerAccounts();
+			for (CmfCustomerAccount cmfCustomerAccount : customerAccounts) {
+				CmfCustomerAccountBO cmfCustomerAccountBO  = new CmfCustomerAccountBO();
+				BeanCopyUtil.copyBeanProperties(cmfCustomerAccount, cmfCustomerAccountBO, CUSTOMER_ACCOUNTS);
+				cmfCustomerBO.getCmfCustomerAccountsBO().add(cmfCustomerAccountBO);
+			}
+			stCaseBO.setCmfCustomerBO(cmfCustomerBO);
+		}
+ 		
+		CmfCustomer cmfCustomerByStBeneficiary  = stCase.getCmfCustomerByStBeneficiaryId();
+		if(null != cmfCustomerByStBeneficiary) {
+			CmfCustomerBO cmfCustomerByStBeneficiaryBO  = new CmfCustomerBO();
+			BeanCopyUtil.copyBeanProperties(cmfCustomerByStBeneficiary, cmfCustomerByStBeneficiaryBO, CMFCUSTOMER_PROPERTIES);
+			Set<CmfCustomerAccount> beneficiary = cmfCustomerByStBeneficiary.getCmfCustomerAccounts();
+			for (CmfCustomerAccount cmfCustomerAccount : beneficiary) {
+				CmfCustomerAccountBO cmfCustomerAccountBO  = new CmfCustomerAccountBO();
+				BeanCopyUtil.copyBeanProperties(cmfCustomerAccount, cmfCustomerAccountBO, CUSTOMER_ACCOUNTS);
+				cmfCustomerByStBeneficiaryBO.getCmfCustomerAccountsBO().add(cmfCustomerAccountBO);
+			}
+			stCaseBO.setCmfCustomerByStBeneficiaryBO(cmfCustomerByStBeneficiaryBO);
+		}
+		SocialMediaAccounts socialMediaAccounts  = stCase.getSocialMediaAccounts();
+		SocialMediaAccountsBO socialMediaAccountsBO  = new SocialMediaAccountsBO();
+		BeanCopyUtil.copyBeanProperties(socialMediaAccounts, socialMediaAccountsBO, SOCIALMEDIAACCOUNTS_PROPERTIES);
+		stCaseBO.setSocialMediaAccountsBO(socialMediaAccountsBO);
+		
+		StTransactionType stTransactionType  = stCase.getStTransactionType();
+		StTransactionTypeBO stTransactionTypeBO  = new StTransactionTypeBO();
+		BeanCopyUtil.copyBeanProperties(stTransactionType, stTransactionTypeBO, SOCIAL_TRANSACTIONCATEGORY_PROPERTIES);
+		stCaseBO.setStTransactionTypeBO(stTransactionTypeBO);
+		
+		Set<StTransactionCaseHistory> stTransactionCaseHistorySet = stCase.getStTransactionCaseHistories();
+		List<StTransactionCaseHistoryBO> stTransactionCaseHistoryBOList = new ArrayList<StTransactionCaseHistoryBO>(0);
+
+		for (StTransactionCaseHistory stCaseh : stTransactionCaseHistorySet) {
+			StTransactionCaseHistoryBO stTransactionCaseHistoryBO = new StTransactionCaseHistoryBO();
+            BeanCopyUtil.copyBeanProperties(stCaseh, stTransactionCaseHistoryBO, STTRANSACTIONCASEHISTORY_PROPERTIES);
+            stTransactionCaseHistoryBOList.add(stTransactionCaseHistoryBO);
+		}
+		stCaseBO.setStTransactionCaseHistoriesBOList(stTransactionCaseHistoryBOList);
+		
+		return stCaseBO;
+	}
+
+	
+	public List<StCaseTransactionBO> convertFtCaseEntityToBO(List<StCaseTransaction> ftCasesList) {
+		LOGGER.debug("Starts convertFtCaseEntityToBO...");
+		List<StCaseTransactionBO> stCaseTransactionBOList = new ArrayList<StCaseTransactionBO>();
+		for(StCaseTransaction ftCase:ftCasesList)
+		{	
+			StCaseTransactionBO stCaseBO = convertStCaseTransactionEntityToBO(ftCase);
+			
+			stCaseTransactionBOList.add(stCaseBO);
+		}
+
+		LOGGER.debug("Ends convertFtCaseEntityToBO...");
+		return stCaseTransactionBOList;
+	}
+	
+	
+	
+	public StCaseTransactionBO convertStCaseTransactionEntityToBO(StCaseTransaction ftCase) {
+		StCaseTransactionBO stCaseBO = new StCaseTransactionBO();
+        BeanCopyUtil.copyBeanProperties(ftCase, stCaseBO, FTCASE_PROPERTIES);
+        SocialProfiles socialProfiles = ftCase.getSocialProfiles();
+        SocialProfilesBO socialProfilesBO = new SocialProfilesBO();
+        BeanCopyUtil.copyBeanProperties(socialProfiles, socialProfilesBO, SOCIALPROFILES_PROPERTIES);
+        StStatusBO stStatusBO = new StStatusBO();
+        BeanCopyUtil.copyBeanProperties(ftCase.getStStatus(), stStatusBO, SOCIAL_TRANSACTIONSTATUS_PROPERTIES);
+        stCaseBO.setStStatusBO(stStatusBO);
+        stCaseBO.setSocialProfilesBO(socialProfilesBO);
+        CmfCustomer cmfCustomer  = ftCase.getCmfCustomerByStCustomerId();
+        if(null != cmfCustomer) {
+			CmfCustomerBO cmfCustomerBO  = new CmfCustomerBO();
+			BeanCopyUtil.copyBeanProperties(cmfCustomer, cmfCustomerBO, CMFCUSTOMER_PROPERTIES);
+			Set<CmfCustomerAccount> customerAccounts = cmfCustomer.getCmfCustomerAccounts();
+			for (CmfCustomerAccount cmfCustomerAccount : customerAccounts) {
+				CmfCustomerAccountBO cmfCustomerAccountBO  = new CmfCustomerAccountBO();
+				BeanCopyUtil.copyBeanProperties(cmfCustomerAccount, cmfCustomerAccountBO, CUSTOMER_ACCOUNTS);
+				cmfCustomerBO.getCmfCustomerAccountsBO().add(cmfCustomerAccountBO);
+			}
+			stCaseBO.setCmfCustomerBO(cmfCustomerBO);
+		}
+ 		
+		CmfCustomer cmfCustomerByStBeneficiary  = ftCase.getCmfCustomerByStBeneficiaryId();
+		if(null != cmfCustomerByStBeneficiary) {
+			CmfCustomerBO cmfCustomerByStBeneficiaryBO  = new CmfCustomerBO();
+			BeanCopyUtil.copyBeanProperties(cmfCustomerByStBeneficiary, cmfCustomerByStBeneficiaryBO, CMFCUSTOMER_PROPERTIES);
+			Set<CmfCustomerAccount> beneficiary = cmfCustomerByStBeneficiary.getCmfCustomerAccounts();
+			for (CmfCustomerAccount cmfCustomerAccount : beneficiary) {
+				CmfCustomerAccountBO cmfCustomerAccountBO  = new CmfCustomerAccountBO();
+				BeanCopyUtil.copyBeanProperties(cmfCustomerAccount, cmfCustomerAccountBO, CUSTOMER_ACCOUNTS);
+				cmfCustomerByStBeneficiaryBO.getCmfCustomerAccountsBO().add(cmfCustomerAccountBO);
+			}
+			stCaseBO.setCmfCustomerByStBeneficiaryBO(cmfCustomerByStBeneficiaryBO);
+		}
+		StTransactionType stTransactionType  = ftCase.getStTransactionType();
+		StTransactionTypeBO stTransactionTypeBO  = new StTransactionTypeBO();
+		BeanCopyUtil.copyBeanProperties(stTransactionType, stTransactionTypeBO, SOCIAL_TRANSACTIONCATEGORY_PROPERTIES);
+		stCaseBO.setStTransactionTypeBO(stTransactionTypeBO);
+		
+		
+		return stCaseBO;
+	}
+
+
+}

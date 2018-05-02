@@ -1,0 +1,86 @@
+package com.zen.smi.bo;
+
+import java.util.Date;
+
+import com.google.gson.annotations.SerializedName;
+
+/**
+ * This class contains Rule Formula Business data.
+ *
+ * @author Tirumala Vasu
+ */
+public class RuleTestSummaryBO {
+	
+	@SerializedName("rule_id")	
+	private Integer ruleId;
+	@SerializedName("rule_formula_name")
+	private String ruleFormulaName;
+	@SerializedName("rule_formula_expression")
+	private String ruleFormulaExpression;
+	@SerializedName("status")
+	private String status;
+	@SerializedName("text")
+	private String text;
+	
+	/**
+	 * @return the ruleId
+	 */
+	public Integer getRuleId() {
+		return ruleId;
+	}
+	/**
+	 * @param ruleId the ruleId to set
+	 */
+	public void setRuleId(Integer ruleId) {
+		this.ruleId = ruleId;
+	}
+	/**
+	 * @return the ruleFormulaName
+	 */
+	public String getRuleFormulaName() {
+		return ruleFormulaName;
+	}
+	/**
+	 * @param ruleFormulaName the ruleFormulaName to set
+	 */
+	public void setRuleFormulaName(String ruleFormulaName) {
+		this.ruleFormulaName = ruleFormulaName;
+	}
+	/**
+	 * @return the ruleFormulaExpression
+	 */
+	public String getRuleFormulaExpression() {
+		return ruleFormulaExpression;
+	}
+	/**
+	 * @param ruleFormulaExpression the ruleFormulaExpression to set
+	 */
+	public void setRuleFormulaExpression(String ruleFormulaExpression) {
+		this.ruleFormulaExpression = ruleFormulaExpression;
+	}
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	/**
+	 * @return the text
+	 */
+	public String getText() {
+		return text;
+	}
+	/**
+	 * @param text the text to set
+	 */
+	public void setText(String text) {
+		this.text = text;
+	}
+
+}

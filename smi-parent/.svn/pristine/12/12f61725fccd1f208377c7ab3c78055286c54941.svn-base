@@ -1,0 +1,28 @@
+package com.zen.smi.socialtransactions.service;
+
+import java.util.List;
+
+import com.zen.smi.cmf.exception.BusinessException;
+import com.zen.smi.socialtransactions.bo.SocialTransactionStaticDataBO;
+import com.zen.smi.socialtransactions.bo.StCaseBO;
+import com.zen.smi.socialtransactions.bo.StCaseBalanceEnquiryBO;
+import com.zen.smi.socialtransactions.bo.StCaseTransactionBO;
+
+
+
+public interface SocialTransactionCaseDataService {
+
+	
+	
+
+	SocialTransactionStaticDataBO getSTTransactionStaticData(int accountTypeId)throws BusinessException;
+
+	List<StCaseBO> getCmfCasesSearchCriteria(Integer accountTypeId,
+			Integer socialMediaAccountsId, Integer statusTypeId,
+			Integer categoryTypeId)throws BusinessException;
+	StCaseTransactionBO getStCaseDetails(String stCaseTransactionId) throws BusinessException;
+	
+	List<StCaseTransactionBO> getAllFundsTransferByTransactions(Integer accountTypeId,Integer socialMediaAccountsId,Integer statusTypeId)throws BusinessException;
+	
+	List<StCaseBalanceEnquiryBO> getAllBalanceEnquiryByTransactions(Integer accountTypeId,Integer socialMediaAccountsId,Integer statusTypeId)throws BusinessException;
+}

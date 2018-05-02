@@ -1,0 +1,258 @@
+package com.zen.smi.bo;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+
+/**
+ * This class contains Rule Business data.
+ *
+ * @author Tirumala Vasu
+ */
+public class RuleBO {
+
+	@SerializedName("rule_id")	
+	private Integer ruleId;
+	@SerializedName("rule_group")
+	private RuleGroupBO ruleGroup;
+	@SerializedName("rule_group_id")
+	private int ruleGroupId;
+	@SerializedName("rule_family_id")
+	private int ruleFamilyId;
+	@SerializedName("rule_app_id")
+	private int ruleAppId;	
+	@SerializedName("rule_name")
+	private String ruleName;
+	@SerializedName("rule_description")
+	private String ruleDescription;
+	@SerializedName("created_by")
+	private String createdBy;
+	@SerializedName("updated_by")
+	private String updatedBy;
+	@SerializedName("created_date")
+	private Date createdDate;
+	@SerializedName("updated_date")
+	private Date updatedDate;
+	@SerializedName("rule_type")
+	private String ruleType;
+	@SerializedName("clone_rule_id")
+	private Integer cloneRuleId;	
+	@Expose(serialize = false, deserialize = false)
+	private List<RuleFormulaBO> ruleFormulas = new ArrayList<RuleFormulaBO>(0);		
+	@SerializedName("rule_formulas")
+	private List<RuleFormulasBO> ruleRulesFormulas = new ArrayList<RuleFormulasBO>(0);	
+	private String message;
+	
+	public List<RuleFormulasBO> getRuleRulesFormulas() {
+		return ruleRulesFormulas;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	public void setRuleRulesFormulas(List<RuleFormulasBO> ruleRulesFormulas) {
+		this.ruleRulesFormulas = ruleRulesFormulas;
+	}
+	@SerializedName("rule_columns")
+	private List<RuleRulesColumnsBO> ruleRulesColumnses = new ArrayList<RuleRulesColumnsBO>(
+			0);
+	@SerializedName("action")
+	private String action;
+	
+
+	/**
+	 * @return the ruleId
+	 */
+	public Integer getRuleId() {
+		return ruleId;
+	}
+	/**
+	 * @param ruleId the ruleId to set
+	 */
+	public void setRuleId(Integer ruleId) {
+		this.ruleId = ruleId;
+	}
+
+	/**
+	 * @return the ruleName
+	 */
+	public String getRuleName() {
+		return ruleName;
+	}
+	/**
+	 * @param ruleName the ruleName to set
+	 */
+	public void setRuleName(String ruleName) {
+		this.ruleName = ruleName;
+	}
+	/**
+	 * @return the ruleDescription
+	 */
+	public String getRuleDescription() {
+		return ruleDescription;
+	}
+	/**
+	 * @param ruleDescription the ruleDescription to set
+	 */
+	public void setRuleDescription(String ruleDescription) {
+		this.ruleDescription = ruleDescription;
+	}
+	/**
+	 * @return the createdBy
+	 */
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	/**
+	 * @return the updatedBy
+	 */
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	/**
+	 * @param updatedBy the updatedBy to set
+	 */
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the updatedDate
+	 */
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	/**
+	 * @param updatedDate the updatedDate to set
+	 */
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	/**
+	 * @return the ruleType
+	 */
+	public String getRuleType() {
+		return ruleType;
+	}
+	/**
+	 * @param ruleType the ruleType to set
+	 */
+	public void setRuleType(String ruleType) {
+		this.ruleType = ruleType;
+	}
+	/**
+	 * @return the cloneRuleId
+	 */
+	public Integer getCloneRuleId() {
+		return cloneRuleId;
+	}
+	/**
+	 * @param cloneRuleId the cloneRuleId to set
+	 */
+	public void setCloneRuleId(Integer cloneRuleId) {
+		this.cloneRuleId = cloneRuleId;
+	}
+	/**
+	 * @return the ruleFormulas
+	 */
+	
+	/**
+	 * @return the ruleRulesColumnses
+	 */
+	public List<RuleRulesColumnsBO> getRuleRulesColumnses() {
+		return ruleRulesColumnses;
+	}
+	
+	public List<RuleFormulaBO> getRuleFormulas() {
+		return ruleFormulas;
+	}
+	public void setRuleFormulas(List<RuleFormulaBO> ruleFormulas) {
+		this.ruleFormulas = ruleFormulas;
+	}
+	/**
+	 * @param ruleRulesColumnses the ruleRulesColumnses to set
+	 */
+	public void setRuleRulesColumnses(List<RuleRulesColumnsBO> ruleRulesColumnses) {
+		this.ruleRulesColumnses = ruleRulesColumnses;
+	}
+	/**
+	 * @return the ruleGroup
+	 */
+	public RuleGroupBO getRuleGroup() {
+		return ruleGroup;
+	}
+	/**
+	 * @param ruleGroup the ruleGroup to set
+	 */
+	public void setRuleGroup(RuleGroupBO ruleGroup) {
+		this.ruleGroup = ruleGroup;
+	}
+
+	/**
+	 * @return the ruleGroupId
+	 */
+	public int getRuleGroupId() {
+		return ruleGroupId;
+	}
+	/**
+	 * @param ruleGroupId the ruleGroupId to set
+	 */
+	public void setRuleGroupId(int ruleGroupId) {
+		this.ruleGroupId = ruleGroupId;
+	}
+	/**
+	 * @return the ruleFamilyId
+	 */
+	public int getRuleFamilyId() {
+		return ruleFamilyId;
+	}
+	/**
+	 * @param ruleFamilyId the ruleFamilyId to set
+	 */
+	public void setRuleFamilyId(int ruleFamilyId) {
+		this.ruleFamilyId = ruleFamilyId;
+	}
+	/**
+	 * @return the action
+	 */
+	public String getAction() {
+		return action;
+	}
+	/**
+	 * @param action the action to set
+	 */
+	public void setAction(String action) {
+		this.action = action;
+	}
+	public int getRuleAppId() {
+		return ruleAppId;
+	}
+	public void setRuleAppId(int ruleAppId) {
+		this.ruleAppId = ruleAppId;
+	}
+
+
+}

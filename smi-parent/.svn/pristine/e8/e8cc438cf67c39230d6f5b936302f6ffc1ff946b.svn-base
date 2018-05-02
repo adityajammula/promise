@@ -1,0 +1,38 @@
+package com.zen.smi.bo;
+public class FileUploadBO {
+	private String app_id;
+	private String rule_family_id;
+	private String rule_group_id;
+	private String rule_id;
+	private String  file_upload;
+	public String getApp_id() {
+		return app_id;
+	}
+	public void setApp_id(String app_id) {
+		this.app_id = app_id;
+	}
+	public String getRule_family_id() {
+		return rule_family_id;
+	}
+	public void setRule_family_id(String rule_family_id) {
+		this.rule_family_id = rule_family_id;
+	}
+	public String getRule_group_id() {
+		return rule_group_id;
+	}
+	public void setRule_group_id(String rule_group_id) {
+		this.rule_group_id = rule_group_id;
+	}
+	public String getRule_id() {
+		return rule_id;
+	}
+	public void setRule_id(String rule_id) {
+		this.rule_id = rule_id;
+	}
+	public String getFile_upload() {
+		return file_upload;
+	}
+	public void setFile_upload(String file_upload) {
+		this.file_upload = file_upload;
+	}
+}

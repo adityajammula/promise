@@ -1,0 +1,18 @@
+package com.zen.smi.bo;
+
+import java.util.List;
+
+public class SocialMediaPostsBOList {
+	
+	private List<SocialMediaPostsBO> socialMediaPostsBOList;
+
+	public List<SocialMediaPostsBO> getSocialMediaPostsBOList() {
+		return socialMediaPostsBOList;
+	}
+
+	public void setSocialMediaPostsBOList(
+			List<SocialMediaPostsBO> socialMediaPostsBOList) {
+		this.socialMediaPostsBOList = socialMediaPostsBOList;
+	}
+
+}

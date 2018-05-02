@@ -1,0 +1,57 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+public class CmfCaseListBO {
+	
+	private List<CmfCaseBO> cmfCaseBO;
+	private List<UserBO> cmfCasesUsers;
+	List<DashBoardJSONObjectBO> dashBoardJSONObjectBOList;
+	List<CmfCaseNoteBO> cmfCaseNoteListBO;
+	
+	public List<CmfCaseBO> getCmfCaseBO() {
+		return cmfCaseBO;
+	}
+
+	public void setCmfCaseBO(List<CmfCaseBO> cmfCaseBO) {
+		this.cmfCaseBO = cmfCaseBO;
+	}
+
+	/**
+	 * @return the cmfCasesUsers
+	 */
+	public List<UserBO> getCmfCasesUsers() {
+		return cmfCasesUsers;
+	}
+
+	/**
+	 * @param cmfCasesUsers the cmfCasesUsers to set
+	 */
+	public void setCmfCasesUsers(List<UserBO> cmfCasesUsers) {
+		this.cmfCasesUsers = cmfCasesUsers;
+	}
+
+	/**
+	 * @return the cmfCaseNoteListBO
+	 */
+	public List<CmfCaseNoteBO> getCmfCaseNoteListBO() {
+		return cmfCaseNoteListBO;
+	}
+
+	/**
+	 * @param cmfCaseNoteListBO the cmfCaseNoteListBO to set
+	 */
+	public void setCmfCaseNoteListBO(List<CmfCaseNoteBO> cmfCaseNoteListBO) {
+		this.cmfCaseNoteListBO = cmfCaseNoteListBO;
+	}
+
+	public List<DashBoardJSONObjectBO> getDashBoardJSONObjectBOList() {
+		return dashBoardJSONObjectBOList;
+	}
+
+	public void setDashBoardJSONObjectBOList(
+			List<DashBoardJSONObjectBO> dashBoardJSONObjectBOList) {
+		this.dashBoardJSONObjectBOList = dashBoardJSONObjectBOList;
+	}
+
+}

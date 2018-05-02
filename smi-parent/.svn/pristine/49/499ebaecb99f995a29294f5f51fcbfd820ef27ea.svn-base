@@ -1,0 +1,97 @@
+<div class="page page-full page-mail">
+
+  <div class="tbox tbox-sm">
+
+    <!-- left side -->
+    <div class="tcol w-md bg-tr-white lt b-r">
+      <div class="p-15 bg-white" style="min-height: 61px">
+
+        <button class="btn btn-sm btn-default pull-right visible-sm visible-xs" active-toggle target="#mail-nav"><i class="fa fa-bars"></i></button>
+        <a ui-sref="app.mail.compose" class="btn btn-sm btn-lightred b-0 br-2 text-strong">Actions</a>
+
+      </div>
+      <!-- /left side header -->
+
+
+      <!-- left side body -->
+      <div class="p-15 hidden-sm hidden-xs" id="mail-nav">
+
+        <ul class="nav nav-pills nav-stacked nav-sm" id="mail-folders">
+          <li ui-sref-active="active"><a ui-sref=actions.customerinformation><img src="resources/images/Customer Information.png" alt="Customer Information" width="30px" height="30px">Customer Information</a></li>
+          <li><a href="javascript:;"><img src="resources/images/History.png" alt="History" width="30px" height="30px">History</a></li>
+          <li><a href="javascript:;"><img src="resources/images/Group Cases.png" alt="Group Cases" width="30px" height="30px">Group Case</a></li>
+          <li><a href="javascript:;"><img src="resources/images/New Case.png" alt="New Case" width="30px" height="30px">Create New Case</a></li>
+          <li><a href="javascript:;"><img src="resources/images/Assign.png" alt="Assign" width="30px" height="30px">Assign Case</a></li>
+          <li><a href="javascript:;"><div class="col-md-3 col-sm-4">
+                <i class="icon-note"></i>
+              </div>Notes</a></li>
+          <li><a href="javascript:;"><img src="resources/images/Resolve.png" alt="Resolve" width="30px" height="30px">
+              Resolve Case</a></li>
+        </ul>
+
+
+      </div>
+      <!-- /left side body -->
+
+    </div>
+    <!-- /left side -->
+
+   <!-- right side body -->
+<div>
+ <!-- mails -->
+ <ul class="list-group no-radius no-border" id="mails-list">
+  <li ng-repeat="mail in mails"
+   class="list-group-item b-{{mail.label.color}}">
+   <div class="media">
+    <div class="pull-left">
+     <div class="thumb thumb-sm">
+      <img src="{{mail.image}}" class="img-circle">
+     </div>
+    </div>
+    <div class="media-body">
+     <div class="media-heading m-0">
+      <a ui-sref="" class="mr-5">{{mail.customerName}}</a> <span
+       class="pull-right text-sm text-muted"> <span
+       class="hidden-xs">{{ mail.date }}</span>
+      </span>
+     </div>
+     <small>{{mail.content}}</small>
+    </div>
+    <div class="form-group col-md-12 ">
+     <label class="col-md-4 "><b>Case Priority :
+       {{mail.casePriority}}</b></label> <label class="col-md-4 "><b>Social
+       Account : {{mail.socialAccount}}</b></label> <label class="col-md-4 "><b>Case
+       Status : {{mail.caseStatus}}</b></label>
+    </div>
+   </div>
+  <!-- </li> -->
+  <!-- <div class="col-md-3 col-sm-4"><i class="fa fa-bank"></i> fa-bank <span class="text-muted">(alias)</span></div> -->
+  <!-- <li ng-repeat="mail in mails"
+   class="list-group-item b-{{mail.label.color}}"> -->
+   <div class="media">
+    <div class="media-body">
+     <div class="media-heading m-0">
+      <span class="text-sm text-muted pull-left"> <span
+       class="hidden-xs"> {{ mail.date }} </span>
+      </span>
+     </div>
+    </div>
+    <div class="col-md-5 col-sm-12 pull-right">
+     <small>{{mail.content}}</small>
+     <div class="col-md-12 col-sm-6"><i class="fa fa-bank pull-right"></i> fa-bank <span class="text-muted pull-right"></span></div>
+    </div>
+   </div>
+  </li>
+ </ul>
+
+</div>
+</div></div>
+    </div>
+    <!-- /right side -->
+
+  </div>
+
+
+
+</div>
+

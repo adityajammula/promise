@@ -1,0 +1,249 @@
+package com.zen.smi.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.FinancialInstitutionsBO;
+import com.zen.smi.bo.ParentBO;
+import com.zen.smi.dao.entities.FinancialInstitutions;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.dao.entities.SocialProfiles;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.FinancialInstitutionsService;
+import com.zen.smi.service.helper.SocialMediaAccountsHelper;
+
+
+public class FinancialInstitutionsServiceImpl extends BaseService implements FinancialInstitutionsService{
+
+	
+	private static final Logger LOGGER = Logger.getLogger(FinancialInstitutionsServiceImpl.class);
+	
+	
+	/**
+	 * This method is to get all details from FinancialInstitutions entity 
+	 * @author Venumadhava.Reddy
+	 * 
+	 */
+	public List<ParentBO> getAllAccountRelations() throws BusinessException {
+		LOGGER.debug("Starts getAllAccountRelations.. ");
+		List<FinancialInstitutions> institutions = null;
+		List<FinancialInstitutionsBO> institutionsBOs = new ArrayList<FinancialInstitutionsBO>();
+		FinancialInstitutionsBO financialInstitutionsBO = null;
+		try {
+			 institutions = getFinancialInstitutionsDAO().load("FROM FinancialInstitutions");
+			 for(FinancialInstitutions financialInstitution :  institutions)
+			 {
+				 financialInstitutionsBO = new FinancialInstitutionsBO();
+				 financialInstitutionsBO = SocialMediaAccountsHelper.getInstance().convertFIEntityToBO(financialInstitution);
+				 institutionsBOs.add(financialInstitutionsBO);
+			 }
+			  
+			 
+		} catch (GenericDAOException e) {
+			throw new BusinessException(e.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("End getAllAccountRelations.. ");
+		
+		return getAllChildsForRootNode(institutionsBOs);
+	}
+
+	/**
+	 * This method is to save Account relation details into FinancialInstitutions entity 
+	 * @author Venumadhava.Reddy
+	 * 
+	 */
+	public void saveAccountRelations(FinancialInstitutionsBO financialInstitutionsBO) throws BusinessException {
+		LOGGER.debug("Starts saveAccountRelations.. ");
+		FinancialInstitutions financialInstitutions = SocialMediaAccountsHelper.getInstance().convertFIBOToEntity(financialInstitutionsBO);
+		try {
+			if(financialInstitutions.getId()!=null && financialInstitutions.getParentId()==null)
+			{
+				financialInstitutions.setParentId(getFinancialInstitutionsDAO().getParentIdById(financialInstitutions.getId()));
+			}
+			getFinancialInstitutionsDAO().saveOrUpdate(financialInstitutions);
+		} catch (GenericDAOException e) {
+			throw new BusinessException(e.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("End saveAccountRelations.. ");
+	}
+
+
+	/**
+	 * Method to get list of all relation ships in tree structure
+	 * @author Venumadhava.Reddy
+	 * @param listBOs
+	 * @return list of all individual parent BOS
+	 * @throws BusinessException
+	 */
+	private List<ParentBO> getAllChildsForRootNode(List<FinancialInstitutionsBO> listBOs) throws BusinessException
+	{
+		LOGGER.debug("starts getAllChildsForRootNode.. ");
+		List<ParentBO> parentBOs = new ArrayList<ParentBO>();
+		ParentBO parentBO = null;
+		//find top most parent elements
+		 for(FinancialInstitutionsBO financialInstitutionsBO : listBOs)
+		 {
+			 List<ParentBO> parentBOsList = new ArrayList<ParentBO>();
+			 parentBO = new ParentBO();
+			 if(financialInstitutionsBO.getParentId()==null)
+			 {
+				 parentBO.setLabel((financialInstitutionsBO.getAccountOwner()));
+				 parentBO.setId(financialInstitutionsBO.getId());
+				 parentBOsList.add(returnAllNodes(parentBO));
+			 } 
+			 parentBOs.addAll(parentBOsList);
+			
+		 }
+		 LOGGER.debug("End getAllChildsForRootNode.. ");
+		return parentBOs;
+		
+	}
+	
+	 
+	/**
+	 * @author Venumadhava.Reddy
+	 * @param node
+	 * @return parentBO with all parent child relations
+	 * @throws BusinessException
+	 */
+	
+	private  ParentBO returnAllNodes(ParentBO node) throws BusinessException{
+	    List<ParentBO> listOfNodes = new ArrayList<ParentBO>();
+	   
+	    node =  addAllNodes(node, listOfNodes);	    
+		node = addFinancialInstitutionsNodes(node);
+	 
+	    return node;
+	}
+
+	
+	private ParentBO addFinancialInstitutionsNodes(ParentBO node) throws BusinessException{
+		List<SocialMediaAccounts> socialMediaAccounts = null;
+		List<ParentBO> parentBOs = new ArrayList<ParentBO>(0);
+		try {
+			socialMediaAccounts = getSocialMediaAccountsDAO().getSocialMediaAccountsByFinanceId(node.getId());
+		for(SocialMediaAccounts accounts : socialMediaAccounts)
+		{
+			ParentBO parentAccBO = new ParentBO();
+			parentAccBO.setLabel(accounts.getAccountName());
+ 			parentAccBO.setAccountType(getSocialProfileDAO().findById(accounts.getSocialProfiles().getProfileId()).getAccountType());
+			parentBOs.add(parentAccBO);
+		}
+		parentBOs.addAll(node.getChildren());
+		node.setChildren(parentBOs);
+		} catch (GenericDAOException e) {
+			throw new BusinessException(e.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+		return node;
+	}
+
+	
+	/**
+	 * 
+	 * @param node
+	 * @param listOfNodes
+	 * @return
+	 * @throws BusinessException
+	 */
+	private ParentBO addAllNodes(ParentBO node, List<ParentBO> listOfNodes) throws BusinessException {
+		 
+		if (node != null && !listOfNodes.contains(node)) {
+	        listOfNodes.add(node);
+	         List<ParentBO> children = getAccountRelationsById(node.getId());
+	        if (children != null) {
+	            for (ParentBO child: children) {
+	                addAllNodes(child, listOfNodes);
+	                child = addFinancialInstitutionsNodes(child);
+	            }
+	            node.setChildren(children);
+	        }
+	        
+	    }
+		 return node;
+	}
+	
+	
+	 
+	/**
+	 * 
+	 */
+	public List<ParentBO> getAccountRelationsById(Integer id) throws BusinessException {
+		List<FinancialInstitutions>  financialInstitutions = null;
+		try {
+			financialInstitutions =  getFinancialInstitutionsDAO().getAccountsById(id);
+		} catch (GenericDAOException e) {
+			throw new BusinessException(e.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		return getParentBOs(financialInstitutions);
+	}
+
+	/**
+	 * 
+	 * @param financialInstitutions
+	 * @return
+	 * @throws BusinessException
+	 */
+	private List<ParentBO> getParentBOs(List<FinancialInstitutions>  financialInstitutions) throws BusinessException
+	{
+		List<ParentBO> parentBOs = new ArrayList<ParentBO>();
+		for(FinancialInstitutions financialInstitution : financialInstitutions)
+		{
+			ParentBO parentBO = new ParentBO();
+			parentBO.setLabel(financialInstitution.getAccountOwner());
+			parentBO.setId((financialInstitution.getId()));
+			parentBOs.add(parentBO);
+		}
+		return parentBOs;
+	}
+
+	/**
+	 * Call this method to get all children for the parent
+	 */
+	public ParentBO getAccountRelationById(FinancialInstitutionsBO financialInstitutionsBO){
+		ParentBO parentBO = new ParentBO();
+		parentBO.setLabel(financialInstitutionsBO.getAccountOwner());
+		parentBO.setId(financialInstitutionsBO.getId());
+		try {
+			parentBO = returnAllNodes(parentBO);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+		}
+		
+		return parentBO;
+	}
+
+	/**
+	 * This method is to delete relation
+	 * @author Venumadhava.Reddy
+	 * 
+	 */
+	public void deleteRelation(FinancialInstitutionsBO financialInstitutionsBO)
+			throws BusinessException {
+		// TODO Auto-generated method stub
+		
+		FinancialInstitutions financialInstitutions = SocialMediaAccountsHelper.getInstance().convertFIBOToEntity(financialInstitutionsBO);
+		try {
+			getFinancialInstitutionsDAO().delete(financialInstitutions);
+		}  catch (GenericDAOException e) {
+			throw new BusinessException(e.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+		
+	}
+	 
+}

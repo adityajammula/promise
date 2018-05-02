@@ -1,0 +1,29 @@
+package com.zen.smi.web.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class RuleTestMessageResponse {
+
+	@SerializedName("rules_applied")
+	List<RulesMessageBO> rulesAppliedList;
+	@SerializedName("rules_not_applied")
+	List<RulesMessageBO> rulesNotAppliedList;
+	
+	public List<RulesMessageBO> getRulesAppliedList() {
+		return rulesAppliedList;
+	}
+	public void setRulesAppliedList(List<RulesMessageBO> rulesAppliedList) {
+		this.rulesAppliedList = rulesAppliedList;
+	}
+	public List<RulesMessageBO> getRulesNotAppliedList() {
+		return rulesNotAppliedList;
+	}
+	public void setRulesNotAppliedList(List<RulesMessageBO> rulesNotAppliedList) {
+		this.rulesNotAppliedList = rulesNotAppliedList;
+	}
+	
+	
+	
+}

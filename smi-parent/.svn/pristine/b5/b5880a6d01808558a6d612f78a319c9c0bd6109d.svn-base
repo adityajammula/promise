@@ -1,0 +1,12 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.entities.StStatus;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public interface StStatusDAO extends BaseDAO<StStatus, Serializable> {
+
+	public StStatus getStCaseStatusByStCase(int stCaseStatusId)
+			throws GenericDAOException;
+}

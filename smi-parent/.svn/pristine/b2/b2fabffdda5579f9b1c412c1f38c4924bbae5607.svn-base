@@ -1,0 +1,69 @@
+AppServices.factory('socialMediaAccountsServices',function($http, $q, smiGenUtil){
+	
+    return{
+    	
+    	 // Start getSocialMediaAccountsData 
+    	getSocialMediaAccountsData: function(){
+    		   	var deferred = $q.defer();
+	       		$http.get('socialMediaAccounts/list',
+	       			{headers: { 'Content-Type': 'application/json; charset=UTF-8'}})
+	       		.success(function(response, status, headers) {
+	       			//alert(JSON.stringify(response));
+	            	   deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	    }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	    });
+	       	 return deferred.promise;
+	     },// end getSocialMediaAccountsData 
+	     
+	     // Start getRuleGroup 
+	     getSocialMediaAccountsByAccountType:function(account_type_id){
+		  		 var deferred = $q.defer();
+		  		 $http.get('socialMediaAccounts/'+account_type_id+'',{
+		  		 }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	     }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	     });
+		  		return deferred.promise; 
+		 },
+		 getAgents: function(rule_apps_id){
+	   		   	var deferred = $q.defer();
+		       		$http.get('flumeAgentsProcess/list/',{
+		               }).success(function(response, status, headers) {
+		       			deferred.resolve(response);
+		       			smiGenUtil.handleSuccess(response);
+		       	    }).error(function() {
+		       	    	smiGenUtil.handleError(response);
+		       	    });
+		       	 return deferred.promise;
+	     },
+	    // Start Agent 
+     	startAgent: function(agentProcessId){
+   		   	var deferred = $q.defer();
+	       		$http.get('flumeAgentsProcess/start/'+agentProcessId,{
+	               }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	    }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	    });
+	       	 return deferred.promise;
+	     },
+	     
+	     // Start getSocialMediaAccount 
+	     getSocialMediaAccounts:function(account_type_id){
+		  		 var deferred = $q.defer();
+		  		 $http.get('socialMediaAccounts/finance_institution_id/'+account_type_id+'',{
+		  		 }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	     }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	     });
+		  		return deferred.promise; 
+		 },
+     };
+});

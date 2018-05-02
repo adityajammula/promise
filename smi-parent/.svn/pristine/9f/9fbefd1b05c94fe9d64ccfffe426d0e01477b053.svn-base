@@ -1,0 +1,330 @@
+package com.zen.smi.service.impl;
+
+import com.zen.smi.dao.CmfCustomerSocialDataDAO;
+import com.zen.smi.dao.FamilyDAO;
+import com.zen.smi.dao.FinancialInstitutionsDAO;
+import com.zen.smi.dao.FlumeAgentsDAO;
+import com.zen.smi.dao.FlumeAgentsProcessDAO;
+import com.zen.smi.dao.GlobalColumnDAO;
+import com.zen.smi.dao.OtherCommentsDAO;
+import com.zen.smi.dao.ProcessesDAO;
+import com.zen.smi.dao.RolesDAO;
+import com.zen.smi.dao.RuleAppsDAO;
+import com.zen.smi.dao.RuleColumnsDAO;
+import com.zen.smi.dao.RuleFormulaDAO;
+import com.zen.smi.dao.RuleGroupDAO;
+import com.zen.smi.dao.RuleRuleColumnsDAO;
+import com.zen.smi.dao.RulesDAO;
+import com.zen.smi.dao.SocialDataAnalysisDAO;
+import com.zen.smi.dao.ScheduleJobsDAO;
+import com.zen.smi.dao.SocialDataProcessDAO;
+import com.zen.smi.dao.SocialMediaAccountPostsDAO;
+import com.zen.smi.dao.SocialMediaAccountsDAO;
+import com.zen.smi.dao.SocialMediaPostsDAO;
+import com.zen.smi.dao.SocialProfileDAO;
+import com.zen.smi.dao.UsersDAO;
+import com.zen.smi.dao.UsersRolesDAO;
+
+
+public class BaseService {
+
+	private UsersDAO userDAO;
+	private RulesDAO rulesDAO;
+	private FamilyDAO familyDAO;
+	private RuleColumnsDAO ruleColumnsDAO;
+	private RuleFormulaDAO ruleFormulaDAO;
+	private RuleGroupDAO ruleGroupDAO;
+	private RuleRuleColumnsDAO ruleRuleColumnsDAO;
+	private UsersRolesDAO usersRolesDAO;
+	private RolesDAO rolesDAO;
+	private SocialMediaAccountsDAO socialMediaAccountsDAO;
+	private SocialProfileDAO socialProfileDAO;
+	private FinancialInstitutionsDAO financialInstitutionsDAO;
+	private GlobalColumnDAO globalColumnDAO;
+	private FlumeAgentsProcessDAO flumeAgentsProcesssDAO;
+	private FlumeAgentsDAO flumeAgentsDAO;
+	private SocialDataProcessDAO socialDataProcessDAO;
+	private ProcessesDAO processesDAO;
+	private RuleAppsDAO ruleAppsDAO;
+	private CmfCustomerSocialDataDAO cmfCustomerSocialDataDAO;
+	private SocialDataAnalysisDAO socialDataAnalysisDAO;
+	private ScheduleJobsDAO scheduleJobsDAO;
+	private SocialMediaPostsDAO socialMediaPostsDAO;
+	private OtherCommentsDAO otherCommentsDAO;
+
+	public OtherCommentsDAO getOtherCommentsDAO() {
+		return otherCommentsDAO;
+	}
+
+	public void setOtherCommentsDAO(OtherCommentsDAO otherCommentsDAO) {
+		this.otherCommentsDAO = otherCommentsDAO;
+	}
+	private SocialMediaAccountPostsDAO socialMediaAccountPostsDAO;
+	
+	public SocialMediaPostsDAO getSocialMediaPostsDAO() {
+		return socialMediaPostsDAO;
+	}
+
+	public void setSocialMediaPostsDAO(SocialMediaPostsDAO socialMediaPostsDAO) {
+		this.socialMediaPostsDAO = socialMediaPostsDAO;
+	}
+
+	public CmfCustomerSocialDataDAO getCmfCustomerSocialDataDAO() {
+		return cmfCustomerSocialDataDAO;
+	}
+
+	public void setCmfCustomerSocialDataDAO(
+			CmfCustomerSocialDataDAO cmfCustomerSocialDataDAO) {
+		this.cmfCustomerSocialDataDAO = cmfCustomerSocialDataDAO;
+	}
+
+	public GlobalColumnDAO getGlobalColumnDAO() {
+		return globalColumnDAO;
+	}
+
+	public void setGlobalColumnDAO(GlobalColumnDAO globalColumnDAO) {
+		this.globalColumnDAO = globalColumnDAO;
+	}
+
+	public ProcessesDAO getProcessesDAO() {
+		return processesDAO;
+	}
+
+	public void setProcessesDAO(ProcessesDAO processesDAO) {
+		this.processesDAO = processesDAO;
+	}
+
+	public SocialMediaAccountsDAO getSocialMediaAccountsDAO() {
+		return socialMediaAccountsDAO;
+	}
+
+	public void setSocialMediaAccountsDAO(
+			SocialMediaAccountsDAO socialMediaAccountsDAO) {
+		this.socialMediaAccountsDAO = socialMediaAccountsDAO;
+	}
+
+	public FamilyDAO getFamilyDAO() {
+		return familyDAO;
+	}
+
+	public void setFamilyDAO(FamilyDAO familyDAO) {
+		this.familyDAO = familyDAO;
+	}
+
+	public RulesDAO getRulesDAO() {
+		return rulesDAO;
+	}
+
+	public void setRulesDAO(RulesDAO rulesDAO) {
+		this.rulesDAO = rulesDAO;
+	}
+
+	public UsersDAO getUserDAO() {
+		return userDAO;
+	}
+
+	public void setUserDAO(UsersDAO userDAO) {
+		this.userDAO = userDAO;
+	}
+
+	/**
+	 * @return the ruleGroupDAO
+	 */
+	public RuleGroupDAO getRuleGroupDAO() {
+		return ruleGroupDAO;
+	}
+
+	/**
+	 * @param ruleGroupDAO
+	 *            the ruleGroupDAO to set
+	 */
+	public void setRuleGroupDAO(RuleGroupDAO ruleGroupDAO) {
+		this.ruleGroupDAO = ruleGroupDAO;
+	}
+
+	/**
+	 * @return the ruleColumnsDAO
+	 */
+	public RuleColumnsDAO getRuleColumnsDAO() {
+		return ruleColumnsDAO;
+	}
+
+	/**
+	 * @param ruleColumnsDAO
+	 *            the ruleColumnsDAO to set
+	 */
+	public void setRuleColumnsDAO(RuleColumnsDAO ruleColumnsDAO) {
+		this.ruleColumnsDAO = ruleColumnsDAO;
+	}
+
+	/**
+	 * @return the ruleFormulaDAO
+	 */
+	public RuleFormulaDAO getRuleFormulaDAO() {
+		return ruleFormulaDAO;
+	}
+
+	/**
+	 * @param ruleFormulaDAO
+	 *            the ruleFormulaDAO to set
+	 */
+	public void setRuleFormulaDAO(RuleFormulaDAO ruleFormulaDAO) {
+		this.ruleFormulaDAO = ruleFormulaDAO;
+	}
+
+	/**
+	 * @return the ruleRuleColumnsDAO
+	 */
+	public RuleRuleColumnsDAO getRuleRuleColumnsDAO() {
+		return ruleRuleColumnsDAO;
+	}
+
+	/**
+	 * @param ruleRuleColumnsDAO
+	 *            the ruleRuleColumnsDAO to set
+	 */
+	public void setRuleRuleColumnsDAO(RuleRuleColumnsDAO ruleRuleColumnsDAO) {
+		this.ruleRuleColumnsDAO = ruleRuleColumnsDAO;
+	}
+
+	/**
+	 * @return the usersRolesDAO
+	 */
+	public UsersRolesDAO getUsersRolesDAO() {
+		return usersRolesDAO;
+	}
+
+	/**
+	 * @param usersRolesDAO
+	 *            the usersRolesDAO to set
+	 */
+	public void setUsersRolesDAO(UsersRolesDAO usersRolesDAO) {
+		this.usersRolesDAO = usersRolesDAO;
+	}
+
+	/**
+	 * @return the rolesDAO
+	 */
+	public RolesDAO getRolesDAO() {
+		return rolesDAO;
+	}
+
+	/**
+	 * @param rolesDAO
+	 *            the rolesDAO to set
+	 */
+	public void setRolesDAO(RolesDAO rolesDAO) {
+		this.rolesDAO = rolesDAO;
+	}
+
+	public SocialProfileDAO getSocialProfileDAO() {
+		return socialProfileDAO;
+	}
+
+	public void setSocialProfileDAO(SocialProfileDAO socialProfileDAO) {
+		this.socialProfileDAO = socialProfileDAO;
+	}
+
+	public FinancialInstitutionsDAO getFinancialInstitutionsDAO() {
+		return financialInstitutionsDAO;
+	}
+
+	public void setFinancialInstitutionsDAO(
+			FinancialInstitutionsDAO financialInstitutionsDAO) {
+		this.financialInstitutionsDAO = financialInstitutionsDAO;
+	}
+
+	/**
+	 * @return the flumeAgentsProcesssDAO
+	 */
+	public FlumeAgentsProcessDAO getFlumeAgentsProcesssDAO() {
+		return flumeAgentsProcesssDAO;
+	}
+
+	/**
+	 * @param flumeAgentsProcesssDAO
+	 *            the flumeAgentsProcesssDAO to set
+	 */
+	public void setFlumeAgentsProcesssDAO(
+			FlumeAgentsProcessDAO flumeAgentsProcesssDAO) {
+		this.flumeAgentsProcesssDAO = flumeAgentsProcesssDAO;
+	}
+
+	/**
+	 * @return the flumeAgentsDAO
+	 */
+	public FlumeAgentsDAO getFlumeAgentsDAO() {
+		return flumeAgentsDAO;
+	}
+
+	/**
+	 * @param flumeAgentsDAO
+	 *            the flumeAgentsDAO to set
+	 */
+	public void setFlumeAgentsDAO(FlumeAgentsDAO flumeAgentsDAO) {
+		this.flumeAgentsDAO = flumeAgentsDAO;
+	}
+
+	/**
+	 * @return the socialDataProcessDAO
+	 */
+	public SocialDataProcessDAO getSocialDataProcessDAO() {
+		return socialDataProcessDAO;
+	}
+
+	/**
+	 * @param socialDataProcessDAO
+	 *            the socialDataProcessDAO to set
+	 */
+	public void setSocialDataProcessDAO(
+			SocialDataProcessDAO socialDataProcessDAO) {
+		this.socialDataProcessDAO = socialDataProcessDAO;
+	}
+
+	/**
+	 * @return the ruleAppsDAO
+	 */
+	public RuleAppsDAO getRuleAppsDAO() {
+		return ruleAppsDAO;
+	}
+
+	/**
+	 * @param ruleAppsDAO the ruleAppsDAO to set
+	 */
+	public void setRuleAppsDAO(RuleAppsDAO ruleAppsDAO) {
+		this.ruleAppsDAO = ruleAppsDAO;
+	}
+
+	public SocialDataAnalysisDAO getSocialDataAnalysisDAO() {
+		return socialDataAnalysisDAO;
+	}
+
+	public void setSocialDataAnalysisDAO(SocialDataAnalysisDAO socialDataAnalysisDAO) {
+		this.socialDataAnalysisDAO = socialDataAnalysisDAO;
+	}
+
+
+	public ScheduleJobsDAO getScheduleJobsDAO() {
+		return scheduleJobsDAO;
+	}
+
+	public void setScheduleJobsDAO(ScheduleJobsDAO scheduleJobsDAO) {
+		this.scheduleJobsDAO = scheduleJobsDAO;
+	}
+
+	/**
+	 * @return the socialMediaAccountPostsDAO
+	 */
+	public SocialMediaAccountPostsDAO getSocialMediaAccountPostsDAO() {
+		return socialMediaAccountPostsDAO;
+	}
+
+	/**
+	 * @param socialMediaAccountPostsDAO the socialMediaAccountPostsDAO to set
+	 */
+	public void setSocialMediaAccountPostsDAO(
+			SocialMediaAccountPostsDAO socialMediaAccountPostsDAO) {
+		this.socialMediaAccountPostsDAO = socialMediaAccountPostsDAO;
+	}
+
+}

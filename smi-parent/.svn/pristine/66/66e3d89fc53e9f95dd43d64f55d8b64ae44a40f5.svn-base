@@ -1,0 +1,119 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+
+
+/**
+ * @author tmangalapenta
+ *
+ */
+public interface CmfCaseDAO extends BaseDAO<CmfCase, Serializable> {
+	
+	/**
+	 * Get the Total Count of All Cases from the database.
+	 * @param null
+	 * @return int
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	Long getCountOfCmfAllCases() throws GenericDAOException;
+
+	/**
+	 * Get the Total Count of Current User Cases from the database.
+	 * @param null
+	 * @return Long
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	Long getCountOfCmfCurrentUserCases(int userId) throws GenericDAOException;
+
+	/**
+	 * Get the All Open Cases by Account Type and status from the database.
+	 * @param null
+	 * @return List of CmfCase objects
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	List<CmfCase> getAllCmfOpenCasesByAccountType(int accountTypeId,int statusTypeId) throws GenericDAOException;
+	/**
+	 * Get the All Open Cases by Account Type from the database.
+	 * @param null
+	 * @return List of CmfCase objects
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	public List<CmfCase> getAllCmfOpenCasesByAccountType(int accountTypeId) throws GenericDAOException;
+	/**
+	 * Get the All Resolved Cases from the database.
+	 * @param null
+	 * @return List of CmfCase objects
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	List<CmfCase> getAllCmfResolvedCases() throws GenericDAOException;
+
+	/**
+	 * Get the All Closed Cases from the database.
+	 * @param null
+	 * @return List of CmfCase objects
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	List<CmfCase> getAllCmfClosedCases() throws GenericDAOException;
+	
+	/**
+	 * Get the All SPAM Cases from the database.
+	 * @param null
+	 * @return List of CmfCase objects
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	List<CmfCase> getAllCmfSpamCases() throws GenericDAOException;
+	
+	/**
+	 * Get the Count of Open Cases by Account Type from the database.
+	 * @param null
+	 * @return Long
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	Long getCountOfCmfOpenCasesByAccountType(int accountTypeId,int statusTypeId) throws GenericDAOException;
+
+	/**
+	 * Get the Count of Resolved Cases from the database.
+	 * @param null
+	 * @return Long
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	Long getCountOfCmfCasesByStatusType(int statusTypeId) throws GenericDAOException;
+	
+	/**
+	 * Get the All Critical Cases from the database.
+	 * @param null
+	 * @return List of CmfCase objects
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	List<CmfCase> getAllCmfCriticalCases() throws GenericDAOException;
+
+	Long getCountOfCmfCurrentUserCasesByPriority(int userId, int priority)throws GenericDAOException;
+
+	List<CmfCase> getAllCmfOpenCasesByCategory(int categoryId)throws GenericDAOException;
+
+	List<CmfCase> getAllCmfOpenCasesByPriority(int priorityTypeId)throws GenericDAOException;
+
+	Long getCountOfCmfCasesByCategoryType(Integer categoryId)throws GenericDAOException;
+	public List<CmfCase> getAllCmfOpenCasesByFinancialInstitutionsType(int financialInstitutionTypeId) throws GenericDAOException;
+	
+	List<CmfCase> getAllCmfOpenCasesByCriteria(Integer priorityTypeId,Integer categoryId,Integer socialMediaAccountsId,int statusTypeId)
+			throws GenericDAOException;
+
+	List<CmfCase> getAllCmfCasesByCustomer(int customerId)throws GenericDAOException;
+}

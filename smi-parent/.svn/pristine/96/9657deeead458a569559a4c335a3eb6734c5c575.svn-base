@@ -1,0 +1,22 @@
+package com.zen.smi.extsys.service.impl;
+
+
+
+public class Application {
+
+    public static void main(String args[]) {
+    	String groupName="kotakbank";
+    	String intialUrl="https://graph.facebook.com/"+groupName+"/posts?access_token=CAACEdEose0cBAIbi6JXeV8bpR2jzjxpA7u1ZCcjpuG3CWoZC9jB2sVER49QiunecaFM5vm6b0OnguzCMJGCWsN0TFQB7IdPrtrdxps1wiXu0BhOQOuEOFuK9rI3Wos4jqgUYhPX1tGsaZABir9NVjqYiS9IQE4amZCPExwQRo9dDQu01U80WbJxpLZAZBZAJuJY7RXMG0ZCi0Lqpd9tBQ8tv";
+    	FaceBookServiceImpl fbClient = new FaceBookServiceImpl();
+    	Integer postCount = null;
+		try {
+			//postCount = fbClient.getPostData(intialUrl);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	System.out.println("postCountfinal"+postCount);
+    	 
+    }
+
+}

@@ -1,0 +1,7 @@
+
+angular.module('smiApp')
+.controller('ConfigGroupsController', function ($scope,$rootScope,$modal, $log) {
+	  
+
+
+});

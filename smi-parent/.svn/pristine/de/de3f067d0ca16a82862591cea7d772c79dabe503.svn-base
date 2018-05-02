@@ -1,0 +1,56 @@
+package com.zen.smi.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.OtherCommentsBO;
+import com.zen.smi.dao.entities.OtherComments;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.service.OtherCommentsService;
+import com.zen.smi.service.helper.CmfCustomerSocialDataHelper;
+import com.zen.smi.service.helper.OtherCommentsHelper;
+
+public class OtherCommentsServiceImpl extends BaseService implements OtherCommentsService{
+	
+	private static final Logger LOGGER = Logger.getLogger(OtherCommentsServiceImpl.class);
+
+	public List<OtherCommentsBO> getOtherCommentsBO() throws BusinessException {
+		List<OtherCommentsBO> finalBO= null;
+		try {
+			List<OtherComments> otherCommentsList= new ArrayList<OtherComments>();
+
+			List<OtherComments> objects=getOtherCommentsDAO().getAllOtherCommentsByAccountType();
+			for (OtherComments otherComments : objects) {
+				otherComments.setSocialProfiles(getSocialProfileDAO().findById(otherComments.getSocialProfiles().getProfileId()));
+				otherComments.setCmfCustomer(getCmfCustomerDAO().findById(otherComments.getCmfCustomer().getCustomerId()));
+				otherCommentsList.add(otherComments);
+			}
+			finalBO=OtherCommentsHelper.getInstance().convertOtherCommentsEntityToBO(otherCommentsList);
+
+		} catch (GenericDAOException e) {
+			throw new BusinessException(e);
+		}
+		return finalBO;
+	}
+	
+	
+	public Long getOtherCommentsBOCount() throws BusinessException {
+		
+		
+		Long count;
+		try {
+		
+
+		 count=getOtherCommentsDAO().loadWithsqlCount("select count(*) from OtherComments");
+		
+		} catch (GenericDAOException e) {
+			throw new BusinessException(e);
+		}
+		
+		return count;
+	}
+	
+}

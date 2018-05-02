@@ -1,0 +1,58 @@
+<div id="sidebar-wrap" ng-controller="NavController">
+  <accordion close-others="oneAtTime" slimscroll="{height: '100%'}">
+
+    <accordion-group is-open="status.isFirstOpen" ng-class="{'open': status.isFirstOpen, 'closed': !status.isFirstOpen}">
+      <accordion-heading>
+        Navigation <i class="fa" ng-class="{'fa-angle-up': status.isFirstOpen, 'fa-angle-down': !status.isFirstOpen}"></i>
+      </accordion-heading>
+      <ul id="navigation" nav-collapse ripple>
+        <li ui-sref-active="active"><a ui-sref="dashboard"><fa name="dashboard"></fa> <span>Dashboard</span></a></li>
+         <li ui-sref-active="active">
+          <a ui-sref="#"><fa name="fa fa-envelope-o"></fa> <span>Case Management</span></a>
+	          <ul>
+	            <li ui-sref-active="active"><a ui-sref="casemanagement" ><fa name="caret-right"></fa> Dashboard</a></li>
+	            <li ui-sref-active="active"><a ui-sref="openfacebookcases" ><fa name="caret-right"></fa> Open Facebook Cases</a></li>
+	             <li ui-sref-active="active"><a ui-sref=""><fa name="caret-right"></fa> Open Twitter Cases</a></li>
+	            <li ui-sref-active="active"><a ui-sref=""><fa name="caret-right"></fa> Resolved Cases</a></li>
+	            <li ui-sref-active="active"><a ui-sref=""><fa name="caret-right"></fa> Closed Cases</a></li>
+	            <li ui-sref-active="active"><a ui-sref=""><fa name="caret-right"></fa> Spam Cases</a></li> 
+	          </ul>
+          </li>
+        <li ui-sref-active="active">
+          <a ui-sref="#"><fa name="cog"></fa> <span>Administration</span></a>
+          <ul>
+            <li ui-sref-active="active"><a ui-sref="#"><fa name="cubes"></fa> Manage Rules</a>
+	          <ul>
+	            <li ui-sref-active="active"><a ui-sref="viewrules" data-ng-click="initializeViewRulesController()"><fa name="caret-right"></fa> View Rules</a></li>
+	            <li ui-sref-active="active"><a ui-sref="configrules"><fa name="caret-right"></fa> Rule Configuration</a></li>
+	            <li ui-sref-active="active"><a ui-sref="globalcolumns" data-ng-click="initializeViewGlobalColumnsController()"><fa name="caret-right"></fa> Global Columns</a></li>
+	            <li ui-sref-active="active"><a ui-sref="testrules" data-ng-click="initializeViewTestRulesController()"><fa name="caret-right"></fa> Test Rules</a></li>
+	          </ul>
+            </li>
+          </ul>
+          
+           <ul>
+            <li ui-sref-active="active"><a ui-sref="#"><fa name="cubes"></fa> Manage Groups</a>
+	          <ul>
+	            <li ui-sref-active="active"><a ui-sref="viewgroups"  data-ng-click="initializeViewGroupsController()"><fa name="caret-right"></fa> View Groups</a></li>
+	            <!-- <li ui-sref-active="active"><a ui-sref="actions"><fa name="caret-right"></fa>Actions</a></li> -->
+	          </ul>
+            </li>
+          </ul>
+           <ul>
+            <li ui-sref-active="active"><a ui-sref="#"><fa name="cubes"></fa> Manage Processes</a>
+	          <ul>
+	            <li ui-sref-active="active"><a ui-sref="processes" data-ng-click="initializeNewProcessController()"><fa name="caret-right"></fa> Processes</a></li>
+	          </ul>
+	          <ul>
+	            <li ui-sref-active="active"><a ui-sref="agents" data-ng-click="initializeAgentsControllerView()" ><fa name="caret-right"></fa>Agents</a></li>
+	          </ul>
+            </li>
+          </ul> 
+        </li>
+      </ul>
+
+    </accordion-group>
+
+  </accordion>
+</div>

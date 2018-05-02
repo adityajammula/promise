@@ -1,0 +1,83 @@
+package com.zen.smi.extsys.facebook.bo;
+
+import java.util.Date;
+import java.util.List;
+
+public class SocialMediaPostsBO {
+	
+	private Integer id;
+	
+	private String text;
+	private Integer channel;
+	private String imageName;
+	private Date createdDate;
+	private String extension;
+	private String createdDateString;
+	private String status;
+	private List<Account> account;
+	
+	public List<Account> getAccount() {
+		return account;
+	}
+	public void setAccount(List<Account> account) {
+		this.account = account;
+	}
+	public String getCreatedDateString() {
+		return createdDateString;
+	}
+	public void setCreatedDateString(String createdDateString) {
+		this.createdDateString = createdDateString;
+	}
+	public String getExtension() {
+		return extension;
+	}
+	public void setExtension(String extension) {
+		this.extension = extension;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
+	}
+	public Integer getChannel() {
+		return channel;
+	}
+	public void setChannel(Integer channel) {
+		this.channel = channel;
+	}
+	
+	public String getImageName() {
+		return imageName;
+	}
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	 
+
+}

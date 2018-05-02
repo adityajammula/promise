@@ -1,0 +1,39 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.StStatusDAO;
+import com.zen.smi.dao.entities.CmfCaseStatus;
+import com.zen.smi.dao.entities.StStatus;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class StStatusDAOImpl extends BaseDAOImpl<StStatus, Serializable> implements StStatusDAO {
+
+	public StStatusDAOImpl() {
+		super(StStatus.class);
+	}
+	public StStatus getStCaseStatusByStCase(int stCaseStatusId)
+			throws GenericDAOException {
+  		 List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		 expressionList.add(Restrictions.eq("stStatusId", stCaseStatusId));
+		 
+		 return searchUnique(expressionList, null);
+	}
+	
+	public StStatus getStCaseStatusByCode(String statusCode)
+			throws GenericDAOException {
+		 StStatus stStatus = null;
+		 List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		 expressionList.add(Restrictions.eq("stStatusCode", statusCode));
+
+		 stStatus = searchUnique(expressionList, null);
+		
+		 return stStatus;
+	}
+	
+}

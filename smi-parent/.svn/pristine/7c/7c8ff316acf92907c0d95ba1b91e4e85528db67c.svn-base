@@ -1,0 +1,314 @@
+AppServices.factory('rulesServices',function($http, $q, smiGenUtil){
+	
+    return{
+    	
+    	// Start getRuleFamilysByAppId 
+    	getRuleFamilysByAppId: function(rule_apps_id){
+   		   	var deferred = $q.defer();
+	       		$http.get('rules/families/list/'+rule_apps_id,{
+	               }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	    }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	    });
+	       	 return deferred.promise;
+	     },// end getRuleFamilysByAppId 
+    	
+     // Start getAppsListData 
+   	 getAppsListData: function(){
+   		   	var deferred = $q.defer();
+	       		$http.get('rules/appslist',{
+	               }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	    }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	    });
+	       	 return deferred.promise;
+	     },// end getAppsListData 
+    	
+    	 // Start getRules 
+    	 getRulesPageData: function(app_Id){
+    		   	var deferred = $q.defer();
+	       		$http.get('rules/list/'+app_Id,{
+	               }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	    }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	    });
+	       	 return deferred.promise;
+	     },// end getRules 
+	      	 
+	     // Start getRules 
+		 getRuleDataById:function(id){
+		      		 var deferred = $q.defer();
+		      		 $http.get('rules/'+id,{
+		      		}).success(function(response, status, headers) {
+		       			deferred.resolve(response);
+		       			smiGenUtil.handleSuccess(response);
+		       	    }).error(function() {
+		       	    	smiGenUtil.handleError(response);
+		       	    });
+		      		return deferred.promise; 
+		      	 },
+	     // end getRules
+		 
+		 // Start getRuleGroup 
+	     groupDetails:function(family_id){
+		  		 var deferred = $q.defer();
+		  		 $http.get('rules/groups/fetch_by_family_id/'+family_id+'',{
+		  		 }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	     }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	     });
+		  		return deferred.promise; 
+		 },
+		 // end getRules 
+		 
+		   //Starts Test Rule
+	 	 testRule: function(requestData){
+ 	 		var deferred = $q.defer();
+ 	 		$http.post('rules/validate_by_id',  JSON.stringify(requestData),
+ 			{headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+ 			deferred.resolve(response);
+ 		 	smiGenUtil.handleSuccess(response);
+ 	 		}).error(function(response) {
+ 	 		 	smiGenUtil.handleError(response);
+ 	 		});
+ 	 		 return deferred.promise;
+ 	 	},// End Test Rule 
+ 	 	 testRuleEdit: function(requestData){
+  	 		var deferred = $q.defer();
+  	 		$http.post('rules/validate',  JSON.stringify(requestData),
+  			{headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+  			deferred.resolve(response);
+  		 	smiGenUtil.handleSuccess(response);
+  	 		}).error(function(response) {
+  	 		 	smiGenUtil.handleError(response);
+  	 		});
+  	 		 return deferred.promise;
+  	 	},//
+		 // Start getRulesByGroup 
+	     rulesByGroupId:function(group_id){
+		  		 var deferred = $q.defer();
+		  		 $http.get('rules/bygroupid/'+group_id+'',{
+		  		 }).success(function(response, status, headers) {
+	       			deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	     }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	     });
+		  		return deferred.promise; 
+		 },
+		 // end getRulesByGroup  
+		 
+		 // Start getRules 
+		 getFamilyDetails: function(){
+		     	var deferred = $q.defer();
+		   		$http.get('rules/families/list',{
+		       	}).success(function(response, status, headers) {
+		   		   deferred.resolve(response);
+		   		   smiGenUtil.handleSuccess(response);
+		   	    }).error(function() {
+		           smiGenUtil.handleError(response);
+			    });
+		 	   return deferred.promise;
+		 },// end getRules 
+		 	      	 
+		 // StartsaveFamily 
+		 saveFamily: function(requestData){
+		 	 	var deferred = $q.defer();
+		        $http.post('rules/families/update', 
+		 	    JSON.stringify(requestData),
+		 	 	   {headers: { 'Content-Type': 'application/json; charset=UTF-8'},
+		 	 	}).success(function(response, status, headers) {
+		 	 	   deferred.resolve(response);
+		 	 	   smiGenUtil.handleSuccess(response);
+		 	 	}).error(function() {
+		 	 	smiGenUtil.handleError(response);
+		        });
+		 	    return deferred.promise;
+		 },// end saveFamily 
+		 
+		 //Start Delete Familye
+		 deleteFamily: function(requestData){
+		 	 var deferred = $q.defer();
+	 	 	 $http.post('rules/families/destroy/'+requestData.rule_family_id,{
+	 	 	 }).success(function(response, status, headers) {
+	 			deferred.resolve(response);
+	 			smiGenUtil.handleSuccess(response);
+	 		 }).error(function() {
+	 			smiGenUtil.handleError(response);
+	 		 });
+	 	 	 return deferred.promise;
+	 	 },//End DeleteFamily 
+	 	 	 	 	      	 
+	 
+		 // StartsaveGroup
+		 saveGroup: function(requestData){
+		 	 var deferred = $q.defer();
+		 	 $http.post('rules/groups/create', 
+		 	 JSON.stringify(requestData),
+		 	 {headers: { 'Content-Type': 'application/json; charset=UTF-8'},
+		 	 }).success(function(response, status, headers) {
+		 	 	deferred.resolve(response);
+		 	 	smiGenUtil.handleSuccess(response);
+		 	 }).error(function() {
+		 	 	smiGenUtil.handleError(response);
+		 	 });
+		 	 return deferred.promise;
+		 	 },// end saveFamily 
+		 	 	 	      	 
+		 	 // Start Delete Group
+		 	 deleteGroup: function(requestData){
+		 	 	 var deferred = $q.defer();
+		 	 	 $http.post('rules/groups/destroy/'+requestData.rule_group_id,{
+		 	 	 }).success(function(data, status, headers) {
+		 	 	 // alert(data);
+		 	 	 	 deferred.resolve(data);
+		 	 	 //alert(JSON.stringify(status));
+		 	 	 }).error(function() {
+		 	 	 	 deferred.reject("An error occured while fetching items");
+		 	 	 });
+		 	 	 return deferred.promise;
+		 	 },// End Delete Group 
+		 	 
+		 	 // Starts Delete Rule
+		 	 deleteRule: function(requestData){
+		 	 	 var deferred = $q.defer();
+		 	 	 $http.post('rules/destroy/'+requestData.rule_id, {
+		 	 	 }).success(function(response, status, headers) {
+		 	 		deferred.resolve(response);
+		 	 		smiGenUtil.handleSuccess(response);
+		 	 	 }).error(function() {
+		 	 		smiGenUtil.handleError(response);
+		 	 	 }); end
+		 	 		return deferred.promise;
+		 	 },//End Delete Rule 
+		 	 
+		 	 //Starts Add Rule
+		 	 addRule: function(requestData){
+	 	 		var deferred = $q.defer();
+	 	 		$http.post('rules/create',  JSON.stringify(requestData),
+	 			{headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+	 			deferred.resolve(response);
+	 		 	smiGenUtil.handleSuccess(response);
+	 	 		}).error(function(response) {
+	 	 		 	smiGenUtil.handleError(response);
+	 	 		});
+	 	 		 return deferred.promise;
+	 	 	},// End Add Rule 
+	 	 	
+	 	    //Starts Update Rule
+	 	 	updateRule: function(requestData){
+		 	 	 var deferred = $q.defer();
+		 	 	 $http.post('rules/update',  JSON.stringify(requestData),
+		 	 	 {headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+		 	 	 deferred.resolve(response);
+	 	 		 smiGenUtil.handleSuccess(response);
+		 	 	 }).error(function(response) {
+		 	 	 	 smiGenUtil.handleError(response);
+		 	 	 });
+		 	 	 return deferred.promise;
+		 	},// End Update Rule 
+	        
+		    //Start Get Global Columns 
+		 	getGlobalRuleColumns: function(){
+			     	var deferred = $q.defer();
+			   		$http.get('rules/global_columns/list',{headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+			   			deferred.resolve(response);
+			   		   smiGenUtil.handleSuccess(response);
+			   	    }).error(function() {
+			           smiGenUtil.handleError(response);
+				    });
+			 	   return deferred.promise;
+			 },//Ends Get Global Columns 
+			
+			 //Start Get Global Column Names in Dropdown
+			 getNewDropDownValues: function(){
+				   var deferred = $q.defer();
+				   $http.get('rules/global_columns_new_dropdown_values/list',{headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+				   	    deferred.resolve(response);
+				   		smiGenUtil.handleSuccess(response);
+				   	 }).error(function() {
+				        smiGenUtil.handleError(response);
+					 }); 
+				 	return deferred.promise;
+			},//Ends Get Global Column Names in Dropdown 
+			 
+			//Starts the Add New Global Column
+			 addGolbalColumn: function(requestData){
+		 	 	var deferred = $q.defer();
+		 	 	$http.post('rules/global_column/create',  JSON.stringify(requestData),
+		 		{headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+		 		deferred.resolve(respofamiliesnse);
+		 		smiGenUtil.handleSuccess(response);
+		 	 	}).error(function(response) {
+		 	 	   smiGenUtil.handleError(response);
+		 	    });
+		 	 		 return deferred.promise;
+		 	 	},// End Add New Global Column
+		 	 	
+		 	 //Starts Update Rule
+		 	 updateGolbalColumn: function(requestData){
+			 	 	 var deferred = $q.defer();
+			 	 	 $http.post('rules/global_column/update',  JSON.stringify(requestData),
+			 	 	 {headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+			 	 	 deferred.resolve(response);
+		 	 		 smiGenUtil.handleSuccess(response);
+			 	 	 }).error(function(response) {
+			 	 	 	 smiGenUtil.handleError(response);
+			 	 	 });
+			 	 	 return deferred.promise;
+			 	},// End Update Rule 
+		 	 	
+		 	// Start Get Global Column By ID 
+	        getGlobalColumnById:function(rule_Column_Id){
+				  var deferred = $q.defer();
+				  $http.get('rules/global_column/show/'+rule_Column_Id,{
+				  }).success(function(response, status, headers) {
+				     deferred.resolve(response);
+				     smiGenUtil.handleSuccess(response);
+				     }).error(function() {
+				       	smiGenUtil.handleError(response);
+				     });
+				     return deferred.promise; 
+				  },//End Get Global Column By ID
+				  
+		    // Check if rule Exist
+			checkIfRuleExists: function(group_id,rule_name){
+		    	var deferred = $q.defer();
+	       		$http.get('rules/checkIfExists/'+group_id+"/"+rule_name,{
+	               }).success(function(response, status, headers) {
+	            	deferred.resolve(response);
+	       			smiGenUtil.handleSuccess(response);
+	       	    }).error(function() {
+	       	    	smiGenUtil.handleError(response);
+	       	    });
+	       	    return deferred.promise;
+		 	},// End Get RuleName 
+		 	
+		 	//File Upload
+		 	bulkTestRule: function(requestData, fileData){
+	 	 		var deferred = $q.defer();
+	 	 		var fd = new FormData();
+	 	        fd.append('file', fileData);
+	 	       fd.append('requestJson', JSON.stringify(requestData));
+	 	 		$http.post('rules/bulk_test',  fd,
+	 	 			{headers: { 'Content-Type': undefined}
+	 	 		}).success(function(response, status, headers) {
+			 		deferred.resolve(response);
+			 		 smiGenUtil.handleSuccess(response);
+	 	 		}).error(function(response) {
+	 	 		 	smiGenUtil.handleError(response);
+	 	 		});
+	 	 		
+	 	 		return deferred.promise;
+		 	},
+	    	
+    };
+});

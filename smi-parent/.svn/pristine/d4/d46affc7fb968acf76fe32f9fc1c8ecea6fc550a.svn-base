@@ -1,0 +1,48 @@
+'use strict';
+
+/**
+ * @author Sowjanya.Pathakamuri
+ * @ngdoc function
+ * @name smiApp.controller:ViewGroupsController
+ * @description
+ * # ViewGroupsController
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('ViewGroupsController', function ($scope, $rootScope, $state, socialMediaAccountsServices) {
+	 
+	  $scope.accountsData = [];
+	  $rootScope.initializeViewGroupsController = function() {
+	  socialMediaAccountsServices.getSocialMediaAccountsData().then(function(response){
+		  
+			 if(response.data != null)
+			  {
+				  $scope.accountsData = response.data.social_media_accounts;
+				  for (var i=0;i<$scope.accountsData.length;i++) {
+					  var accountRelationShip=$scope.accountsData[i].accountRealtion;
+					  if(accountRelationShip.length>37) {
+						 var relationships = accountRelationShip.substring(0, 37) + "....";
+						 $scope.accountsData[i].accountRealtion = relationships;
+					  } 
+				  }
+			  }
+	     });
+	  };
+		 
+	//navigate to add new social accounts page
+	  $scope.addNewAccount = function() {
+		  $state.go('editgroups');
+	  };
+	  
+	  $scope.showAccount = function(account) {
+		  var params = {};
+		  if(account != null)
+		  {
+			  params.social_media_accounts_id = account.social_media_accounts_id;
+		  }
+		  $state.go('accountRelationship', params);
+	  };
+	  
+	  
+	  
+});

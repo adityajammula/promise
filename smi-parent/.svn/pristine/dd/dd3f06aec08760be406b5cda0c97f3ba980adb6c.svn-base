@@ -1,0 +1,31 @@
+.navigationDropdown  {
+	  padding: 8px 32px !important;
+}
+.casePriorityLabel {
+	display: table-cell !important;
+	padding-left: 12px;
+}
+.casePriorityImage {
+	display: table-cell !important;
+}
+.casePriorityIcons {
+	width: 33px;
+	height: 33px;
+	font-size: 21px;
+	padding: 1px 8px;
+	display: table-cell !important;
+}
+.openFbCases .tbox{
+	width: 20% !important;
+	float: left;
+}
+.caseCategoryDesc {
+	width: 74.6%;
+}
+.imageSize {
+	width: 36px;
+}
+.caseCategoryLi {
+	padding-top: 11px;
+	cursor: pointer;
+}

@@ -1,0 +1,28 @@
+package com.zen.smi.service;
+
+import java.util.List;
+
+import com.zen.smi.bo.FlumeAgentsProcessBO;
+import com.zen.smi.bo.RuleBO;
+import com.zen.smi.bo.RuleColumnsBO;
+import com.zen.smi.bo.RuleEngineBO;
+import com.zen.smi.bo.RuleFamilyBO;
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.exception.UserException;
+
+
+public interface FlumeAgentsProcessService {
+
+	/**
+	 * Get the All FlumeAgentsProcess from the database.
+	 * @param null
+	 * @return List of FlumeAgentsProcessBO objects
+	 * @throws UserException 
+	 * @author tmangalapenta
+	 */
+	List<FlumeAgentsProcessBO> getAllFlumeAgentsProcess() throws BusinessException;
+	
+	
+}

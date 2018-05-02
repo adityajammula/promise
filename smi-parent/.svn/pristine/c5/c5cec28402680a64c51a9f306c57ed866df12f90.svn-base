@@ -1,0 +1,341 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+import com.zen.smi.dao.entities.CmfCaseCategory;
+
+
+public class CmfCaseBO {
+	
+	@SerializedName("case_id")	
+	private String caseId;
+	private SocialProfilesBO socialProfilesBO;
+	private UserBO userBO;
+	private CmfCaseCategoryBO cmfCaseCategoryBO;
+	private CmfCaseStatusBO cmfCaseStatusBO;
+	private CmfCustomerBO cmfCustomerBO;
+	private CmfCasePriorityBO cmfCasePriorityBO;
+	private SocialMediaAccountsBO socialMediaAccountsBO;
+	private FinancialInstitutionsBO financialInstitutionsBO;
+	@SerializedName("description")	
+	private String description;
+	@SerializedName("create_reason")	
+	private String createReason;
+	@SerializedName("assign_reason")	
+	private String assignReason;
+	@SerializedName("reopen_reason")	
+	private String reopenReason;
+	@SerializedName("resolution_commets")	
+	private String resolutionCommets;
+	@SerializedName("group_case_id")	
+	private String groupCaseId;
+	@SerializedName("created_by")	
+	private String createdBy;
+	@SerializedName("updated_by")	
+	private String updatedBy;
+	@SerializedName("created_date")	
+	private Date createdDate;
+	@SerializedName("updated_date")	
+	private Date updatedDate;
+	private List<CmfCaseNoteBO> cmfCaseNotesBO = new ArrayList<CmfCaseNoteBO>(0);
+	@SerializedName("group_case_flag")	
+	private String groupCaseFlag;
+	@SerializedName("name")	
+	private String name;
+	private List<CmfCaseHistoryBO> cmfCaseHistoryBO = new ArrayList<CmfCaseHistoryBO>(0);
+	
+	private CmfGroupCaseList cmfGroupCaseList;
+	private CmfUnGroupCaseList cmfUnGroupCaseList;
+	private String postId;
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getGroupCaseFlag() {
+		return groupCaseFlag;
+	}
+	public void setGroupCaseFlag(String groupCaseFlag) {
+		this.groupCaseFlag = groupCaseFlag;
+	}
+	private String isGroupCase;
+	/**
+	 * @return the caseId
+	 */
+	public String getCaseId() {
+		return caseId;
+	}
+	/**
+	 * @param caseId the caseId to set
+	 */
+	public void setCaseId(String caseId) {
+		this.caseId = caseId;
+	}
+	/**
+	 * @return the socialProfilesBO
+	 */
+	public SocialProfilesBO getSocialProfilesBO() {
+		return socialProfilesBO;
+	}
+	/**
+	 * @param socialProfilesBO the socialProfilesBO to set
+	 */
+	public void setSocialProfilesBO(SocialProfilesBO socialProfilesBO) {
+		this.socialProfilesBO = socialProfilesBO;
+	}
+	
+	/**
+	 * @return the userBO
+	 */
+	public UserBO getUserBO() {
+		return userBO;
+	}
+	/**
+	 * @param userBO the userBO to set
+	 */
+	public void setUserBO(UserBO userBO) {
+		this.userBO = userBO;
+	}
+	/**
+	 * @return the cmfCaseStatusBO
+	 */
+	public CmfCaseStatusBO getCmfCaseStatusBO() {
+		return cmfCaseStatusBO;
+	}
+	/**
+	 * @param cmfCaseStatusBO the cmfCaseStatusBO to set
+	 */
+	public void setCmfCaseStatusBO(CmfCaseStatusBO cmfCaseStatusBO) {
+		this.cmfCaseStatusBO = cmfCaseStatusBO;
+	}
+	/**
+	 * @return the cmfCustomerBO
+	 */
+	public CmfCustomerBO getCmfCustomerBO() {
+		return cmfCustomerBO;
+	}
+	/**
+	 * @param cmfCustomerBO the cmfCustomerBO to set
+	 */
+	public void setCmfCustomerBO(CmfCustomerBO cmfCustomerBO) {
+		this.cmfCustomerBO = cmfCustomerBO;
+	}
+	/**
+	 * @return the cmfCasePriorityBO
+	 */
+	public CmfCasePriorityBO getCmfCasePriorityBO() {
+		return cmfCasePriorityBO;
+	}
+	/**
+	 * @param cmfCasePriorityBO the cmfCasePriorityBO to set
+	 */
+	public void setCmfCasePriorityBO(CmfCasePriorityBO cmfCasePriorityBO) {
+		this.cmfCasePriorityBO = cmfCasePriorityBO;
+	}
+	/**
+	 * @return the socialMediaAccountsBO
+	 */
+	public SocialMediaAccountsBO getSocialMediaAccountsBO() {
+		return socialMediaAccountsBO;
+	}
+	/**
+	 * @param socialMediaAccountsBO the socialMediaAccountsBO to set
+	 */
+	public void setSocialMediaAccountsBO(SocialMediaAccountsBO socialMediaAccountsBO) {
+		this.socialMediaAccountsBO = socialMediaAccountsBO;
+	}
+	/**
+	 * @return the financialInstitutionsBO
+	 */
+	public FinancialInstitutionsBO getFinancialInstitutionsBO() {
+		return financialInstitutionsBO;
+	}
+	/**
+	 * @param financialInstitutionsBO the financialInstitutionsBO to set
+	 */
+	public void setFinancialInstitutionsBO(
+			FinancialInstitutionsBO financialInstitutionsBO) {
+		this.financialInstitutionsBO = financialInstitutionsBO;
+	}
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	/**
+	 * @return the createReason
+	 */
+	public String getCreateReason() {
+		return createReason;
+	}
+	/**
+	 * @param createReason the createReason to set
+	 */
+	public void setCreateReason(String createReason) {
+		this.createReason = createReason;
+	}
+	/**
+	 * @return the assignReason
+	 */
+	public String getAssignReason() {
+		return assignReason;
+	}
+	/**
+	 * @param assignReason the assignReason to set
+	 */
+	public void setAssignReason(String assignReason) {
+		this.assignReason = assignReason;
+	}
+	/**
+	 * @return the reopenReason
+	 */
+	public String getReopenReason() {
+		return reopenReason;
+	}
+	/**
+	 * @param reopenReason the reopenReason to set
+	 */
+	public void setReopenReason(String reopenReason) {
+		this.reopenReason = reopenReason;
+	}
+	/**
+	 * @return the resolutionCommets
+	 */
+	public String getResolutionCommets() {
+		return resolutionCommets;
+	}
+	/**
+	 * @param resolutionCommets the resolutionCommets to set
+	 */
+	public void setResolutionCommets(String resolutionCommets) {
+		this.resolutionCommets = resolutionCommets;
+	}
+	/**
+	 * @return the groupCaseId
+	 */
+	public String getGroupCaseId() {
+		return groupCaseId;
+	}
+	/**
+	 * @param groupCaseId the groupCaseId to set
+	 */
+	public void setGroupCaseId(String groupCaseId) {
+		this.groupCaseId = groupCaseId;
+	}
+	/**
+	 * @return the updatedBy
+	 */
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	/**
+	 * @param updatedBy the updatedBy to set
+	 */
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the updatedDate
+	 */
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	/**
+	 * @param updatedDate the updatedDate to set
+	 */
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	/**
+	 * @return the cmfCaseNotesBO
+	 */
+	public List<CmfCaseNoteBO> getCmfCaseNotesBO() {
+		return cmfCaseNotesBO;
+	}
+	/**
+	 * @param cmfCaseNotesBO the cmfCaseNotesBO to set
+	 */
+	public void setCmfCaseNotesBO(List<CmfCaseNoteBO> cmfCaseNotesBO) {
+		this.cmfCaseNotesBO = cmfCaseNotesBO;
+	}
+	public String getIsGroupCase() {
+		return isGroupCase;
+	}
+	public void setIsGroupCase(String isGroupCase) {
+		this.isGroupCase = isGroupCase;
+	}
+	/**
+	 * @return the cmfCaseHistoryBO
+	 */
+	public List<CmfCaseHistoryBO> getCmfCaseHistoryBO() {
+		return cmfCaseHistoryBO;
+	}
+	/**
+	 * @param cmfCaseHistoryBO the cmfCaseHistoryBO to set
+	 */
+	public void setCmfCaseHistoryBO(List<CmfCaseHistoryBO> cmfCaseHistoryBO) {
+		this.cmfCaseHistoryBO = cmfCaseHistoryBO;
+	}
+	
+	public CmfCaseCategoryBO getCmfCaseCategoryBO() {
+		return cmfCaseCategoryBO;
+	}
+	public void setCmfCaseCategoryBO(CmfCaseCategoryBO cmfCaseCategoryBO) {
+		this.cmfCaseCategoryBO = cmfCaseCategoryBO;
+	}
+	public CmfGroupCaseList getCmfGroupCaseList() {
+		return cmfGroupCaseList;
+	}
+	public void setCmfGroupCaseList(CmfGroupCaseList cmfGroupCaseList) {
+		this.cmfGroupCaseList = cmfGroupCaseList;
+	}
+	public CmfUnGroupCaseList getCmfUnGroupCaseList() {
+		return cmfUnGroupCaseList;
+	}
+	public void setCmfUnGroupCaseList(CmfUnGroupCaseList cmfUnGroupCaseList) {
+		this.cmfUnGroupCaseList = cmfUnGroupCaseList;
+	}
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	/**
+	 * @return the postId
+	 */
+	public String getPostId() {
+		return postId;
+	}
+	/**
+	 * @param postId the postId to set
+	 */
+	public void setPostId(String postId) {
+		this.postId = postId;
+	}
+	
+}

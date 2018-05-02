@@ -1,0 +1,309 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCustomerAccount;
+import com.zen.smi.dao.entities.CmfCustomerSocialData;
+import com.zen.smi.dao.entities.StCase;
+import com.zen.smi.socialtransactions.bo.StCaseBO;
+
+
+public class CmfCustomerBO {
+	private int customerId;
+	private String firstName;
+	private String lastName;
+	private String middleName;
+	private String mobileNumber;
+	private String emailId;
+	private String landlineNumber;
+	private String crnNumber;
+	private String facebookId;
+	private String twitterId;
+	private String address;
+	private String alternateAddress;
+	private String demographicScore;
+	private String overallScore;
+	private String socialScore;
+	private String bankingScore;
+	private List<CmfCaseBO> cmfCasesBO = new ArrayList<CmfCaseBO>(0);
+	private List<StCaseBO> stCasesForStCustomerId = new ArrayList<StCaseBO>(0);
+	private List<StCaseBO> stCasesForStBeneficiaryId = new ArrayList<StCaseBO>(0);
+	private List<CmfCustomerAccountBO> cmfCustomerAccountsBO = new ArrayList<CmfCustomerAccountBO>(
+			0);
+	private CmfCustomerSocialDataBO cmfCustomerSocialData;
+	private String mmId;
+	
+	/**
+	 * @return the customerId
+	 */
+	public int getCustomerId() {
+		return customerId;
+	}
+	/**
+	 * @param customerId the customerId to set
+	 */
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+	/**
+	 * @return the firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+	/**
+	 * @param firstName the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+	/**
+	 * @param lastName the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	/**
+	 * @return the middleName
+	 */
+	public String getMiddleName() {
+		return middleName;
+	}
+	/**
+	 * @param middleName the middleName to set
+	 */
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
+	/**
+	 * @return the mobileNumber
+	 */
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+	/**
+	 * @param mobileNumber the mobileNumber to set
+	 */
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+	/**
+	 * @return the emailId
+	 */
+	public String getEmailId() {
+		return emailId;
+	}
+	/**
+	 * @param emailId the emailId to set
+	 */
+	public void setEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+	/**
+	 * @return the landlineNumber
+	 */
+	public String getLandlineNumber() {
+		return landlineNumber;
+	}
+	/**
+	 * @param landlineNumber the landlineNumber to set
+	 */
+	public void setLandlineNumber(String landlineNumber) {
+		this.landlineNumber = landlineNumber;
+	}
+	/**
+	 * @return the crnNumber
+	 */
+	public String getCrnNumber() {
+		return crnNumber;
+	}
+	/**
+	 * @param crnNumber the crnNumber to set
+	 */
+	public void setCrnNumber(String crnNumber) {
+		this.crnNumber = crnNumber;
+	}
+	/**
+	 * @return the facebookId
+	 */
+	public String getFacebookId() {
+		return facebookId;
+	}
+	/**
+	 * @param facebookId the facebookId to set
+	 */
+	public void setFacebookId(String facebookId) {
+		this.facebookId = facebookId;
+	}
+	/**
+	 * @return the twitterId
+	 */
+	public String getTwitterId() {
+		return twitterId;
+	}
+	/**
+	 * @param twitterId the twitterId to set
+	 */
+	public void setTwitterId(String twitterId) {
+		this.twitterId = twitterId;
+	}
+	/**
+	 * @return the address
+	 */
+	public String getAddress() {
+		return address;
+	}
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	/**
+	 * @return the alternateAddress
+	 */
+	public String getAlternateAddress() {
+		return alternateAddress;
+	}
+	/**
+	 * @param alternateAddress the alternateAddress to set
+	 */
+	public void setAlternateAddress(String alternateAddress) {
+		this.alternateAddress = alternateAddress;
+	}
+	/**
+	 * @return the demographicScore
+	 */
+	public String getDemographicScore() {
+		return demographicScore;
+	}
+	/**
+	 * @param demographicScore the demographicScore to set
+	 */
+	public void setDemographicScore(String demographicScore) {
+		this.demographicScore = demographicScore;
+	}
+	/**
+	 * @return the overallScore
+	 */
+	public String getOverallScore() {
+		return overallScore;
+	}
+	/**
+	 * @param overallScore the overallScore to set
+	 */
+	public void setOverallScore(String overallScore) {
+		this.overallScore = overallScore;
+	}
+	/**
+	 * @return the socialScore
+	 */
+	public String getSocialScore() {
+		return socialScore;
+	}
+	/**
+	 * @param socialScore the socialScore to set
+	 */
+	public void setSocialScore(String socialScore) {
+		this.socialScore = socialScore;
+	}
+	/**
+	 * @return the bankingScore
+	 */
+	public String getBankingScore() {
+		return bankingScore;
+	}
+	/**
+	 * @param bankingScore the bankingScore to set
+	 */
+	public void setBankingScore(String bankingScore) {
+		this.bankingScore = bankingScore;
+	}
+	/**
+	 * @return the cmfCasesBO
+	 */
+	public List<CmfCaseBO> getCmfCasesBO() {
+		return cmfCasesBO;
+	}
+	/**
+	 * @param cmfCasesBO the cmfCasesBO to set
+	 */
+	public void setCmfCasesBO(List<CmfCaseBO> cmfCasesBO) {
+		this.cmfCasesBO = cmfCasesBO;
+	}
+	/**
+	 * @return the stCasesForStCustomerId
+	 */
+	public List<StCaseBO> getStCasesForStCustomerId() {
+		return stCasesForStCustomerId;
+	}
+	/**
+	 * @param stCasesForStCustomerId the stCasesForStCustomerId to set
+	 */
+	public void setStCasesForStCustomerId(List<StCaseBO> stCasesForStCustomerId) {
+		this.stCasesForStCustomerId = stCasesForStCustomerId;
+	}
+	/**
+	 * @return the stCasesForStBeneficiaryId
+	 */
+	public List<StCaseBO> getStCasesForStBeneficiaryId() {
+		return stCasesForStBeneficiaryId;
+	}
+	/**
+	 * @param stCasesForStBeneficiaryId the stCasesForStBeneficiaryId to set
+	 */
+	public void setStCasesForStBeneficiaryId(
+			List<StCaseBO> stCasesForStBeneficiaryId) {
+		this.stCasesForStBeneficiaryId = stCasesForStBeneficiaryId;
+	}
+	/**
+	 * @return the cmfCustomerAccountsBO
+	 */
+	public List<CmfCustomerAccountBO> getCmfCustomerAccountsBO() {
+		return cmfCustomerAccountsBO;
+	}
+	/**
+	 * @param cmfCustomerAccountsBO the cmfCustomerAccountsBO to set
+	 */
+	public void setCmfCustomerAccountsBO(
+			List<CmfCustomerAccountBO> cmfCustomerAccountsBO) {
+		this.cmfCustomerAccountsBO = cmfCustomerAccountsBO;
+	}
+	/**
+	 * @return the cmfCustomerSocialData
+	 */
+	public CmfCustomerSocialDataBO getCmfCustomerSocialData() {
+		return cmfCustomerSocialData;
+	}
+	/**
+	 * @param cmfCustomerSocialData the cmfCustomerSocialData to set
+	 */
+	public void setCmfCustomerSocialData(
+			CmfCustomerSocialDataBO cmfCustomerSocialData) {
+		this.cmfCustomerSocialData = cmfCustomerSocialData;
+	}
+	/**
+	 * @return the mmId
+	 */
+	public String getMmId() {
+		return mmId;
+	}
+	/**
+	 * @param mmId the mmId to set
+	 */
+	public void setMmId(String mmId) {
+		this.mmId = mmId;
+	}
+	
+	
+}

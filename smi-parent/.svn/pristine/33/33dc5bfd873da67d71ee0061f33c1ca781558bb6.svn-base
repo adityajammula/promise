@@ -1,0 +1,52 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+
+
+public class CmfCaseStaticDataBO {
+	private List<CmfCaseCategoryBO> cmfCaseCategoryBOList;
+	private List<CmfCasePriorityBO> cmfCasePriorityBOList;
+	private List<SocialMediaAccountsBO> socialMediaAccountsList;
+	/**
+	 * @return the cmfCaseCategoryBOList
+	 */
+	public List<CmfCaseCategoryBO> getCmfCaseCategoryBOList() {
+		return cmfCaseCategoryBOList;
+	}
+	/**
+	 * @param cmfCaseCategoryBOList the cmfCaseCategoryBOList to set
+	 */
+	public void setCmfCaseCategoryBOList(
+			List<CmfCaseCategoryBO> cmfCaseCategoryBOList) {
+		this.cmfCaseCategoryBOList = cmfCaseCategoryBOList;
+	}
+	/**
+	 * @return the cmfCasePriorityBOList
+	 */
+	public List<CmfCasePriorityBO> getCmfCasePriorityBOList() {
+		return cmfCasePriorityBOList;
+	}
+	/**
+	 * @param cmfCasePriorityBOList the cmfCasePriorityBOList to set
+	 */
+	public void setCmfCasePriorityBOList(
+			List<CmfCasePriorityBO> cmfCasePriorityBOList) {
+		this.cmfCasePriorityBOList = cmfCasePriorityBOList;
+	}
+	/**
+	 * @return the socialMediaAccountsList
+	 */
+	public List<SocialMediaAccountsBO> getSocialMediaAccountsList() {
+		return socialMediaAccountsList;
+	}
+	/**
+	 * @param socialMediaAccountsList the socialMediaAccountsList to set
+	 */
+	public void setSocialMediaAccountsList(
+			List<SocialMediaAccountsBO> socialMediaAccountsList) {
+		this.socialMediaAccountsList = socialMediaAccountsList;
+	}
+	
+	
+}

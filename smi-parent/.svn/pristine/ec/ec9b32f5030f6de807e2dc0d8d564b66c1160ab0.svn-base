@@ -1,0 +1,34 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.CmfCaseNoteCategoriesDAO;
+import com.zen.smi.dao.CmfCaseNoteDAO;
+import com.zen.smi.dao.FlumeAgentsDAO;
+import com.zen.smi.dao.entities.CmfCaseNote;
+import com.zen.smi.dao.entities.CmfCaseNoteCategories;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfCaseNoteCategoriesDAOImpl extends BaseDAOImpl<CmfCaseNoteCategories, Serializable> implements CmfCaseNoteCategoriesDAO {
+
+	public CmfCaseNoteCategoriesDAOImpl() {
+		super(CmfCaseNoteCategories.class);
+	}
+
+	public CmfCaseNoteCategories getCmfCaseNoteCategoriesByNote(Integer noteId)
+			throws GenericDAOException {
+		 String query = "FROM CmfCaseNoteCategories as cnc LEFT JOIN FETCH  cnc.cmfCaseNotes as n WHERE n.noteId="+noteId;
+		 if(load(query).size() >0) {
+			  return load(query).get(0);
+		  }
+		  return null;
+	}
+
+}

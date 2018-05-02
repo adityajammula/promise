@@ -1,0 +1,56 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * @author khaja moinuddin
+ *
+ */
+public interface RuleGroupDAO extends BaseDAO<RuleGroup, Serializable> {
+	
+	/**
+	 * this method is to get all the RuleGroup by Family Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of RuleGroup
+	 */
+	List<RuleGroup> getGroup(int familyId) throws GenericDAOException;
+		
+	
+	 /**to save the rule group based on rule family id
+		 * @return
+		 * @throws GenericDAOException
+		 * *@Author kalyan
+		 */
+	void saveRuleGroup(RuleGroup ruleGroup) throws GenericDAOException;
+	
+	/**
+	 * this method is to get the RuleGroup by Rule Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return RuleGroup
+	 */
+	RuleGroup getRuleGroupByRuleID(int ruleId) throws GenericDAOException;
+	
+	/**
+	 * this method is to get the RuleGroup by App Id and Family Id and group Name.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return Object
+	 */
+
+    List<Object[]> getRuleGroupNameByAppIdandFamilyId(int AppId,int FamilyId ,String groupName) throws GenericDAOException ;
+	
+}

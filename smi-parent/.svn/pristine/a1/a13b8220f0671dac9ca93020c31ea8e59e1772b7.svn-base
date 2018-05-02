@@ -1,0 +1,112 @@
+'use strict';
+
+/**
+ * @author Sowjanya.Pathakamuri
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('EditGroupsController', function ($scope, $rootScope, $state,editGroupService, dialogs) {
+	 
+  $scope.accounttype =[{id:1, name:'FaceBook'},
+                       {id:2, name:'Twitter'}];
+  
+  //for getting  branchids;
+  $scope.my_tree_handler = function(branch) {
+	 $scope.treelabelid= branch.id;
+    var _ref;
+    $scope.output = "You selected: " + branch.label;
+    if ((_ref = branch.data) != null ? _ref.description : void 0) {
+      return $scope.output += '(' + branch.data.description + ')';
+    }
+  };
+  
+  $scope.my_data = [];
+  editGroupService.getSocialMediaAccountsRealtions().then(function(response){
+	 if(response.data != null)
+	  {
+		  $scope.my_data =response.data.parentBOs;
+	  }
+ });
+ $scope.onSearch = function(accountName,accountType) {	 
+	  if (accountName == null || accountName == "" || accountName == undefined){
+		  dialogs.error("ERROR","Please enter the account name",{size:'md'});	
+	    	 return false;
+		  }	  
+	  if (accountType == null || accountType == "" || accountType == undefined){
+		  dialogs.error("ERROR","Please select the account type",{size:'md'});	
+	    	 return false;
+		  }
+   var requestData = {
+	      "group_name": accountName,
+	      "group_type": accountType.name
+	};
+ 
+  $scope.groupData = [];
+  editGroupService.getFcebookData(requestData).then(function(response){
+	 if(response.data != null)
+	  {
+		  $scope.groupData =response.data.groups;
+		
+	  }
+ });
+  };
+  
+  $scope.resetData = function(){
+	  $scope.groupData=[];
+  };
+  
+  $scope.onOptions = function(groupname) {
+	  $scope.isClick=true;
+	  $scope.accountid = groupname.id;
+	  $scope.accountname= groupname.name;
+	  /*if($scope.accounttype.name.name=="FaceBook")  {
+		 $scope.likes="Likes";
+		  $scope.metaData = [];
+		  editGroupService.getFaceBookMetaData(requestData).then(function(response){
+			 if(response.data != null)
+			  {
+				  $scope.metaData =response.data;
+			  }
+		 });
+	  }
+	  if($scope.accounttype.name.name=="Twitter")  {
+		 $scope.likes="Tweets";
+	  $scope.metaData = [];
+	  editGroupService.getMetaData(requestData).then(function(response){
+		 if(response.data != null)
+		  {
+			  $scope.metaData =response.data;
+		  }
+	 });
+	  }*/
+	  
+  };
+  
+  $scope.onNext = function(accountType) {
+	  $scope.exactAccountName=true;
+  };
+  $scope.onCreate = function(accountType) {
+	 
+ var requestData = {
+		  "account_type_id": accountType.id,
+          "financial_institution_id":$scope.treelabelid,
+		  "social_media_accounts_accountname": $scope.accountname,
+          "social_media_accounts_accountId":$scope.accountid
+ };
+ if(requestData.financial_institution_id==14||requestData.financial_institution_id==18||requestData.financial_institution_id==4||requestData.financial_institution_id==8||requestData.financial_institution_id==16||requestData.financial_institution_id==37||requestData.financial_institution_id==22||requestData.financial_institution_id==11||requestData.financial_institution_id==12) {
+     dialogs.error("Please Select the folder");
+     return false;
+ }
+ editGroupService.createTree(requestData).then(function(response){
+	   /*if(response !=null && response.data !=null){ 
+	   }*/
+ });
+ 
+ };
+  
+});
+  

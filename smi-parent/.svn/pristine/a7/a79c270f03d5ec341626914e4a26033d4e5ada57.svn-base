@@ -1,0 +1,28 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.StTransactionDAO;
+import com.zen.smi.dao.entities.StTransactionType;
+
+/**
+ * @author Sowjanya.Pathakamuri
+ *
+ */
+public class StTransactionDAOImpl extends BaseDAOImpl<StTransactionType, Serializable> implements StTransactionDAO {
+
+	public StTransactionDAOImpl() {
+			super(StTransactionType.class);
+		}
+
+	
+
+	
+	 
+	
+
+
+}
+	
+
+

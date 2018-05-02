@@ -1,0 +1,75 @@
+package com.zen.smi.socialtransactions.bo;
+
+import java.util.Date;
+
+import com.zen.smi.dao.entities.StCase;
+
+public class StTransactionCaseHistoryBO {
+	private Integer stTransactionCaseHistoryId;
+	private StCase stCase;
+	private String stTransactionStatusCode;
+	private String lastUpdatedBy;
+	private Date lastUpdatedDate;
+	/**
+	 * @return the stTransactionCaseHistoryId
+	 */
+	public Integer getStTransactionCaseHistoryId() {
+		return stTransactionCaseHistoryId;
+	}
+	/**
+	 * @param stTransactionCaseHistoryId the stTransactionCaseHistoryId to set
+	 */
+	public void setStTransactionCaseHistoryId(Integer stTransactionCaseHistoryId) {
+		this.stTransactionCaseHistoryId = stTransactionCaseHistoryId;
+	}
+	/**
+	 * @return the stCase
+	 */
+	public StCase getStCase() {
+		return stCase;
+	}
+	/**
+	 * @param stCase the stCase to set
+	 */
+	public void setStCase(StCase stCase) {
+		this.stCase = stCase;
+	}
+	/**
+	 * @return the stTransactionStatusCode
+	 */
+	public String getStTransactionStatusCode() {
+		return stTransactionStatusCode;
+	}
+	/**
+	 * @param stTransactionStatusCode the stTransactionStatusCode to set
+	 */
+	public void setStTransactionStatusCode(String stTransactionStatusCode) {
+		this.stTransactionStatusCode = stTransactionStatusCode;
+	}
+	/**
+	 * @return the lastUpdatedBy
+	 */
+	public String getLastUpdatedBy() {
+		return lastUpdatedBy;
+	}
+	/**
+	 * @param lastUpdatedBy the lastUpdatedBy to set
+	 */
+	public void setLastUpdatedBy(String lastUpdatedBy) {
+		this.lastUpdatedBy = lastUpdatedBy;
+	}
+	/**
+	 * @return the lastUpdatedDate
+	 */
+	public Date getLastUpdatedDate() {
+		return lastUpdatedDate;
+	}
+	/**
+	 * @param lastUpdatedDate the lastUpdatedDate to set
+	 */
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+	
+	
+}

@@ -1,0 +1,67 @@
+var smiLoginApp = angular.module('smiLoginApp', ['ngAnimate', 'ngSanitize', 'mgcrea.ngStrap']);
+
+
+
+smiLoginApp.run([ '$templateCache', function($templateCache) {
+}]);
+smiLoginApp.config(function($modalProvider) {
+	  angular.extend($modalProvider.defaults, {
+		    container: 'body',
+		    html: true
+		  });
+		  
+		});
+smiLoginApp.controller('LoginController', function($scope,$modal, $templateCache) {
+	/*var myModal = $modal({title: 'My Title', templateUrl: 'loginModalTemplate.html', show: false});*/
+	/*var loginModal = $modal({scope: $scope, templateUrl: 'loginModalTemplate.html', show: true});
+	    $scope.showModal = function() {
+	    	loginModal.$promise.then(loginModal.show);
+	
+	    }*/
+
+	  // Controller usage example
+	  //
+	 $scope.modal = {title: 'Login', content: ' '};
+      $templateCache.put('loginModal.html', '<div class="modal" tabindex="-1" role="dialog">'
+    		  +'<div class="modal-dialog">'
+    		  +'<div class="modal-body" style="border-radius:10px; background-color:rgba(0,0,0,0.3)" ng-show="content"><div id="login-form"> <div>'
+    		  +'<ul class="form-header"><li><label for="login"><i class="fa fa-lock"></i> Social Banker<label for="login">'
+    		  +'</li></ul></div><div class="section-out"><section class="login-section"><div class="login">'
+    		  +'<form action="j_spring_security_check" method="POST"><ul class="ul-list"><li><input type="text" required class="input" placeholder="Your Username" name="j_username" data-ng-model="j_username"/>'
+    		  +'<span class="icon"><i class="fa fa-user"></i></span></li><li>'
+    		  +'<input type="password" required class="input" placeholder="Password" name="j_password"  data-ng-model="j_password"/>'
+    		  +'<span class="icon"><i class="fa fa-lock"></i></span></li><li><div class="remember">'
+    		  +'<a href="">Forget Password</a></div></li><li><input type="submit" value="SIGN IN" class="submitBtn"  data-ng-click="submitted=true">'
+    		  +'</li><li><button type="button" class="btn" ng-click="$hide()">Close</button></li></ul></form></div>'
+    		  +'</div>'
+    		  +'</div></div>');
+
+	  /*function MyModalController($scope) {
+	  
+	  }*/
+	 
+    });
+
+
+
+
+
+
+/*smiLoginApp.controller('LoginController', function ($scope, $rootScope) {
+	//$scope.test = "1234";
+	$scope.loginModel = function() {
+		   var modalInstance = $modal.open({
+		       templateUrl:'loginModel.html',
+		       controller :'LoginModelController',
+		       resolve: {
+		           items: function () {
+		        		   var obj = {};
+		        		   
+			        	   return obj;
+		           }
+		         }
+		  	 });
+	 };
+	 
+})*/
+

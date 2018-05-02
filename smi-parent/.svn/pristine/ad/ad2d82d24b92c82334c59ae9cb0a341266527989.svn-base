@@ -1,0 +1,23 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+
+public class CmfCustomerAccountListBO {
+	
+	@SerializedName("customer_Accounts_By_CustomerId")
+	private List<CmfCustomerAccountBO> cmfCustomerAccountBO;
+
+	public List<CmfCustomerAccountBO> getCmfCustomerAccountBO() {
+		return cmfCustomerAccountBO;
+	}
+
+	public void setCmfCustomerAccountBO(
+			List<CmfCustomerAccountBO> cmfCustomerAccountBO) {
+		this.cmfCustomerAccountBO = cmfCustomerAccountBO;
+	}
+
+	
+}

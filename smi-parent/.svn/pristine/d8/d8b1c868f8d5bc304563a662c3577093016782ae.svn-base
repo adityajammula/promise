@@ -1,0 +1,39 @@
+package com.zen.smi.bo;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ParentBO {
+	 private String label;
+	 private Integer id;
+	 private String accountType;
+	 private List<ParentBO> children = new ArrayList<ParentBO>();
+	 
+	 
+	public String getLabel() {
+		return label;
+	}
+	public void setLabel(String label) {
+		this.label = label;
+	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public List<ParentBO> getChildren() {
+		return children;
+	}
+	public void setChildren(List<ParentBO> children) {
+		this.children = children;
+	}
+	public String getAccountType() {
+		return accountType;
+	}
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
+	  
+	
+}

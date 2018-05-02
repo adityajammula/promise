@@ -1,0 +1,27 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.CmfCaseCategoryDAO;
+import com.zen.smi.dao.CmfCaseHistoryDAO;
+import com.zen.smi.dao.OtherCommentsDAO;
+import com.zen.smi.dao.entities.CmfCaseCategory;
+import com.zen.smi.dao.entities.CmfCaseHistory;
+import com.zen.smi.dao.entities.OtherComments;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class OtherCommentsDAOImpl extends BaseDAOImpl<OtherComments, Serializable> implements OtherCommentsDAO {
+
+	public OtherCommentsDAOImpl() {
+		super(OtherComments.class);
+	}
+
+	
+	
+	
+}

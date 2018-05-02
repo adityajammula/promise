@@ -1,0 +1,17 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('DashboardController', function ($scope, dashboardService) {
+    
+	  dashboardService.getDashboardInitData().then(function(data) {
+			
+	  });
+  
+});

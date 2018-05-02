@@ -1,0 +1,169 @@
+<div class="container-fluid">
+	<div class="row tile">
+
+		<script type="text/ng-template" id="addFamily.html">
+      <div class="modal-header">
+      <h3 class="modal-title custom-font">{{Titil}}</h3>
+      </div>
+     <div class="modal-body">
+       <table st-table="rowCollection" class="st-table table table-striped table-custom">
+         <tbody>
+            <tr>
+                <td>Enter Family Name</td>
+                <td><input type="text" class="form-control input-sm" name="firstName" value="" ng-model="familyName"></td>
+            </tr>
+         </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+         <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="ok()"><i class="fa fa-arrow-right"></i> Submit</button>
+         <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> Cancel</button>
+      </div>
+     </script>
+		<script type="text/ng-template" id="addRuleGroup.html">
+      <div  class="pagecontent">
+      <div class="modal-header">
+          <h3 class="modal-title custom-font">{{Titil}}</h3>
+          <h3 class="modal-title custom-font" align ="center">{{family.ruleFamilyName}}</h3>
+     </div>
+     <div class="modal-body">
+       <table st-table="rowCollection" class="st-table table table-striped table-custom">
+         <tbody>
+            <tr>
+                <td>Enter Group Name</td>
+                <td> <input type="text" class="form-control input-sm" name="firstName" value="" ng-model="groupName"></td>
+            </tr>
+         </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+         <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="ok()"><i class="fa fa-arrow-right"></i> Submit</button>
+         <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="cancel()"><i class="fa fa-arrow-left"></i> Cancel</button>
+      </div>
+     </div>
+     </script>
+		<!-- tile -->
+		<div class="tile-header bg-greensea dvd dvd-btm">
+			<h1 class="custom-font">
+				<strong>Family & Rule Group Configuration</strong>
+			</h1>
+		</div>
+		<div class="dvd dvd-btm col-sm-12 tile-body">
+			<div class="tile-body">
+			<div class="row">
+			  <div class="dvd dvd-btm col-sm-5 tile-body">
+           <label class="col-lg-4 text-right ">Application</label>
+		                <div class="col-lg-4">
+		                  <select class="form-control mb-10"  data-ng-model="appId" data-ng-options="rulesApps.appId as rulesApps.appName for rulesApps in appData" data-ng-change="getFamilyDetailsBasedOnAppId(appId)">
+		                  <option value="">Select</option>
+		                  </select>
+		              	</div>
+		              	</div>
+		              	</div>
+				<div class="row">
+					<div class="ruleConfigInput col-md-3">
+						<a href ng-click="addFamilyItem()">
+						  <i class="fa fa-plus"></i>
+							Add New Family</a>
+					</div>
+					<div class="ruleConfigInput col-md-3">
+						<a href ng-click="addGroupItem()"><i
+							class="fa fa-plus"></i> Add New Rule Group</a>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-3 col-md-6">
+						<div class="bg-greensea dvd dvd-btm">
+							<label colspan="3" class="tile-header">FAMILY</label>
+						</div>
+						<div class="tile-body p-0" >
+							<table st-table="copyOfFamilyData" st-safe-src="familyData"
+								class="table table-striped tableborder" >
+								<thead>
+									<tr class="st-filters">
+										<th colspan="3"><input st-search="'rule_family_name'"
+											placeholder="Search Family" class="input-sm form-control"
+											type="search" /></th>
+									</tr>
+								</thead>
+								<tbody class="table-hover bankerScroll" >
+									<tr ng-repeat="family in copyOfFamilyData" ng-class="{'selected':$index == highliteFamily}" ng-click="sethighliteFamily($index)">
+										<td ng-click="getRuleGroup(family)" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 130px; width: 130px " class="pointer">{{family.rule_family_name}}</td>
+										<td><a class="pull-right btn edit" data-nodrag
+											ng-click="editFamilyItem(family)"><i
+												class="fa fa-edit"></i></a></td>
+										<td><a class="pull-right btn remove check-toggler"
+											ng-class="{checked: user.checked}" data-nodrag
+											ng-click="removeFamily(family.rule_family_id)"></a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6">
+						<div class="bg-greensea dvd dvd-btm">
+							<label colspan="3" class="tile-header">RULEGROUP</label>
+						</div>
+						<div class="tile-body p-0" >
+							<table st-table="copyOfGroupData" st-safe-src="groupData"
+								class="table table-striped tableborder">
+								<thead>
+									<!-- <tr>
+										<th colspan="3" class="tile-header bg-greensea dvd dvd-btm">RULEGROUP</th>
+									</tr> -->
+									<tr class="st-filters">
+										<th colspan="3"><input st-search="'ruleGroupName'"
+											placeholder="Search Group" class="input-sm form-control"
+											type="search" /></th>
+									</tr>
+								</thead>
+								<tbody ng-hide="hideGroup" class="table-hover bankerScroll">
+									<tr  data-ng-repeat="group in copyOfGroupData" ng-class="{'selected':$index == highliteGroup}" ng-click="sethighliteGroup($index)">
+										<td ng-click="getRules(group)" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 130px; width: 130px" class="pointer">{{group.rule_group_name}}</td>
+										<td><a class="pull-right btn edit" data-nodrag
+											ng-click="editGroupItem(group)"><i
+												class="fa fa-edit"></i></a></td>
+										<td><a class="pull-right btn remove check-toggler"
+											ng-class="{checked: user.checked}" data-nodrag
+											ng-click="removeGroup(group.rule_group_id)"></a></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="col-lg-3 col-md-6">
+					<div class="bg-greensea dvd dvd-btm">
+							<label colspan="3" class="tile-header">RULE</label>
+						</div>
+						<div class="tile-body p-0" >
+							<table st-table="copyOfRulesData" st-safe-src="rulesData"
+								class="table table-striped tableborder">
+								<thead>
+								<!-- 	<tr>
+										<th colspan="3" class="tile-header bg-greensea dvd dvd-btm">RULE</th>
+									</tr> -->
+									<tr class="st-filters">
+										<th colspan="3"><input st-search="'ruleName'"
+											placeholder="Search Rule" class="input-sm form-control"
+											type="search" /></th>
+									</tr>
+								</thead>
+								<tbody ng-hide="hideRule" class="bankerScroll">
+									<tr data-ng-repeat="rule in copyOfRulesData">
+										<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; width: 220px" class="pointer">{{rule.rule_name}}</td>
+										<!-- <td><a class="pull-right btn edit" data-nodrag
+											ng-click="item.editing = !item.editing"><i
+												class="fa fa-edit"></i></a></td>
+										<td><a class="pull-right btn remove check-toggler"
+											ng-class="{checked: user.checked}" data-nodrag
+											ng-click="removeRule(rule.rule_id)"></a></td> -->
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

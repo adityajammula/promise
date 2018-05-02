@@ -1,0 +1,60 @@
+package com.zen.smi.extsys.facebook.bo;
+
+
+public class FBMessageBO {	
+	
+	private Long id;
+	private boolean isPublic = false;
+	private Long inReplyToMessage = new Long(-1);
+	private String messageText;
+	private String screenName;
+	private String fbAccountId;
+	private String messageId;
+	
+	public String getFbAccountId() {
+		return fbAccountId;
+	}
+	public void setFbAccountId(String fbAccountId) {
+		this.fbAccountId = fbAccountId;
+	}
+	public String getMessageId() {
+		return messageId;
+	}
+	public void setMessageId(String messageId) {
+		this.messageId = messageId;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public boolean isPublic() {
+		return isPublic;
+	}
+	public void setPublic(boolean isPublic) {
+		this.isPublic = isPublic;
+	}
+	public Long getInReplyToMessage() {
+		return inReplyToMessage;
+	}
+	public void setInReplyToMessage(Long inReplyToMessage) {
+		this.inReplyToMessage = inReplyToMessage;
+	}
+	public String getMessageText() {
+		return messageText;
+	}
+	public void setMessageText(String messageText) {
+		this.messageText = messageText;
+	}
+	public String getScreenName() {
+		return screenName;
+	}
+	public void setScreenName(String screenName) {
+		this.screenName = screenName;
+	}
+	
+	
+	
+	
+}

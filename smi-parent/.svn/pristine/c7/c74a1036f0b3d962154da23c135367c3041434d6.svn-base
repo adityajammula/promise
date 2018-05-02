@@ -1,0 +1,29 @@
+package com.zen.smi.cmf.bo;
+
+public class PostMessageBO {
+	
+	private String message;
+	private String caseId;
+	private boolean isPublic;
+	
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+	public String getCaseId() {
+		return caseId;
+	}
+	public void setCaseId(String caseId) {
+		this.caseId = caseId;
+	}
+	public boolean isPublic() {
+		return isPublic;
+	}
+	public void setPublic(boolean isPublic) {
+		this.isPublic = isPublic;
+	}
+
+}

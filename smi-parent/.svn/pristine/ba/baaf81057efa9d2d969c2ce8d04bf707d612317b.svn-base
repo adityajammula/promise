@@ -1,0 +1,22 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.StCase;
+import com.zen.smi.dao.entities.StCaseTransaction;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public interface StCaseDAO extends BaseDAO<StCase, Serializable>{
+
+	List<StCase> getAllStCasesByCriteria(Integer accountTypeId,
+			Integer socialMediaAccountsId, Integer statusTypeId,
+			Integer categoryTypeId) throws GenericDAOException;
+
+	StCase getById(String stCaseId)throws GenericDAOException;
+	
+	Long getMaxRowCount()throws GenericDAOException;
+	
+	
+
+}

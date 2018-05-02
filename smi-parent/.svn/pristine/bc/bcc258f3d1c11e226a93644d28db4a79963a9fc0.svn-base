@@ -1,0 +1,88 @@
+<div id="sidebar-wrap" ng-controller="NavController">
+	<accordion close-others="oneAtTime" slimscroll="{height: '100%'}">
+
+	<accordion-group is-open="status.isFirstOpen"
+		ng-class="{'open': status.isFirstOpen, 'closed': !status.isFirstOpen}">
+	<accordion-heading> Navigation <i class="fa"
+		ng-class="{'fa-angle-up': status.isFirstOpen, 'fa-angle-down': !status.isFirstOpen}"></i>
+	</accordion-heading>
+	<ul id="navigation" nav-collapse ripple>
+		<li ui-sref-active="active"><a ui-sref="dashboard"><fa name="dashboard"></fa><span>Dashboard</span></a></li>
+		<li ui-sref-active="active"><a ui-sref="#"><!-- <img src="resources/images/money_bag_business.png" alt= "" style="height: 23px;"> --> 
+		<i class="fa fa-credit-card"></i>
+		<span>Social Transactions</span></a>
+			<ul>
+				<li ui-sref-active="active"><a ui-sref="facebooktransactions" data-ng-click="initializeFacebookTransactionsController()">
+				                 <fa	name="caret-right"></fa>Facebook Transactions</a></li>
+				<li ui-sref-active="active"><a ui-sref="twittertransactions" data-ng-click="initializeTwitterTransactionsController()" >
+				 				 <fa name="caret-right"></fa>Twitter Transactions</a></li>
+		</ul>
+		</li>
+		<li ui-sref-active="active"><a ui-sref="#"><fa name="fa fa-envelope-o"></fa> <span>Case Management</span><span class="badge bg-lightred">{{totalCaseCount}}</span></a>
+			<ul>
+				<li ui-sref-active="active"><a ui-sref="casemanagement"	data-ng-click="initializeCmfDashboardController()">
+				                 <fa	name="caret-right"></fa>Dashboard</a></li>
+				<li ui-sref-active="active"><a ui-sref="openfacebookcases" data-ng-click="initializeOpenFacebookCasesController()" >
+				 				 <fa name="caret-right"></fa>Open Facebook Cases<span class="badge bg-lightred" ng-model="countfbcases">{{countfbcases}}</span></a></li>
+				<li ui-sref-active="active"><a ui-sref="opentwittercases"  data-ng-click="initializeOpenTwitterCasesController()">
+				                 <fa name="caret-right"></fa>Open Twitter Cases<span class="badge bg-lightred" ng-model="counttwittercases">{{counttwittercases}}</span></a></li>
+                <li ui-sref-active="active"><a ui-sref="resolvedcases" data-ng-click="initializeResolvedCasesController()"><fa name="caret-right"></fa>Resolved Cases<span class="badge bg-lightred" ng-model="countresolvedcases">{{countresolvedcases}}</span></a></li>
+                <li ui-sref-active="active"><a ui-sref="closedcases" data-ng-click="initializeClosedCasesController()"><fa name="caret-right"></fa>Closed Cases<span class="badge bg-lightred" ng-model="countclosedcases">{{countclosedcases}}</span></a></li>
+                <li ui-sref-active="active"><a ui-sref="cmfspamcases"	data-ng-click="initializespamCasesController()">
+				                 <fa	name="caret-right"></fa>Spam Cases<span class="badge bg-lightred" ng-model="countspamcases">{{countspamcases}}</span></a></li></ul>
+		</li>
+		<li ui-sref-active="active"><a ui-sref="#"><fa name="fa fa-gear"></fa>
+				<span>Administration</span></a>
+			<ul>
+				<li ui-sref-active="active"><a ui-sref="#"><fa name="cubes"></fa>
+						Manage Rules</a>
+					<ul>
+						<li ui-sref-active="active"><a ui-sref="viewrules"
+							data-ng-click="initializeViewRulesController()"><fa
+									name="caret-right"></fa> View Rules</a></li>
+						<li ui-sref-active="active"><a ui-sref="configrules"><fa
+									name="caret-right"></fa> Rule Configuration</a></li>
+						<li ui-sref-active="active"><a ui-sref="globalcolumns"
+							data-ng-click="initializeViewGlobalColumnsController()"><fa
+									name="caret-right"></fa> Global Columns</a></li>
+						<li ui-sref-active="active"><a ui-sref="testrules"
+							data-ng-click="initializeViewTestRulesController()"><fa
+									name="caret-right"></fa> Test Rules</a></li>
+					</ul></li>
+			</ul>
+
+			<ul>
+				<li ui-sref-active="active"><a ui-sref="#"><fa name="group"></fa>
+						Manage Groups</a>
+					<ul>
+						<li ui-sref-active="active"><a ui-sref="viewgroups"
+							data-ng-click="initializeViewGroupsController()"><fa
+									name="caret-right"></fa> View Groups</a></li>
+					</ul></li>
+			</ul>
+			<ul>
+				<li ui-sref-active="active"><a ui-sref="#"><fa name="share-alt"></fa>
+						Manage Processes</a>
+					<ul>
+						<li ui-sref-active="active"><a ui-sref="processes"
+							data-ng-click="initializeNewProcessController()"><fa
+									name="caret-right"></fa> Processes</a></li>
+					</ul>
+					<ul>
+						<li ui-sref-active="active"><a ui-sref="agents"
+							data-ng-click="initializeAgentsControllerView()"><fa
+									name="caret-right"></fa>Agents</a></li>
+					</ul></li>
+			</ul></li>
+			
+			<li ui-sref-active="active"><a ui-sref="#"> 
+			<span> User Registration</span></a>
+			<ul>
+				<li ui-sref-active="active"><a ui-sref="registration">
+				                 <fa name="caret-right"></fa>Registration</a></li>
+		</ul>
+		</li>
+	</ul>
+
+	</accordion-group> </accordion>
+</div>

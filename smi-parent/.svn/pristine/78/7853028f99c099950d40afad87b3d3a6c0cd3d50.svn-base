@@ -1,0 +1,181 @@
+<div class="container-fluid">
+		   <!-- row -->
+		       <!-- tile -->
+		       	<div class="row tile">
+		       	<script type="text/ng-template" id="customerHistory.html">
+          
+	<div class="modal-header col-md-12 ">
+                  <h3 class="modal-title custom-font col-md-12">Case Detials</h3>				  
+                </div>      
+<div id="secondHeader" > 
+
+<div class="col-md-12" style="text-decoration: line-through; left: 80px;">
+	<span class="badge bg-greensea">&nbsp;&nbsp;&nbsp;</span>
+	<span style="text-decoration: line-through;">---------------</span>
+	<span class="badge bg-primary">&nbsp;&nbsp;&nbsp;</span>
+	<span style="text-decoration: line-through;">---------------</span>
+	<span class="badge bg-red">&nbsp;&nbsp;&nbsp;</span>
+	<span style="text-decoration: line-through;">---------------</span>
+	<span class="badge bg-orange">&nbsp;&nbsp;&nbsp;</span>
+	<span style="text-decoration: line-through;">---------------</span>
+	<span class="badge bg-black">&nbsp;&nbsp;&nbsp;</span>
+</div>
+<div class="col-md-12" style="left: 55px;">
+	<label class="tile-body custom-font col-md-2"><small><strong>Created</strong></small></label> <label
+		class="tile-body custom-font col-md-2"><small><strong>Assigned</strong></small></strong></label> <label
+		class="tile-body custom-font col-md-2"><small><strong>Escalated</strong></small></strong></label> <label
+		class="tile-body custom-font col-md-2"><small><strong>Resolved</strong></small></strong></label> <label
+		class="tile-body custom-font col-md-2"><small><strong>Closed</strong></small></strong></label>
+</div>
+<div class="col-md-12" style="left: 55px;">
+	<label class="tile-body custom-font col-md-2"></label> <label
+		class="tile-body custom-font col-md-2"><small><strong>Name</small></label> <label
+		class="tile-body custom-font col-md-2"></label> 
+		<label class="tile-body custom-font col-md-2"><small><strong>Name</strong></small></label>
+	<label class="tile-body custom-font col-md-2"><small><strong>Name</strong></small></label>
+</div>
+<div class="col-md-12" style="left: 55px;">
+			<label class="tile-body text-small col-md-2"><small><strong>16:54, 24.11.2014</strong></small></label> 
+			<label class="tile-body text-small col-md-2"><small><strong>16:54, 24.11.2014</strong></small></label> 
+			<label class="tile-body text-small col-md-2"><small><strong>16:54, 24.11.2014</strong></small></label> 
+			<label class="tile-body text-small col-md-2"><small><strong>16:54, 24.11.2014</strong></small></label> 
+			<label class="tile-body text-small col-md-2"><small><strong>16:54, 24.11.2014</strong></small></label>
+		</div>
+</div>
+<!--<div class="col-md-12"> 
+<ul class="list-group no-radius no-border" id="mails-list">
+   <li ng-repeat="case in fbCases" class="list-group-item b-{{mail.label.color}}">
+ 
+     <div class="media">
+    
+       <div class="pull-left">
+        <label class="checkbox checkbox-custom checkbox-custom-sm m-0 mail-select">
+        <input type="checkbox"><i></i></label>
+         <div class="thumb thumb-sm">
+           <img src="{{case.image}}" class="img-circle" >
+         </div>
+       </div>
+       <div class="media-body">
+         <div class="media-heading m-0">
+           <a class="mr-5">{{case.customerName}}</a>
+           <span class="pull-right text-sm text-muted">
+             <span class="hidden-xs">{{ case.date }}</span>
+           </span>
+         </div>
+         <small>{{case.content}}</small>
+       </div>
+       
+        <div class="form-group col-md-12 tile-body ">
+        <label class="col-md-4 text-small"><b>Case Priority : {{case.casePriority}}</b></label>
+        <label class="col-md-4 text-small"><b>Social Account : {{case.socialAccount}}</b></label>
+        <label class="col-md-4 text-small"><b>Case Status :  {{case.caseStatus}}</b></label>
+</div>
+    </div>
+ </li>
+ </ul>
+</div>-->
+
+<div class="col-md-12">
+		<ul class="list-group no-radius no-border" id="mails-list">
+				<li ng-repeat="mail in mails"
+					class="list-group-item b-{{mail.label.color}}">
+					<div class="media" style="border-bottom: 1px solid gray; margin: 5">
+						<div class="pull-left">
+							<div class="thumb thumb-sm">
+								<img src="{{mail.image}}" class="img-circle">
+							</div>
+						</div>
+						<div class="media-body" style="padding-bottom:10px;">
+							<div class="media-heading m-0">
+								<a class="mr-5">{{mail.customerName}}</a> <span
+									class="pull-right text-sm text-muted"> <span
+									class="hidden-xs">{{ mail.date }}</span>
+								</span>
+							</div>
+							<small>{{mail.content}}</small>
+						</div>
+						<div class="form-group col-md-12 pull-left">
+							<label class="col-md-4 custom-font"><b>Case Priority :
+									{{mail.casePriority}}</b></label> <label class="col-md-4 custom-font"><b>Social
+									Account : {{mail.socialAccount}}</b></label> <label class="col-md-4 custom-font"><b>Case
+									Status : {{mail.caseStatus}}</b></label>
+						</div>
+					</div>
+					<div class="media">
+								<div class="media-body">
+									<div class="media-heading m-0">
+										<span class="text-sm text-muted pull-left"> <span
+											class="hidden-xs"> {{ mail.date }} </span>
+										</span>
+										<div class="col-lg-2 col-md-8" style="text-align: right;color: #337ab7;font-weight: 700;">fa-bank</div>
+										<div><i class="fa fa-bank pull-right" style="font-size:xx-large"></i></div> 
+									</div>
+								</div>
+								<div class="col-md-9 col-sm-10 " style="margin-left: 20%;">
+									<small>{{mail.content}}</small>									
+								</div>
+							</div>
+				</li>
+			</ul>
+</div>
+
+<div class="modal-footer">
+                  <button class="btn btn-primary btn-ef btn-ef-4" ng-click="close()">Close</button>
+                </div>
+     </script>
+		       		<div class=" tile-body row">
+				        <div class="col-md-12">
+					            <div class="col-md-8 ">
+					            <a  class=" br-2 w-60"  data-ng-click="goOpenFacebook()"><i class="fa fa-long-arrow-left"></i></a>
+					        	</div>
+				        	
+								<div class="col-md-3">
+									<div class="search" id="main-search">
+									  	<input class="form-control underline-input" placeholder="Search...">
+									    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+									</div>
+								</div>
+								<!-- Search end -->
+		                    
+							      <div class="btn-group col-md-1 ">
+									  <button class="btn btn-default btn-sm br-2 text-right"  ><i class="fa fa-refresh"></i></button>
+								  </div>
+						</div>
+					</div> 
+					<div class="col-sm-12" style="border-bottom: 1px solid lightgrey; margin: 10; height: 1px;"> </div>
+					<div class="col-md-12 row"> 
+						 <ul class="list-group no-radius no-border" id="mails-list" >
+						    <li ng-repeat="mail in mails" class="list-group-item b-{{mail.label.color}}" style="border-bottom: 1px solid lightgrey; margin: 7" data-ng-click="showCaseHistory()">
+						
+						      <div class="media" >
+						     
+						        <div class="pull-left">
+						          <div class="thumb thumb-sm">
+						            <img src="{{mail.image}}" class="img-circle" >
+						          </div>
+						        </div>
+						        <div class="media-body">
+						          <div class="media-heading m-0">
+						            <a class="mr-5">{{mail.customerName}}</a>
+						            <span class="pull-right text-sm text-muted">
+						              <span class="hidden-xs"><b>{{ mail.date }}</b></span>
+						            </span>
+						          </div>
+						          <small>{{mail.content}}</small>
+						        </div>
+						        
+						         <div class="form-group col-md-12 tile-body ">
+						         		 <label  class="col-md-4 "><b>Case Priority : {{mail.casePriority}}</b></label>
+								         <label class="col-md-4 "><b>Social Account : {{mail.socialAccount}}</b></label>
+								         <label class="col-md-4 "><b>Case Status :  {{mail.caseStatus}}</b></label>
+								 </div>
+						     	</div>
+						    </li>
+						  </ul>
+					</div>
+					
+				</div>
+		 <!-- /row
+
+</div>
+<!-- /right side body -->

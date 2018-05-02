@@ -1,0 +1,25 @@
+AppServices.factory('dashboardService',function($http, $q){
+	
+    return{
+    	// Start getDashboardInitData 
+    	getDashboardInitData: function(){
+    		//showLoading($dialogs);
+    		var deferred = $q.defer();
+    		
+//    		$http.get('getDashboardInitData').success(function(data, status, headers) {
+//    			//hideLoading($rootScope);
+//    			errorIfExpired($dialogs, headers()["content-type"], data, $rootScope, $window);
+//    			deferred.resolve(data);
+//    	    }).error(function() {
+//    	    	//hideLoading($rootScope);
+//    	    	deferred.reject("An error occured while fetching items");
+//    	    });
+    		
+        	 return deferred.promise;
+   
+         },//end getDashboardInitData
+         
+         
+ 
+    };
+});

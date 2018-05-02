@@ -1,0 +1,20 @@
+package com.zen.smi.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class SocialMediaAccountsListBO {
+
+	@SerializedName("social_media_accounts")
+	private List<SocialMediaAccountsBO> socialMediaAccountsBO;
+
+	public List<SocialMediaAccountsBO> getSocialMediaAccountsBO() {
+		return socialMediaAccountsBO;
+	}
+
+	public void setSocialMediaAccountsBO(
+			List<SocialMediaAccountsBO> socialMediaAccountsBO) {
+		this.socialMediaAccountsBO = socialMediaAccountsBO;
+	}
+}

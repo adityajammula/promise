@@ -1,0 +1,29 @@
+package com.zen.smi.service.impl;
+
+import java.util.List;
+
+import com.zen.smi.bo.CmfCustomerSocialDataBO;
+import com.zen.smi.dao.entities.CmfCustomerSocialData;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.service.CmfCustomerSocialDataService;
+import com.zen.smi.service.helper.CmfCustomerSocialDataHelper;
+
+public class CmfCustomerSocialDataServiceImpl extends BaseService implements CmfCustomerSocialDataService{
+
+	public List<CmfCustomerSocialDataBO> getSocialAccountData() throws BusinessException {
+	
+		List<CmfCustomerSocialDataBO> cmfCustomerSocialDataBO = null;
+		List<CmfCustomerSocialData> cmfCustomerSocialData;
+		try {
+			cmfCustomerSocialData = getCmfCustomerSocialDataDAO().getSocialAccountData();
+			 cmfCustomerSocialDataBO=CmfCustomerSocialDataHelper.getInstance().convertCmfCustomerSocialDataToBO(cmfCustomerSocialData);
+		} catch (GenericDAOException e) {
+		throw new BusinessException(e);
+		}
+		
+		
+		return cmfCustomerSocialDataBO;
+	}
+
+}

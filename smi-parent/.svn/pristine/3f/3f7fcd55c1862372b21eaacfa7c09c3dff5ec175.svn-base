@@ -1,0 +1,79 @@
+package com.zen.smi.controller;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.zen.smi.bo.PostsBO;
+import com.zen.smi.bo.PostsListBO;
+import com.zen.smi.bo.RuleBO;
+import com.zen.smi.bo.RuleColumnsBO;
+import com.zen.smi.bo.RuleColumnsListBO;
+import com.zen.smi.bo.RuleEngineBO;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.ProcessService;
+
+/**
+ * 
+ * @author Tejaswi.Gandra
+ *
+ */
+
+
+@Controller
+@RequestMapping("/processes/")
+public class ProcessController extends BaseController {
+
+	/**
+	 * Logger for RulesPageController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(RulesController.class);
+
+	@Autowired
+	public ProcessService processService;
+   
+	@Autowired
+	public Gson gson;
+	
+	@RequestMapping(value = "/posts", method = RequestMethod.GET)
+	public @ResponseBody
+	String getpostDataById(
+			HttpServletRequest request, HttpServletResponse response) {
+		LOGGER.info("starts getpostDataById");
+		String resultJson = null;
+		try {
+			//PostsBO posts = gson.fromJson(processJson, PostsBO.class);
+			List<PostsBO> postBOList = processService.getPostsData("1",new Date());
+			PostsListBO postListBO = new PostsListBO();
+			postListBO.setPostsBO(postBOList);
+			resultJson = gson.toJson(postListBO, PostsListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		LOGGER.info("ends getpostDataById");
+		return resultJson;
+	}
+
+	
+}

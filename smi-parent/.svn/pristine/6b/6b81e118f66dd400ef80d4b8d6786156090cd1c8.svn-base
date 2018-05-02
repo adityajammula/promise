@@ -1,0 +1,129 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.Date;
+
+import com.zen.smi.dao.entities.CmfCase;
+
+public class CmfCaseNoteBO {
+	private Integer noteId;
+	private CmfCaseBO cmfCase;
+	private String noteDescription;
+	private String createdBy;
+	private String updatedBy;
+	private Date createdDate;
+	private Date updatedDate;
+	private String caseStatus;
+	private String caseNoteCategory;
+	
+	/**
+	 * @return the noteId
+	 */
+	public Integer getNoteId() {
+		return noteId;
+	}
+	/**
+	 * @param noteId the noteId to set
+	 */
+	public void setNoteId(Integer noteId) {
+		this.noteId = noteId;
+	}
+	/**
+	 * @return the cmfCase
+	 */
+	public CmfCaseBO getCmfCase() {
+		return cmfCase;
+	}
+	/**
+	 * @param cmfCase the cmfCase to set
+	 */
+	public void setCmfCase(CmfCaseBO cmfCase) {
+		this.cmfCase = cmfCase;
+	}
+	/**
+	 * @return the noteDescription
+	 */
+	public String getNoteDescription() {
+		return noteDescription;
+	}
+	/**
+	 * @param noteDescription the noteDescription to set
+	 */
+	public void setNoteDescription(String noteDescription) {
+		this.noteDescription = noteDescription;
+	}
+	/**
+	 * @return the createdBy
+	 */
+	public String getCreatedBy() {
+		return createdBy;
+	}
+	/**
+	 * @param createdBy the createdBy to set
+	 */
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+	/**
+	 * @return the updatedBy
+	 */
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+	/**
+	 * @param updatedBy the updatedBy to set
+	 */
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+	/**
+	 * @return the createdDate
+	 */
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+	/**
+	 * @param createdDate the createdDate to set
+	 */
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+	/**
+	 * @return the updatedDate
+	 */
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	/**
+	 * @param updatedDate the updatedDate to set
+	 */
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+	/**
+	 * @return the caseStatus
+	 */
+	public String getCaseStatus() {
+		return caseStatus;
+	}
+	/**
+	 * @param caseStatus the caseStatus to set
+	 */
+	public void setCaseStatus(String caseStatus) {
+		this.caseStatus = caseStatus;
+	}
+	/**
+	 * @return the caseNoteCategory
+	 */
+	public String getCaseNoteCategory() {
+		return caseNoteCategory;
+	}
+	/**
+	 * @param caseNoteCategory the caseNoteCategory to set
+	 */
+	public void setCaseNoteCategory(String caseNoteCategory) {
+		this.caseNoteCategory = caseNoteCategory;
+	}
+	
+
+	
+}

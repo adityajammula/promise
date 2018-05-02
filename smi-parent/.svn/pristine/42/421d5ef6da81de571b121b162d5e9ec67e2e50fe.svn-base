@@ -1,0 +1,16 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.StCase;
+import com.zen.smi.dao.entities.StCaseTransaction;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public interface StCaseTransactionDAO extends BaseDAO<StCaseTransaction, Serializable>{
+	
+	List<StCaseTransaction> getAllFundsTransferByTransactions(Integer accountTypeId,Integer socialMediaAccountsId,Integer statusTypeId) throws GenericDAOException;
+	
+	StCaseTransaction getById(String stCaseTransactionId)throws GenericDAOException;
+
+}

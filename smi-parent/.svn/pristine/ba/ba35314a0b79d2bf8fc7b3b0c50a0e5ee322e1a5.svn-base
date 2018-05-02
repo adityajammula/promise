@@ -1,0 +1,147 @@
+<div class="container-fluid">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
+    <title>Register</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/ico" href="favicon.ico" />
+    <link rel="stylesheet" href="resources/bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="resources/bower_components/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="resources/bower_components/animate.css/animate.css" />
+    
+    <link rel="stylesheet" href="resources/bower_components/angular-motion/dist/angular-motion.min.css" type="text/css"/>
+    
+    <link href="resources/styles/uikit.css" rel="stylesheet" type="text/css"/>
+	<link href="resources/styles/register.css" rel="stylesheet" type="text/css"/>
+	<link href="resources/styles/fonts.css" rel="stylesheet" type="text/css"/>
+	
+	
+     <script src="resources/bower_components/jquery/jquery.js"></script>
+    <script src="resources/bower_components/angular/angular.js"></script>
+ 
+    <script src="resources/bower_components/json3/lib/json3.js"></script>
+    <script src="resources/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="resources/bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="resources/bower_components/angular-animate/angular-animate.js"></script>
+    <script src="resources/bower_components/angular-touch/angular-touch.js"></script>
+    <script src="resources/bower_components/angular-fontawesome/dist/angular-fontawesome.js"></script>
+    <script src="resources/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+
+    <script src="resources/bower_components/jquery-ui/ui/jquery-ui.js"></script>
+    <script src="resources/bower_components/angular-strap/dist/angular-strap.min.js"></script>
+	<script src="resources/bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
+	
+	<script src="resources/bower_components/angular-strap/dist/angular-strap.tpl.js" data-semver="v2.3.1"></script>
+ 
+  </head>
+  <script type="text/javascript">
+window.fbAsyncInit = function() {
+    FB.init({
+    appId      : '678667082278748', // replace your app id here
+    channelUrl : '//WWW.YOUR_DOMAIN.COM/channel.html', 
+    status     : true, 
+    cookie     : true, 
+    xfbml      : true  
+    });
+};
+(function(d){
+    var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement('script'); js.id = id; js.async = true;
+    js.src = "//connect.facebook.net/en_US/all.js";
+    ref.parentNode.insertBefore(js, ref);
+}(document));
+ 
+function FBLogin(){
+    FB.login(function(response){
+        if(response.authResponse){
+            window.location.href = "actions.php?action=fblogin";
+        }
+    }, {scope: 'email,user_likes'});
+}
+</script>
+	<div class="row tile">
+		<div style="padding-left: 5%;">
+			<div style="padding: 2%;">
+				<p>
+					<b><large>Please Register your Twitter or Facebook
+						account to avail the benefits of Social Banking </large></b>
+				</p>
+			</div>
+			<div>
+			<div class=" form-group col-md-12" style="margin-bottom:3% !important;">
+				<div class="row col-md-2">
+					<label for="username">Account* </label>
+				</div>
+				<div class="row col-md-3">
+					<select
+						class="form-control form-control-inline col-md-3">
+						<option value="">Select</option>
+					</select>
+				</div>
+				<!-- <div class="col-md-2">
+					<button type="submit" class="btn btn-rounded btn-primary btn-sm ">Link
+						Account</button>
+
+				</div> -->
+				<div class="row col-md-3">
+					<label style="margin-left: 36%;">Account Number*</label>
+				</div>
+				<div class="row col-md-3">
+					<input type="text" name="name" id="name"
+						data-ng-model="accountNunber" class="form-control">
+				</div>
+			</div>
+			<div class=" form-group col-md-12" style="margin-bottom: 3% !important;">
+				<div class="row col-md-2">
+					<label for="username" >Mobile Phone Number* </label>
+				</div>
+				<div class="row col-md-3">
+					<input type="text" name="name" id="name"
+						data-ng-model="phoneNumber" class="form-control">
+				</div>
+				<div class = "col-md-1"></div>
+				<div class="row col-md-2">
+					<label>MMID*</label>
+				</div>
+				<div class="row col-md-3">
+					<input type="text" name="name" id="name"
+						data-ng-model="mmid" class="form-control">
+				</div>
+			</div>
+			<div class=" form-group col-md-12" style="margin-bottom: 3% !important;">
+				<div class="row col-md-2">
+					<label for="username">Facebook ID* </label>
+				</div>
+				<div class="row col-md-3">
+					<input type="text" name="name" id="name"
+						data-ng-model="facebookId" class="form-control">
+				</div>
+				 <div class="col-md-1">
+  				<!-- <fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button> -->
+  				<!-- <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+				</fb:login-button> -->
+				<img src="resources/images/fbLogin.png" alt="Fb Connect" title="Login with facebook" onclick="FBLogin();"style="width: 76%;"/>
+				</div> 
+				          
+				
+				<div class="row col-md-2">
+					<label>Twitter ID*</label>
+				</div>
+				<div class="row col-md-3">
+					<input type="text" name="name" id="name"
+						data-ng-model="twitterId" class="form-control">
+				</div>
+				<div class="col-md-2">
+					<!-- <button type="submit" class="btn btn-rounded btn-primary btn-sm" data-ng-click="loginIntoTwitter()">Login</button> -->
+					<img src="resources/images/twitterlogin.png" alt="Fb Connect" title="Login with facebook" style="width: 35%;"/>
+		</div>
+			</div>
+			<div class="col-md-12" style="text-align: center;">
+					<button type="submit" class="btn btn-rounded btn-primary btn-sm" data-ng-click="register()">Register</button>
+
+				</div>
+				</div>
+		</div>
+	</div>
+</div>

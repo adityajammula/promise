@@ -1,0 +1,29 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.CmfCaseNoteDAO;
+import com.zen.smi.dao.StTransactionCaseHistoryDAO;
+import com.zen.smi.dao.entities.CmfCaseNote;
+import com.zen.smi.dao.entities.StTransactionCaseHistory;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class StTransactionCaseHistoryDAOImpl extends BaseDAOImpl<StTransactionCaseHistory, Serializable> implements StTransactionCaseHistoryDAO {
+
+	public StTransactionCaseHistoryDAOImpl() {
+		super(StTransactionCaseHistory.class);
+	}
+
+	public List<StTransactionCaseHistory> getStTransactionCaseHistoryByStCaseId(
+			String stCaseId) throws GenericDAOException {
+		String query = "FROM StTransactionCaseHistory WHERE stCase ="+stCaseId;
+		return load(query);
+	}
+	
+}

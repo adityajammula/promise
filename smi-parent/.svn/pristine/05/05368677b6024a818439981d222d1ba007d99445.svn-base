@@ -1,0 +1,37 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('ViewCustomerHistoryTwitterController', function ($scope,$state) {
+	 
+	    $scope.twitterCases =[];
+	    
+	    $scope.twitterCases = [
+	     {
+	       "id": 0,
+	       "customerName": "Adithya",
+	       "casePriority": "High",
+	       "socialAccount": "<<value>>",
+	       "caseStatus": "Escalated",
+	       "image": "resources/images/random-avatar1.jpg",
+	       "content": "Commodo sunt minim incididunt ipsum dolore veniam nulla Lorem reprehenderit officia. Ut esse cillum quis deserunt.",
+	       "date": "16:54, 24.11.2014"
+	     },
+	     {
+	    	 "id": 1,
+		       "customerName": "Karthik",
+		       "casePriority": "Medium",
+		       "socialAccount": "<<value>>",
+		       "caseStatus": "Assighned",
+		       "image": "resources/images/random-avatar2.jpg",
+		       "content": "Commodo sunt minim incididunt ipsum dolore veniam nulla Lorem reprehenderit officia. Ut esse cillum quis deserunt.",
+		       "date": "16:54, 24.11.2014"
+	     }];
+
+});

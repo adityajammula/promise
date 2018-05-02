@@ -1,0 +1,30 @@
+package com.zen.smi.web.startup;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
+
+import com.zen.smi.service.MessageService;
+import com.zen.smi.service.helper.SchedulerHelper;
+
+@Component
+public class StartupListener implements ApplicationListener<ContextRefreshedEvent> {
+
+	private static final Logger LOGGER = Logger.getLogger(StartupListener.class);
+	
+	@Autowired
+	private MessageService messageService;
+	public void onApplicationEvent(ContextRefreshedEvent event) {
+		LOGGER.debug("Starts onApplicationEvent.. ");
+		try {
+			messageService.populateAllMessages();
+			//Start scheduled jobs
+			SchedulerHelper.getScheduler();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		LOGGER.debug("Ends onApplicationEvent.. ");
+	}
+}

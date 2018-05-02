@@ -1,0 +1,387 @@
+/**
+ * This is to Configure the Family & Rule Groups
+ */
+angular.module('smiApp')
+.controller('ConfigRulesController', function ($scope,$rootScope,rulesServices,$modal, $log,dialogs) {
+	   $scope.copyOfFamilyData = [];
+	   $scope.copyOfGroupData = [];
+	   $scope.copyOfRuleData = [];
+	   $scope.ruleGroupData = [];
+	   $scope.rulesData = [];
+	   $scope.familyData = [];
+	   $scope.hideGroup = true;
+	   $scope.hideRule = true;
+	   var familyName=null;
+/**
+ * Only once rootscope shud Call in Js
+ */	    
+	$rootScope.initializeRulesController = function(appId) {
+		if(appId === null) {
+			rulesServices.getAppsListData().then(function(response){
+				  if(response.data !== null)
+				  {
+					  $scope.appData = response.data.ruleApps;
+					  $scope.appId = response.data.ruleApps[0].appId;
+					  // when page load it will load with first record
+					  $scope.getFamilyDetailsBasedOnAppId($scope.appId);
+				  }
+		      });
+		}
+		else{
+			 $scope.getFamilyDetailsBasedOnAppId($scope.appId);
+			}
+	};
+	$scope.getFamilyDetailsBasedOnAppId = function(appId) {
+		$scope.appId=appId;
+		$scope.getFamilyDetail($scope.appId);
+	};
+/**
+ * This method is used to get the Family Details
+ */
+	$scope.getFamilyDetail = function(appId) {
+	  rulesServices.getRuleFamilysByAppId(appId).then(function(response){
+	  if(response !== null && response.data.rule_families.length >0){
+		  var family= response.data.rule_families;
+		  $scope.familyData = family;
+		  $scope.copyOfFamilyData = [].concat($scope.familyData);
+		  $scope.getRuleGroup(family[0]);
+		  $scope.sethighliteFamily(0);
+	      }
+	  else{
+		  $scope.copyOfFamilyData = [];
+		  $scope.copyOfGroupData = [];
+		  $scope.copyOfRuleData = [];
+		  $scope.rulesData = [];
+	   }
+	  });
+    };
+/**
+ * This method is used to get the Rule Groups
+ */  
+   $scope.getRuleGroup = function(family) {
+   if(family.rule_groups.length === 0) {
+	  $scope.hideGroup = true;
+	  $scope.hideRule = true;
+	  familyName = family;
+	  return;
+	 }
+	  $scope.ruleGroupData=family.rule_groups;
+	  $scope.ruleFamilyId=family.rule_family_id;
+	  $scope.copyOfGroupData = [].concat($scope.ruleGroupData);
+	  $scope.getRules(family.rule_groups[0]);
+	  $scope.hideGroup=false;
+	  familyName=family;
+	  $scope.sethighliteGroup(0);
+};
+/**
+ * This method is used to update the Rule Groups
+ */ 
+  $rootScope.updateGroup = function(familyId) {
+    rulesServices.getRuleFamilysByAppId($scope.appId).then(function(response){
+	for(var i=0;i<response.data.rule_families.length;i++){
+	 var family= response.data.rule_families;
+	 $scope.familyData = family;
+	 $scope.copyOfFamilyData = [].concat($scope.familyData);
+	if(response.data.rule_families[i].rule_family_id===familyId) {
+	  $scope.ruleGroupData=response.data.rule_families[i].rule_groups;
+	  $scope.copyOfGroupData = [].concat($scope.ruleGroupData);
+	  $scope.getRuleGroup(family[i]);
+	  break;
+    }
+  }
+});
+};
+/*	  $scope.updateRules = function(familyId,ruleGroupId) {
+		  rulesServices.getFamilyDetails().then(function(response){
+	 	    	var family=response.data.rule_families;
+	 	        $scope.familyData = family;
+	 	    	 for(var i=0;i<$scope.familyData.length;i++){
+	 				 {
+	 					if($scope.familyData[i].rule_family_id==familyId)
+						 {
+	 					 if($scope.familyData[i].rule_groups.length >0){
+	 						  $scope.groups=$scope.familyData[i].rule_groups;
+	 						  for(var i=0;i< $scope.groups.length;i++){
+	 							  if($scope.groups[i].rule_group_id==ruleGroupId) {
+	 							 	  $scope.rulesData=$scope.groups[i].rules;
+	 							      $scope.copyOfRuleData = [].concat($scope.groups[i].rules);
+	 							 	  break;
+	 								 }
+	 						 }
+	 					}
+	 				 }
+	 			   }
+	 			}
+	 	    	$rootScope.updateGroup(familyId);
+	 	    });
+	  };*/
+/**
+ * This method is to get the Rules
+ */	  
+  $scope.getRules = function(group) {
+	$scope.rulesData=group.rules;
+	$scope.copyOfRulesData = [].concat($scope.rulesData);
+	$scope.ruleGroupId=group.rule_group_id;
+	$scope.hideRule = false;
+  };
+    $scope.highliteFamily = null;  
+    $scope.sethighliteFamily = function(index){
+    $scope.highliteFamily = index;
+  };
+    $scope.highliteGroup = null;  
+    $scope.sethighliteGroup = function(index){
+    $scope.highliteGroup = index;
+  };
+
+  /**
+   * This method is to remove family
+   */
+  $scope.removeFamily = function(id) {
+	 var dlg = dialogs.confirm("Confirmation", "Are you sure that you want to delete this family ?",{size:'md'});
+       dlg.result.then(function (btn) {
+	   //Yes is clicked
+	   var requestData = {
+	       "rule_family_id":id
+	    };
+	   rulesServices.deleteFamily(requestData).then(function(data) {
+		   $scope.getFamilyDetail($scope.appId);
+        });
+	 });
+  };
+  /**
+   * This method is to remove family
+   */
+  $scope.removeGroup = function(id) {
+	var dlg = dialogs.confirm("Confirmation", "Are you sure that you want to delete this group ?",{size:'md'});
+	      dlg.result.then(function (btn) {
+	   	  //Yes is clicked
+	   	  var requestData = {
+	          "rule_group_id":id
+	      };
+		  rulesServices.deleteGroup(requestData).then(function(data) {
+		  $rootScope.updateGroup($scope.ruleFamilyId);
+		  });
+     });
+  };
+  
+	/*	$scope.removeRule = function(id) {
+			 var dlg = dialogs.confirm("Confirmation", "Are you sure that you want to delete this rule ?",{size:'md'});
+		      dlg.result.then(function (btn) {
+		    	  //Yes is clicked
+		    		//alert(JSON.stringify(id));
+					 var requestData = {
+						      "rule_id" : id
+						};
+					 rulesServices.deleteRule(requestData).then(function(data) {
+						 $scope.updateRules($scope.ruleFamilyId, $scope.ruleGroupId);
+						});
+		    	  
+		      });
+						
+			};*/
+/**
+ * This is method is used to add Family Details in Popup
+ */
+ $scope.addFamilyItem = function() {
+		 $scope.appId=$scope.appId;
+		  var modalInstance = $modal.open({
+		  templateUrl:'addFamily.html',
+		  controller :'AddFamilyController',
+		  resolve: {
+			   items: function () {
+			        var obj = {};
+		            obj.isEditOrAdd="Add";
+		        	obj.appId=$scope.appId;;
+			       return obj;
+			       }
+			   }
+		  });
+	};
+		    
+		    /**
+		     * This is method is used to add Family Details in Popup
+		     */
+   $scope.editFamilyItem = function(familydata) {
+		    		 //alert(JSON.stringify(familydata));
+		    		      // $scope.familyid=familyid;
+		     $scope.appId=$scope.appId;
+		     var modalInstance = $modal.open({
+		     templateUrl:'addFamily.html',
+		     controller :'AddFamilyController',
+		     resolve: {
+		     items: function () {
+		     var obj = {};
+		     obj.isEditOrAdd="Edit";
+		     obj.familydata=familydata;
+		     obj.appId=$scope.appId;;
+		     return obj;
+           }
+		 }
+	 });
+   };		    
+ /**
+  * This is method is used to add Family Details in Popup
+  */		    
+     $scope.addGroupItem = function() {
+	    $scope.items=familyName;
+	  	var modalInstance = $modal.open({
+	      templateUrl:'addRuleGroup.html',
+	      controller :'AddRuleGroupController',
+	       resolve: {
+	        items: function () {
+	        	 var obj = {};
+      		     obj.isEditOrAdd="Add";
+      		     obj.appId=$scope.appId;
+      		     obj.family=familyName;
+	             return obj;
+	       }
+	      }
+	    });
+     };
+     /**
+      * This is method is used to add Group Details in Pop-up
+      */	
+         $scope.editGroupItem = function(group) {
+        	// alert(JSON.stringify(group));
+    	    $scope.items=familyName;
+    	  	var modalInstance = $modal.open({
+    	      templateUrl:'addRuleGroup.html',
+    	      controller :'AddRuleGroupController',
+    	       resolve: {
+    	        items: function () {
+    	        	 var obj = {};
+	        		   obj.isEditOrAdd="Edit";
+	        		   obj.groupdata=group;
+	        		   obj.appId=$scope.appId;
+	        		   obj.family=familyName;
+		        	   return obj;
+    	       }
+    	      }
+    	    });
+         };
+     
+	})
+	
+/**
+ * Controller for Add Family
+ */	
+.controller('AddFamilyController', function ($scope, $modalInstance,rulesServices,$rootScope,items) {
+	if(items.isEditOrAdd=="Edit"){
+		$scope.Titil="Edit Family Name";
+		$scope.familyName=items.familydata.rule_family_name;
+   }
+	else{
+		$scope.Titil="Add New Family";
+	}
+	$scope.ok = function () {
+		if(items.isEditOrAdd=="Edit"){
+			$scope.familyId = items.familydata.rule_family_id;
+		  	 $scope.appId = items.appId;
+		    	if($scope.familyName === null || $scope.familyName === undefined ){
+		    		alert("Please Enter Family Name");
+		    		return false;
+		    		}
+		    	else{
+		    		if($scope.familyName !=items.familydata.rule_family_name){
+		    			 var requestData = {
+		    			          "rule_family_id": $scope.familyId,
+		    				      "rule_family_name": $scope.familyName,
+		    				      "rule_apps_id": $scope.appId
+		    				};
+		    	  rulesServices.saveFamily(requestData).then(function(data) {
+		    			$rootScope.initializeRulesController($scope.appId);
+					});
+		    			
+		    		}
+		    		$modalInstance.close();
+		    	}
+			
+		}else{
+	    	 $scope.appId = items.appId;
+	    	if($scope.familyName === null || $scope.familyName === undefined ){
+	    		alert("Please Enter Family Name");
+	    		return false;
+	    		}
+	    	else{
+	    	  var requestData = {
+	    				      "rule_family_name": $scope.familyName,
+	    				      "rule_apps_id": $scope.appId
+	    				};
+	    	  rulesServices.saveFamily(requestData).then(function(data) {
+	    			$rootScope.initializeRulesController($scope.appId);
+				});
+	    	}
+	      $modalInstance.close();
+		}
+    };
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+/**
+ * Controller for Add Group
+ */    
+  }).controller('AddRuleGroupController', function ($scope, $modalInstance,items,rulesServices,$rootScope) {
+		
+	  $scope.family = items.family;
+	  if(items.isEditOrAdd=="Edit"){
+			$scope.Titil="Edit Group Name";
+			$scope.groupName=items.groupdata.rule_group_name;
+	   }
+		else{
+			$scope.Titil="Add Group Name";
+		}
+	    $scope.ok = function () {
+	    	if(items.isEditOrAdd=="Edit"){
+	    		
+	    		if($scope.groupName === null || $scope.groupName === undefined ){
+		    		alert("Please Enter Group Name");
+		    		return false;
+		    	 }
+		    	 else
+		    	 {
+		    		 if( $scope.groupName !=items.groupdata.rule_group_name){
+		    			 var requestDataForAddingGroup = {
+			    				 "rule_group_id": items.groupdata.rule_group_id,
+			    	              "rule_group_name": $scope.groupName,
+			    	              "rule_family":{
+			    	            	  "rule_family_id":$scope.family.rule_family_id ,
+			    	            	  "rule_apps_id":items.appId
+			    	              }
+			    	        };
+			    		
+			    		 rulesServices.saveGroup(requestDataForAddingGroup).then(function(data) {
+			    			 $rootScope.updateGroup($scope.family.rule_family_id);
+			     		 });
+		    			 
+		    		 }
+		    		
+		         }
+		    	 $modalInstance.close();
+		   }
+			else{
+				
+				if($scope.groupName === null || $scope.groupName === undefined ){
+		    		alert("Please Enter Group Name");
+		    		return false;
+		    	 }
+		    	 else
+		    	 {
+		    		 var requestDataForAddingGroup = {
+		    	              "rule_group_name": $scope.groupName,
+		    	              "rule_family":{
+		    	            	  "rule_family_id":$scope.family.rule_family_id ,
+		    	            	  "rule_apps_id":items.appId
+		    	              }
+		    	        };
+		    		 rulesServices.saveGroup(requestDataForAddingGroup).then(function(data) {
+		    			 $rootScope.updateGroup($scope.family.rule_family_id);
+		     		 });
+		         }
+		    	 $modalInstance.close();
+			}
+	    };
+
+	    $scope.cancel = function () {
+	      $modalInstance.dismiss('cancel');
+	    };
+  });

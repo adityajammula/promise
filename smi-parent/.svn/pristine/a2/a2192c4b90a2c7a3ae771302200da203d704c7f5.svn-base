@@ -1,0 +1,83 @@
+package com.zen.smi.cmf.service.helper;
+
+import static com.zen.smi.generic.utils.SmiConstants.CMFCASENOTE_PROPERTIES;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.cmf.bo.CmfCaseNoteBO;
+import com.zen.smi.dao.entities.CmfCaseNote;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+
+public final class CmfCaseNoteHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for StaffHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(CmfCaseNoteHelper .class);
+
+	/**
+	 * Instance of StaffHelper.
+	 */
+	private static CmfCaseNoteHelper  instance;
+
+	/**
+	 * Private constructor
+	 */
+	private CmfCaseNoteHelper() {
+
+	}
+	
+	/**
+	 * Converts List of CmfCase entity to CmfCaseBO objects
+	 * @param Staff staff
+	 * @return List<CmfCaseBO>
+	 * @author tmangalapenta
+	 */
+	public List<CmfCaseNoteBO> convertCmfCaseNotesEntityToBO(Set<CmfCaseNote> cmfCaseNoteSet) {
+		LOGGER.debug("Starts convertCmfCaseNotesEntityToBO...");
+		List<CmfCaseNoteBO> cmfCaseNoteBOList = new ArrayList<CmfCaseNoteBO>();
+		for(CmfCaseNote cmfCaseNote:cmfCaseNoteSet)
+		{	
+			CmfCaseNoteBO cmfCaseNoteBO = convertcmfCaseNoteEntiryToBO(cmfCaseNote);
+			
+			cmfCaseNoteBOList.add(cmfCaseNoteBO);
+		}
+
+		LOGGER.debug("Ends convertCmfCaseNotesEntityToBO...");
+		return cmfCaseNoteBOList;
+	}
+	
+	
+	public CmfCaseNoteBO convertcmfCaseNoteEntiryToBO(CmfCaseNote cmfCaseNote) {
+		CmfCaseNoteBO cmfCaseNoteBO = new CmfCaseNoteBO();
+		BeanCopyUtil.copyBeanProperties(cmfCaseNote, cmfCaseNoteBO, CMFCASENOTE_PROPERTIES);
+		 if(null != cmfCaseNote.getCmfCaseStatus()) {
+			 cmfCaseNoteBO.setCaseStatus(cmfCaseNote.getCmfCaseStatus().getCaseStatus());
+		 }
+		 if(null != cmfCaseNote.getCmfCaseNoteCategories()) {
+			 cmfCaseNoteBO.setCaseNoteCategory(cmfCaseNote.getCmfCaseNoteCategories().getType());
+		 }
+		
+		return cmfCaseNoteBO;
+	}
+
+	
+	/**
+	 * Singleton instance of StaffHelper.
+	 *
+	 * @return instance StaffHelper
+	 */
+	public static CmfCaseNoteHelper getInstance() {
+		if (instance == null) {
+			instance = new CmfCaseNoteHelper();
+		}
+		return instance;
+	}
+
+	
+	
+}

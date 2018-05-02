@@ -1,0 +1,85 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.RuleGroupDAO;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+/**
+ * @author khaja moinuddin shaik
+ *
+ */
+public class RuleGroupDAOImpl extends BaseDAOImpl<RuleGroup, Serializable> implements RuleGroupDAO {
+
+	public RuleGroupDAOImpl() {
+			super(RuleGroup.class);
+		}
+	/**
+	 * this method is to get all the RuleGroup by Family Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of RuleGroup
+	 */
+	public  List<RuleGroup> getGroup(int familyId) throws GenericDAOException {
+	
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("ruleFamily.ruleFamilyId", familyId));
+		
+		return search(expressionList, null);
+	}
+	
+
+	/**to save rule group based on familyid
+	 * @return
+	 * @throws GenericDAOException
+	 * @author kalyan
+	 */
+	public void saveRuleGroup(RuleGroup ruleGroup) throws GenericDAOException {
+		saveOrUpdate(ruleGroup);
+	
+	}
+
+	/**
+	 * this method is to get the RuleGroup by Rule Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return RuleGroup
+	 */
+	public RuleGroup getRuleGroupByRuleID(int ruleId) throws GenericDAOException {
+		  String query = "FROM RuleGroup as rg LEFT JOIN FETCH  rg.rules as r WHERE r.ruleId="+ruleId;
+		  return load(query).get(0);
+
+	}
+	/**
+	 * this method is to get the RuleGroup by App Id and Family Id and group Name.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return Object
+	 */
+	
+	public  List<Object[]> getRuleGroupNameByAppIdandFamilyId(int AppId,int FamilyId ,String groupName) throws GenericDAOException {
+		  String query = "SELECT rg.rule_group_name FROM rule_group rg " +
+		  		"INNER JOIN rule_family rf ON rg.rule_family_id=rf.rule_family_id " +
+		  		"INNER JOIN rule_apps rp ON rp.app_id=rf.rule_app_id " +
+		  		"where rp.app_id="+AppId +" and rg.rule_group_name='"+groupName+"'"+" and rf.rule_family_id="+FamilyId;
+		  				
+		  return loadWithsql(query);
+		
+	}
+
+}
+	
+
+

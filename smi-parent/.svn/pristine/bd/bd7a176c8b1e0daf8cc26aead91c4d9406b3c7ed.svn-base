@@ -1,0 +1,26 @@
+<div class="container-fluid">
+<div class="row tile">
+	<script type="text/ng-template" id="appendNote.html">
+     <div class="modal-header">
+      <h3 class="modal-title custom-font">Append Note</h3>
+      </div>
+     <div class="modal-body">
+       <table st-table="rowCollection" class="st-table table table-striped table-custom">
+         <tbody>
+            <tr>
+                <td>Note Description*</td>
+                <td><textarea class="form-control" rows="2" name="message"
+								id="message" on-blur-validation ng-model="appendnotesfb" required></textarea></td>
+            </tr>
+         </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+         <button class="btn btn-success btn-ef btn-ef-3 btn-ef-3c" ng-click="saveAppendNotes()"><i class="fa fa-arrow-right"></i> Save</button>
+         <button class="btn btn-lightred btn-ef btn-ef-4 btn-ef-4c" ng-click="close()"><i class="fa fa-arrow-left"></i>Close</button>
+      </div>
+     </script>
+     </div>
+     </div>
+     
+        

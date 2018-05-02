@@ -1,0 +1,15 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.CmfCaseNote;
+import com.zen.smi.dao.entities.StCase;
+import com.zen.smi.dao.entities.StTransactionCaseHistory;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public interface StTransactionCaseHistoryDAO extends BaseDAO<StTransactionCaseHistory, Serializable>{
+	List<StTransactionCaseHistory> getStTransactionCaseHistoryByStCaseId(String stCaseId)throws GenericDAOException;
+	List<StTransactionCaseHistory> getStTransactionHistoryByStCaseId(
+			String stCaseId) throws GenericDAOException;
+}

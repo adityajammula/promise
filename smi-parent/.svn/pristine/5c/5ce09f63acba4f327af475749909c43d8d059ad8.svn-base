@@ -1,0 +1,42 @@
+AppServices.factory('ResolvedCaseService',function($http, $q, smiGenUtil){
+	
+    return{
+    	 //get resolved case by criteria
+        getResolvedCaseByCriteria: function(requestData){
+   	 	var deferred = $q.defer();
+   	 	$http.post('cmfcases/resolvedcasesbycriteria',  JSON.stringify(requestData),
+   		{headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+   		deferred.resolve(response);
+   		smiGenUtil.handleSuccess(response);
+   	 	}).error(function(response) {
+   	 	   smiGenUtil.handleError(response);
+   	    });
+   	 		 return deferred.promise;
+   	 	},//get resolved case by criteria
+   	 
+   	  //close selected cases
+        closeCase: function(requestData){
+   	 	var deferred = $q.defer();
+   	 	$http.post('cmfcases/close',  JSON.stringify(requestData),
+   		{headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+   		deferred.resolve(response);
+   		smiGenUtil.handleSuccess(response);
+   	 	}).error(function(response) {
+   	 	   smiGenUtil.handleError(response);
+   	    });
+   	 		 return deferred.promise;
+   	 	},// close selected cases
+   	//reOpen selected cases
+        reOpenCase: function(requestData){
+   	 	var deferred = $q.defer();
+   	 	$http.post('cmfcases/reopen',  JSON.stringify(requestData),
+   		{headers: { 'Content-Type': 'application/json; charset=UTF-8'}}).success(function(response, status, headers) {
+   		deferred.resolve(response);
+   		smiGenUtil.handleSuccess(response);
+   	 	}).error(function(response) {
+   	 	   smiGenUtil.handleError(response);
+   	    });
+   	 		 return deferred.promise;
+   	 	},// reOpen selected cases
+    };	
+});

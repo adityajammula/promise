@@ -1,0 +1,152 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.Date;
+
+import com.google.gson.annotations.SerializedName;
+
+
+public class FlumeAgentsProcessBO {
+
+	@SerializedName("agent_process_id")
+	private Integer agentProcessId;
+	@SerializedName("flume_agent")
+	private FlumeAgentsBO flumeAgentsBO;
+	@SerializedName("social_data_process")
+	private SocialDataProcessBO socialDataProcessBO;
+	@SerializedName("start_date")
+	private Date startDate;
+	@SerializedName("end_date")
+	private Date endDate;
+	@SerializedName("status")
+	private String status;
+	@SerializedName("process_data")
+	private String processData;
+	@SerializedName("statistics")
+	private String statistics;
+	@SerializedName("stacktrace")
+	private String stacktrace;
+	@SerializedName("system_process_id")
+	private String systemProcessId;
+	/**
+	 * @return the agentProcessId
+	 */
+	public Integer getAgentProcessId() {
+		return agentProcessId;
+	}
+	/**
+	 * @param agentProcessId the agentProcessId to set
+	 */
+	public void setAgentProcessId(Integer agentProcessId) {
+		this.agentProcessId = agentProcessId;
+	}
+	/**
+	 * @return the flumeAgentsBO
+	 */
+	public FlumeAgentsBO getFlumeAgentsBO() {
+		return flumeAgentsBO;
+	}
+	/**
+	 * @param flumeAgentsBO the flumeAgentsBO to set
+	 */
+	public void setFlumeAgentsBO(FlumeAgentsBO flumeAgentsBO) {
+		this.flumeAgentsBO = flumeAgentsBO;
+	}
+	/**
+	 * @return the socialDataProcessBO
+	 */
+	public SocialDataProcessBO getSocialDataProcessBO() {
+		return socialDataProcessBO;
+	}
+	/**
+	 * @param socialDataProcessBO the socialDataProcessBO to set
+	 */
+	public void setSocialDataProcessBO(SocialDataProcessBO socialDataProcessBO) {
+		this.socialDataProcessBO = socialDataProcessBO;
+	}
+	/**
+	 * @return the startDate
+	 */
+	public Date getStartDate() {
+		return startDate;
+	}
+	/**
+	 * @param startDate the startDate to set
+	 */
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+	/**
+	 * @return the endDate
+	 */
+	public Date getEndDate() {
+		return endDate;
+	}
+	/**
+	 * @param endDate the endDate to set
+	 */
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	/**
+	 * @return the processData
+	 */
+	public String getProcessData() {
+		return processData;
+	}
+	/**
+	 * @param processData the processData to set
+	 */
+	public void setProcessData(String processData) {
+		this.processData = processData;
+	}
+	/**
+	 * @return the statistics
+	 */
+	public String getStatistics() {
+		return statistics;
+	}
+	/**
+	 * @param statistics the statistics to set
+	 */
+	public void setStatistics(String statistics) {
+		this.statistics = statistics;
+	}
+	/**
+	 * @return the stacktrace
+	 */
+	public String getStacktrace() {
+		return stacktrace;
+	}
+	/**
+	 * @param stacktrace the stacktrace to set
+	 */
+	public void setStacktrace(String stacktrace) {
+		this.stacktrace = stacktrace;
+	}
+	/**
+	 * @return the systemProcessId
+	 */
+	public String getSystemProcessId() {
+		return systemProcessId;
+	}
+	/**
+	 * @param systemProcessId the systemProcessId to set
+	 */
+	public void setSystemProcessId(String systemProcessId) {
+		this.systemProcessId = systemProcessId;
+	}
+
+
+}

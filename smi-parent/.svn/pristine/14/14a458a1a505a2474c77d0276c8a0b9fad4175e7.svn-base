@@ -1,0 +1,47 @@
+package com.zen.smi.extsys.facebook.bo;
+
+
+public class TwitterMessageBO {	
+	
+	private Long id;
+	private boolean isPrivate = true;
+	private Long inReplyToMessage = new Long(-1);
+	private String messageText;
+	private String screenName;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	public boolean isPrivate() {
+		return isPrivate;
+	}
+	public void setPrivate(boolean isPrivate) {
+		this.isPrivate = isPrivate;
+	}
+	public Long getInReplyToMessage() {
+		return inReplyToMessage;
+	}
+	public void setInReplyToMessage(Long inReplyToMessage) {
+		this.inReplyToMessage = inReplyToMessage;
+	}
+	public String getMessageText() {
+		return messageText;
+	}
+	public void setMessageText(String messageText) {
+		this.messageText = messageText;
+	}
+	public String getScreenName() {
+		return screenName;
+	}
+	public void setScreenName(String screenName) {
+		this.screenName = screenName;
+	}
+	
+	
+	
+	
+}

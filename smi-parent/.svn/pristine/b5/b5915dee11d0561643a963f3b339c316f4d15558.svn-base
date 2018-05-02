@@ -1,0 +1,89 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  	   .controller('ViewCustomerHistoryFBController', function ($scope,$state,$modal,$rootScope,OpenfacebookCaseService) {
+  		   /**
+  		   * This method is used show the History of Particular Customer.
+  		   */
+		    $scope.historyCases =[];
+		    /* $scope.image = "resources/images/random-avatar1.jpg";*/
+		    $rootScope.initializeCustomerHistoryController = function() {
+		    	 $scope.getHistory();
+			};
+		    $scope.getHistory = function() {
+		    	  OpenfacebookCaseService.getCustomerHistory($rootScope.customerId).then(function(response) {
+		    		    $scope.historyCases =response.data.cmfCaseBO;
+					});
+		    };
+		    $scope.refreshHistoryPage = function() {
+		    	 $scope.getHistory();
+		    };
+		     /**
+			* It will show complete details of particular Customer Case in Pop up.
+			*/ 
+		      $scope.showCaseHistory = function(cases) {
+			    var modalInstance = $modal.open({
+				templateUrl : 'customerHistory.html',
+				controller : 'CustomerHistoryController',
+				   resolve : {
+					   caseHistoryItems : function() {
+					     var obj = {};
+						 obj.caseId = cases.case_id;
+						 return obj;
+				       }
+				   }
+				 });
+			  };
+		
+			/*This method to navigate back to Previous*/
+		    $scope.goOpenFacebook= function(){
+			 $state.go('openfacebookcases');
+		    };
+		
+		   
+		  /*  $scope.filterBySearch = function(name) {
+		        if (!$scope.search) return true;
+		        var regex = new RegExp('\\b' + escapeRegExp($scope.search), 'i');
+		        return regex.test(name);
+		    };
+		    function escapeRegExp(string){
+		        return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+		    }
+				*/
+		    
+		    $scope.Search = '';
+		    $scope.search = function (user) {
+		      var query = $scope.Search;
+		      var fullname = user.cmfCustomerBO.firstName+ ' ' + user.cmfCustomerBO.lastName;
+		      if (fullname.indexOf(query) != -1) {
+		        return true;
+		      }
+		      return false;
+		    };
+				
+		}).controller('CustomerHistoryController', function($scope,$state,$modal,caseHistoryItems,$modalInstance,$stateParams,OpenfacebookCaseService) {
+			$scope.caseId = caseHistoryItems.caseId;
+			$scope.showCaseHistory = [];
+			$scope.isShow = true;
+			OpenfacebookCaseService.getIndividualCaseDetails($scope.caseId).then(function(response) {
+								if (response != null) {
+									$scope.caseContent = response.data.cmfCaseBO[0].description;
+									$scope.customerName = response.data.cmfCaseBO[0].cmfCustomerBO.firstName;
+									$scope.createdDate = response.data.cmfCaseBO[0].created_date;
+									$scope.casePriority = response.data.cmfCaseBO[0].cmfCasePriorityBO.priority_name;
+									$scope.socialAccount = response.data.cmfCaseBO[0].socialMediaAccountsBO.social_media_accounts_accountname;
+									$scope.caseStatus = response.data.cmfCaseBO[0].cmfCaseStatusBO.caseStatus;
+									$scope.showCaseHistory = response.data.cmfCaseBO[0].cmfCaseHistoryBO;
+								}
+							});
+				$scope.close = function () {
+					$modalInstance.dismiss('close');
+			    };
+		});

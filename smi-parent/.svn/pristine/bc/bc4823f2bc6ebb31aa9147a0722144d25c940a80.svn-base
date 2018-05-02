@@ -1,0 +1,28 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.List;
+import com.zen.smi.dao.OtherCommentsDAO;
+import com.zen.smi.dao.entities.OtherComments;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class OtherCommentsDAOImpl extends BaseDAOImpl<OtherComments, Serializable> implements OtherCommentsDAO {
+
+	public OtherCommentsDAOImpl() {
+		super(OtherComments.class);
+	}
+
+	public List<Object[]> getAllOtherCommentsByAccountType()
+			throws GenericDAOException {
+		String sqlQuery = "SELECT oc.message,oc.social_profile_id,cc.facebook_id,cc.twitter_id "
+				+ "FROM smi_production.other_comments oc,smi_production.cmf_customer cc "
+				+ "where oc.customer_id=cc.customer_id";
+		
+		
+		return loadWithsql(sqlQuery);
+	}
+
+	
+	
+	
+}

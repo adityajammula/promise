@@ -1,0 +1,37 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.StTransactionTypeDAO;
+import com.zen.smi.dao.entities.StStatus;
+import com.zen.smi.dao.entities.StTransactionType;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class StTransactionTypeDAOImpl extends BaseDAOImpl<StTransactionType, Serializable> implements StTransactionTypeDAO {
+
+	public StTransactionTypeDAOImpl() {
+		super(StTransactionType.class);
+	}
+
+
+	public StTransactionType getStTransactionTypeByName(String name)throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("stTransactionCode", name));
+		return searchUnique(expressionList, null);
+	}
+
+
+	public StTransactionType getStTransactionTypeByStCase(int stTransactionTypeId)
+			throws GenericDAOException {
+		 String query = "FROM StTransactionType WHERE stTransactionTypeId="+stTransactionTypeId;
+		  return load(query).get(0);
+	}
+
+
+	
+}

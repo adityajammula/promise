@@ -1,0 +1,33 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.CmfCustomerDAO;
+import com.zen.smi.dao.entities.CmfCustomer;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfCustomerDAOImpl extends BaseDAOImpl<CmfCustomer, Serializable> implements CmfCustomerDAO {
+
+	public CmfCustomerDAOImpl() {
+		super(CmfCustomer.class);
+	}
+
+	public CmfCustomer getCmfCustomerByCmfCase(int cmfCustomerId)
+			throws GenericDAOException {
+		String query = "FROM CmfCustomer WHERE customerId="+cmfCustomerId;
+		  return load(query).get(0);
+	}
+	
+	public List<CmfCustomer> getCustDemographicData(int customerId)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("customerId", customerId));		
+		
+		return search(expressionList, null);
+	}
+}

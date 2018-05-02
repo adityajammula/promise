@@ -1,0 +1,40 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.dao.entities.RuleFormula;
+import com.zen.smi.dao.entities.RuleRulesColumns;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public interface RuleFormulaDAO extends BaseDAO<RuleFormula, Serializable> {
+
+	/**to retrieve the Rule Formulas
+	 * @return List of Rule Formulas
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	List<RuleFormula> getRuleFormulasByRuleId(int ruleId)  throws GenericDAOException;
+	/**to Save the Rule Formulas
+	 * @return Void
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	void saveRuleFormula(RuleFormula ruleFormula) throws GenericDAOException;
+	
+	/**to Update the Rule Formula
+	 * @return Void
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	void updateRuleFormula(RuleFormula ruleFormula) throws GenericDAOException;
+	
+	/**to Delete the Rule Formula
+	 * @return Void
+	 * @throws GenericDAOException
+	 * @author tmangalapenta
+	 */
+	void deleteRuleFormula(RuleFormula ruleFormula) throws GenericDAOException;
+}

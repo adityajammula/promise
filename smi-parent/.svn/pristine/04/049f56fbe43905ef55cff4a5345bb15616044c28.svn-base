@@ -1,0 +1,221 @@
+angular.module('smiApp')
+ .controller('SpamCasesController', function($scope, $state, $modal, OpenfacebookCaseService,$rootScope,$log,dialogs,ResolvedCaseService) {
+		$scope.isSelect = true;
+		$scope.ischecked = false;
+		$scope.categoryId = 0;
+		$scope.priorityId = 0;
+		$scope.spamCaseJson = {};
+		$scope.socialProfileId = 0;
+		$scope.moreOptions = [ { id : 1, name : 'Group Selected Cases'}, 
+		                       { id : 2, name : 'Assign Selected Cases'},
+		                       { id : 3, name : 'Append Notes'},
+		                       { id : 4, name : 'Not a Spam'}]; 
+		$scope.spamCases = [];
+		$scope.spamCaseJson = {
+				"category_type" :	$scope.categoryId,
+				"priority_type" :	$scope.priorityId,
+				"account_type"  :	$scope.socialProfileId
+				};
+		$rootScope.initializespamCasesController = function() {
+			ResolvedCaseService.getSpamCaseByCriteria($scope.spamCaseJson).then(function(response) {
+						$scope.spamCases = response.data.cmfCaseBO;
+					});
+			$scope.getCategories();
+		};
+				$scope.getCategories = function() {
+					OpenfacebookCaseService.getStaticData().then(function(response) {
+										$scope.categories = response.data.cmfCaseCategoryBOList;
+										$scope.priorities = response.data.cmfCasePriorityBOList;
+										for ( var i = 0; i < response.data.cmfCasePriorityBOList.length; i++) {
+											var obj = response.data.cmfCasePriorityBOList[i];
+											obj.priorityImage = (response.data.cmfCasePriorityBOList[i].priority_name).charAt(0);
+										}
+										$scope.accounts = response.data.socialProfilesBOList;
+									});
+				}, 
+				$scope.getSpamCasesByAccountCategory = function(categoryId) {
+					$scope.spamCaseJson.category_type = categoryId.toString();
+					$scope.getSpamCases();
+				}, 
+				$scope.getSpamCasesByPriority = function(priorityId) {
+					$scope.spamCaseJson.priority_type = priorityId.toString();
+					$scope.getSpamCases();
+				};
+		$scope.getSpamCasesByAccount = function(socialProfileId) {
+			$scope.spamCaseJson.account_type = socialProfileId.toString();
+			$scope.getSpamCases();
+		};
+		$scope.getAllPriorities = function() {
+			$scope.spamCaseJson.priority_type =  "All";
+			$scope.getSpamCases();
+		};
+		$scope.getAllCategories = function() {
+			$scope.spamCaseJson.category_type =  "All";
+			$scope.getSpamCases();
+		};
+		$scope.getAllAccounts = function() {
+			$scope.spamCaseJson.account_type =  "All";
+			$scope.getSpamCases();
+		};
+		$scope.getSpamCases = function() {
+			ResolvedCaseService.getSpamCaseByCriteria($scope.spamCaseJson).then(function(response) {
+						$scope.spamCases = response.data.cmfCaseBO;
+					});
+		};
+		$scope.highliteCategory = null;
+		$scope.sethighliteCategory = function(index) {
+			$scope.highliteCategory = index;
+		};
+		$scope.highlitePriority = null;
+		$scope.sethighlitePriority = function(index) {
+			$scope.highlitePriority = index;
+		};
+		$scope.highliteAccount = null;
+		$scope.sethighliteAccount = function(index) {
+			$scope.highliteAccount = index;
+		};
+		$scope.refreshSpamCases = function() {
+			$rootScope.initializespamCasesController();
+		};
+		/*$scope.caseDetails = function(cases) {
+			var params = {};
+			if (cases != null) {
+				params.case_id = cases.case_id;
+			}
+			$state.go('viewindividualcasedetails', params);
+			$rootScope.customerId = cases.cmfCustomerBO.customerId;
+			$rootScope.caseid = cases.case_id;
+		};*/
+
+		var selectedCases = [];
+		$scope.getSelectedValue = function(id) {
+			$scope.isSelect = false;
+			selectedCases.push(id);
+			
+		};
+		
+
+		$scope.getOption = function(id) {
+			if (id == 4) {
+					var dlg = dialogs.confirm("Confirmation", "Are you sure want to mark this case as Not a Spam?",{size:'md'});
+				       dlg.result.then(function (btn) {
+				    	   var spamCaseJSON = {
+			    				      "cmf_case":[]
+			    			};
+				    	   spamCaseJSON.cmf_case[i] = {};
+					    	for(var i =0;i<selectedCases.length;i++) {
+					    		spamCaseJSON.cmf_case[i] = selectedCases[i];
+					    	};
+				    	   ResolvedCaseService.notASpamCase(spamCaseJSON).then(function(response){
+				    		   $rootScope.initializespamCasesController();
+				    	   })
+					   //Yes is clicked
+				    	  
+					 });
+				
+			} else if(id==3) {
+				var modalInstance = $modal.open({
+					templateUrl : 'spamAppendNotes.html',
+					controller : 'spamAppendNotesController',
+					resolve: {
+						 selectedCases: function () {
+			    	        var obj = {};
+				        	obj.selectedCases = selectedCases;
+					        return obj;
+			    	     }
+			    	}
+				});
+
+				
+			} else if(id == 2) {
+				
+				var modalInstance = $modal.open({
+					templateUrl : 'spamAssignCase.html',
+					controller : 'spamAssignCaseController',
+				
+				 resolve: {
+					 selectedCases: function () {
+				        	 var obj = {};
+			      		     obj.selectedCases = selectedCases;
+				             return obj;
+				       }
+				      }
+				});
+			} else if(id == 1) {
+				
+				var modalInstance = $modal.open({
+					templateUrl : 'spamGroupCase.html',
+					controller : 'spamGroupCaseController',
+					resolve: {
+						 selectedCases: function () {
+			    	        	 var obj = {};
+				        		   obj.selectedCases=selectedCases;
+					        	   return obj;
+			    	       }
+			    	      }
+				});
+			}
+		};
+		 $scope.Search = '';
+		    $scope.search = function (user) {
+		      var query = $scope.Search;
+		      var fullname = user.cmfCustomerBO.firstName+ ' ' + user.cmfCustomerBO.lastName;
+		      if (fullname.indexOf(query) != -1) {
+		        return true;
+		      }
+		      return false;
+		    }; 
+ }).controller('spamAssignCaseController',  function ($scope, $modalInstance,$rootScope,OpenfacebookCaseService,selectedCases ) {
+		
+		$scope.getAssignedUserId= function(user) {
+			$scope.user=user
+		};
+		OpenfacebookCaseService.getAllUsers().then(function(response) {
+			$scope.users = response.data.cmfCasesUsers;
+			});
+		
+		    $scope.SaveSpamAssignCase = function () {
+		    	var SaveSpamAssignCaseJSON = {
+ 				      "user_name":$scope.spamassignusrname,
+ 				      "reason": $scope.reasons,
+ 				      "cmf_case":[]
+ 				};
+		    	SaveSpamAssignCaseJSON.cmf_case[i] = {};
+		    	  for(var i =0;i<selectedCases.selectedCases.length;i++)
+		    	  {
+		    		  SaveSpamAssignCaseJSON.cmf_case[i] = selectedCases.selectedCases[i];
+		    	  };
+		    OpenfacebookCaseService.saveSelectedCases(SaveSpamAssignCaseJSON).then(function(result){
+		    	$rootScope.initializespamCasesController();
+	    	});
+		    $modalInstance.close();
+		    $scope.close = function () {
+		    	
+				$modalInstance.dismiss('close');
+		    };
+	    };
+		  
+}).controller('spamAppendNotesController', function($scope,$modal,$state,$modalInstance,selectedCases,OpenfacebookCaseService) {
+			
+			$scope.saveSpamAppendNotes = function () {
+		    	var saveSpamAppendNotesJSON = {
+ 				      "note_description": $scope.appendnotesspam,
+ 				      "cmfcase":[]
+ 			    };
+		    	saveSpamAppendNotesJSON.cmfcase[i] = {};
+		    	  for(var i =0;i<selectedCases.selectedCases.length;i++) {
+		    		  saveSpamAppendNotesJSON.cmfcase[i] = selectedCases.selectedCases[i];
+		    	  };
+		    	OpenfacebookCaseService.saveAppendNotes(saveSpamAppendNotesJSON).then(function(result){
+		    		$rootScope.initializespamCasesController();
+		    	});
+		    	 $modalInstance.close();
+		    };
+		  
+			$scope.close = function () {
+				$modalInstance.dismiss('close');
+		    };
+}).controller('spamGroupCaseController', function() {
+	
+	
+});;

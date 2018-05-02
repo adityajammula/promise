@@ -1,0 +1,173 @@
+package com.zen.smi.service.impl;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.zen.smi.bo.RuleFamilyBO;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleApps;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleFormula;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.exception.UserException;
+import com.zen.smi.generic.utils.MessageUtil;
+import com.zen.smi.service.FamilyService;
+import com.zen.smi.service.RuleGroupService;
+import com.zen.smi.service.RuleService;
+import com.zen.smi.service.helper.FamilyHelper;
+import com.zen.smi.service.helper.RuleHelper;
+
+/**
+ * @author Jshaik
+ *
+ */
+public class FamilyServiceImpl extends BaseService implements  FamilyService {
+	
+	/**
+	 * Logger for FamilyServiceImpl class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(FamilyServiceImpl.class);
+
+	@Autowired
+	private RuleGroupService ruleGroupService; 
+	/**
+	 * to get all families.
+	 *  
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of RuleFamilyBO
+	 */
+	public List<RuleFamilyBO> getFamilyDetails() throws BusinessException {
+		LOGGER.debug("Starts getFamilyDetails....");
+		List<RuleFamily> ruleFamily=null;
+		List<RuleFamilyBO> ruleFamilyBO = null;
+	    try {
+			ruleFamily = getFamilyDAO().load("from RuleFamily");
+			if(ruleFamily != null)
+			{
+				List<RuleFamily> ruleFamilyList= new ArrayList<RuleFamily>(0); 
+				List<RuleGroup> ruleGroupsList = new ArrayList<RuleGroup>(0);
+				for (RuleFamily ruleFmilyEntity : ruleFamily) {
+					ruleGroupsList = new ArrayList<RuleGroup>(0);
+					List<RuleGroup> ruleGroups = getRuleGroupDAO().getGroup(ruleFmilyEntity.getRuleFamilyId());
+					for (RuleGroup rGroup : ruleGroups) {
+						List<Rule> rules = getRulesDAO().getRulesByGroupId(rGroup.getRuleGroupId());
+						rGroup.setRules(new HashSet<Rule>(rules));
+						ruleGroupsList.add(rGroup);
+					}
+					
+					Set<RuleGroup> ruleGroupList = new HashSet<RuleGroup>(ruleGroupsList);
+					ruleFmilyEntity.setRuleGroups(ruleGroupList);
+					ruleFamilyList.add(ruleFmilyEntity);
+				}
+				ruleFamilyBO = FamilyHelper.getInstance().convertRulesEntityToBO(ruleFamilyList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends getFamilyDetails....");
+		return ruleFamilyBO;
+	}
+	
+	/**
+	 * this method is to get all the families by App Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of RuleFamilyBO
+	 */
+	public List<RuleFamilyBO> getRuleFamilysByAppId(int ruleAppId) throws BusinessException {
+		LOGGER.debug("Starts getRuleFamilysByAppId....");
+		List<RuleFamily> ruleFamily=null;
+		List<RuleFamilyBO> ruleFamilyBO = null;
+	    try {
+			ruleFamily = getFamilyDAO().getRuleFamilysByAppId(ruleAppId);
+			if(ruleFamily != null)
+			{
+				List<RuleFamily> ruleFamilyList= new ArrayList<RuleFamily>(0); 
+				List<RuleGroup> ruleGroupsList = new ArrayList<RuleGroup>(0);
+				for (RuleFamily ruleFmilyEntity : ruleFamily) {
+					ruleGroupsList = new ArrayList<RuleGroup>(0);
+					List<RuleGroup> ruleGroups = getRuleGroupDAO().getGroup(ruleFmilyEntity.getRuleFamilyId());
+					for (RuleGroup rGroup : ruleGroups) {
+						List<Rule> rules = getRulesDAO().getRulesByGroupId(rGroup.getRuleGroupId());
+						rGroup.setRules(new HashSet<Rule>(rules));
+						ruleGroupsList.add(rGroup);
+					}
+					
+					Set<RuleGroup> ruleGroupList = new HashSet<RuleGroup>(ruleGroupsList);
+					ruleFmilyEntity.setRuleGroups(ruleGroupList);
+					ruleFamilyList.add(ruleFmilyEntity);
+				}
+				ruleFamilyBO = FamilyHelper.getInstance().convertRulesEntityToBO(ruleFamilyList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends getRuleFamilysByAppId....");
+		return ruleFamilyBO;
+	}	 
+	
+	
+	/**
+     * to add the new family.
+     * @param null
+     * @return RuleFamilyBO
+     * @throws UserException
+     * * @Author kalyan
+     */
+    public void saveFamilyDetails(RuleFamilyBO ruleFamilyBO) throws BusinessException {
+           
+            RuleFamily ruleFamily=FamilyHelper.getInstance().convertFamilyBOToEntity(ruleFamilyBO);
+                     
+            try{
+            	RuleApps  ruleApps = getRuleAppsDAO().findById(ruleFamilyBO.getRuleAppsId());
+            	ruleFamily.setRuleApps(ruleApps);
+                getFamilyDAO().saveFamilyDetails(ruleFamily);
+            } catch (GenericDAOException gde) {
+    			throw new BusinessException(gde.getMessageBO());
+    		} catch (Exception e) {
+    			throw new BusinessException(MessageUtil.getInstance().getMessage("FAMILYNAME_ALREADY_EXIST", null), e);
+    		}
+    }
+
+
+
+    /**
+     * @author Venumadhava.Reddy
+     * if(!anyrulegroups under this family)
+     * { 
+     * 	delete
+     * } else
+     * {
+     * 	throw user exception
+     * }
+     */
+	public void deleteFamilyDetails(RuleFamilyBO familyBO) throws BusinessException {
+		 RuleFamily ruleFamily=FamilyHelper.getInstance().convertFamilyBOToEntity(familyBO);
+		 try{
+             getFamilyDAO().delete(ruleFamily);
+         } catch (GenericDAOException gde) {
+ 			throw new BusinessException(gde.getMessageBO());
+ 		} catch (Exception e) {
+ 			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+ 		}
+		
+	}
+	
+}

@@ -1,0 +1,1796 @@
+package com.zen.smi.cmf.service.impl;
+
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASES_ASSIGNED;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASES_ESCALATED;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASES_CLOSED;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASES_CREATED;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASES_NOTE_ASSIGNED;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASES_NOTE_REOPEN;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASES_NOTE_RESOLVED;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASES_REOPEN;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASES_RESOLVED;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASES_SPAM;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASE_DASHBOARD_TYPE_CATEGORY;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASE_DASHBOARD_TYPE_PRIORITY;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASE_DASHBOARD_TYPE_SOCIALPROFILE;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASES_NOTE_CREATED;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASES_NOTE_GROUP;
+
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Resource;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.cmf.bo.CmfCaseBO;
+import com.zen.smi.cmf.bo.CmfCaseCategoryBO;
+import com.zen.smi.cmf.bo.CmfCaseGraphDashboardBO;
+import com.zen.smi.cmf.bo.CmfCaseHistoryBO;
+import com.zen.smi.cmf.bo.CmfCaseManagementDashboardBO;
+import com.zen.smi.cmf.bo.CmfCaseNoteBO;
+import com.zen.smi.cmf.bo.CmfCasePriorityBO;
+import com.zen.smi.cmf.bo.CmfCaseStaticDataBO;
+import com.zen.smi.cmf.bo.CmfPrirotyAndUserListBO;
+import com.zen.smi.cmf.bo.DashBoardGraphBO;
+import com.zen.smi.cmf.bo.DashBoardJSONObjectBO;
+import com.zen.smi.cmf.bo.GraphBO;
+import com.zen.smi.cmf.bo.SearchBO;
+import com.zen.smi.cmf.bo.UserBO;
+import com.zen.smi.cmf.exception.BusinessException;
+import com.zen.smi.cmf.service.CmfCaseService;
+import com.zen.smi.cmf.service.helper.CmfCaseHelper;
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCaseCategory;
+import com.zen.smi.dao.entities.CmfCaseHistory;
+import com.zen.smi.dao.entities.CmfCaseNote;
+import com.zen.smi.dao.entities.CmfCaseNoteCategories;
+import com.zen.smi.dao.entities.CmfCasePriority;
+import com.zen.smi.dao.entities.CmfCaseStatus;
+import com.zen.smi.dao.entities.CmfCustomer;
+import com.zen.smi.dao.entities.FinancialInstitutions;
+import com.zen.smi.dao.entities.Roles;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.dao.entities.SocialProfiles;
+import com.zen.smi.dao.entities.Users;
+import com.zen.smi.dao.entities.UsersRoles;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.generic.utils.MessageUtil;
+
+  
+public class CmfCaseServiceImpl extends CmfBaseService implements CmfCaseService {
+
+	/**
+	 * Logger for CmfCaseServiceImpl class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(CmfCaseServiceImpl.class);
+
+	public CmfCaseManagementDashboardBO getCountOfCmfCaseManagement(Integer userId,int faceBookAccountId,int twitterBookAccountId)
+			throws BusinessException {
+
+		LOGGER.debug("Starts getCountOfCmfCaseManagement....");
+		CmfCaseManagementDashboardBO cmfCaseManagementDashboardBO = new CmfCaseManagementDashboardBO();
+		
+		try {
+			cmfCaseManagementDashboardBO.setTotalOpenCases(getCmfCaseDAO().getCountOfCmfCasesByStatusType(CMF_CASES_CREATED));
+			cmfCaseManagementDashboardBO.setTotalDashboardCases(getCmfCaseDAO().getCountOfCmfCasesByStatusType(null));
+
+			cmfCaseManagementDashboardBO.setFaceBookOpenCases(getCmfCaseDAO().getCountOfCmfOpenCasesByAccountType(faceBookAccountId,CMF_CASES_CREATED));
+			cmfCaseManagementDashboardBO.setTwitterOpenCases(getCmfCaseDAO().getCountOfCmfOpenCasesByAccountType(twitterBookAccountId,CMF_CASES_CREATED));
+			cmfCaseManagementDashboardBO.setCasesAssignedToUser(getCmfCaseDAO().getCountOfCmfCurrentUserCases(userId,CMF_CASES_ASSIGNED,null));
+			
+			cmfCaseManagementDashboardBO.setResolvedCases(getCmfCaseDAO().getCountOfCmfCasesByStatusType(CMF_CASES_RESOLVED));
+			cmfCaseManagementDashboardBO.setClosedCases(getCmfCaseDAO().getCountOfCmfCasesByStatusType(CMF_CASES_CLOSED));
+			cmfCaseManagementDashboardBO.setSpamCases(getCmfCaseDAO().getCountOfCmfCasesByStatusType(CMF_CASES_SPAM));
+			
+			List<CmfCasePriorityBO> cmfCasePriorityBOList =  new ArrayList<CmfCasePriorityBO>(0);
+			List<CmfCasePriorityBO> cmfCasePriorityBOListAssignedToUser =  new ArrayList<CmfCasePriorityBO>(0);
+
+			List<CmfCasePriority> cmfCasePriorityList = getCmfCasePriorityDAO().load("from CmfCasePriority");
+			for (CmfCasePriority cmfCasePriority : cmfCasePriorityList) {
+				CmfCasePriorityBO cmfPriBO = new CmfCasePriorityBO();
+				Long priorityCount = getCmfCaseDAO().getCountOfCmfCurrentUserCasesByPriority(null,cmfCasePriority.getPriorityId(), CMF_CASES_CREATED, CMF_CASES_ASSIGNED);
+				cmfPriBO.setPriorityId(cmfCasePriority.getPriorityId());
+				cmfPriBO.setPriorityName(cmfCasePriority.getPriorityName());
+				cmfPriBO.setIssueCount(priorityCount);
+				cmfCasePriorityBOList.add(cmfPriBO);
+			} 
+			for (CmfCasePriority cmfCasePriority : cmfCasePriorityList) {
+				CmfCasePriorityBO cmfPriBO = new CmfCasePriorityBO();
+				Long priorityCount = getCmfCaseDAO().getCountOfCmfCurrentUserCasesByPriority(userId,cmfCasePriority.getPriorityId(), null, CMF_CASES_ASSIGNED);
+				cmfPriBO.setPriorityId(cmfCasePriority.getPriorityId());
+				cmfPriBO.setPriorityName(cmfCasePriority.getPriorityName());
+				cmfPriBO.setIssueCount(priorityCount);
+				cmfCasePriorityBOListAssignedToUser.add(cmfPriBO);
+			} 
+			cmfCaseManagementDashboardBO.setCmfCasePriorityBOListAssignedToUser(cmfCasePriorityBOListAssignedToUser);
+			cmfCaseManagementDashboardBO.setCmfCasePriorityBOList(cmfCasePriorityBOList);
+			
+			List<CmfCaseCategory> cmfCaseCategoryList = getCmfCaseCategoryDAO().load("from CmfCaseCategory");
+			List<CmfCaseCategoryBO> cmfCaseCategoryBOList =  new ArrayList<CmfCaseCategoryBO>(0);
+			for (CmfCaseCategory cmfCaseCategory : cmfCaseCategoryList) {
+				CmfCaseCategoryBO cmfCatBO = new CmfCaseCategoryBO();
+				Long categoryCount = getCmfCaseDAO().getCountOfCmfCasesByCategoryType(cmfCaseCategory.getCategoryId(), CMF_CASES_CREATED, CMF_CASES_ASSIGNED);
+				cmfCatBO.setCategoryId(cmfCaseCategory.getCategoryId());
+				cmfCatBO.setCategoryName(cmfCaseCategory.getCategoryName());
+				cmfCatBO.setIssueCount(categoryCount);
+				cmfCaseCategoryBOList.add(cmfCatBO);
+			}
+			cmfCaseManagementDashboardBO.setCmfCaseCategoryBO(cmfCaseCategoryBOList);
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByAccountType....");
+		return cmfCaseManagementDashboardBO;
+	}
+
+	public CmfCaseStaticDataBO getCmfCaseStaticData()
+			throws BusinessException {
+
+		LOGGER.debug("Starts getCmfCaseStaticData....");
+		CmfCaseStaticDataBO cmfCaseStaticDataBO = new CmfCaseStaticDataBO();
+		
+		try { 
+			List<CmfCaseCategory> cmfCaseCategoryList = getCmfCaseCategoryDAO().load("from CmfCaseCategory");
+			List<CmfCasePriority> cmfCasePriorityList = getCmfCasePriorityDAO().load("from CmfCasePriority");
+			List<SocialMediaAccounts> socialMediaAccountsList = getSocialMediaAccountsDAO().load("from SocialMediaAccounts");
+			List<SocialProfiles> socialProfilesList = getSocialProfileDAO().load("from SocialProfiles");
+			
+			cmfCaseStaticDataBO.setSocialProfilesBOList(CmfCaseHelper.getInstance().convertSocialProfilesEntityToBO(socialProfilesList));
+			cmfCaseStaticDataBO.setCmfCaseCategoryBOList(CmfCaseHelper.getInstance().convertCmfCaseCategoryEntityToBO(cmfCaseCategoryList));
+			cmfCaseStaticDataBO.setCmfCasePriorityBOList(CmfCaseHelper.getInstance().convertCmfCasePriorityEntityToBO(cmfCasePriorityList));
+			cmfCaseStaticDataBO.setSocialMediaAccountsList(CmfCaseHelper.getInstance().convertSocialMediaAccountsEntityToBO(socialMediaAccountsList));
+
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getCmfCaseStaticData....");
+		return cmfCaseStaticDataBO;
+	}
+
+	public List<CmfCaseBO> getAllCmfOpenCasesByAccountType(int accountTypeId,int statusTypeId)
+			throws BusinessException {
+		LOGGER.debug("Starts getAllCmfOpenCasesByAccountType....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+//		try {
+//			cmfCases = getCmfCaseDAO().getAllCmfOpenCasesByAccountType(accountTypeId,statusTypeId);
+//			if (null != cmfCases) {
+//				cmfCasesList = new ArrayList<CmfCase>(0);
+//				for (CmfCase cmfCase : cmfCases) {
+//					cmfCase = getCmfCaseDependencies(cmfCase);
+//					cmfCasesList.add(cmfCase);
+//				}
+//
+//				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(cmfCasesList);
+//			}
+//		} catch (GenericDAOException gde) {
+//			throw new BusinessException(gde.getMessageBO());
+//		} catch (Exception e) {
+//			throw new BusinessException(MessageUtil.getInstance().getMessage(
+//					"UNKNOWN_EXCEPTION", null), e);
+//		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByAccountType....");
+		return cmfCaseBO;
+	}
+
+
+	private CmfCase getCmfCaseDependencies(CmfCase cmfCase)throws BusinessException {
+		LOGGER.debug("Starts getRuleSubEntity....");
+		try {
+			SocialProfiles socialProfiles = null;
+			Users users = null;
+			CmfCaseStatus cmfCaseStatus = null;
+			CmfCustomer cmfCustomer = null;
+			CmfCasePriority cmfCasePriority = null;
+			SocialMediaAccounts socialMediaAccounts = null;
+			FinancialInstitutions financialInstitutions = null;
+
+			if(null != cmfCase.getSocialProfiles()) {
+				socialProfiles = getSocialProfileDAO().getSocialProfilesByCmfCase(cmfCase.getSocialProfiles().getProfileId());
+			}
+			if(null != cmfCase.getUsers()) {
+			users = getUserDAO().getUserByCmfCase(cmfCase.getUsers().getUserId());
+			}
+			if(null != cmfCase.getCmfCaseStatus()) {
+			cmfCaseStatus = getCmfCaseStatusDAO().getCmfCaseStatusByCmfCase(cmfCase.getCmfCaseStatus().getCaseStatusId());
+			}
+			if(null != cmfCase.getCmfCustomer()) {
+			cmfCustomer = getCmfCustomerDAO().getCmfCustomerByCmfCase(cmfCase.getCmfCustomer().getCustomerId());
+			}
+			if(null != cmfCase.getCmfCasePriority()) {
+			cmfCasePriority = getCmfCasePriorityDAO().getCmfCasePriorityByCmfCase(cmfCase.getCmfCasePriority().getPriorityId());
+			}
+			if(null != cmfCase.getSocialMediaAccounts()) {
+			socialMediaAccounts = getSocialMediaAccountsDAO().getSocialMediaAccountsByCmfCase(cmfCase.getSocialMediaAccounts().getId());
+			}
+			if(null != cmfCase.getFinancialInstitutions()) {
+			financialInstitutions = getFinancialInstitutionsDAO().getFinancialInstitutionsByCmfCase(cmfCase.getFinancialInstitutions().getId());
+			}
+			CmfCaseCategory cmfCaseCategory = null;
+			if(null != cmfCase.getCmfCaseCategory()) {
+				cmfCaseCategory = getCmfCaseCategoryDAO().findById(cmfCase.getCmfCaseCategory().getCategoryId());
+				}
+			cmfCase.setSocialProfiles(socialProfiles);
+			cmfCase.setUsers(users);
+			cmfCase.setCmfCaseStatus(cmfCaseStatus);
+			cmfCase.setCmfCustomer(cmfCustomer);
+			cmfCase.setCmfCasePriority(cmfCasePriority);
+			cmfCase.setSocialMediaAccounts(socialMediaAccounts);
+			cmfCase.setFinancialInstitutions(financialInstitutions);
+			cmfCase.setCmfCaseCategory(cmfCaseCategory);
+			List<CmfCaseNote> cmfCaseNoteList = getCmfCaseNoteDAO().getCmfCaseNoteByCaseId(cmfCase.getCaseId());
+			Set<CmfCaseNote> cmfCaseNoteSet = new HashSet<CmfCaseNote>(0);
+			for (CmfCaseNote cmfCaseNote : cmfCaseNoteList) { 
+				
+				CmfCaseStatus cmfStatus = getCmfCaseStatusDAO().getCmfCaseStatusByNote(cmfCaseNote.getNoteId());
+				if(null != cmfStatus) {
+					cmfCaseNote.setCmfCaseStatus(cmfStatus);
+				}
+				CmfCaseNoteCategories cmfCaseNoteCategories = getCmfCaseNoteCategoriesDAO().getCmfCaseNoteCategoriesByNote(cmfCaseNote.getNoteId());
+				if(null != cmfCaseNoteCategories) {
+					cmfCaseNote.setCmfCaseNoteCategories(cmfCaseNoteCategories);
+				}
+				cmfCaseNoteSet.add(cmfCaseNote);
+			}
+						
+				
+				cmfCase.setCmfCaseNotes(cmfCaseNoteSet);
+//			} else {
+//				Set<CmfCaseNote> cmfCaseNoteSet = new HashSet<CmfCaseNote>(0);
+//				cmfCase.setCmfCaseNotes(cmfCaseNoteSet);
+//			}
+					List<CmfCaseHistory> cmfCaseHistory = 	getCmfCaseHistoryDAO().getCmfCaseHistoryByCaseId(cmfCase.getCaseId());
+					Set<CmfCaseHistory> cmfCaseHistorySet = new HashSet<CmfCaseHistory>();
+					for (CmfCaseHistory cmfCaseh : cmfCaseHistory) {
+						cmfCaseh = addAllCaseHistory(cmfCaseh);
+						cmfCaseHistorySet.add(cmfCaseh);
+					}
+					cmfCase.setCmfCaseHistories(cmfCaseHistorySet);
+	
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends getRuleSubEntity....");
+		return cmfCase;
+	
+	}
+
+	private CmfCaseHistory addAllCaseHistory(CmfCaseHistory cmfCaseh)throws BusinessException  {
+		LOGGER.debug("Starts addAllCaseHistory....");
+		try {
+
+			if (null != cmfCaseh) {
+				CmfCaseHistory children = getCmfCaseHistoryDAO().getCaseHistoryByParentId(cmfCaseh.getCaseHistoryId());
+				if (null != children) {
+					cmfCaseh.setChildCmfCaseHistory(children);
+					addAllCaseHistory(children);
+		        }
+		    }
+			} catch (GenericDAOException gde) {
+				throw new BusinessException(gde.getMessageBO());
+			} catch (Exception e) {
+				throw new BusinessException(MessageUtil.getInstance().getMessage(
+						"UNKNOWN_EXCEPTION", null), e);
+			}
+		LOGGER.debug("Ends addAllCaseHistory....");
+		 return cmfCaseh;
+	}
+
+	public List<CmfCaseBO> getAllCmfResolvedCases(Integer priorityTypeId,Integer categoryId,Integer accountTypeId) throws BusinessException {
+		LOGGER.debug("Starts getAllCmfResolvedCases....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			
+			cmfCases = getCmfCaseDAO().getAllCmfCasesByCriteria(priorityTypeId,categoryId,accountTypeId,CMF_CASES_RESOLVED);
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(
+						cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfResolvedCases....");
+		return cmfCaseBO;
+	}
+
+	public List<CmfCaseBO> getAllCmfClosedCases() throws BusinessException {
+		LOGGER.debug("Starts getAllCmfClosedCases....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			cmfCases = getCmfCaseDAO().getAllCmfClosedCases();
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(
+						cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfClosedCases....");
+		return cmfCaseBO;
+	}
+
+	public List<CmfCaseBO> getAllCmfSpamCases() throws BusinessException {
+		LOGGER.debug("Starts getAllCmfSpamCases....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			cmfCases = getCmfCaseDAO().getAllCmfSpamCases();
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(
+						cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfSpamCases....");
+		return cmfCaseBO;
+	}
+
+	public List<CmfCaseBO> getAllCmfOpenCasesByAccountType(int accountTypeId)
+			throws BusinessException {
+		LOGGER.debug("Starts getAllCmfOpenCasesByAccountType....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			cmfCases = getCmfCaseDAO().getAllCmfOpenCasesByAccountType(accountTypeId,CMF_CASES_CREATED,CMF_CASES_REOPEN,CMF_CASES_ASSIGNED,CMF_CASES_ESCALATED);
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByAccountType....");
+		return cmfCaseBO;
+	}
+	public List<CmfCaseBO> getAllCmfOpenCasesByFinancialInstitutionsType(int financialInstitutionTypeId) throws BusinessException {
+		LOGGER.debug("Starts getAllCmfOpenCasesByAccountType....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			cmfCases = getCmfCaseDAO().getAllCmfOpenCasesByFinancialInstitutionsType(financialInstitutionTypeId);
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByFinancialInstitutionsType....");
+		return cmfCaseBO;
+	}
+	public List<CmfCaseBO> getAllCmfOpenCasesByCategory(int categoryId)
+			throws BusinessException {
+		LOGGER.debug("Starts getAllCmfOpenCasesByAccountType....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			cmfCases = getCmfCaseDAO().getAllCmfOpenCasesByCategory(categoryId);
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByAccountType....");
+		return cmfCaseBO;
+	}
+
+	public List<CmfCaseBO> getAllCmfOpenCasesByPriority(int priorityTypeId)
+			throws BusinessException {
+		LOGGER.debug("Starts getAllCmfOpenCasesByPriority....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			cmfCases = getCmfCaseDAO().getAllCmfOpenCasesByPriority(priorityTypeId);
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByPriority....");
+		return cmfCaseBO;
+	}
+	public List<CmfCaseBO> getAllCmfOpenCasesByCriteria(Integer priorityTypeId,Integer categoryId,Integer socialMediaAccountsId,Integer accountTypeId)
+			throws BusinessException {
+		LOGGER.debug("Starts getAllCmfOpenCasesByCriteria....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			cmfCases = getCmfCaseDAO().getAllCmfOpenCasesByCriteria(priorityTypeId,categoryId,socialMediaAccountsId,accountTypeId,CMF_CASES_CREATED);
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByCriteria....");
+		return getFilterdCases(cmfCaseBO);
+	}
+	
+	/*
+	 * 
+	 */
+	private  List<CmfCaseBO>  getFilterdCases(List<CmfCaseBO> caseBOs)
+	{
+	
+		for(CmfCaseBO caseBO :caseBOs )
+		{
+			if(caseBO.getGroupCaseFlag()!=null){
+				
+				if(caseBO.getGroupCaseFlag().equalsIgnoreCase("yes") && caseBO.getGroupCaseId().equals("0")){
+					
+					caseBO.setIsGroupCase("true");
+					
+				}
+			}
+			
+		}
+		return caseBOs;
+	}
+	public GraphBO getCountOfCmfCasesByDateCriteria(String type,Date startDate,Date endDate) throws BusinessException
+	{
+
+		LOGGER.debug("Starts getCountOfCmfCasesByDateCriteria....");
+		List<DashBoardJSONObjectBO> cmfCaseGraphDashboardBOList = null;
+		GraphBO graphBO = new GraphBO();
+		
+		try {
+				int splitCount = 0;
+				long days = calculateDays(startDate,endDate);
+				if(days <= 7) {
+					cmfCaseGraphDashboardBOList = new ArrayList<DashBoardJSONObjectBO>(0);
+					splitCount = Integer.valueOf(""+days);
+					List<Date> startDateList = new ArrayList<Date>(0);
+					startDateList = assignTimePeriodsByDate(startDate,splitCount,days);
+					
+					if(!type.equals("") && type.equals(CMF_CASE_DASHBOARD_TYPE_CATEGORY)) {
+						
+						List<DashBoardGraphBO> categoryBOList = new ArrayList<DashBoardGraphBO>(0);
+						List<CmfCaseCategory> cmfCaseCategoryList = getCaseCategoryList();
+						for (CmfCaseCategory cmfCaseCategory : cmfCaseCategoryList) {
+							DashBoardGraphBO dashBoardGraphBO = new DashBoardGraphBO();
+							dashBoardGraphBO.setPeriod(cmfCaseCategory.getCategoryId());
+							dashBoardGraphBO.setPeriodName(cmfCaseCategory.getCategoryName());
+							categoryBOList.add(dashBoardGraphBO);
+						}
+						graphBO.setOptionsList(categoryBOList);
+						
+						cmfCaseGraphDashboardBOList = new ArrayList<DashBoardJSONObjectBO>(0);
+				        int i =0;
+				        String period = "";
+				        if(days ==0) {
+				        	 Format formattermm = new SimpleDateFormat("E");
+						        period = formattermm.format(startDateList.get(i));
+						        DashBoardJSONObjectBO dashBoardJSONObjectBO = new DashBoardJSONObjectBO();
+								dashBoardJSONObjectBO.setLable(period);
+						        dashBoardJSONObjectBO.setDashBoardGraphBOList(getCategoryCasesCountByPeriod(cmfCaseCategoryList,null,startDateList.get(i), startDateList.get(i+1),splitCount,days,type));
+								cmfCaseGraphDashboardBOList.add(dashBoardJSONObjectBO);
+				        }
+						while(days !=0 && i<days) {
+					        Format formattermm = new SimpleDateFormat("E");
+					        period = formattermm.format(startDateList.get(i));
+					        DashBoardJSONObjectBO dashBoardJSONObjectBO = new DashBoardJSONObjectBO();
+							dashBoardJSONObjectBO.setLable(period);
+					        dashBoardJSONObjectBO.setDashBoardGraphBOList(getCategoryCasesCountByPeriod(cmfCaseCategoryList,null,startDateList.get(i), startDateList.get(i+1),splitCount,days,type));
+							cmfCaseGraphDashboardBOList.add(dashBoardJSONObjectBO);
+							 i++;
+						} 
+						
+						graphBO.setDashBoardGraphBOList(cmfCaseGraphDashboardBOList);
+						
+			        }
+			        if(!type.equals("") && type.equals(CMF_CASE_DASHBOARD_TYPE_PRIORITY)) {
+			        	
+			        	List<DashBoardGraphBO> cmfCasePriorityBOList = new ArrayList<DashBoardGraphBO>(0);
+			        	List<CmfCasePriority> cmfCasePriorityList = getCasePriorityList();
+						for (CmfCasePriority cmfCasePriority : cmfCasePriorityList) {
+							DashBoardGraphBO dashBoardGraphBO = new DashBoardGraphBO();
+							dashBoardGraphBO.setPeriod(cmfCasePriority.getPriorityId());
+							dashBoardGraphBO.setPeriodName(cmfCasePriority.getPriorityName());
+							cmfCasePriorityBOList.add(dashBoardGraphBO);
+						}
+						graphBO.setOptionsList(cmfCasePriorityBOList);
+						cmfCaseGraphDashboardBOList = new ArrayList<DashBoardJSONObjectBO>(0);
+						int i =0;
+				        String period = "";
+				        
+				        if(days ==0) {
+				        	  Format formattermm = new SimpleDateFormat("E");
+						        period = formattermm.format(startDateList.get(i));
+						        DashBoardJSONObjectBO dashBoardJSONObjectBO = new DashBoardJSONObjectBO();
+								dashBoardJSONObjectBO.setLable(period);
+						        dashBoardJSONObjectBO.setDashBoardGraphBOList(getCategoryCasesCountByPeriod(null,cmfCasePriorityList,startDateList.get(i), startDateList.get(i+1),splitCount,days,type));
+								cmfCaseGraphDashboardBOList.add(dashBoardJSONObjectBO);
+				        }
+						while(days !=0 && i<days) {
+							  Format formattermm = new SimpleDateFormat("E");
+						        period = formattermm.format(startDateList.get(i));
+						        DashBoardJSONObjectBO dashBoardJSONObjectBO = new DashBoardJSONObjectBO();
+								dashBoardJSONObjectBO.setLable(period);
+						        dashBoardJSONObjectBO.setDashBoardGraphBOList(getCategoryCasesCountByPeriod(null,cmfCasePriorityList,startDateList.get(i), startDateList.get(i+1),splitCount,days,type));
+								cmfCaseGraphDashboardBOList.add(dashBoardJSONObjectBO);
+							i++;
+						} 
+						graphBO.setDashBoardGraphBOList(cmfCaseGraphDashboardBOList);
+			        }
+					if(!type.equals("") && type.equals(CMF_CASE_DASHBOARD_TYPE_SOCIALPROFILE)) {
+						List<DashBoardGraphBO> cmfCaseProfileBOList = new ArrayList<DashBoardGraphBO>(0);
+						List<SocialProfiles> socialProfilesList = getSocialProfileDAO().load("from SocialProfiles");
+						for (SocialProfiles socialProfiles : socialProfilesList) {
+							DashBoardGraphBO dashBoardGraphBO = new DashBoardGraphBO();
+							dashBoardGraphBO.setPeriod(socialProfiles.getProfileId());
+							dashBoardGraphBO.setPeriodName(socialProfiles.getAccountType());
+							cmfCaseProfileBOList.add(dashBoardGraphBO);
+						}
+						graphBO.setOptionsList(cmfCaseProfileBOList);
+						cmfCaseGraphDashboardBOList = new ArrayList<DashBoardJSONObjectBO>(0);
+						int i =0;
+				        String period = "";
+				        if(days ==0) {
+				        	 Format formattermm = new SimpleDateFormat("E");
+						        period = formattermm.format(startDateList.get(i));
+						        DashBoardJSONObjectBO dashBoardJSONObjectBO = new DashBoardJSONObjectBO();
+								dashBoardJSONObjectBO.setLable(period);
+						        dashBoardJSONObjectBO.setDashBoardGraphBOList(getSocialProfialCasesCountByPeriod(socialProfilesList,startDateList.get(i), startDateList.get(i+1)));
+								cmfCaseGraphDashboardBOList.add(dashBoardJSONObjectBO);
+				        }
+						while(days !=0 && i<days) {
+					        Format formattermm = new SimpleDateFormat("E");
+					        period = formattermm.format(startDateList.get(i));
+					        DashBoardJSONObjectBO dashBoardJSONObjectBO = new DashBoardJSONObjectBO();
+							dashBoardJSONObjectBO.setLable(period);
+					        dashBoardJSONObjectBO.setDashBoardGraphBOList(getSocialProfialCasesCountByPeriod(socialProfilesList,startDateList.get(i), startDateList.get(i+1)));
+							cmfCaseGraphDashboardBOList.add(dashBoardJSONObjectBO);
+							 i++;
+						} 
+						graphBO.setDashBoardGraphBOList(cmfCaseGraphDashboardBOList);
+					}
+					
+				} else if(days <= 30) {
+					Calendar c = Calendar.getInstance();
+					Calendar cend = Calendar.getInstance();
+				    c.setTime(startDate);
+				    cend.setTime(endDate);
+				    List<Date> startDateList = new ArrayList<Date>();
+				    List<Date> endDateList = new ArrayList<Date>();
+				    startDateList.add(startDate);
+				    Date tempEndDate = null;
+				    while (c.getTimeInMillis()<cend.getTimeInMillis()) {
+				    	tempEndDate = c.getTime();
+				    	if (c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+				    		endDateList.add(tempEndDate);
+				        }
+				        c.add(Calendar.DAY_OF_MONTH, 1);
+				        if (c.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY) {
+				            startDateList.add(c.getTime());
+				        }
+				    }
+				    if(null != tempEndDate) {
+				    	endDateList.add(tempEndDate);
+				    }
+				    
+					splitCount = Integer.valueOf(""+days);
+				
+					if(!type.equals("") && type.equals(CMF_CASE_DASHBOARD_TYPE_CATEGORY)) {
+						List<DashBoardGraphBO> categoryBOList = new ArrayList<DashBoardGraphBO>(0);
+						List<CmfCaseCategory> cmfCaseCategoryList = getCaseCategoryList();
+						for (CmfCaseCategory cmfCaseCategory : cmfCaseCategoryList) {
+							DashBoardGraphBO dashBoardGraphBO = new DashBoardGraphBO();
+							dashBoardGraphBO.setPeriod(cmfCaseCategory.getCategoryId());
+							dashBoardGraphBO.setPeriodName(cmfCaseCategory.getCategoryName());
+							categoryBOList.add(dashBoardGraphBO);
+						}
+						graphBO.setOptionsList(categoryBOList);
+						cmfCaseGraphDashboardBOList = new ArrayList<DashBoardJSONObjectBO>(0);
+						int count = 0;
+						String period = "";
+						for (Date stDate : startDateList) {
+					    	Format formattermm = new SimpleDateFormat("d-MMM");
+						    period = formattermm.format(stDate);
+							DashBoardJSONObjectBO dashBoardJSONObjectBO = new DashBoardJSONObjectBO();
+							dashBoardJSONObjectBO.setLable(period);
+							dashBoardJSONObjectBO.setDashBoardGraphBOList(getCategoryCasesCountByPeriod(cmfCaseCategoryList,null,stDate, endDateList.get(count),splitCount,days,type));
+							cmfCaseGraphDashboardBOList.add(dashBoardJSONObjectBO);
+							count++;
+						}
+						graphBO.setDashBoardGraphBOList(cmfCaseGraphDashboardBOList);
+			        }
+			        if(!type.equals("") && type.equals(CMF_CASE_DASHBOARD_TYPE_PRIORITY)) {
+			        	List<DashBoardGraphBO> cmfCasePriorityBOList = new ArrayList<DashBoardGraphBO>(0);
+			        	List<CmfCasePriority> cmfCasePriorityList = getCasePriorityList();
+						for (CmfCasePriority cmfCasePriority : cmfCasePriorityList) {
+							DashBoardGraphBO dashBoardGraphBO = new DashBoardGraphBO();
+							dashBoardGraphBO.setPeriod(cmfCasePriority.getPriorityId());
+							dashBoardGraphBO.setPeriodName(cmfCasePriority.getPriorityName());
+							cmfCasePriorityBOList.add(dashBoardGraphBO);
+						}
+						graphBO.setOptionsList(cmfCasePriorityBOList);
+						cmfCaseGraphDashboardBOList = new ArrayList<DashBoardJSONObjectBO>(0);
+						int count = 0;
+						String period = "";
+						for (Date stDate : startDateList) {
+						    	Format formattermm = new SimpleDateFormat("d-MMM");
+							    period = formattermm.format(stDate);
+							DashBoardJSONObjectBO dashBoardJSONObjectBO = new DashBoardJSONObjectBO();
+							dashBoardJSONObjectBO.setLable(period);
+							dashBoardJSONObjectBO.setDashBoardGraphBOList(getCategoryCasesCountByPeriod(null,cmfCasePriorityList,stDate, endDateList.get(count),splitCount,days,type));
+							cmfCaseGraphDashboardBOList.add(dashBoardJSONObjectBO);
+							count++;
+						}
+						graphBO.setDashBoardGraphBOList(cmfCaseGraphDashboardBOList);
+
+			        }
+					if(!type.equals("") && type.equals(CMF_CASE_DASHBOARD_TYPE_SOCIALPROFILE)) {
+						List<DashBoardGraphBO> cmfCaseProfileBOList = new ArrayList<DashBoardGraphBO>(0);
+						List<SocialProfiles> socialProfilesList = getSocialProfileDAO().load("from SocialProfiles");
+						for (SocialProfiles socialProfiles : socialProfilesList) {
+							DashBoardGraphBO dashBoardGraphBO = new DashBoardGraphBO();
+							dashBoardGraphBO.setPeriod(socialProfiles.getProfileId());
+							dashBoardGraphBO.setPeriodName(socialProfiles.getAccountType());
+							cmfCaseProfileBOList.add(dashBoardGraphBO);
+						}
+						graphBO.setOptionsList(cmfCaseProfileBOList);
+						
+						cmfCaseGraphDashboardBOList = new ArrayList<DashBoardJSONObjectBO>(0);
+						int count = 0;
+						String period = "";
+						for (Date stDate : startDateList) {
+						    	Format formattermm = new SimpleDateFormat("d-MMM");
+							    period = formattermm.format(stDate);
+							DashBoardJSONObjectBO dashBoardJSONObjectBO = new DashBoardJSONObjectBO();
+							dashBoardJSONObjectBO.setLable(period);
+							dashBoardJSONObjectBO.setDashBoardGraphBOList(getSocialProfialCasesCountByPeriod(socialProfilesList, stDate, endDateList.get(count)));
+							cmfCaseGraphDashboardBOList.add(dashBoardJSONObjectBO);
+							count++;
+						}
+						graphBO.setDashBoardGraphBOList(cmfCaseGraphDashboardBOList);
+					}
+				} else if(days <= 366) {
+					splitCount = Integer.valueOf(""+days)/30;
+					cmfCaseGraphDashboardBOList = new ArrayList<DashBoardJSONObjectBO>(0);
+					List<Date> startDateList = new ArrayList<Date>(0);
+					startDateList = assignTimePeriodsByDate(startDate,splitCount,days);
+					startDateList.add(endDate);
+					if(!type.equals("") && type.equals(CMF_CASE_DASHBOARD_TYPE_CATEGORY)) {
+						
+						List<DashBoardGraphBO> categoryBOList = new ArrayList<DashBoardGraphBO>(0);
+						List<CmfCaseCategory> cmfCaseCategoryList = getCaseCategoryList();
+						for (CmfCaseCategory cmfCaseCategory : cmfCaseCategoryList) {
+							DashBoardGraphBO dashBoardGraphBO = new DashBoardGraphBO();
+							dashBoardGraphBO.setPeriod(cmfCaseCategory.getCategoryId());
+							dashBoardGraphBO.setPeriodName(cmfCaseCategory.getCategoryName());
+							categoryBOList.add(dashBoardGraphBO);
+						}
+						graphBO.setOptionsList(categoryBOList);
+						cmfCaseGraphDashboardBOList = new ArrayList<DashBoardJSONObjectBO>(0);
+						
+						int count = 0;
+						String period = "";
+						while (count<startDateList.size()-1) {
+					    	Format formattermm = new SimpleDateFormat("MMM-yy");
+						    period = formattermm.format(startDateList.get(count));
+							DashBoardJSONObjectBO dashBoardJSONObjectBO = new DashBoardJSONObjectBO();
+							dashBoardJSONObjectBO.setLable(period);
+							dashBoardJSONObjectBO.setDashBoardGraphBOList(getCategoryCasesCountByPeriod(cmfCaseCategoryList,null, startDateList.get(count), startDateList.get(count+1),splitCount,days,type));
+							cmfCaseGraphDashboardBOList.add(dashBoardJSONObjectBO);
+							count++;
+						}
+						graphBO.setDashBoardGraphBOList(cmfCaseGraphDashboardBOList);
+			        }
+			        if(!type.equals("") && type.equals(CMF_CASE_DASHBOARD_TYPE_PRIORITY)) {
+			        	
+			        	List<DashBoardGraphBO> cmfCasePriorityBOList = new ArrayList<DashBoardGraphBO>(0);
+			        	List<CmfCasePriority> cmfCasePriorityList = getCasePriorityList();
+						for (CmfCasePriority cmfCasePriority : cmfCasePriorityList) {
+							DashBoardGraphBO dashBoardGraphBO = new DashBoardGraphBO();
+							dashBoardGraphBO.setPeriod(cmfCasePriority.getPriorityId());
+							dashBoardGraphBO.setPeriodName(cmfCasePriority.getPriorityName());
+							cmfCasePriorityBOList.add(dashBoardGraphBO);
+						}
+						graphBO.setOptionsList(cmfCasePriorityBOList);
+						cmfCaseGraphDashboardBOList = new ArrayList<DashBoardJSONObjectBO>(0);
+						int count = 0;
+						String period = "";
+						while (count<startDateList.size()-1) {
+					    	Format formattermm = new SimpleDateFormat("MMM-yy");
+						    period = formattermm.format(startDateList.get(count));
+							DashBoardJSONObjectBO dashBoardJSONObjectBO = new DashBoardJSONObjectBO();
+							dashBoardJSONObjectBO.setLable(period);
+							dashBoardJSONObjectBO.setDashBoardGraphBOList(getCategoryCasesCountByPeriod(null,cmfCasePriorityList,startDateList.get(count), startDateList.get(count+1),splitCount,days,type));
+							cmfCaseGraphDashboardBOList.add(dashBoardJSONObjectBO);
+							count++;
+						}
+						graphBO.setDashBoardGraphBOList(cmfCaseGraphDashboardBOList);
+
+			        }
+					if(!type.equals("") && type.equals(CMF_CASE_DASHBOARD_TYPE_SOCIALPROFILE)) {
+						List<DashBoardGraphBO> cmfCaseProfileBOList = new ArrayList<DashBoardGraphBO>(0);
+						List<SocialProfiles> socialProfilesList = getSocialProfileDAO().load("from SocialProfiles");
+						for (SocialProfiles socialProfiles : socialProfilesList) {
+							DashBoardGraphBO dashBoardGraphBO = new DashBoardGraphBO();
+							dashBoardGraphBO.setPeriod(socialProfiles.getProfileId());
+							dashBoardGraphBO.setPeriodName(socialProfiles.getAccountType());
+							cmfCaseProfileBOList.add(dashBoardGraphBO);
+						}
+						graphBO.setOptionsList(cmfCaseProfileBOList);
+						cmfCaseGraphDashboardBOList = new ArrayList<DashBoardJSONObjectBO>(0);
+						int count = 0;
+						String period = "";
+						while (count<startDateList.size()-1) {
+					    	Format formattermm = new SimpleDateFormat("MMM-yy");
+						    period = formattermm.format(startDateList.get(count));
+							DashBoardJSONObjectBO dashBoardJSONObjectBO = new DashBoardJSONObjectBO();
+							dashBoardJSONObjectBO.setLable(period);
+							dashBoardJSONObjectBO.setDashBoardGraphBOList(getSocialProfialCasesCountByPeriod(socialProfilesList, startDateList.get(count), startDateList.get(count+1)));
+							cmfCaseGraphDashboardBOList.add(dashBoardJSONObjectBO);
+							count++;
+						}
+						graphBO.setDashBoardGraphBOList(cmfCaseGraphDashboardBOList);
+					}
+				}
+				
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getCountOfCmfCasesByDateCriteria....");
+		return graphBO;
+	}
+	
+
+	private List<CmfCasePriority> getCasePriorityList() throws BusinessException {
+		List<CmfCasePriority> cmfCasePriorityList = null;
+		try {
+			cmfCasePriorityList = getCmfCasePriorityDAO().load("from CmfCasePriority");
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		return cmfCasePriorityList;
+	}
+	
+	private List<CmfCaseCategory> getCaseCategoryList() throws BusinessException {
+		List<CmfCaseCategory> cmfCaseCategoryList = null;
+		try {
+			cmfCaseCategoryList= getCmfCaseCategoryDAO().load("from CmfCaseCategory");
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		return cmfCaseCategoryList;
+	}
+
+	private List<Date> assignTimePeriodsByDate(Date startDate,
+			int splitCount,long days) {
+
+		Calendar now = Calendar.getInstance();
+		now.setTime(startDate);
+        now.set(Calendar.HOUR, 0);
+        now.set(Calendar.MINUTE, 0);
+        now.set(Calendar.SECOND, 0);
+        int i =1;
+        List<Date> startDateList = new ArrayList<Date>(0);
+        startDateList.add(now.getTime());
+        
+        while(i<=splitCount) {
+	        	if(days <= 30) {
+	        		now.add(Calendar.DATE, 1);
+	        	} else if(days>30 && days <= 366) {
+	        		now.add(Calendar.MONTH, 1);
+	        	}
+			   startDateList.add(now.getTime());
+			   i++;
+		} 
+        if(days ==0) {
+        	now.add(Calendar.DATE, 1);
+        	startDateList.add(now.getTime());
+        }
+		return startDateList;
+	}
+
+	private List<DashBoardGraphBO> getCategoryCasesCountByPeriod(List<CmfCaseCategory> cmfCaseCategoryList,List<CmfCasePriority> cmfCasePriorityList,Date startDate,Date endDate,int splitCount,long days,String type) throws BusinessException {
+		List<DashBoardGraphBO> dashBoardGraphBOList = new ArrayList<DashBoardGraphBO>(0);
+		if(!type.equals("") && type.equals(CMF_CASE_DASHBOARD_TYPE_CATEGORY)) {
+		for (CmfCaseCategory cmfCaseCategory : cmfCaseCategoryList) {
+			dashBoardGraphBOList.add(getCategoryByPeriod(null,cmfCaseCategory.getCategoryId(),cmfCaseCategory.getCategoryName(),startDate,endDate,days));
+		} 
+		} else if(!type.equals("") && type.equals(CMF_CASE_DASHBOARD_TYPE_PRIORITY)) {
+			for (CmfCasePriority cmfCasePriority : cmfCasePriorityList) {
+				dashBoardGraphBOList.add(getCategoryByPeriod(cmfCasePriority.getPriorityId(),null,cmfCasePriority.getPriorityName(),startDate,endDate,days));
+			} 
+		}
+		
+		LOGGER.debug("Ends getCountOfCmfCasesByDateCriteria....");
+		return dashBoardGraphBOList;
+	}
+	
+	private List<DashBoardGraphBO> getSocialProfialCasesCountByPeriod(List<SocialProfiles> cmfCaseProfileBOList,
+			Date fromDate, Date toDate)throws BusinessException  {
+		List<DashBoardGraphBO> dashBoardGraphBOList = new ArrayList<DashBoardGraphBO>(0);
+		for (SocialProfiles socialProfiles : cmfCaseProfileBOList) {
+			dashBoardGraphBOList.add(getSocialProfialByPeriod(socialProfiles.getProfileId(),socialProfiles.getAccountType(),fromDate,toDate));
+		} 
+		
+		LOGGER.debug("Ends getCountOfCmfCasesByDateCriteria....");
+		return dashBoardGraphBOList;
+	}
+
+	private DashBoardGraphBO getSocialProfialByPeriod(Integer profileId,
+			String accountType, Date fromDate, Date toDate) throws BusinessException {
+		DashBoardGraphBO dashBoardGraphBO = new DashBoardGraphBO();
+
+		try{
+			Long categoryCount = null;
+					categoryCount = getCmfCaseDAO().getCountOfCasesSocialProfialByDateCriteria(profileId,fromDate,toDate);
+				
+				if(null != profileId) {
+					dashBoardGraphBO.setPeriodNumber(profileId);
+				}
+				dashBoardGraphBO.setTypeCount(categoryCount);
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+	
+		LOGGER.debug("Ends getCategoryByPeriod....");
+		return dashBoardGraphBO;
+	}
+
+	private DashBoardGraphBO getCategoryByPeriod(Integer priorityId,Integer categoryId, String typeName,
+			Date startDate,Date endDate,long days) throws BusinessException {
+		DashBoardGraphBO dashBoardGraphBO = new DashBoardGraphBO();
+
+		try{
+			Long categoryCount = null;
+				categoryCount = getCmfCaseDAO().getCountOfCmfCasesByDateCriteria(priorityId,null,categoryId,startDate,endDate);
+				if(null != priorityId) {
+					dashBoardGraphBO.setPeriodNumber(priorityId);
+				} else if (null != categoryId) {
+					dashBoardGraphBO.setPeriodNumber(categoryId);
+				}
+				dashBoardGraphBO.setTypeCount(categoryCount);
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+	
+		LOGGER.debug("Ends getCategoryByPeriod....");
+		return dashBoardGraphBO;
+	}
+	
+	private long calculateDays(Date startDate,Date endDate) {
+	    long diff = endDate.getTime() - startDate.getTime();
+	    long days =  TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+	    return days;
+	}
+
+	public List<CmfCaseBO> getAllCmfCasesByCustomer(int customerId)
+			throws BusinessException {
+		LOGGER.debug("Starts getAllCmfOpenCasesByCriteria....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try { 
+			cmfCases = getCmfCaseDAO().getAllCmfCasesByCustomer(customerId);
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByCriteria....");
+		return cmfCaseBO;
+	}
+
+	public CmfCaseBO getCaseDetails(String caseId) throws BusinessException {
+		LOGGER.debug("Starts getAllCmfOpenCasesByCriteria....");
+		CmfCase cmfCase = null;
+		CmfCaseBO cmfCaseBO = null;
+		try { 
+			cmfCase = getCmfCaseDAO().findById(caseId);
+			
+			if (null != cmfCase) {
+				cmfCase = getCmfCaseDependencies(cmfCase);
+				
+				cmfCaseBO = CmfCaseHelper.getInstance().convertcmfCaseEntiryToCmfCaseBO(cmfCase);
+			}
+			
+			
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByCriteria....");
+		return cmfCaseBO;
+	}
+	
+	public List<CmfCaseBO> getCaseDetailsByGroupCaseId(String caseId) throws BusinessException  {
+		LOGGER.debug("Starts getAllCmfOpenCasesByCriteria....");
+		List<CmfCase> cmfCases = null;
+		CmfCaseBO cmfCaseBO = null;
+		List<CmfCaseBO> cmfCasesBO= new ArrayList<CmfCaseBO>();
+		try { 
+			cmfCases = getCmfCaseDAO().getAllCmfCasesByGroupCaseId(caseId);
+			
+			
+			for(CmfCase cmCase:cmfCases) {
+				CmfCase	cmfCase = getCmfCaseDependencies(cmCase);
+				
+				cmfCaseBO = CmfCaseHelper.getInstance().convertcmfCaseEntiryToCmfCaseBO(cmfCase);
+				cmfCasesBO.add(cmfCaseBO);
+			}
+			
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByCriteria....");
+		return cmfCasesBO;
+	}
+	
+	public List<CmfCaseBO> getCaseDetailsBySearch(SearchBO searchBO) throws BusinessException  {
+		
+		List<CmfCase> cmfCases = null;
+		CmfCaseBO cmfCaseBO = null;
+		List<CmfCaseBO> cmfCasesBO= new ArrayList<CmfCaseBO>();
+		try { 
+			cmfCases = getCmfCaseDAO().getAllCmfCasesBySearch(searchBO.getKeyword(),searchBO.getSourceId(),searchBO.getCurrentStatus(),searchBO.getCategory(), searchBO.getPreority() , searchBO.getAccountId());			
+			for(CmfCase cmCase:cmfCases) {
+				CmfCase	cmfCase = getCmfCaseDependencies(cmCase);
+				
+				cmfCaseBO = CmfCaseHelper.getInstance().convertcmfCaseEntiryToCmfCaseBO(cmfCase);
+				cmfCasesBO.add(cmfCaseBO);
+			}
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByCriteria....");
+		return cmfCasesBO;
+	}
+	
+	public List<UserBO> getAllUsers() throws BusinessException {
+
+		LOGGER.debug("Starts getAllUsers....");
+		List<UserBO> userBOList = null;
+		
+		try { 
+			userBOList = new ArrayList<UserBO>(0);
+			List<Users> usersList = getUserDAO().load("from Users");
+			UserBO userBO = null;
+			for (Users users : usersList) {
+				List<UsersRoles> userRolesList = getUsersRolesDAO().getUserRoles(users.getUserId());
+				Set<UsersRoles> userRoles = new HashSet<UsersRoles>(userRolesList);
+				users.setUsersRoleses(userRoles);
+				for(UsersRoles userRole:userRoles)
+				{
+					Roles role = getRolesDAO().getRoles(userRole.getUserRoleId());
+					userRole.setRoles(role);
+				}
+				if(users != null)
+				{
+					userBO = UserHelper.getInstance().convertUserEntityToBO(users);
+				}
+				
+				userBOList.add(userBO);
+			}
+			
+						
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends getAllUsers....");
+		return userBOList;
+	}
+	
+	public void assignSelectedCasesToUser(String userName,String reasonForAssigning,List<String> caseIdList) throws BusinessException {
+
+		LOGGER.debug("Starts assignSelectedCasesToUser....");
+		CmfCase cmfCase = null;
+		try { 
+			Users users = getUserDAO().getUserByUserName(userName);
+			for (String caseId : caseIdList) {
+				cmfCase = getCmfCaseDAO().findById(caseId);
+				cmfCase.setUsers(users);
+				CmfCaseStatus cmfCaseStatus = getCmfCaseStatusDAO().getCmfCaseStatusByCmfCase(CMF_CASES_ASSIGNED);
+				cmfCase.setCmfCaseStatus(cmfCaseStatus);
+				CmfCaseNoteCategories cmfCaseNoteCategories = getCmfCaseNoteCategoriesDAO().findById(CMF_CASES_NOTE_ASSIGNED);
+				appendNote(cmfCaseStatus,reasonForAssigning,cmfCase,userName,cmfCaseNoteCategories);
+				getCmfCaseDAO().saveOrUpdate(cmfCase);
+			}
+						
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends assignSelectedCasesToUser....");
+	}
+
+	public List<CmfCaseBO> getAllCmfSpamCases(Integer priorityTypeId,
+			Integer categoryId, Integer accountTypeId) throws BusinessException {
+		LOGGER.debug("Starts getAllCmfSpamCases....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			
+			cmfCases = getCmfCaseDAO().getAllCmfCasesByCriteria(priorityTypeId,categoryId,accountTypeId,CMF_CASES_SPAM);
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(
+						cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfSpamCases....");
+		return cmfCaseBO;
+	}
+
+	public List<CmfCaseBO> getAllCmfClosedCases(Integer priorityTypeId,
+			Integer categoryId, Integer accountTypeId) throws BusinessException {
+		LOGGER.debug("Starts getAllCmfClosedCases....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			
+			cmfCases = getCmfCaseDAO().getAllCmfCasesByCriteria(priorityTypeId,categoryId,accountTypeId,CMF_CASES_CLOSED);
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(
+						cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfClosedCases....");
+		return cmfCaseBO;
+	}
+
+	public void reopenSelectedCases(String userName, String reason,
+			List<String> caseIdList) throws BusinessException {
+		LOGGER.debug("Starts reopenSelectedCases....");
+		CmfCase cmfCase = null;
+		try { 
+			Users users = getUserDAO().getUserByUserName(userName);
+			for (String caseId : caseIdList) {
+				cmfCase = getCmfCaseDAO().findById(caseId);
+				cmfCase.setUsers(users);
+				CmfCaseStatus cmfCaseStatus = getCmfCaseStatusDAO().getCmfCaseStatusByCmfCase(CMF_CASES_REOPEN);
+				cmfCase.setCmfCaseStatus(cmfCaseStatus);
+				CmfCaseNoteCategories cmfCaseNoteCategories = getCmfCaseNoteCategoriesDAO().findById(CMF_CASES_NOTE_REOPEN);
+				appendNote(cmfCaseStatus,reason,cmfCase,userName,cmfCaseNoteCategories);
+				getCmfCaseDAO().saveOrUpdate(cmfCase);
+			}
+						
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends reopenSelectedCases....");
+	}
+
+	
+	private void appendNote(CmfCaseStatus cmfCaseStatus, String reason,
+			CmfCase cmfCase,String userName,CmfCaseNoteCategories cmfCaseNoteCategories) throws BusinessException {
+		try { 
+			CmfCaseNote cmfCaseNote = new CmfCaseNote();
+			cmfCaseNote.setNoteDescription(reason);
+			cmfCaseNote.setCmfCase(cmfCase);
+			cmfCaseNote.setCreatedBy(userName);
+			cmfCaseNote.setUpdatedBy(userName);
+			cmfCaseNote.setCmfCaseStatus(cmfCaseStatus);
+			cmfCaseNote.setCmfCaseNoteCategories(cmfCaseNoteCategories);
+			cmfCaseNote.setCreatedDate(new Date());
+			cmfCaseNote.setUpdatedDate(new Date());
+			getCmfCaseNoteDAO().saveOrUpdate(cmfCaseNote);
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+	}
+	private void updateNote(CmfCaseStatus cmfCaseStatus, String reason,
+			CmfCase cmfCase,String userName,CmfCaseNoteCategories cmfCaseNoteCategories) throws BusinessException {
+		try { 
+			CmfCaseNote cmfCaseNote  = getCmfCaseNoteDAO().getNoteByCaseIdAndCategoryId(cmfCase.getCaseId(), cmfCaseNoteCategories.getId());
+			if(cmfCaseNote!=null){
+				cmfCaseNote.setNoteDescription(reason);
+				cmfCaseNote.setUpdatedBy(userName);
+				cmfCaseNote.setUpdatedDate(new Date());
+			}else
+			{
+				cmfCaseNote = new CmfCaseNote();
+				cmfCaseNote.setNoteDescription(reason);
+				cmfCaseNote.setCmfCase(cmfCase);
+				cmfCaseNote.setCreatedBy(userName);
+				cmfCaseNote.setUpdatedBy(userName);
+				cmfCaseNote.setCmfCaseStatus(cmfCaseStatus);
+				cmfCaseNote.setCmfCaseNoteCategories(cmfCaseNoteCategories);
+				cmfCaseNote.setCreatedDate(new Date());
+				cmfCaseNote.setUpdatedDate(new Date());
+				getCmfCaseNoteDAO().saveOrUpdate(cmfCaseNote);
+			}
+			getCmfCaseNoteDAO().saveOrUpdate(cmfCaseNote);
+			
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+	}
+	
+	
+	public void closeSelectedCases(String userName, List<String> caseIdList)
+			throws BusinessException {
+		LOGGER.debug("Starts closeSelectedCases....");
+		CmfCase cmfCase = null;
+		try { 
+			Users users = getUserDAO().getUserByUserName(userName);
+			for (String caseId : caseIdList) {
+				cmfCase = getCmfCaseDAO().findById(caseId);
+				cmfCase.setUsers(users);
+				CmfCaseStatus cmfCaseStatus = getCmfCaseStatusDAO().getCmfCaseStatusByCmfCase(CMF_CASES_CLOSED);
+				cmfCase.setCmfCaseStatus(cmfCaseStatus);
+				getCmfCaseDAO().saveOrUpdate(cmfCase);
+			}
+				
+						
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends closeSelectedCases....");
+		
+	}
+	
+	
+	public void moveToSpamSelectedCases(String userName, List<String> caseIdList) throws BusinessException
+	{
+		LOGGER.debug("Starts moveToSpamSelectedCases....");
+		CmfCase cmfCase = null;
+		try { 
+			Users users = getUserDAO().getUserByUserName(userName);
+			for (String caseId : caseIdList) {
+				cmfCase = getCmfCaseDAO().findById(caseId);
+				cmfCase.setUsers(users);
+				CmfCaseStatus cmfCaseStatus = getCmfCaseStatusDAO().getCmfCaseStatusByCmfCase(CMF_CASES_SPAM);
+				cmfCase.setCmfCaseStatus(cmfCaseStatus);
+				getCmfCaseDAO().saveOrUpdate(cmfCase);
+			}
+				
+						
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends moveToSpamSelectedCases....");
+		
+	}
+
+	public void reOpenSpamSelectedCases(String userName, List<String> caseIdList)
+			throws BusinessException {
+		LOGGER.debug("Starts reOpenSpamSelectedCases....");
+		CmfCase cmfCase = null;
+		try { 
+			Users users = getUserDAO().getUserByUserName(userName);
+			for (String caseId : caseIdList) {
+				cmfCase = getCmfCaseDAO().findById(caseId);
+				cmfCase.setUsers(users);
+				CmfCaseStatus cmfCaseStatus = getCmfCaseStatusDAO().getCmfCaseStatusByCmfCase(CMF_CASES_CREATED);
+				cmfCase.setCmfCaseStatus(cmfCaseStatus);
+				getCmfCaseDAO().saveOrUpdate(cmfCase);
+			}
+				
+						
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends reOpenSpamSelectedCases....");
+		
+	}
+
+	public void resolvedSelectedCases(String userName, String reason,
+			List<String> caseIdList) throws BusinessException {
+		LOGGER.debug("Starts resolvedSelectedCases....");
+		CmfCase cmfCase = null;
+		try { 
+			Users users = getUserDAO().getUserByUserName(userName);
+			for (String caseId : caseIdList) {
+				cmfCase = getCmfCaseDAO().findById(caseId);
+				cmfCase.setUsers(users);
+				CmfCaseStatus cmfCaseStatus = getCmfCaseStatusDAO().getCmfCaseStatusByCmfCase(CMF_CASES_RESOLVED);
+				cmfCase.setCmfCaseStatus(cmfCaseStatus);
+				CmfCaseNoteCategories cmfCaseNoteCategories = getCmfCaseNoteCategoriesDAO().findById(CMF_CASES_NOTE_RESOLVED);
+				appendNote(cmfCaseStatus,reason,cmfCase,userName,cmfCaseNoteCategories);
+				getCmfCaseDAO().saveOrUpdate(cmfCase);
+			}
+				
+						
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends resolvedSelectedCases....");
+	}
+	public List<CmfCaseBO> getAllCmfGroupCases(Integer account_type) throws BusinessException {
+		LOGGER.debug("Starts getAllCmfGroupCases....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			
+			cmfCases = getCmfCaseDAO().getAllCmfOpenCasesByAccountType(account_type);
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertGroupCmfCaseEntityToBO(
+						cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfClosedCases....");
+		return cmfCaseBO;
+		}
+
+	/**
+	 * 
+	 */
+	public void saveCase(CmfCaseBO caseBO) throws BusinessException{
+		CmfCase cmfCase = null;
+		int noteId = CMF_CASES_NOTE_CREATED;
+		boolean isNewCase = true; 
+	try{
+		if(null != caseBO.getCaseId() && !caseBO.getCaseId().equals(""))
+		{
+			cmfCase = getCmfCaseDAO().findById(caseBO.getCaseId());
+			isNewCase = false;
+		} else {
+			cmfCase = new CmfCase();
+		}
+		cmfCase.setCmfCasePriority(getCmfCasePriorityDAO().getCmfCasePriorityByCmfCase(caseBO.getCmfCasePriorityBO().getPriorityId()));		
+		cmfCase.setUsers(getUserDAO().getUserByCmfCase(caseBO.getUserBO().getUserId()));
+		cmfCase.setCmfCaseStatus(getCmfCaseStatusDAO().getCmfCaseStatusByCmfCase(caseBO.getCmfCaseStatusBO().getCaseStatusId()));
+		cmfCase.setDescription(caseBO.getDescription());
+		cmfCase.setSocialProfiles(getSocialProfileDAO().getSocialProfilesByCmfCase(caseBO.getSocialProfilesBO().getProfileId()));
+		
+		if(caseBO.getCmfCaseCategoryBO()!=null){
+			cmfCase.setCmfCaseCategory(getCmfCaseCategoryDAO().getCaseCategoryById(caseBO.getCmfCaseCategoryBO().getCategoryId()));
+		}
+		if(caseBO.getCmfCustomerBO()!=null){
+			cmfCase.setCmfCustomer(getCmfCustomerDAO().getCmfCustomerByCmfCase(caseBO.getCmfCustomerBO().getCustomerId()));
+		}
+		if(caseBO.getSocialMediaAccountsBO()!=null){
+			cmfCase.setSocialMediaAccounts(getSocialMediaAccountsDAO().getSocialMediaAccountsByCmfCase(caseBO.getSocialMediaAccountsBO().getId()));
+		}
+		if(caseBO.getFinancialInstitutionsBO()!=null && caseBO.getFinancialInstitutionsBO().getId()!= null){
+			cmfCase.setFinancialInstitutions(getFinancialInstitutionsDAO().getFinancialInstitutionsByCmfCase(caseBO.getFinancialInstitutionsBO().getId()));
+		}
+		
+		cmfCase.setName(caseBO.getName());
+		cmfCase.setCreatedBy(caseBO.getCreatedBy());
+		cmfCase.setUpdatedBy(caseBO.getUpdatedBy());
+		cmfCase.setCreatedDate(new Date());
+		cmfCase.setUpdatedDate(new Date());
+		if(caseBO.getCaseId() == null || caseBO.getCaseId().equals("")){
+			cmfCase.setCaseId(getCaseID(cmfCase.getSocialProfiles().getAccountType(),cmfCase.getCmfCaseCategory().getCategoryShortName(),cmfCase.getCmfCasePriority().getPrirotyShortName()));
+		}
+		
+		cmfCase.setGroupCaseFlag(caseBO.getGroupCaseFlag());
+		if("Yes".equalsIgnoreCase(caseBO.getGroupCaseFlag()))
+		{
+			cmfCase.setGroupCaseId("0");
+		}else
+		{
+			cmfCase.setGroupCaseId("");
+		} 
+		getCmfCaseDAO().saveOrUpdate(cmfCase);
+		
+	//	updating groupcaseid 	
+		if("Yes".equalsIgnoreCase(caseBO.getGroupCaseFlag()) )
+		{	
+			noteId = CMF_CASES_NOTE_GROUP;
+			if(caseBO.getCmfGroupCaseList()!=null && caseBO.getCmfGroupCaseList().getGroupCaseBOs().size() > 0){
+				updateGroupCase((caseBO.getCmfGroupCaseList()).getGroupCaseBOs() , cmfCase.getCaseId());
+			}
+			if(caseBO.getCmfUnGroupCaseList()!=null && caseBO.getCmfUnGroupCaseList().getUnGroupCaseBOs()!=null)
+			{
+				unGroupCase(caseBO.getCmfUnGroupCaseList().getUnGroupCaseBOs());
+			}
+			
+		}
+		
+		if(isNewCase)
+		{
+			for(CmfCaseNoteBO CmfCaseNoteBO : caseBO.getCmfCaseNotesBO())
+			{
+				CmfCaseNoteCategories cmfCaseNoteCategories = getCmfCaseNoteCategoriesDAO().findById(noteId);
+				appendNote(cmfCase.getCmfCaseStatus(), CmfCaseNoteBO.getNoteDescription(), cmfCase, cmfCase.getUsers().getUserName(), cmfCaseNoteCategories);
+			}
+		}else
+		{
+			for(CmfCaseNoteBO CmfCaseNoteBO : caseBO.getCmfCaseNotesBO())
+			{
+				CmfCaseNoteCategories cmfCaseNoteCategories = getCmfCaseNoteCategoriesDAO().findById(noteId);
+				updateNote(cmfCase.getCmfCaseStatus(), CmfCaseNoteBO.getNoteDescription(), cmfCase, cmfCase.getUsers().getUserName(), cmfCaseNoteCategories);			
+			}
+		}
+	
+		
+		}catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+	}
+	
+	
+	public void updateGroupCase(List<CmfCaseBO> cmfCaseBOs, String groupCaseId) throws BusinessException
+	{
+		for(CmfCaseBO caseBO : cmfCaseBOs)
+		{
+			 
+			 try {
+				getCmfCaseDAO().updateGroupCaseId(caseBO.getCaseId(), groupCaseId);
+			} catch (GenericDAOException e) {
+				// TODO Auto-generated catch block
+				throw new BusinessException(e.getMessageBO());
+			} catch (Exception e) {
+				throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+			}
+			 
+		}
+			
+	}
+	 public void unGroupCase(List<CmfCaseBO> cmfCaseBOs) throws BusinessException
+	 {
+		 for(CmfCaseBO caseBO : cmfCaseBOs)
+			{
+			 try {
+					getCmfCaseDAO().unGroupCaseId(caseBO.getCaseId());
+				} catch (GenericDAOException e) {
+					// TODO Auto-generated catch block
+					throw new BusinessException(e.getMessageBO());
+				} catch (Exception e) {
+					throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+				}
+			}
+	 }
+	
+	/**
+	 * 
+	 * @return
+	 * @throws BusinessException
+	 */
+	public String generateCaseID(int accountTypeId, Integer categoryId ,Integer prirotyId) throws BusinessException
+	{
+		String caseStr = "";
+		String category = "";
+		String account_type = "";
+		String priority = "";
+		String caseId	= "";
+		
+		try{
+		SocialMediaAccounts socialProfilesBO 	=  	getSocialMediaAccountsDAO().getSocialMediaAccountsByCmfCase(accountTypeId);
+		CmfCaseCategoryBO caseCategoryBO	=   getCaseCategoryById(categoryId);
+		CmfCasePriorityBO casePriorityBO 	= 	getCasePriorityById(prirotyId);
+	
+		category = caseCategoryBO.getCategoryShortName();
+		priority = casePriorityBO.getPrirotyShortName();
+		
+		
+		if(socialProfilesBO.getAccountName().equals("FACEBOOK"))
+		{	account_type = "FB";
+			
+		}else
+		{	
+			account_type = "TW";			
+		}
+		caseStr = category+account_type+priority;
+		long count = getRowCount();
+		caseId = caseStr+(count+1);		 
+		}catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		}
+		catch (BusinessException  be) {
+			be.printStackTrace(); 
+		}
+		
+		return caseId;
+	}
+	
+	
+	
+	private String getCaseID(String accountType,String categoryType , String priority) throws BusinessException
+	{
+		String caseId	= "";
+		if(accountType.equals("FACEBOOK"))
+		{
+			accountType = "FB";
+		}else
+		{
+			accountType = "TW";
+		}
+		return categoryType+accountType+priority+(String.format("%06d", getRowCount()+1));
+		
+	}
+
+	public Long getRowCount() throws BusinessException {
+		long count = 0;
+		try{
+			count = getCmfCaseDAO().getCountOfCmfAllCases();
+	} catch (GenericDAOException gde) {
+		throw new BusinessException(gde.getMessageBO());
+	} catch (Exception e) {
+		throw new BusinessException(MessageUtil.getInstance().getMessage(
+				"UNKNOWN_EXCEPTION", null), e);
+	}
+		return count;
+	}
+
+	public CmfCaseCategoryBO  getCaseCategoryById(Integer id) throws BusinessException {
+		CmfCaseCategoryBO cmfCaseCategoryBO = null;
+		try{
+			CmfCaseCategory cmfCaseCategory =  getCmfCaseCategoryDAO().getCaseCategoryById(id);
+			cmfCaseCategoryBO = CmfCaseHelper.getInstance().convertCmfCaseCategoryEntiryToCmfCaseCategoryBO(cmfCaseCategory);
+		}catch (GenericDAOException gde) {
+				throw new BusinessException(gde.getMessageBO());
+			} catch (Exception e) {
+				throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+			}
+		return cmfCaseCategoryBO;
+	}
+	
+	public CmfCasePriorityBO getCasePriorityById(int id) throws BusinessException
+	{
+		CmfCasePriorityBO casePriorityBO = null;
+		try{
+		CmfCasePriority casePriority =   getCmfCasePriorityDAO().getCmfCasePriorityByCmfCase(id);
+		casePriorityBO = CmfCaseHelper.getInstance().convertCmfCasePriorityEntiryToBO(casePriority);
+		}catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+		return casePriorityBO;
+	}
+
+	public CmfPrirotyAndUserListBO populateUserAndPrirotyList()throws BusinessException {
+		CmfPrirotyAndUserListBO  prirotyAndUserListBO = new CmfPrirotyAndUserListBO();
+		List<CmfCasePriorityBO> casePriorityBOs = new ArrayList<CmfCasePriorityBO>();
+		
+		List<CmfCasePriority> casePriorities =  getCasePriorityList();
+		
+		for(CmfCasePriority casePriority : casePriorities)
+		{
+			CmfCasePriorityBO cmfPriorityBO = new CmfCasePriorityBO();
+			cmfPriorityBO = CmfCaseHelper.getInstance().convertCmfCasePriorityEntiryToBO(casePriority);
+			casePriorityBOs.add(cmfPriorityBO);
+		}
+		
+		List<UserBO> users =  getAllUsers();
+		prirotyAndUserListBO.setCmfUserListBO(users);
+		prirotyAndUserListBO.setCmfPriorityListBO(casePriorityBOs);
+		
+		return prirotyAndUserListBO;
+	}
+
+	public void assignCaseToGroupCase(String userName,String caseId, String groupCaseId,
+			String reason) throws BusinessException {
+		LOGGER.debug("Starts assignCaseToGroupCase....");
+		CmfCase cmfCase = null;
+		try { 
+			Users users = getUserDAO().getUserByUserName(userName);
+				cmfCase = getCmfCaseDAO().findById(caseId);
+				cmfCase.setUsers(users);
+				cmfCase.setGroupCaseId(groupCaseId);
+				
+				CmfCaseNoteCategories cmfCaseNoteCategories = getCmfCaseNoteCategoriesDAO().findById(CMF_CASES_NOTE_GROUP);
+				appendNote(cmfCase.getCmfCaseStatus(),reason,cmfCase,userName,cmfCaseNoteCategories);
+				getCmfCaseDAO().saveOrUpdate(cmfCase);
+							
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		
+		LOGGER.debug("Ends assignCaseToGroupCase....");
+		
+	}
+	
+	/**
+	 * 
+	 */
+	public void saveCaseHistory(CmfCaseHistoryBO caseHistoryBO)throws BusinessException {
+		CmfCaseHistory caseHistory = new CmfCaseHistory();
+		try {
+			Integer maxId = getMaxParentIdByCaseId(caseHistoryBO.getCaseId());
+			
+			caseHistory.setCmfCase(getCmfCaseDAO().findById(caseHistoryBO.getCaseId()));
+			caseHistory.setCaseHistoryDescription(caseHistoryBO.getCaseHistoryDescription());
+			caseHistory.setParentCaseHistoryId(maxId);
+			caseHistory.setCreatedBy(caseHistoryBO.getCreatedBy());
+			caseHistory.setCreatedDate((new Date()));
+			caseHistory.setPostType("Bank");
+			getCmfCaseHistoryDAO().saveOrUpdate(caseHistory);		 					
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage("UNKNOWN_EXCEPTION", null), e);
+		}
+		
+	}
+	
+	
+	
+	private Integer getMaxParentIdByCaseId(String case_id) throws GenericDAOException
+	{
+		Integer parentId = null;  
+		List<Object[]> maxId =  getCmfCaseHistoryDAO().getMaxCaseHistoryByCaseId(case_id);
+		if(maxId!=null && maxId.get(0)!=null)
+		{
+			parentId =  Integer.parseInt(""+maxId.get(0));
+		}
+		return parentId;
+	}
+	public List<CmfCaseBO> getCmfCasesSearchCriteria(Integer priorityTypeId,Integer categoryId,Integer socialMediaAccountsId,Integer accountTypeId,Integer statusTypeId,String keyWord) throws BusinessException {
+		LOGGER.debug("Starts getAllCmfOpenCasesByAccountType....");
+		LOGGER.debug("Starts getAllCmfSpamCases....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			
+			cmfCases = getCmfCaseDAO().getCmfCasesSearchCriteria(priorityTypeId,categoryId,accountTypeId,socialMediaAccountsId,statusTypeId,keyWord);
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(
+						cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByAccountType....");
+		return cmfCaseBO;
+	}
+	
+
+	public List<CmfCaseBO> getTopFiveCmfOpenCases() throws BusinessException {
+		LOGGER.debug("Starts getAllCmfOpenCasesByAccountType....");
+		List<CmfCase> cmfCases = null;
+		List<CmfCase> cmfCasesList = null;
+		List<CmfCaseBO> cmfCaseBO = null;
+		try {
+			cmfCases = getCmfCaseDAO().getTopFiveCmfOpenCases();
+			if (null != cmfCases) {
+				cmfCasesList = new ArrayList<CmfCase>(0);
+				for (CmfCase cmfCase : cmfCases) {
+					cmfCase = getCmfCaseDependencies(cmfCase);
+					cmfCasesList.add(cmfCase);
+				}
+
+				cmfCaseBO = CmfCaseHelper.getInstance().convertCmfCaseEntityToBO(cmfCasesList);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+
+		LOGGER.debug("Ends getAllCmfOpenCasesByAccountType....");
+		return cmfCaseBO;
+	}
+
+}

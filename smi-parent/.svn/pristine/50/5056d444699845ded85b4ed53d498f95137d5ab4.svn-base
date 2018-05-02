@@ -1,0 +1,22 @@
+package com.zen.smi.extsys.service;
+ 
+import java.util.List;
+
+import com.zen.smi.extsys.facebook.bo.FBMessageBO;
+import com.zen.smi.extsys.facebook.bo.Group;
+import com.zen.smi.extsys.facebook.bo.GroupMetaDataBO;
+import com.zen.smi.extsys.facebook.bo.SocialMediaPostsBO;
+ 
+public interface FaceBookService {
+	
+	 List<Group> getGroups(String initialUrl) throws Exception;
+
+	 String postMessage(FBMessageBO fbMessageBO) throws Exception;
+	 
+	  String postToUserTimeLine(SocialMediaPostsBO socialMediaPostsBO,byte[] bytes) throws Exception;
+
+}
+ 
+ 
+
+

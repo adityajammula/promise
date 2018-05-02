@@ -1,0 +1,14 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.ScheduleJobs;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+public interface ScheduleJobsDAO extends BaseDAO<ScheduleJobs, Serializable>{
+	
+	ScheduleJobs getJobsById(int jobId ) throws GenericDAOException;
+
+}

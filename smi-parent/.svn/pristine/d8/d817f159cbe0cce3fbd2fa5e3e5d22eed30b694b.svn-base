@@ -1,0 +1,21 @@
+AppServices.factory('dashboardService',function($http, $q,smiGenUtil){
+	
+    return{
+    	
+         getRealChartData:function(account_type_id){
+        	 
+    	 	var deferred = $q.defer();
+       		$http.get('socialMediaAccounts/socialdatanalysisgraph/'+account_type_id,{
+               }).success(function(response, status, headers) {
+       			deferred.resolve(response);
+       			smiGenUtil.handleSuccess(response);
+       	    }).error(function() {
+       	    	smiGenUtil.handleError(response);
+       	    });
+       		return deferred.promise;
+        	 
+         }
+         
+ 
+    };
+});

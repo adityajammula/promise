@@ -1,0 +1,15 @@
+package com.zen.smi.bo;
+
+import java.util.Set;
+
+public class GlobalColumnsDropDownBO {
+	private Set<String> globalColumns;
+
+	public Set<String> getGlobalColumns() {
+		return globalColumns;
+	}
+
+	public void setGlobalColumns(Set<String> globalColumns) {
+		this.globalColumns = globalColumns;
+	}
+}

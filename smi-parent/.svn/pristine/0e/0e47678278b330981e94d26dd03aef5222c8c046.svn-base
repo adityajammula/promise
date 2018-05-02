@@ -1,0 +1,14 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.entities.CmfCaseHistory;
+
+
+/**
+ * @author tmangalapenta
+ *
+ */
+public interface CmfCaseHistoryDAO extends BaseDAO<CmfCaseHistory, Serializable> {
+	
+}

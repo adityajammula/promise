@@ -1,0 +1,18 @@
+package com.zen.smi.bo;
+
+import java.util.List;
+
+public class OtherCommentsBOList {
+	
+	public List<OtherCommentsBO> getOtherCommentsBO() {
+		return otherCommentsBO;
+	}
+
+	public void setOtherCommentsBO(List<OtherCommentsBO> otherCommentsBO) {
+		this.otherCommentsBO = otherCommentsBO;
+	}
+
+	private List<OtherCommentsBO> otherCommentsBO;
+	
+
+}

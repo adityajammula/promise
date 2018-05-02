@@ -1,0 +1,48 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('ViewRulesController', function ($scope, $rootScope, rulesServices, $state) {
+	  $scope.rulesData = [];
+	  $rootScope.initializeViewRulesController = function() {
+		  rulesServices.getAppsListData().then(function(response){
+			  if(response.data != null)
+			  {
+				  $scope.appData = response.data.ruleApps;
+				  $scope.appId = response.data.ruleApps[0].appId;
+				  // when page load it will load with first record
+				  $scope.getRulesBasedOnAppId($scope.appId);
+			  }
+	      });
+		  
+	  };
+	  
+	  /**
+	   * This method is to Show the Rules in the table when change the application name.
+	   */ 
+	  $scope.getRulesBasedOnAppId = function(appId) {
+		  rulesServices.getRulesPageData(appId).then(function(response){
+			  if(response.data != null)
+			  {
+				  $scope.rulesData = response.data.rules;
+			  }
+	      });
+		  
+	  };
+/**
+ * This method is to Show the Rules in the table.
+ */
+	  $scope.showRule = function(rule) {
+		  var params = {};
+		  if(rule != null) {
+			  params.rule_id = rule.rule_id;
+		  }
+		  $state.go('editrules', params);
+	  };
+});

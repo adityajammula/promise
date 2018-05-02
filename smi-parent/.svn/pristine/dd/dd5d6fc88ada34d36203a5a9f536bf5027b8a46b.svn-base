@@ -1,0 +1,28 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCustomerAccount;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * @author tmangalapenta
+ *
+ */
+public interface CmfCustomerAccountDAO extends BaseDAO<CmfCustomerAccount, Serializable> {
+	
+	public List<CmfCustomerAccount> getCustomerAccounts(int customerId)
+			throws GenericDAOException;
+	
+	public void addCustomerAccounts(List<CmfCustomerAccount> customerAccountList)
+			throws GenericDAOException;
+	
+	public void updateCustomerAccounts(List<CmfCustomerAccount> customerAccountList)
+			throws GenericDAOException;
+	
+	public void deleteCustomerAccounts(List<CmfCustomerAccount> customerAccountList)
+			throws GenericDAOException;
+}

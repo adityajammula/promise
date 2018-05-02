@@ -1,0 +1,32 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASE_CREATED_STATUS;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASE_CLOSED_STATUS;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CASE_SPAM_STATUS;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.CmfCaseDAO;
+import com.zen.smi.dao.CmfCaseDetailsDAO;
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCaseDetails;
+import com.zen.smi.dao.entities.RuleRulesColumns;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.generic.utils.MessageUtil;
+
+public class CmfCaseDetailsDAOImpl extends BaseDAOImpl<CmfCaseDetails, Serializable> implements CmfCaseDetailsDAO {
+
+	public CmfCaseDetailsDAOImpl() {
+		super(CmfCaseDetails.class);
+	}
+}

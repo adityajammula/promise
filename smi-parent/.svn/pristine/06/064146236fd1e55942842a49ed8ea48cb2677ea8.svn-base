@@ -1,0 +1,56 @@
+package com.zen.smi.service.helper;
+
+import org.apache.log4j.Logger;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.SchedulerFactory;
+import org.quartz.impl.StdSchedulerFactory;
+
+public class SchedulerHelper {
+	/**
+	 * Logger for StaffHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(SchedulerHelper .class);
+
+	/**
+	 * Instance of StaffHelper.
+	 */
+	private static SchedulerHelper  instance;
+
+	/**
+	 * Private constructor
+	 */
+	public static Scheduler scheduler=null;
+	private SchedulerHelper() {
+
+	}
+	private static SchedulerHelper getInstance() {
+		if (instance == null) {
+			instance = new SchedulerHelper();
+			try {
+				startScheduler();
+			} catch (SchedulerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return instance;
+	}
+	public static void startScheduler() throws SchedulerException {
+		SchedulerFactory factory = new StdSchedulerFactory();
+	
+		try {
+			scheduler = factory.getScheduler();
+			scheduler.addGlobalJobListener(new SMIJobListener());
+			scheduler.start();
+		} catch (SchedulerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	public Scheduler getScheduler(){
+		getInstance();
+		return scheduler;
+	}
+}

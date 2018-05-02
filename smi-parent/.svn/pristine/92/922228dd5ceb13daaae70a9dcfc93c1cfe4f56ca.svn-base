@@ -1,0 +1,246 @@
+package com.zen.smi.helper;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import com.zen.rules.DataRule;
+import com.zen.rules.RuleFamily;
+import com.zen.rules.RuleGroup;
+import com.zen.rules.bo.InputBO;
+import com.zen.rules.entities.Message;
+import com.zen.rules.entities.TweetMessage;
+import com.zen.rules.eval.RuleEngine;
+import com.zen.rules.events.DataEvent;
+import com.zen.rules.events.Event;
+import com.zen.rules.impl.GenericDataRule;
+import com.zen.rules.impl.GenericRuleFamily;
+import com.zen.rules.impl.GenericRuleGroup;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+import com.zen.smi.web.bo.RuleTestMessageResponse;
+import com.zen.smi.web.bo.RulesMessageBO;
+import com.zen.smi.web.bo.RulesTestMessageBO;
+
+public final class RulesHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for StaffHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(RulesHelper .class);
+
+	/**
+	 * Instance of StaffHelper.
+	 */
+	private static RulesHelper  instance;
+
+	public static RulesHelper getInstance() {
+		if (instance == null) {
+			instance = new RulesHelper();
+		}
+		return instance;
+	}
+
+	public static void setInstance(RulesHelper instance) {
+		RulesHelper.instance = instance;
+	}
+
+	/**
+	 * Private constructor
+	 */
+	private RulesHelper() {
+
+	}
+	
+	public void processMessages(Map<String, RulesTestMessageBO> rulesTestMessageMap, InputBO inputBO) {
+		 LOGGER.debug("Starts processMessages...");
+		 
+		 Collection<RulesTestMessageBO> messageList = rulesTestMessageMap.values();
+		 try {
+			 RuleEngine engine = new RuleEngine();
+			 //update familes etc
+			 this.updateRules(engine, inputBO);
+			 //put in iteration
+			 for(RulesTestMessageBO rulesTestMessage: messageList)
+			 {
+				 engine.handle(rulesTestMessage.getMessage());
+			 }
+			 Map<String , List<Event>> eventsMap = engine.getEventsMap();
+			 if(!eventsMap.isEmpty())
+			 {
+				 StringBuffer bufferString = new StringBuffer();
+				 Iterator<String> eventsMapKeyIterator = eventsMap.keySet().iterator();
+				 while(eventsMapKeyIterator.hasNext())
+				 {
+					bufferString.setLength(0);
+					String messageId =  eventsMapKeyIterator.next();
+					List<Event> eventsList = eventsMap.get(messageId);
+					if(eventsList != null && !eventsList.isEmpty())
+					{
+						 for(Event currentEvent : eventsList)
+						 {
+							 DataEvent dataEvent = (DataEvent)currentEvent;
+							 String formula = dataEvent.getFormulaName();
+							 bufferString.append(formula);
+						 }
+					}
+					//Per message 
+					if(bufferString.length() > 0)
+					{
+						//Formula Applied
+						RulesTestMessageBO finalMessage = rulesTestMessageMap.get(messageId);
+						if(finalMessage != null)
+						{ 
+							//Update the object in the list
+							finalMessage.setFormulaApplied(bufferString.toString());
+						}
+					}
+				 }//while completed
+			 }
+		 
+		 } catch (Exception e) {
+			e.printStackTrace();
+		}
+    	 
+    	 LOGGER.debug("Ends processMessages...");
+		
+	}
+	public RuleTestMessageResponse createResponse(Collection<RulesTestMessageBO> messageList) {
+		 LOGGER.debug("Starts createResponse...");
+		 RuleTestMessageResponse response = new RuleTestMessageResponse();
+		 if(messageList != null)
+		 {
+			 List<RulesMessageBO> rulesAppliedList = new ArrayList<RulesMessageBO>();
+			 List<RulesMessageBO> rulesNotAppliedList = new ArrayList<RulesMessageBO>();
+			 response.setRulesAppliedList(rulesAppliedList);
+			 response.setRulesNotAppliedList(rulesNotAppliedList);
+			 
+			 for(RulesTestMessageBO msgBO : messageList)
+			 {
+				 String messageText = msgBO.getMessage().getText();
+				 String formula = msgBO.getFormulaApplied();
+				 RulesMessageBO newMessageBO = new RulesMessageBO();
+				 newMessageBO.setMessage(messageText);
+				 newMessageBO.setFormulaApplied(formula);
+				 if(formula != null)
+				 {
+					 rulesAppliedList.add(newMessageBO);
+				 }else
+				 {
+					 rulesNotAppliedList.add(newMessageBO);
+				 }
+			 }
+		 }
+		 
+		 
+    	 LOGGER.debug("Ends createResponse...");
+		return response;
+    	 
+	}
+	private void updateRules(RuleEngine engine, InputBO inputBO) {
+		 System.out.println(inputBO.getRuleId());
+		 Integer familyId = inputBO.getRuleFamilyId();
+		 if(familyId != null && familyId > 0)
+		 {
+			 updateRuleFamilies(engine, inputBO, familyId);
+		 }
+		 
+		 
+	}
+
+	/**
+	 * @param engine
+	 * @param inputBO
+	 * @param familyId
+	 */
+	private void updateRuleFamilies(RuleEngine engine, InputBO inputBO,
+			Integer familyId) {
+		 List<RuleFamily> families = engine.getAllFamilies();
+		
+		 Iterator<RuleFamily> familyIter = families.iterator();
+		 while(familyIter.hasNext())
+		 {
+			 GenericRuleFamily genFamily = (GenericRuleFamily)familyIter.next();
+			 if(!familyId.equals(genFamily.getFamilyId()))
+			 {
+				 familyIter.remove();
+			 }else
+			 {
+				 updateRuleGroups(inputBO, genFamily);
+			 }
+			 
+		 }
+	}
+
+	/**
+	 * @param inputBO
+	 * @param genFamily
+	 */
+	private void updateRuleGroups(InputBO inputBO, GenericRuleFamily genFamily) {
+		 Integer ruleGroupId = inputBO.getRuleGroupId();
+		 if(ruleGroupId == null) return;
+		 List<RuleGroup> ruleGroupList = genFamily.getRuleGroups();
+		 if(ruleGroupList != null)
+		 {
+			 Iterator<RuleGroup> ruleGroupIter = ruleGroupList.iterator();
+			 while(ruleGroupIter.hasNext())
+			 {
+				 GenericRuleGroup genRuleGroup = (GenericRuleGroup)ruleGroupIter.next();
+				 
+				 if(!ruleGroupId.equals(genRuleGroup.getGroupId()))
+				 {
+					 ruleGroupIter.remove();
+				 }else
+				 {
+					 Integer ruleId = inputBO.getRuleId();
+					 List<DataRule> dataRuleList = genRuleGroup.getDataRules();
+					 if(dataRuleList != null)
+					 {
+						 updateDataRules(ruleId, dataRuleList);
+					 }
+				 }
+			 }
+		 }
+	}
+
+	/**
+	 * @param ruleId
+	 * @param dataRuleList
+	 */
+	private void updateDataRules(Integer ruleId, List<DataRule> dataRuleList) {
+		if(ruleId == null) return;
+		Iterator<DataRule> ruleGroupIter = dataRuleList.iterator();
+		 while(ruleGroupIter.hasNext()) 
+		 {
+			 GenericDataRule genRule = (GenericDataRule)ruleGroupIter.next();
+			 if(!ruleId.equals(genRule.getRuleId()))
+			 {
+				 ruleGroupIter.remove();
+			 }
+			 
+		 }
+	}
+	/**
+	 * @param id String
+	 * @param messageText String
+	 * @return TweetMessage
+	 */
+	public TweetMessage createRulesMessage(String messageText, String id, String appName) {
+		 LOGGER.debug("Starts createRulesMessage...");
+		
+		 TweetMessage tweetMessage = new TweetMessage(messageText, id);
+		 tweetMessage.setPostType("public"); 
+		 tweetMessage.setSocialAccountType("TWITTER");
+		 tweetMessage.setAppName(appName);
+		 
+     	 LOGGER.debug("Ends createRulesMessage...");
+		
+     	 return tweetMessage;
+	}
+}

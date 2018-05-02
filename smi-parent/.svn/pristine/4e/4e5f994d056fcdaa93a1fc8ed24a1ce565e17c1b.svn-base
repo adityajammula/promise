@@ -1,0 +1,79 @@
+package com.zen.smi.controller;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.zen.smi.cmf.bo.CmfCaseNoteBO;
+import com.zen.smi.cmf.service.CmfCaseNoteService;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.generic.utils.MessageUtil;
+
+/**
+ * CmfCaseController class manage Cases related data. Data from screens is
+ * transferred to the controller and passed to services/dao.
+ * 
+ * @author tmangalapenta 
+ */
+@Controller
+@RequestMapping("/cmfcases/note")
+public class CmfCaseNoteController extends BaseController {
+
+	/**
+	 * Logger for CmfCaseController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(CmfCaseNoteController.class);
+
+	@Autowired
+	public CmfCaseNoteService cmfCaseNoteService;
+
+	/**
+	 * This method is to get all the rules information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return RuleListBO
+	 */
+	
+	@RequestMapping(value = "/appendnote", method = RequestMethod.POST)
+	public @ResponseBody String appendNoteToSelectedCases(@RequestBody String noteJson,HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			JSONObject obj = new JSONObject(noteJson);
+			String noteDescription = (String) obj.get("note_description");
+			List<String> caseidList = new ArrayList<String>(0);
+			JSONArray noteCaseIds = obj.getJSONArray("cmfcase");
+			int length = noteCaseIds.length();
+			if (length > 0) {
+			    for (int i = 0; i < length; i++) {
+			    	caseidList.add(noteCaseIds.getString(i));
+			    }
+			}
+		
+			 cmfCaseNoteService.appendNoteToSelectedCases(noteDescription,caseidList);
+			 resultJson = handleSuccess(resultJson, MessageUtil.getInstance().getMessage("NOTE_SAVED", null));
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	
+	
+}

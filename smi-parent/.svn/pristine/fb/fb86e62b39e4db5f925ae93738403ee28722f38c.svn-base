@@ -1,0 +1,17 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+public class CmfGroupCaseList {
+
+	List<CmfCaseBO> groupCaseBOs;
+
+	public List<CmfCaseBO> getGroupCaseBOs() {
+		return groupCaseBOs;
+	}
+
+	public void setGroupCaseBOs(List<CmfCaseBO> groupCaseBOs) {
+		this.groupCaseBOs = groupCaseBOs;
+	}
+	
+}

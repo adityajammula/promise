@@ -1,0 +1,340 @@
+<div class="container-fluid" >
+    <!-- row -->
+    <div class="row">
+        <!-- tile -->
+        <section class="tile">
+          <!-- tile header -->
+          <div class="tile-header bg-greensea dvd dvd-btm">
+            <h1 class="custom-font"><strong>DashBoard</strong></h1>
+          </div>
+          <!-- /tile header -->
+          <!-- tile body -->
+          <div class="tile-body">
+            <!-- cards row -->
+  <div class="row">
+    <!-- col -->
+    <div class="card-container col-lg-4 col-sm-6 col-sm-12">
+      <div class="card">
+        <div class="front bg-greensea">
+          <!-- row -->
+          <div class="row">
+            <!-- col -->
+            <div class="col-xs-4">
+              <i class="fa fa-users fa-4x"></i>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-8">
+              <p class="text-elg text-strong mb-0" ng-model="totalcases">{{totalcases}}</p>
+              <span>Cases</span>
+            </div>
+            <!-- /col -->
+          </div>
+          <div class="clearfix" style="height: 14px"></div>
+          <!-- /row -->
+        </div>
+        <div class="back bg-greensea">
+          <!-- row -->
+          <div class="row">
+            <!-- col -->
+            <div class="col-xs-6">
+              <a ui-sref="openfacebookcases"><img class ="col-xs-6"src="resources/images/Facebook.png" alt="fb" width="30px" height="30px">
+              <span class ="col-xs-6" ng-model="totalfbcases">{{totalfbcases}} Cases</span>
+              </a>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-6">
+              <a ui-sref="opentwittercases"><img class ="col-xs-6" src="resources/images/Twitter.png" alt="twitter" width="30px" height="30px">
+              <span class ="col-xs-6" ng-model="totaltwittercases">{{totaltwittercases}} Cases</span></a>
+            </div>
+            <!-- /col -->
+          </div>
+          <!-- /row -->
+        </div>
+      </div>
+    </div>
+    <!-- /col -->
+    <!-- col -->
+    <div class="card-container col-lg-4 col-sm-6 col-sm-12">
+      <div class="card">
+        <div class="front bg-lightred">
+          <!-- row -->
+          <div class="row">
+            <!-- col -->
+            <div class="col-xs-4">
+              <i class="fa fa-shopping-cart fa-4x"></i>
+            </div>
+            <!-- /col -->
+            <!-- col -->
+            <div class="col-xs-8">
+              <p class="text-elg text-strong mb-0" ng-model="totalcaseprioritycases">{{totalcaseprioritycases}}</p>
+              <span>Cases</span>
+            </div>
+            <!-- /col -->
+          </div>
+          <div class="clearfix" style="height: 14px"></div>
+          <!-- /row -->
+        </div>
+        <div class="back bg-lightred">
+          <!-- row -->
+          <div class="row">
+            <!-- col -->
+           
+            	<div class ="totalcriticalcases"  style="display:table-cell" ng-repeat="caseCount in caseCounts">
+            		<div>
+            			<label >{{caseCount.priority_name}}</label>
+            		</div>
+	            	<div>
+	            		 <label >{{caseCount.issue_count_by_priority_id}}</label>
+	            	</div>
+	            	<div>
+	            		 <label style="width:100%;">cases</label>
+	            	</div>
+		            
+		            
+	            </div>
+            <!-- /col -->
+            <!-- col -->
+            <!-- <div class="col-xs-3">
+                <div class ="totalcriticalcases">
+	            	 <label class="labeltitle">{{caseCount.priority_name}}</label>
+		             <label style="width:100%;">{{caseCount.issue_count_by_priority_id}}</label>
+		             <label style="width:100%;">cases</label>
+	            </div>
+            </div>
+            /col
+            col
+            <div class="col-xs-3">
+                <div class ="totalcriticalcases">
+	            	<label class="labeltitle">{{caseCount.priority_name}}</label>
+		            <label style="width:100%;">{{caseCount.issue_count_by_priority_id}}</label>
+		            <label style="width:100%;">cases</label>
+	            </div>
+            </div>
+            /col
+            col
+            <div class="col-xs-3">
+                <div class ="totalcriticalcases">
+	            	<label class="labeltitle">{{caseCount.priority_name}}</label>
+		            <label style="width:100%;">{{caseCount.issue_count_by_priority_id}}</label>
+		            <label style="width:100%;">cases</label>
+	            </div>
+            </div> -->
+            <!-- /col -->
+          </div>
+          <!-- /row -->
+
+        </div>
+      </div>
+    </div>
+    <!-- /col -->
+
+    <!-- col -->
+    <div class="card-container col-lg-4 col-sm-6 col-sm-12">
+      <div class="card">
+         <!-- tile -->
+      <section class="tile tile-simple bg-blue" style="min-height: 100px; overflow: hidden;">
+        <!-- tile header -->
+        <div class="tile-header">
+          <h1 class="custom-font">Critical Cases</h1>
+        </div>
+        <!-- /tile header -->
+
+        <!-- tile body -->
+        <div class="tile-body criticalcasespadding">
+
+          <wrap-owlcarousel class="owl-carousel" data-options="{
+          autoPlay: 5000,
+          stopOnHover: true,
+          slideSpeed : 300,
+          paginationSpeed : 400,
+          singleItem : true}">
+
+									<div>
+										<div class="progress-list">
+											<div class="details icondisplay">
+												<div class="title">
+													<img src="resources/images/Facebook.png" alt="fb" width="50px" height="50px">
+												</div>
+												<div class="description text-transparent-white text-lowercase">
+													<label class="text-sm labelmargin">Sunil</label>
+													<label class="text-sm labelmargin">I received call from ICICI credit card.your payment is not done.I paid due amt before due date....</label>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										<div class="progress-list">
+											<div class="details icondisplay">
+												<div class="title">
+													<img src="resources/images/Twitter.png" alt="twitter" width="50px" height="50px">
+												</div>
+												<div class="description text-transparent-white text-lowercase">
+												    <label class="text-sm labelmargin">John</label>
+													<label class="text-sm labelmargin">sir i want to inform you that someone has made a fraud call from mobile number 08084564702.....</label>
+												</div>
+											</div>
+
+										</div>
+
+									</div>
+
+									<div>
+										<div class="progress-list">
+											<div class="details icondisplay">
+												<div class="title">
+													<img src="resources/images/Twitter.png" alt="twitter" width="50px" height="50px">
+												</div>
+												<div class="description text-transparent-white text-lowercase">
+												    <label class="text-sm labelmargin">Peter</label>
+													<label class="text-sm labelmargin">As cash was been deducted from my credit card account on behalf of your name (PAYTM)........</label>
+												</div>
+											</div>
+
+										</div>
+
+									</div>
+            
+                                     <div>
+										<div class="progress-list">
+											<div class="details icondisplay">
+												<div class="title">
+													<img src="resources/images/Facebook.png" alt="fb" width="50px" height="50px">
+												</div>
+												<div class="description text-transparent-white text-lowercase">
+												    <label class="text-sm labelmargin">samad</label>
+													<label class="text-sm labelmargin">Today i have made a credit card payment but i have received message on my phone .......</label>
+												</div>
+											</div>
+
+										</div>
+
+									</div>
+            
+                                    <div>
+										<div class="progress-list">
+											<div class="details icondisplay">
+												<div class="title">
+													<img src="resources/images/Twitter.png" alt="twitter" width="50px" height="50px">
+												</div>
+												<div class="description text-transparent-white text-lowercase">
+												    <label class="text-sm labelmargin">Mohan</label>
+													<label class="text-sm labelmargin">This is to inform you that I have not made any payment by using Citi Bank Credit Card ........</label>
+												</div>
+											</div>
+
+										</div>
+
+									</div>
+            
+            </div>
+          </wrap-owlcarousel>
+        </div>
+        <!-- /tile body -->
+      </section>
+      <!-- /tile -->
+      </div>
+    </div>
+    <!-- /col -->
+  </div>
+  <!-- /row -->
+ </div>
+<!-- /tile body -->
+</section>
+<!-- /tile -->
+</div>
+<!-- /row -->
+<!-- row -->
+<div class="row">
+  <!-- col -->
+    <div class="col-md-6">
+
+      <!-- tile -->
+      <section class="tile" fullscreen="isFullscreen02">
+
+        <!-- tile header -->
+        <div class="tile-header dvd dvd-btm">
+          <h1 class="custom-font"><strong>Case </strong>Category</h1>
+        </div>
+        <!-- /tile header -->
+
+        <!-- tile widget -->
+        <div class="tile-widget">
+          <div morris-donut-chart donut-data='caseCategoryData' style="height: 250px"></div>
+        </div>
+        <!-- /tile widget -->
+
+        
+      </section>
+      <!-- /tile -->
+
+    </div>
+    <!-- /col -->
+   <!-- col -->
+    <div class="col-md-6">
+
+      <!-- tile -->
+      <section class="tile" fullscreen="isFullscreen02">
+
+        <!-- tile header -->
+        <div class="tile-header dvd dvd-btm">
+          <h1 class="custom-font"><strong>Case</strong>Priority</h1>
+        </div>
+        <!-- /tile header -->
+
+        <!-- tile widget -->
+        <div class="tile-widget">
+          <div id="a1" morris-donut-chart  donut-data='casePriorityData' style="height: 250px"></div>
+         <!--  <div id="donut-example"></div> -->
+        </div>
+        <!-- /tile widget -->
+
+        
+      </section>
+      <!-- /tile -->
+
+    </div>
+    <!-- /col -->
+  </div>
+  <div class="row">
+     <!-- col -->
+    <div class="col-md-12">
+
+      <!-- tile -->
+      <section class="tile" fullscreen="isFullscreen01">
+
+        <!-- tile header -->
+        <div class="tile-header bg-greensea dvd dvd-btm" >
+          <h1 class="custom-font"><strong>Statistics </strong>Graph</h1>
+          <ul class="controls" >
+            <li  data-ng-click="showNumberFct()">
+              <a href="javascript:;" daterangepicker="rangeOptions" date-begin="startDate" date-end="endDate" >
+                <span>{{startDate}} - {{endDate}}  </span>&nbsp;&nbsp;<i class="fa fa-angle-down"   ></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- /tile header -->
+
+        <!-- tile widget -->
+        <div >
+           <input name="customRadio" type="radio" data-ng-model="caseStatisticVal" value="CaseCategory" data-ng-change = "changeCase(caseStatisticVal)"><i></i>Case Category
+           <input name="customRadio" type="radio" data-ng-model="caseStatisticVal" value="CasePriority" data-ng-change = "changeCase(caseStatisticVal)"><i></i>Case Priority
+           <input name="customRadio" type="radio" data-ng-model="caseStatisticVal" value="SocialChannel" data-ng-change = "changeCase(caseStatisticVal)"><i></i>Social Channel
+        <div   title="{{titil}}" data-ac-chart="'bar'" data-ac-data="data" data-ac-config="config" class="chart">
+          
+
+        </div>
+        <!-- /tile widget -->
+
+      
+      </section>
+      <!-- /tile -->
+
+    </div>
+    <!-- /col -->
+</div>
+<!-- /page content -->
+</div>

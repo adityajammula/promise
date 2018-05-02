@@ -1,0 +1,21 @@
+package com.zen.smi.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class PostsListBO {
+	
+	@SerializedName("posts")
+	private List<PostsBO> postsBO;
+
+	public List<PostsBO> getPostsBO() {
+		return postsBO;
+	}
+
+	public void setPostsBO(List<PostsBO> postsBO) {
+		this.postsBO = postsBO;
+	}
+
+
+}

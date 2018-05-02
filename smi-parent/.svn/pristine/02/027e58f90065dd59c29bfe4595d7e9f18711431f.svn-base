@@ -1,0 +1,9 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+
+import com.zen.smi.dao.entities.StCaseMessage;
+
+public interface StCaseMessageDAO extends BaseDAO<StCaseMessage, Serializable> {
+
+}

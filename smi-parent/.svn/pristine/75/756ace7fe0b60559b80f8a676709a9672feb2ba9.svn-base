@@ -1,0 +1,222 @@
+package com.zen.smi.controller;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import twitter4j.JSONArray;
+import twitter4j.JSONObject;
+
+import com.zen.smi.cmf.bo.CmfCustomerAccountBO;
+import com.zen.smi.cmf.bo.CmfCustomerAccountListBO;
+import com.zen.smi.cmf.bo.CmfCustomerBO;
+import com.zen.smi.cmf.bo.CmfCustomerListBO;
+import com.zen.smi.cmf.bo.CmfCustomerSocialDataBO;
+import com.zen.smi.cmf.bo.CmfCustomerSocialdataListBO;
+import com.zen.smi.cmf.exception.BusinessException;
+import com.zen.smi.cmf.service.CmfCustomerService;
+import com.zen.smi.generic.utils.MessageUtil;
+
+
+@Controller
+@RequestMapping("/cmfcustomer")
+public class CmfCustomerController extends BaseController {
+
+	/**
+	 * Logger for CmfCustomerController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(CmfCustomerController.class);
+
+	@Autowired
+	public CmfCustomerService cmfCustInfoService;
+
+	/**
+	 * This method is to get all the rules information which is converted to
+	 * json and passed to view rules page.
+	 * 
+	 * @param request
+	 * @param response
+	 * @return RuleListBO
+	 */
+@RequestMapping(value = "/{customer_id}", method = RequestMethod.GET)
+	public @ResponseBody
+	String getCustomerInformation(@PathVariable("customer_id") int custId,
+			HttpServletRequest request, HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			
+			List<CmfCustomerBO> cmfCustomerBO = cmfCustInfoService.getCustInfo(custId);
+			CmfCustomerListBO cmfCustomerListBO = new CmfCustomerListBO();
+			cmfCustomerListBO.setCmfCustomerBO(cmfCustomerBO);
+			resultJson = gson.toJson(cmfCustomerListBO, CmfCustomerListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	@RequestMapping(value = "/socialDataByCustomerId/{social_data_customer_id}", method = RequestMethod.GET)
+	public @ResponseBody
+	String getSocialMediaInformation(@PathVariable("social_data_customer_id") int custId,
+			HttpServletRequest request, HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			
+			List<CmfCustomerSocialDataBO> cmfCustomerSocialDataBO = cmfCustInfoService.getCustomerSocialData(custId);
+			CmfCustomerSocialdataListBO cmfCustomerSocialDataListBO = new CmfCustomerSocialdataListBO();
+			cmfCustomerSocialDataListBO.setCmfCustomerBO(cmfCustomerSocialDataBO);
+			resultJson = gson.toJson(cmfCustomerSocialDataListBO, CmfCustomerSocialdataListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	@RequestMapping(value = "/customerAccountsByCustomerId/{customer_Accounts_By_CustomerId}", method = RequestMethod.GET)
+	public @ResponseBody
+	String getCustomerAccounts(@PathVariable("customer_Accounts_By_CustomerId") int custId,
+			HttpServletRequest request, HttpServletResponse response) {
+		String resultJson = null;
+		try {
+			
+			List<CmfCustomerAccountBO> cmfCustomerAccountBO = cmfCustInfoService.getCustomerAccounts(custId);
+			CmfCustomerAccountListBO cmfCustomerAccountListBO = new CmfCustomerAccountListBO();
+			cmfCustomerAccountListBO.setCmfCustomerAccountBO(cmfCustomerAccountBO);
+			resultJson = gson.toJson(cmfCustomerAccountListBO, CmfCustomerAccountListBO.class);
+			resultJson = handleSuccess(resultJson, null);
+			
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+	@RequestMapping(value = "/addCustomerAccounts", method = RequestMethod.POST)
+	public @ResponseBody
+	String addCustomerAccounts(@RequestBody String accountsJson,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		String   Json = null;
+		List<CmfCustomerAccountBO> cmfCustomerAccountBOList = new ArrayList<CmfCustomerAccountBO>();
+		try {
+			
+			JSONArray array = new JSONArray(accountsJson);
+			JSONObject element = null;
+			for (int i = 0; i < array.length(); i++) {
+			    element = array.getJSONObject(i);
+			    CmfCustomerAccountBO bo = gson.fromJson(element.toString(), (Type) CmfCustomerAccountBO.class);
+				cmfCustomerAccountBOList.add(bo);
+			}
+			
+			cmfCustInfoService.addCustomerAccounts(cmfCustomerAccountBOList);
+			Json = handleSuccess(Json, MessageUtil.getInstance().getMessage("ACCOUNT_CREATED", null));
+		}
+		catch (Throwable th) {
+			th.printStackTrace();
+			Json = handleOtherError(th);
+		}
+		return Json;
+	}
+	
+	@RequestMapping(value = "/customerregistration", method = RequestMethod.POST)
+	public @ResponseBody
+	String customerRegistration(@RequestBody String customerJson,
+			HttpServletRequest request, HttpServletResponse response) {
+		
+		String   Json = null;
+		try {
+			
+			JSONArray cmfCustomer = new JSONArray(customerJson);
+			CmfCustomerBO cmfCustomerBO = gson.fromJson(cmfCustomer.toString(),CmfCustomerBO.class);
+			
+			cmfCustInfoService.customerRegistration(cmfCustomerBO);
+			Json = handleSuccess(Json, MessageUtil.getInstance().getMessage("ACCOUNT_CREATED", null));
+		}
+		catch (Throwable th) {
+			th.printStackTrace();
+			Json = handleOtherError(th);
+		}
+		return Json;
+	}
+	
+	@RequestMapping(value = "/verifyotp/{customer_id}/{customer_ptp}", method = RequestMethod.GET)
+	public @ResponseBody
+	String verifyOTP(@PathVariable("customer_id") int customerId,@PathVariable("customer_ptp") String customerOtp,
+			HttpServletRequest request, HttpServletResponse response) {
+		String resultJson = null;
+			try {
+				cmfCustInfoService.verifyOTP(customerId,customerOtp);
+			}  catch (BusinessException be) {
+				be.printStackTrace();
+				resultJson = handleOtherError(be);
+			} 
+			
+			LOGGER.info("Ends verifyOTP");
+			return resultJson;
+	}
+	
+	@RequestMapping(value = "/saveCustomerAccounts", method = RequestMethod.POST)
+	public @ResponseBody
+	String saveCustomerAccounts(@RequestBody String duJson,
+			HttpServletRequest request, HttpServletResponse response) {
+		String Json = null;
+		List<CmfCustomerAccountBO> deleteBOList = new ArrayList<CmfCustomerAccountBO>();
+		List<CmfCustomerAccountBO> updateBOList = new ArrayList<CmfCustomerAccountBO>();
+		try {
+			JSONArray array = new JSONArray(duJson.toString());
+			JSONObject element = array.getJSONObject(0);
+			
+			// Deleteh
+			JSONObject deleteElement = null;
+			
+			JSONArray deleteArray = new JSONArray(element.get("toDelete").toString());
+			if(deleteArray !=null) {
+			for (int i=0; i<deleteArray.length(); i++) {
+				deleteElement = deleteArray.getJSONObject(i);
+				CmfCustomerAccountBO deleteBO = gson.fromJson(deleteElement.toString(), CmfCustomerAccountBO.class);
+				deleteBOList.add(deleteBO);
+			}
+		
+
+			cmfCustInfoService.deleteCustomerAccounts(deleteBOList);
+			}
+			
+			// Update
+			JSONObject updateElement = null;
+			JSONArray updateArray = new JSONArray(element.get("toUpdate").toString());
+			
+			for (int i=0; i<updateArray.length(); i++) {
+				updateElement = updateArray.getJSONObject(i);
+				CmfCustomerAccountBO updateBO = gson.fromJson(updateElement.toString(), CmfCustomerAccountBO.class);
+				updateBOList.add(updateBO);
+			}
+
+			cmfCustInfoService.updateCustomerAccounts(updateBOList);
+			Json = handleSuccess(Json, MessageUtil.getInstance().getMessage("ACCOUNT_UPDATED", null));
+		} catch (Throwable th) {
+			th.printStackTrace();
+			Json = handleOtherError(th);
+		}
+		return Json;
+	}
+
+}

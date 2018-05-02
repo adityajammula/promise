@@ -1,0 +1,17 @@
+package com.zen.smi.extsys.facebook.bo;
+
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Picture {
+
+	public PictureData getData() {
+		return data;
+	}
+
+	public void setData(PictureData data) {
+		this.data = data;
+	}
+
+	PictureData data;
+}

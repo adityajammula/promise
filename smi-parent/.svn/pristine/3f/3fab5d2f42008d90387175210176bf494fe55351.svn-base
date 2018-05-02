@@ -1,0 +1,86 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.FinancialInstitutionsDAO;
+import com.zen.smi.dao.entities.FinancialInstitutions;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+/**
+ * @author Sowjanya.Pathakamuri
+ *
+ */
+public class FinancialInstitutionsDAOImpl extends BaseDAOImpl<FinancialInstitutions, Serializable> implements FinancialInstitutionsDAO {
+
+	public FinancialInstitutionsDAOImpl() {
+		super(FinancialInstitutions.class);
+	}
+
+
+	/**To get SMA Financial Institution
+	 * @author tmangalapenta
+	 * @param  Integer accountId
+	 * @return SocialMediaAccounts 
+	 * @throws GenericDAOException
+	 */
+	public FinancialInstitutions getSMAFinancialInstitution(Integer accountId) {
+		  String query = "FROM FinancialInstitutions as fi INNER  JOIN FETCH  fi.socialMediaAccountses as sma WHERE sma.id="+accountId;
+		  return load(query).get(0);
+	}
+
+	/** this method is to get Actual root parent from the parent ID 
+	 * @author venu
+	 * @param  Integer id
+	 * @return FinancialInstitutions 
+	 * @throws GenericDAOException
+	 */
+	/**
+	 * this method is to get Actual root parent from the parent ID 
+	 */
+	public FinancialInstitutions getRootParentById(Integer id)
+			throws GenericDAOException {
+		// TODO Auto-generated method stub
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("id", id));
+		 
+		return searchUnique(expressionList, null);
+		
+		 
+	}
+
+	/** To get Accounts based on id
+	 * @author tmangalapenta
+	 * @param  id
+	 * @return List of FinancialInstitutions 
+	 * @throws GenericDAOException
+	 */
+	public List<FinancialInstitutions> getAccountsById(Integer id)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("parentId", id));
+		 
+		return search(expressionList, null);
+	}
+
+
+	/** To get Parent Id By Id
+	 * @author venu
+	 * @param  Integer accountId
+	 * @return SocialMediaAccounts 
+	 * @throws GenericDAOException
+	 */
+public Integer getParentIdById(Integer id) throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+			expressionList.add(Restrictions.eq("id", id));			 
+			return searchUnique(expressionList, null).getParentId();
+	
+}
+
+	
+	
+}

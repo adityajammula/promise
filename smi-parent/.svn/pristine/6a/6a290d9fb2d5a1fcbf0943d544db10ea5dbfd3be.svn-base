@@ -1,0 +1,31 @@
+package com.zen.smi.service.impl;
+
+import java.util.Date;
+import java.util.List;
+
+import com.zen.smi.bo.PostsBO;
+import com.zen.smi.dao.entities.Posts;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.service.ProcessService;
+import com.zen.smi.service.helper.ProcessHelper;
+
+
+/**
+ * 
+ * @author Tejaswi.Gandra
+ *
+ */
+public class ProcessServiceImpl extends BaseService implements ProcessService {
+	
+	
+
+	public List<PostsBO> getPostsData(String accountName, Date date)throws BusinessException {
+		
+		List<Posts> posts =getProcessesDAO().getPostsData(accountName, date);
+		
+		List<PostsBO> postsBO = ProcessHelper.getInstance().convertPostsListEntityToBO(posts);
+		
+		return postsBO;
+	}
+
+}

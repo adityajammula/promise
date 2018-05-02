@@ -1,0 +1,26 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.entities.FlumeAgentsProcess;
+import com.zen.smi.dao.entities.Rule;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * @author khaja moinuddin
+ *
+ */
+public interface FlumeAgentsDAO extends BaseDAO<FlumeAgents, Serializable> {
+	/**
+	 * this method is to get FlumeAgents based on FlumeAgentsProcessID.
+	 * 
+	 * @author tmangalapenta
+	 * @param flumeAgentsProcessId
+	 * @return FlumeAgents
+	 */
+	FlumeAgents getFlumeAgentsByFlumeAgentsProcessID(int flumeAgentsProcessId) throws GenericDAOException;			
+}

@@ -1,0 +1,62 @@
+package com.zen.smi.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.gson.Gson;
+import com.zen.smi.bo.CmfCustomerSocialDataBO;
+import com.zen.smi.bo.CmfCustomerSocialDataListBO;
+import com.zen.smi.exception.BusinessException;
+import com.zen.smi.service.CmfCustomerSocialDataService;
+
+/**
+ * 
+ * 
+ * @author kreddivari 
+ */
+@Controller
+@RequestMapping("/cmf_customer_social_data")
+public class CmfSocialDataController extends BaseController {
+
+	/**
+	 * Logger for CmfCaseController class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(CmfSocialDataController.class);
+
+	@Autowired
+	public CmfCustomerSocialDataService cmfCustomerSocialDataService;
+	
+	@Autowired
+	Gson gson;
+
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public @ResponseBody String getAllCmfSocialData(HttpServletRequest request,
+			HttpServletResponse response) throws BusinessException {
+		String resultJson = null;
+		try {
+			
+			List<CmfCustomerSocialDataBO> cmfCustomerSocialDataBO = cmfCustomerSocialDataService.getSocialAccountData();
+			CmfCustomerSocialDataListBO cmfCustomerSocialDataListBO = new CmfCustomerSocialDataListBO();
+			cmfCustomerSocialDataListBO.setCmfCustomerSocialDataBO(cmfCustomerSocialDataBO);
+			resultJson=gson.toJson(cmfCustomerSocialDataListBO,CmfCustomerSocialDataListBO.class);
+			
+		} catch (BusinessException be) {
+			be.printStackTrace();
+			resultJson = handleBusinessError(be);
+		} catch (Throwable th) {
+			th.printStackTrace();
+			resultJson = handleOtherError(th);
+		}
+		return resultJson;
+	}
+	
+}

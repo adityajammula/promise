@@ -1,0 +1,119 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description # NavCtrl Controller of the smiApp
+ */
+angular
+		.module('smiApp')
+		.controller('ViewIndividualCaseDetailsController',function($scope,$stateParams,OpenfacebookCaseService,$state,$modal,$log,dialogs,$rootScope) {
+			$scope.mails = [];
+					$scope.isShow = true;
+					$scope.image = "resources/images/random-avatar1.jpg";
+					OpenfacebookCaseService.getIndividualCaseDetails($stateParams.case_id).then(function(response) {
+						if(response != null) {
+						$scope.caseContent = response.data.description;
+						$scope.customerName = response.data.cmfCustomerBO.firstName;
+						$scope.createdDate = response.data.created_date;
+						$scope.casePriority =  response.data.cmfCasePriorityBO.priority_name;
+						$scope.socialAccount =  response.data.socialMediaAccountsBO.social_media_accounts_accountname;
+						$scope.caseStatus =  response.data.cmfCaseStatusBO.caseStatus;
+						if(response.data.cmfCaseDetailsBO != null) {
+						$scope.mails = response.data.cmfCaseDetailsBO.cmfCaseHistories;
+						}
+						}
+									});
+					$scope.actionsList = function(){
+						$scope.isShow = false;
+					};
+					
+					/*This method to navigate back to Previous*/
+					 $scope.goOpenFacebook= function(){
+						 $state.go('openfacebookcases');
+					 };
+					
+					 $scope.addAssignCase = function(){
+					   var modalInstance = $modal.open({
+							templateUrl : 'assignCase.html',
+							controller : 'AddassignCaseController',
+						    resolve: {
+								items: function () {
+								   var obj = {};
+								     obj.assignto  = $scope.assignto;
+					      		     obj.reasons   = $scope.reasons;
+					      		     obj.selectedCases=$stateParams.case_id;
+								     return obj;
+								   }
+								}
+							});
+					 }
+					 
+					 $scope.addAppendNote = function(){
+						 var modalInstance = $modal.open({
+							  templateUrl : 'appendNote.html',
+							  controller : 'CreateAppendNoteController',
+							  resolve: {
+								selectedCases: function () {
+						    	        	 var obj = {};
+							        		   obj.selectedCases=$stateParams.case_id;
+								        	   return obj;
+						    	       }
+						    	      }
+							});
+					 }
+		}).controller('AddassignCaseController',  function ($scope, $modalInstance,$rootScope,OpenfacebookCaseService,items ) {
+			alert(JSON.stringify(items));
+			$scope.getAssignedUserId= function(user) {
+				alert(JSON.stringify(user));
+				$scope.user=user;
+			};
+			OpenfacebookCaseService.getAllUsers().then(function(response) {
+				$scope.users = response.data.cmfCasesUsers;
+			});
+			$scope.ok = function () {
+					var requestData = {
+					    	 "user_name":$scope.assignto,
+					    	 "reason": $scope.reasons,
+	    				      "cmf_case":[]
+					};
+					
+					requestData.cmfcase[i] = {};
+					   for(var i =0;i<items.selectedCases.length;i++) {
+						  requestData.cmfcase[i] = items.selectedCases[i];
+					};
+					
+					OpenfacebookCaseService.saveSelectedCases(requestData).then(function(result){
+					});
+					
+					$scope.close = function () {
+						$modalInstance.dismiss('close');
+					};
+				};
+							  
+		})
+
+		.controller('CreateAppendNoteController', function($scope,$modal,$state,$modalInstance,selectedCases,OpenfacebookCaseService) {
+			
+			$scope.saveAppendNotes = function () {
+				
+		    	var saveAppendNotesJSON = {
+    				      "note_description": $scope.appendnotesfb,
+    				      "cmfcase":[]
+    			};
+		    	saveAppendNotesJSON.cmfcase[i] = {};
+		    	for(var i =0;i<selectedCases.selectedCases.length;i++) {
+		    		saveAppendNotesJSON.cmfcase[i] = selectedCases.selectedCases[i];
+		    	};
+
+		    	
+		    	OpenfacebookCaseService.saveAppendNotes(saveAppendNotesJSON).then(function(result){
+		    		
+		    	});
+		    	 $modalInstance.close();
+		    };
+		  
+			$scope.close = function () {
+				$modalInstance.dismiss('close');
+		    };
+		});

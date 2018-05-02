@@ -1,0 +1,18 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.OtherComments;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * @author jshaik
+ *
+ */
+public interface OtherCommentsDAO extends BaseDAO<OtherComments, Serializable> {
+
+	List<OtherComments> getAllOtherCommentsByAccountType() throws GenericDAOException;
+	 public Long loadWithsqlCount(String queryName) throws GenericDAOException;
+}

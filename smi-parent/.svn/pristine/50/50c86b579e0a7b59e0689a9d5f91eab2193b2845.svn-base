@@ -1,0 +1,70 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
+
+import com.zen.smi.dao.FamilyDAO;
+import com.zen.smi.dao.RulesDAO;
+import com.zen.smi.dao.entities.RuleFamily;
+import com.zen.smi.dao.entities.RuleGroup;
+import com.zen.smi.dao.entities.Users;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+/**
+ * @author Jshaik
+ *
+ */
+public class FamilyDAOImpl extends BaseDAOImpl<RuleFamily, Serializable> implements FamilyDAO {
+
+	public FamilyDAOImpl() {
+		super(RuleFamily.class);
+	}
+	
+	
+	/**to save the rule family
+	 * @return void
+	 * @throws GenericDAOException
+	 * @Author kalyan
+	 */
+	public void saveFamilyDetails(RuleFamily ruleFamily) throws GenericDAOException {
+		
+		saveOrUpdate(ruleFamily);
+		
+	}
+
+	/**
+	 * this method is to get Rule Family based on groupid.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return RuleFamily
+	 */
+	public RuleFamily getRuleFamilyByGroupID(int groupId)
+			throws GenericDAOException {
+			  String query = "FROM RuleFamily as rf LEFT JOIN FETCH  rf.ruleGroups as rg WHERE rg.ruleGroupId="+groupId;
+			  return load(query).get(0);
+
+	}
+
+	/**
+	 * this method is to get all the families by App Id.
+	 * 
+	 * @author tmangalapenta
+	 * @param request
+	 * @param response
+	 * @return list of RuleFamily
+	 */
+	public List<RuleFamily> getRuleFamilysByAppId(Integer appId)
+			throws GenericDAOException {
+		List<SimpleExpression> expressionList = new ArrayList<SimpleExpression>();
+		expressionList.add(Restrictions.eq("ruleApps.appId", appId));
+		
+		return search(expressionList, null);
+	}
+
+}

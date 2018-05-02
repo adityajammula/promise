@@ -1,0 +1,29 @@
+package com.zen.smi.dao.impl;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.zen.smi.dao.CmfCustomerSocialDataDAO;
+import com.zen.smi.dao.FlumeAgentsDAO;
+import com.zen.smi.dao.entities.CmfCustomerSocialData;
+import com.zen.smi.dao.entities.FlumeAgents;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public class CmfCustomerSocialDataDAOImpl extends BaseDAOImpl<CmfCustomerSocialData, Serializable> implements CmfCustomerSocialDataDAO {
+
+	public CmfCustomerSocialDataDAOImpl() {
+		super(CmfCustomerSocialData.class);
+	}
+
+	public List<CmfCustomerSocialData> getSocialAccountData() throws GenericDAOException {
+		
+		
+		
+		List<CmfCustomerSocialData> cmfCustomerSocialData=retrieveAll();
+		
+		return cmfCustomerSocialData;
+	}
+	
+}

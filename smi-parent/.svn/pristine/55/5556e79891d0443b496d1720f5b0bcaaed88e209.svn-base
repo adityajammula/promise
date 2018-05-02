@@ -1,0 +1,139 @@
+package com.zen.smi.extsys.service.impl;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import twitter4j.ResponseList;
+import twitter4j.StatusUpdate;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.TwitterObjectFactory;
+import twitter4j.User;
+import twitter4j.auth.AccessToken;
+import twitter4j.conf.ConfigurationBuilder;
+import twitter4j.json.DataObjectFactory;
+
+import com.zen.smi.extsys.facebook.bo.Cover;
+import com.zen.smi.extsys.facebook.bo.Group;
+import com.zen.smi.extsys.facebook.bo.GroupMetaDataBO;
+import com.zen.smi.extsys.service.TwitterService;
+import com.zen.smi.generic.utils.MessageUtil;
+public class TwitterServiceImpl implements TwitterService {
+	
+	
+	
+	public TwitterServiceImpl()
+	{
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.setDebugEnabled(true)
+		  .setJSONStoreEnabled(true)
+		  .setOAuthConsumerKey(consumerKeyStr)
+		  .setOAuthConsumerSecret(consumerSecretStr)
+		  .setOAuthAccessToken(accessTokenStr)
+		  .setOAuthAccessTokenSecret(accessTokenSecretStr);
+		TwitterFactory tf = new TwitterFactory(cb.build());
+		this.twitter = tf.getInstance();		
+	}
+	
+	
+	private Twitter twitter;
+	static String consumerKeyStr = "2pg31kIOOVpNLXav6zfduaXW0";
+	static String consumerSecretStr = "B3PmkJkxakoGfe6P5lh2XBFY39rrsvujWGVBXBhPyXAUuUDpdo";
+	static String accessTokenStr = "3306692136-QypuKSpXU0r4rCX9254H7hvVlj788dI3jYLK4Xg";
+	static String accessTokenSecretStr = "7lpRT3QZCCMsEp8IPTOrAeqjZBXpTK0eYRabeI9OncHlA";
+	
+	
+	
+/*	Sample Resopnse
+ * {"location":"Mumbai, India","default_profile":false,"profile_background_tile":false,"statuses_count":43077,"lang":"en","profile_link_color":"910000","profile_banner_url":"https://pbs.twimg.com/profile_banners/63752206/1439004599","id":63752206,"following":false,"protected":false,"favourites_count":12,"profile_text_color":"000000","description":"Welcome to the official service handle of ICICI Bank. We are here to help you resolve your queries. For updates and offers, follow us on @ICICIBank","verified":true,"contributors_enabled":false,"profile_sidebar_border_color":"FCC265","name":"ICICI Bank Cares","profile_background_color":"FFFFFF","created_at":"Fri Aug 07 15:36:02 +0000 2009","is_translation_enabled":false,"default_profile_image":false,"followers_count":33576,"has_extended_profile":false,"profile_image_url_https":"https://pbs.twimg.com/profile_images/834681929/ICICI-khayal-logo-tiny_square_normal.jpg","geo_enabled":false,"status":{"contributors":null,"text":"@mrvijayakumar Hi, our website is working fine. Please DM us your contact details incase you're still facing an issue.","geo":null,"retweeted":false,"in_reply_to_screen_name":"mrvijayakumar","truncated":false,"lang":"en","entities":{"symbols":[],"urls":[],"hashtags":[],"user_mentions":[{"id":258206159,"name":"Vijayakumar Selvaraj","indices":[0,14],"screen_name":"mrvijayakumar","id_str":"258206159"}]},"in_reply_to_status_id_str":"630641343509872640","id":630644859041255424,"source":"<a href=\"http://twitter.com\" rel=\"nofollow\">Twitter Web Client<\/a>","in_reply_to_user_id_str":"258206159","favorited":false,"in_reply_to_status_id":630641343509872640,"retweet_count":0,"created_at":"Mon Aug 10 07:40:25 +0000 2015","in_reply_to_user_id":258206159,"favorite_count":0,"id_str":"630644859041255424","place":null,"coordinates":null},"profile_background_image_url":"http://pbs.twimg.com/profile_background_images/92357545/TB-new.jpg","profile_background_image_url_https":"https://pbs.twimg.com/profile_background_images/92357545/TB-new.jpg","follow_request_sent":false,"entities":{"description":{"urls":[]},"url":{"urls":[{"expanded_url":"http://www.icicibank.com","indices":[0,22],"display_url":"icicibank.com","url":"http://t.co/FEpFA09i8t"}]}},"url":"http://t.co/FEpFA09i8t","utc_offset":19800,"time_zone":"New Delhi","notifications":false,"profile_use_background_image":true,"friends_count":12663,"profile_sidebar_fill_color":"E46613","screen_name":"ICICIBank_Care","id_str":"63752206","profile_image_url":"http://pbs.twimg.com/profile_images/834681929/ICICI-khayal-logo-tiny_square_normal.jpg","listed_count":205,"is_translator":false}
+*/	
+	
+
+	public List<Group> getUsers(String keyword) throws Exception {
+		List<Group> groups= new ArrayList<Group>();
+    	ResponseList<User> userList = this.twitter.searchUsers("%"+keyword+"%", 1);
+    	if(userList != null && !userList.isEmpty())
+    	{
+    		System.out.println(userList.size());
+    		for(User user: userList)
+    		{
+    			String rawJSON = TwitterObjectFactory.getRawJSON(user);
+    			System.out.println(rawJSON);
+    			Group group = new Group();
+    			group.setName((user.getName()));    			
+    			group.setId(Long.toString(user.getId()));
+    			groups.add(group);
+    		}
+    	}
+		return groups;
+    	
+
+	}
+	
+	
+	
+
+	public GroupMetaDataBO getUserByid(Long id) throws Exception {
+		
+    	User user = this.twitter.showUser(id);
+    	
+    	
+    	GroupMetaDataBO groupMetaDataBO=new GroupMetaDataBO();
+    	Cover cover = new Cover();
+    	groupMetaDataBO.setLikes(Long.toString(user.getFollowersCount()));
+    	cover.setSource(user.getProfileImageURL());
+    	groupMetaDataBO.setCover(cover);
+    	groupMetaDataBO.setWere_here_count(Long.toString(user.getFriendsCount()));
+    	groupMetaDataBO.setName(user.getName());
+		return groupMetaDataBO;
+    	
+
+	}
+
+   static int count = 0;
+  
+   ///counting 5 times..
+   //need to chnages the logic.
+	public void postToTwitterAccount(String screenName, String message,String type , String status) {
+		
+//		try {
+//				if(type.equals("direct") && "SUCESS".equals(status)){
+//					twitter.sendDirectMessage(screenName, message);
+//				}else{
+//					StatusUpdate status1 = new StatusUpdate("@"+screenName+" Tesjkdsakj asdlasjdlajsdl asdlk"+new Date());
+//					status1.setInReplyToStatusId(new Long("3064347347").longValue());
+//					System.out.println(status1);
+//					twitter.updateStatus(status1);
+//					//MessageUtil.getInstance().getMessage(messageName, params)
+//				}				
+//			} catch (TwitterException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}	
+		System.out.println("Count: "+ ++count);
+		
+		
+	}
+	
+	
+	
+/*	public static void main (String[] args){
+		
+		TwitterServiceImpl twitterServiceImpl= new TwitterServiceImpl();
+		
+		try {
+			List<Group> groups=twitterServiceImpl.getUsers("icici");
+			GroupMetaDataBO groupMetaDataBO=twitterServiceImpl.getUserByid(Long.parseLong(groups.get(0).getId()));
+			
+			System.out.println("#########################################"+groupMetaDataBO);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}*/
+	
+}

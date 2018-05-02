@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-ng-app="smiLoginApp">
+<head>
+	<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
+    <title>Register</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="icon" type="image/ico" href="favicon.ico" />
+    <link rel="stylesheet" href="resources/bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="resources/bower_components/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="resources/bower_components/animate.css/animate.css" />
+    
+    <link rel="stylesheet" href="resources/bower_components/angular-motion/dist/angular-motion.min.css" type="text/css"/>
+    
+    <link href="resources/styles/uikit.css" rel="stylesheet" type="text/css"/>
+	<link href="resources/styles/register.css" rel="stylesheet" type="text/css"/>
+	<link href="resources/styles/fonts.css" rel="stylesheet" type="text/css"/>
+	
+	
+     <script src="resources/bower_components/jquery/jquery.js"></script>
+    <script src="resources/bower_components/angular/angular.js"></script>
+ 
+    <script src="resources/bower_components/json3/lib/json3.js"></script>
+    <script src="resources/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="resources/bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="resources/bower_components/angular-animate/angular-animate.js"></script>
+    <script src="resources/bower_components/angular-touch/angular-touch.js"></script>
+    <script src="resources/bower_components/angular-fontawesome/dist/angular-fontawesome.js"></script>
+    <script src="resources/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+
+    <script src="resources/bower_components/jquery-ui/ui/jquery-ui.js"></script>
+    <script src="resources/bower_components/angular-strap/dist/angular-strap.min.js"></script>
+	<script src="resources/bower_components/angular-strap/dist/angular-strap.tpl.min.js"></script>
+	
+	<script src="resources/bower_components/angular-strap/dist/angular-strap.tpl.js" data-semver="v2.3.1"></script>
+ 
+  </head>
+  <body class="tm-navbar-fixed">
+  <div class="mainContainer">
+
+	<div class="uk-slidenav-position">
+      <div class="tm-fullscreen-container uk-height-viewport">
+        <div class="tm-fullscreen">
+			<img src="resources/images/logo.png"/>
+          <div class="caption uk-text-cente">
+            <div class="uk-container uk-container-center">
+			<div class="col-md-5 col-md-offset-3">
+				<div class="row">
+				  <div class="col-md-8">
+				   <div class="uk-grid ">
+					  <h1>@SocialEngagement </h1>
+					  <p>Open a new channel of communication<br class="uk-visible-large"/>
+						to engage with the customers and <br/> resolve there question</p>
+					</div>
+					</div>
+					<div class="col-md-8"><button type="button" class="uk-button uk-button-secondary ">I am a user</button></div>
+				</div>
+				<div class="row p-15">
+					<div class="col-md-8">
+						<div class="uk-grid ">
+						  <p>Open a new channel of communication<br class="uk-visible-large"/>
+							to engage with the customers and <br/> resolve there question</p>
+						</div>
+					</div>
+				<div class="col-md-8"><button type="button" class="uk-button uk-button-primary">I am not a user</button></div>
+				</div>
+				
+			  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</body>
+</html>

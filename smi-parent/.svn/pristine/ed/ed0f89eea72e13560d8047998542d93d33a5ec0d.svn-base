@@ -1,0 +1,206 @@
+'use strict';
+
+/**
+ * @author khaja moinuddin
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('AccountRelationshipController', function ($scope, $stateParams,$modal, $log, dialogs, $state, editGroupService) {
+	  
+	  var tree;
+	  $scope.acctTitle = null;
+	  $scope.my_tree = tree = {};	 
+	  
+	  /**
+	     * This method is for get accounts
+	  */	
+	  $scope.initialize = function() {
+		  	$scope.treeData = [];
+		    editGroupService.getSocialMediaAccountsRealtions().then(function(response){
+			  	 if(response.data != null)
+			  	  {
+			  		$scope.treeData=response.data.parentBOs;
+			  		$scope.treeData.accountType="Terminal";
+			  	  }
+			});
+	  };   
+	    
+    /**
+     * This method is for add parent account
+     */	
+    $scope.addParent = function() {
+    	var name=	tree.get_selected_branch();
+	      if(name.accountType== "TWITTER" || name.accountType== "FACEBOOK"){
+	    	  dialogs.error("Error","Could not add parents to Terminal nodes");
+	      }
+	      else
+	    	  {  
+		 	   var modalInstance = $modal.open({
+		 	       templateUrl:'editBrach.html',
+		 	       controller :'EditBrachController',
+		 	       resolve: {
+		 	           items: function () {
+		 	        		  var obj = {};
+		 	        		   obj.isAddParent="AddParent";
+		 	        		   obj.treeObj=$scope.branchName;
+		 	        		   obj.data= $scope.treeData;
+		 	        		   obj.initMethod = $scope.initialize;
+		 		        	   return obj;
+		 	           }
+		 	         }
+		 	  	 });
+	    	  }
+   };
+   
+   /**
+    * This method to navigate back to Previous
+    */   
+   $scope.goViewGroups= function(){
+  	  $state.go('viewgroups');
+   };
+   
+   /**
+    * This method is for add child account
+    */	 
+   $scope.addChild = function() {
+	   var name=	tree.get_selected_branch();
+	      if(name.accountType== "TWITTER" || name.accountType== "FACEBOOK"){
+	    	  dialogs.error("Error","Could not add child Terminal nodes");
+	      }
+	      else
+	    	  {  
+		 	   var modalInstance = $modal.open({
+		 	       templateUrl:'editBrach.html',
+		 	       controller :'EditBrachController',
+		 	       resolve: {
+		 	           items: function () {
+		 	        		  var obj = {};
+		 	        		   obj.isAddChild="AddChild";
+		 	        		   obj.getBranch= tree.get_selected_branch();
+		 	        		   obj.getParent= tree.select_parent_branch();
+		 	        		   obj.label=$scope.branchName;
+		 	        		   obj.initMethod = $scope.initialize;
+		 	        		   obj.data= $scope.treeData;
+		 		        	   return obj;
+		 	           }
+		 	         }
+		 	  	 });
+	    	  }
+   };
+   /**
+   * This method is for edit account
+   */	   
+    $scope.editBranch = function(){
+    	
+      var name=	tree.get_selected_branch();
+      if(name.accountType== "TWITTER" || name.accountType== "FACEBOOK"){
+    	  dialogs.error("Error","Could not Edit Terminal nodes");
+      }
+      else
+    	  {
+    		var modalInstance = $modal.open({
+ 	 	       templateUrl:'editBrach.html',
+ 	 	       controller :'EditBrachController',
+ 	 	       resolve: {
+ 	 	           items: function () {
+ 	 	        		   var obj = {};
+ 	 	        		   obj.isEdit="Edit";
+ 	 	        		   obj.treeObj= tree.get_selected_branch();
+ 	 	        		   obj.data=$scope.treeData;
+ 	 	        		   obj.initMethod = $scope.initialize;
+ 	 		        	   return obj;
+ 	 	           }
+ 	 	         }
+ 	 	  	 });
+    	  }
+    }; 
+  }).controller('EditBrachController', function ($scope, $modalInstance, $rootScope,dialogs, items,editGroupService) {
+	    	  $scope.deleteBtn = true;
+			   if(items.isEdit== "Edit"){
+				   $scope.acctTitle =" Branch Edit";
+				   $scope.branchName = items.treeObj.label;
+				   $scope.deleteBtn = false;
+				  
+				   
+			   }else if(items.isAddParent == "AddParent" ){
+				   $scope.acctTitle ="Add Parent";
+				   $scope.deleteBtn = true;
+			   }else{
+				   $scope.acctTitle =" Add Child";
+				   $scope.deleteBtn = true;
+			   }
+			   var reqObj={
+						 "financial_institutions_id":null,
+			 			 "financial_institutions_accountowner":null,
+			 			 "financial_institutions_parentid":null,
+			 			 "action":null
+			  };
+	     // }
+	  		
+
+/**
+* This method is for save account
+*/	
+ $scope.saveBranch = function() {
+	
+	if (items.isEdit == "Edit") {
+			reqObj.financial_institutions_id = items.treeObj.id;
+			reqObj.financial_institutions_accountowner = $scope.branchName;
+			reqObj.action= "Edit";
+		//reqObj.financial_institutions_parentid = items.getParent.id;
+		
+	 }else if(items.isAddParent == "AddParent"){
+		
+		 reqObj.financial_institutions_accountowner = $scope.branchName;
+		 reqObj.action= "AddParent";
+	 }else{
+		 reqObj.financial_institutions_parentid = items.getBranch.id;
+		 reqObj.financial_institutions_accountowner = $scope.branchName;
+		 reqObj.action= "AddChild";
+	 }
+	
+	editGroupService.saveSocialMediaAccountsRealtions(reqObj).then(function(response){
+	  	 if(response!= null)
+	  	  {
+	  		items.initMethod();
+	  	  }
+	     });
+	$modalInstance.close();
+  };
+		 
+  /**
+   * This method is for cancel model
+   */	
+  $scope.cancel = function () {
+     $modalInstance.dismiss('cancel');
+  };
+  /**
+   * This method is for delete account
+   */	
+  $scope.deleteBranch = function () {
+	  
+	  var dlg = dialogs.confirm("Confirmation", "Are you sure that you want to delete this Branch ?",{size:'md'});
+	     dlg.result.then(function (btn) {
+	    	 
+		    	  if(items.treeObj.children.length >0){
+			    		 dialogs.error("Error","child needs to delete");
+			    	 }else{
+			    			 reqObj.id = items.treeObj.id;
+					    	 editGroupService.deleteSocialMediaAccountsRealtions(reqObj).then(function(response){
+								  	 if(response!= null)
+								  	  {
+								  		items.initMethod();
+								  	  }
+							});  
+			    		
+			    		 
+			    	 }
+	    	 
+	    	 $modalInstance.close();
+	    });
+  };
+});

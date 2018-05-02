@@ -1,0 +1,250 @@
+package com.zen.smi.cmf.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.cmf.bo.CmfCustomerAccountBO;
+import com.zen.smi.cmf.bo.CmfCustomerBO;
+import com.zen.smi.cmf.bo.CmfCustomerSocialDataBO;
+import com.zen.smi.cmf.customer.registration.otp.OTP;
+import com.zen.smi.cmf.exception.BusinessException;
+import com.zen.smi.cmf.service.CmfCustomerService;
+import com.zen.smi.cmf.service.helper.CmfCustInfoHelper;
+import com.zen.smi.dao.entities.CmfCustomer;
+import com.zen.smi.dao.entities.CmfCustomerAccount;
+import com.zen.smi.dao.entities.CmfCustomerOtp;
+import com.zen.smi.dao.entities.CmfCustomerSocialData;
+import com.zen.smi.dao.exception.GenericDAOException;
+import com.zen.smi.generic.utils.MessageUtil;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CUSTOMER_OTP_VERIFIED;
+import static com.zen.smi.generic.utils.SmiConstants.CMF_CUSTOMER_OTP_NEW;
+public class CmfCustomerServiceImpl extends CmfBaseService implements CmfCustomerService {
+
+	/**
+	 * Logger for CmfCustomerServiceImpl class.
+	 */
+	private static final Logger LOGGER = Logger
+			.getLogger(CmfCustomerServiceImpl.class);
+
+	public List<CmfCustomerBO> getCustInfo(int custId) throws BusinessException {
+		LOGGER.debug("Starts getCustInfo....");
+		List<CmfCustomerBO> cmfCustomerBO = null;
+		List<CmfCustomer> cmfCustomer = null;
+		
+		try {
+			cmfCustomer = getCmfCustomerDAO().getCustDemographicData(custId);
+			if (null != cmfCustomer) {
+				cmfCustomerBO = CmfCustInfoHelper.getInstance().convertCmfCustInfoToBO(
+						cmfCustomer);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends getCustInfo....");
+		return cmfCustomerBO;
+	}
+
+	
+	public List<CmfCustomerAccountBO> getCustAcctInfo(int custId)
+			throws BusinessException {
+		// TODO Auto-generated method stub
+				return null;
+	}
+
+	public List<CmfCustomerSocialDataBO> getCustomerSocialData(int custId)
+			throws BusinessException {
+		LOGGER.debug("Starts getCustSocialData....");
+		List<CmfCustomerSocialDataBO> cmfCustomerSocialDataBO = null;
+		List<CmfCustomerSocialData> cmfCustomerSocialData = null;
+		
+		try {
+			cmfCustomerSocialData = getCmfCustomerSocialDataDAO().getCustomerSocialData(custId);
+			if (null != cmfCustomerSocialData) {
+				cmfCustomerSocialDataBO = CmfCustInfoHelper.getInstance().convertCmfCustomerSocialDataToBO(
+						cmfCustomerSocialData);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends getCustSocialData....");
+		return cmfCustomerSocialDataBO;
+	}
+	
+	public List<CmfCustomerAccountBO> getCustomerAccounts(int custId)
+			throws BusinessException {
+		LOGGER.debug("Starts getCustomerAccounts....");
+		List<CmfCustomerAccountBO> cmfCustomerAccountBO = new ArrayList<CmfCustomerAccountBO>();
+		List<CmfCustomerAccount> cmfCustomerAccount = null;
+		
+		try {
+			cmfCustomerAccount = getCmfCustomerAccountDAO().getCustomerAccounts(custId);
+			CmfCustomerAccountBO accountBO = null;
+			if(cmfCustomerAccount != null && cmfCustomerAccount.size() > 0){
+				for (CmfCustomerAccount customerAccount : cmfCustomerAccount) {
+					accountBO = new CmfCustomerAccountBO();
+					accountBO.setAccountNumber(customerAccount.getAccountNumber());
+					accountBO.setAccountType(customerAccount.getAccountType());
+					accountBO.setCustomerAccountId(customerAccount.getCustomerAccountId());
+					CmfCustomerBO cmfCustomerBO = new CmfCustomerBO();
+					CmfCustomer cmfCustomer = customerAccount.getCmfCustomer();
+					if(cmfCustomer != null){
+						cmfCustomerBO.setCustomerId(cmfCustomer.getCustomerId());
+					}
+					accountBO.setCmfCustomer(cmfCustomerBO);
+					cmfCustomerAccountBO.add(accountBO);
+				}
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends getCustomerAccounts....");
+		return cmfCustomerAccountBO;
+	}
+	
+	public void addCustomerAccounts(List<CmfCustomerAccountBO> cmfCustomerAccountBOList) throws BusinessException {
+		LOGGER.debug("Starts saveCustomerAccounts....");
+		List<CmfCustomerAccount> cmfCustomerAccount = new ArrayList<CmfCustomerAccount>();
+		
+		try {
+			for (CmfCustomerAccountBO cmfCustomerAccountBO : cmfCustomerAccountBOList) {
+				CmfCustomerAccount account = null;
+				if(null != cmfCustomerAccountBO.getCustomerAccountId()) {
+					account = getCmfCustomerAccountDAO().findById(cmfCustomerAccountBO.getCustomerAccountId());
+				} else {
+					account = new CmfCustomerAccount();
+				}
+				account.setAccountNumber(cmfCustomerAccountBO.getAccountNumber());
+				account.setAccountType(cmfCustomerAccountBO.getAccountType());
+				CmfCustomer cust = getCmfCustomerDAO().findById(cmfCustomerAccountBO.getCmfCustomer().getCustomerId());
+				account.setCmfCustomer(cust);
+				cmfCustomerAccount.add(account);
+			}
+			getCmfCustomerAccountDAO().addCustomerAccounts(cmfCustomerAccount);
+				
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends saveCustomerAccounts....");
+	}
+	
+	public void updateCustomerAccounts(List<CmfCustomerAccountBO> cmfCustomerAccountBOList) throws BusinessException {
+		LOGGER.debug("Starts saveCustomerAccounts....");
+		List<CmfCustomerAccount> cmfCustomerAccount = new ArrayList<CmfCustomerAccount>();
+		
+		try {
+			for (CmfCustomerAccountBO cmfCustomerAccountBO : cmfCustomerAccountBOList) {
+				CmfCustomerAccount account = new CmfCustomerAccount();
+				account.setAccountNumber(cmfCustomerAccountBO.getAccountNumber());
+				account.setAccountType(cmfCustomerAccountBO.getAccountType());
+				CmfCustomerBO cmfCustomer = cmfCustomerAccountBO.getCmfCustomer();
+				CmfCustomer cust = new CmfCustomer();
+				cust.setCustomerId(cmfCustomer.getCustomerId());
+				account.setCmfCustomer(cust);
+				cmfCustomerAccount.add(account);
+			}
+			getCmfCustomerAccountDAO().updateCustomerAccounts(cmfCustomerAccount);
+				
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends saveCustomerAccounts....");
+	}
+	
+	public void deleteCustomerAccounts(List<CmfCustomerAccountBO> cmfCustomerAccountBOList) throws BusinessException {
+		LOGGER.debug("Starts saveCustomerAccounts....");
+		List<CmfCustomerAccount> cmfCustomerAccount = new ArrayList<CmfCustomerAccount>();
+		
+		try {
+			for (CmfCustomerAccountBO cmfCustomerAccountBO : cmfCustomerAccountBOList) {
+				CmfCustomerAccount account = new CmfCustomerAccount();
+				account.setAccountNumber(cmfCustomerAccountBO.getAccountNumber());
+				account.setAccountType(cmfCustomerAccountBO.getAccountType());
+				account.setCustomerAccountId(cmfCustomerAccountBO.getCustomerAccountId());
+				CmfCustomerBO cmfCustomer = cmfCustomerAccountBO.getCmfCustomer();
+				CmfCustomer cust = new CmfCustomer();
+				cust.setCustomerId(cmfCustomer.getCustomerId());
+				account.setCmfCustomer(cust);
+				cmfCustomerAccount.add(account);
+			}
+			getCmfCustomerAccountDAO().deleteCustomerAccounts(cmfCustomerAccount);
+				
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends saveCustomerAccounts....");
+	}
+
+
+	public void customerRegistration(CmfCustomerBO cmfCustomerBO)
+			throws BusinessException {
+		LOGGER.debug("Starts customerRegistration....");
+		CmfCustomer cmfCustomer = CmfCustInfoHelper.getInstance().convertCmfCustomerBOToEntiry(cmfCustomerBO);
+		try {
+			cmfCustomer.setStatus(CMF_CUSTOMER_OTP_NEW);
+			getCmfCustomerDAO().saveOrUpdate(cmfCustomer);
+			if(null != cmfCustomerBO.getCmfCustomerAccountsBO() && cmfCustomerBO.getCmfCustomerAccountsBO().size()>0) {
+				CmfCustomerAccountBO cmfCustomerAccountBO = cmfCustomerBO.getCmfCustomerAccountsBO().get(0);
+				CmfCustomerAccount cmfCustomerAccount = new CmfCustomerAccount();
+				cmfCustomerAccount.setAccountNumber(cmfCustomerAccountBO.getAccountNumber());
+				cmfCustomerAccount.setAccountType(cmfCustomerAccountBO.getAccountType());
+				cmfCustomerAccount.setCmfCustomer(cmfCustomer);
+				getCmfCustomerAccountDAO().saveOrUpdate(cmfCustomerAccount);
+				String key =  OTP.generate("" + "12345678", "" + System.currentTimeMillis(), 6, "totp");
+				CmfCustomerOtp cmfCustomerOtp = new CmfCustomerOtp();
+				cmfCustomerOtp.setCmfCustomerOtp(key);
+				cmfCustomerOtp.setCmfCustomer(cmfCustomer);
+				getCmfCustomerOtpDAO().saveOrUpdate(cmfCustomerOtp);
+			}
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends customerRegistration....");
+		
+	}
+	
+	public void verifyOTP(Integer customerId,String otpString)
+			throws BusinessException {
+		LOGGER.debug("Starts verifyOTP....");
+		try {
+			CmfCustomer cmfCustomer = getCmfCustomerDAO().findById(customerId);
+			CmfCustomerOtp cmfCustomerOtp = getCmfCustomerOtpDAO().getOTPByCustomerId(customerId);
+			if(otpString.equals( cmfCustomerOtp.getCmfCustomerOtp())) {
+				cmfCustomer.setStatus(CMF_CUSTOMER_OTP_VERIFIED);
+			} else {
+				throw new BusinessException(MessageUtil.getInstance().getMessage(
+						"CUSTOMER_OTP_NOT_VERIFIED", null));
+			}
+
+		} catch (GenericDAOException gde) {
+			throw new BusinessException(gde.getMessageBO());
+		} catch (Exception e) {
+			throw new BusinessException(MessageUtil.getInstance().getMessage(
+					"UNKNOWN_EXCEPTION", null), e);
+		}
+		LOGGER.debug("Ends verifyOTP....");
+		
+	}
+}

@@ -1,0 +1,19 @@
+package com.zen.smi.bo;
+
+import com.google.gson.annotations.SerializedName;
+
+public class RuleFormulasBO {
+	
+	
+	@SerializedName("rule_formula")
+	private RuleFormulaBO ruleFormulaBO;
+
+	public RuleFormulaBO getRuleFormulaBO() {
+		return ruleFormulaBO;
+	}
+
+	public void setRuleFormulaBO(RuleFormulaBO ruleFormulaBO) {
+		this.ruleFormulaBO = ruleFormulaBO;
+	}
+
+}

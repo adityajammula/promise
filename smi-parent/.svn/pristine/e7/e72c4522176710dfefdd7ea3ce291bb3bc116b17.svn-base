@@ -1,0 +1,76 @@
+angular.module('smiApp')
+.controller('OpenTwitterCasesController', function ($scope,$state,$modal,OpenfacebookCaseService,$rootScope) {
+	$scope.ischecked=false;
+	$scope.isSelect = true;
+	 $scope.moreOptions =[{id:1, name:'Group Selected Cases'},
+	                      {id:2, name:'Assign Selected Cases'},
+					      {id:3, name:'Append Notes'},
+						  {id:4, name:'Mark As Spam'}];
+	 
+		   $scope.twCases = [];
+			$rootScope.initializeOpenTwitterCasesController = function() {
+				
+				OpenfacebookCaseService.getOpenCases(2).then(function(response) {
+					$scope.twCases = response.data.cmfCaseBO;
+				});
+				$scope.getCategories();
+			};
+		
+		$scope.getCategories = function() {
+		OpenfacebookCaseService.getStaticData().then(function(response) {
+			$scope.categories = response.data.cmfCaseCategoryBOList;
+			$scope.priorities = response.data.cmfCasePriorityBOList;
+			for ( var i = 0; i < response.data.cmfCasePriorityBOList.length; i++) {
+				var obj = response.data.cmfCasePriorityBOList[i];
+				obj.priorityImage = (response.data.cmfCasePriorityBOList[i].priority_name).charAt(0);
+			}
+			$scope.accounts = response.data.socialMediaAccountsList;
+		});
+		},
+		$scope.getOpenCasesByAccountCategory = function(categoryId) {
+			OpenfacebookCaseService.getOpenCasesByCategory(categoryId).then(function(response){
+				$scope.twCases = response.data.cmfCaseBO;
+			});
+		};
+		$scope.getCasePriorities = function(priorityId) {
+			OpenfacebookCaseService.getOpenCasesByPriority(priorityId).then(function(response){
+			   
+				$scope.twCases = response.data.cmfCaseBO;
+			});
+		},
+		$scope.refreshOpenCategories = function() {
+			$rootScope.initializeOpenFacebookCasesController();
+		},
+	   $scope.individualCaseDetails = function() {
+			$state.go('viewindividualcasedetailstwitter');
+		};
+		var selectedCases = [];
+		$scope.getSelectedValue = function(id) {
+			$scope.isSelect = false;
+			selectedCases.push(id);
+		};
+
+		$scope.getOption = function(id) {
+			if (id == 2) {
+				var modalInstance = $modal.open({
+					templateUrl : 'assignCase.html',
+					controller : 'AssignCaseController',
+				});
+
+			} else if (id == 3) {
+					var modalInstance = $modal.open({
+						templateUrl : 'appendNote.html',
+						controller : 'AppendNotesController',
+					});
+		
+
+			}
+		};
+	     
+			  
+}).controller('AppendNotesController', function() {
+	
+	
+}).controller('AssignCaseController', function() {
+	
+});

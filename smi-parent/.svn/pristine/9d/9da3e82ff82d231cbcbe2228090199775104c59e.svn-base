@@ -1,0 +1,21 @@
+package com.zen.smi.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class FinancialInstituteListBO {
+	
+	@SerializedName("FinancialInstitutions")
+	private List<FinancialInstitutionsBO> financialInstitutionsBOs;
+
+	public List<FinancialInstitutionsBO> getFinancialInstitutionsBOs() {
+		return financialInstitutionsBOs;
+	}
+
+	public void setFinancialInstitutionsBOs(
+			List<FinancialInstitutionsBO> financialInstitutionsBOs) {
+		this.financialInstitutionsBOs = financialInstitutionsBOs;
+	}
+ 
+}

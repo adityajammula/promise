@@ -1,0 +1,17 @@
+angular
+		.module('smiRegisterApp.controllers',[])
+		.controller('RegisterController',function($scope, $state, $modal,$rootScope,$log,dialogs,$stateParams) {
+				alert("hiii");
+			$scope.create = function() {
+			     alert("hari");
+				$state.go('google.com', params);
+				
+			};
+
+
+			
+			
+			
+});
+
+

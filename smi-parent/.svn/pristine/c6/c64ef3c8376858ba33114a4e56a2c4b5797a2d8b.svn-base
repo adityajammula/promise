@@ -1,0 +1,20 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.CmfCase;
+import com.zen.smi.dao.entities.CmfCaseNote;
+import com.zen.smi.dao.entities.CmfCaseNoteCategories;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+
+/**
+ * @author tmangalapenta
+ *
+ */
+public interface CmfCaseNoteCategoriesDAO extends BaseDAO<CmfCaseNoteCategories, Serializable> {
+
+	CmfCaseNoteCategories getCmfCaseNoteCategoriesByNote(Integer noteId) throws GenericDAOException;
+
+}

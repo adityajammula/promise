@@ -1,0 +1,200 @@
+package com.zen.smi.service.helper;
+
+import static com.zen.smi.generic.utils.SmiConstants.FINANCIALINSTITUTIONS_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.SOCIALMEDIAACCOUNTS_PROPERTIES;
+import static com.zen.smi.generic.utils.SmiConstants.SOCIALPROFILES_PROPERTIES;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
+import com.zen.smi.bo.FinancialInstitutionsBO;
+import com.zen.smi.bo.SocialDataAnalysisBO;
+import com.zen.smi.bo.SocialMediaAccountsBO;
+import com.zen.smi.bo.SocialProfilesBO;
+import com.zen.smi.dao.entities.FinancialInstitutions;
+import com.zen.smi.dao.entities.SocialDataAnalysis;
+import com.zen.smi.dao.entities.SocialMediaAccounts;
+import com.zen.smi.dao.entities.SocialProfiles;
+import com.zen.smi.generic.utils.BeanCopyUtil;
+import com.zen.smi.generic.utils.SmiConstants;
+
+public final class SocialMediaAccountsHelper extends BeanCopyUtil {
+
+	/**
+	 * Logger for SocialMediaAccountsHelper class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(SocialMediaAccountsHelper .class);
+
+	/**
+	 * Instance of SocialMediaAccountsHelper.
+	 */
+	private static SocialMediaAccountsHelper  instance;
+
+	/**
+	 * Private constructor
+	 */
+	private SocialMediaAccountsHelper() {
+
+	}
+	
+	
+	
+	/**
+	 * Singleton instance of SocialMediaAccountsHelper.
+	 *
+	 * @return instance SocialMediaAccountsHelper
+	 */
+	public static SocialMediaAccountsHelper getInstance() {
+		if (instance == null) {
+			instance = new SocialMediaAccountsHelper();
+		}
+		return instance;
+	}
+
+	
+
+	/**
+	 * Converts List of Social Media Accounts Entity To BO
+	 * @param List<SocialMediaAccounts> accountsList
+	 * @return List<SocialMediaAccountsBO>
+	 * @author Sowjanya.Pathakamuri
+	 */
+	public List<SocialMediaAccountsBO> convertSocialMediaAccountsEntityToBO(
+			List<SocialMediaAccounts> accountsList) {
+		LOGGER.debug("Starts convertSocialMediaAccountsEntityToBO...");
+		List<SocialMediaAccountsBO> socialMediaAccountsBOList = new ArrayList<SocialMediaAccountsBO>(0);
+		for (SocialMediaAccounts socialMediaAccounts : accountsList) {
+			socialMediaAccountsBOList.add(getsocialMediaAccountsBOFromEntity(socialMediaAccounts));
+		}
+		
+		LOGGER.debug("Ends convertSocialMediaAccountsEntityToBO...");
+		return socialMediaAccountsBOList;
+	}
+
+	private SocialMediaAccountsBO getsocialMediaAccountsBOFromEntity(
+			SocialMediaAccounts socialMediaAccounts) {
+		LOGGER.debug("Starts getsocialMediaAccountsBOFromEntity...");
+		
+		 SocialMediaAccountsBO socialMediaAccountsBO = new SocialMediaAccountsBO();
+		
+		// SocialMediaAccounts information
+
+//			String[] socialMediaAccountsProperties = {"id","accountName","accountId","processStatus","scheduledDate","processPercentage","createdDate"};
+		 	BeanCopyUtil.copyBeanProperties(socialMediaAccounts, socialMediaAccountsBO , SOCIALMEDIAACCOUNTS_PROPERTIES);
+		 	 
+			
+		 //SocialMediaAccounts SocialProfiles information	
+		 	SocialProfiles socialProfiles =  socialMediaAccounts.getSocialProfiles();
+			 SocialProfilesBO socialProfilesBO = new  SocialProfilesBO();
+//	         String[] socialProfilesProperties = {"profileId","accountType"};
+	         BeanCopyUtil.copyBeanProperties(socialProfiles, socialProfilesBO, SOCIALPROFILES_PROPERTIES);
+	         socialMediaAccountsBO.setSocialProfiles(socialProfilesBO);
+
+	      // FinancialInstitutions information
+	         FinancialInstitutions financialInstitutions =  socialMediaAccounts.getFinancialInstitutions();
+	         FinancialInstitutionsBO financialInstitutionsBO = new  FinancialInstitutionsBO();
+//	         String[] financialInstitutionsProperties = {"id","accountOwner","parentId"};
+	         BeanCopyUtil.copyBeanProperties(financialInstitutions, financialInstitutionsBO, FINANCIALINSTITUTIONS_PROPERTIES);
+	         socialMediaAccountsBO.setFinancialInstitutions(financialInstitutionsBO);
+
+	 		LOGGER.debug("Ends getsocialMediaAccountsBOFromEntity...");
+	 		return socialMediaAccountsBO;
+	}
+	
+	/**
+	 * 
+	 * @param socialMediaAccounts
+	 * @param accountsBO
+	 * @return
+	 */
+	public SocialMediaAccountsBO getsocialMediaAccountsBOFromEntity(SocialMediaAccounts socialMediaAccounts,SocialMediaAccountsBO accountsBO) {
+		LOGGER.debug("Starts getsocialMediaAccountsBOFromEntity...");
+		
+		 
+		// SocialMediaAccounts information
+
+//			String[] properties = {"id","accountName","accountId","processStatus","scheduledDate","processPercentage","createdDate"};
+		 	BeanCopyUtil.copyBeanProperties(socialMediaAccounts, accountsBO , SOCIALMEDIAACCOUNTS_PROPERTIES);
+		 	 
+			
+		 //SocialMediaAccounts SocialProfiles information	
+		 	SocialProfiles socialProfiles =  socialMediaAccounts.getSocialProfiles();
+			 SocialProfilesBO socialProfilesBO = new  SocialProfilesBO();
+//	         String[] socialProfilesProperties = {"profileId","accountType"};
+	         BeanCopyUtil.copyBeanProperties(socialProfiles, socialProfilesBO, SOCIALPROFILES_PROPERTIES);
+	         accountsBO.setSocialProfiles(socialProfilesBO);
+
+	      // FinancialInstitutions information
+	         FinancialInstitutions financialInstitutions =  socialMediaAccounts.getFinancialInstitutions();
+	         FinancialInstitutionsBO financialInstitutionsBO = new  FinancialInstitutionsBO();
+//	         String[] financialInstitutionsProperties = {"Id","accountOwner","parentId"};
+	         BeanCopyUtil.copyBeanProperties(financialInstitutions, financialInstitutionsBO, FINANCIALINSTITUTIONS_PROPERTIES);
+	         accountsBO.setFinancialInstitutions(financialInstitutionsBO);
+
+	 		LOGGER.debug("Ends getsocialMediaAccountsBOFromEntity...");
+	 		return accountsBO;
+	}
+	
+	/**
+	 * 
+	 * @param socialMediaAccountsBO
+	 * @return
+	 */
+	public SocialMediaAccounts convertSocialMediaBOToEntity(SocialMediaAccountsBO socialMediaAccountsBO)
+	{
+		
+		SocialMediaAccounts socialMediaAccounts = new SocialMediaAccounts();
+//		String[] properties = {"id","accountName","accountId","processStatus","scheduledDate","processPercentage","createdDate"};
+		BeanCopyUtil.copyBeanProperties(socialMediaAccountsBO, socialMediaAccounts , SOCIALMEDIAACCOUNTS_PROPERTIES);
+	 		
+		return socialMediaAccounts;
+	}
+	
+	
+	/**
+	 * This method is to copy properties from FinancialInstitutions to FinancialInstitutionsBO
+	 * @author Venumadhava.Reddy
+	 * @param financialInstitutions
+	 * @return financialInstitutionsBO 
+	 */
+	public FinancialInstitutionsBO convertFIEntityToBO(FinancialInstitutions financialInstitutions)
+	{
+		  FinancialInstitutionsBO  financialInstitutionsBO = new FinancialInstitutionsBO();
+//		  String[] financialInstitutionsProperties = {"Id","accountOwner","parentId"};
+		  BeanCopyUtil.copyBeanProperties(financialInstitutions, financialInstitutionsBO, FINANCIALINSTITUTIONS_PROPERTIES);
+		  return financialInstitutionsBO;
+	}
+	
+	
+	/**
+	 * This method is to copy properties from FinancialInstitutionsBO  to FinancialInstitutions
+	 * @author Venumadhava.Reddy
+	 * @param financialInstitutions
+	 * @return financialInstitutions entity
+	 */
+	public FinancialInstitutions convertFIBOToEntity(FinancialInstitutionsBO financialInstitutionsBO)
+	{
+		   FinancialInstitutions  financialInstitutions = new FinancialInstitutions();
+		  String[] financialInstitutionsProperties = {"Id","accountOwner","parentId"};
+		  BeanCopyUtil.copyBeanProperties(financialInstitutionsBO, financialInstitutions, financialInstitutionsProperties);
+		  return financialInstitutions;
+	}
+	
+	
+	public SocialProfilesBO convertEntityToBO(SocialProfiles socialProfiles)
+	{
+		 SocialProfilesBO socialProfilesBO = new  SocialProfilesBO();
+         BeanCopyUtil.copyBeanProperties(socialProfiles, socialProfilesBO, SOCIALPROFILES_PROPERTIES);
+         return socialProfilesBO;
+	}
+	
+	
+	public SocialDataAnalysisBO convertAnalysisEntityToBO(SocialDataAnalysis dataAnalysis)
+	{
+		SocialDataAnalysisBO analysisBO = new SocialDataAnalysisBO();
+		BeanCopyUtil.copyBeanProperties(dataAnalysis, analysisBO, SmiConstants.SOCIALDATA_ANALYSIS_PROPERTIES);
+		return analysisBO;
+	}
+}

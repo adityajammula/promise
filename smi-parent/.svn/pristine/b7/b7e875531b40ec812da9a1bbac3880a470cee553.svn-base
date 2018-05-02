@@ -1,0 +1,15 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.entities.FlumeAgentsProcess;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public interface AgentProcessDAO extends BaseDAO<FlumeAgentsProcess, Serializable> {
+
+	List<FlumeAgentsProcess> getProcessesByProcessId(Integer processId);
+	
+	FlumeAgentsProcess getSpecificProcess(Integer agentId, Integer processId) throws GenericDAOException;
+
+}

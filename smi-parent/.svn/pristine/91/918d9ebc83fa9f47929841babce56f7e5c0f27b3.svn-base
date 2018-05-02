@@ -1,0 +1,19 @@
+package com.zen.smi.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class RuleGroupListBO {
+
+	@SerializedName("rule_groups")
+	private List<RuleGroupBO> ruleGroupListBO;
+
+	public List<RuleGroupBO> getRuleGroupListBO() {
+		return ruleGroupListBO;
+	}
+
+	public void setRuleGroupListBO(List<RuleGroupBO> ruleGroupListBO) {
+		this.ruleGroupListBO = ruleGroupListBO;
+	}
+}

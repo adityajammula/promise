@@ -1,0 +1,19 @@
+package com.zen.smi.dao;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.zen.smi.dao.BaseDAO;
+import com.zen.smi.dao.entities.RuleColumns;
+import com.zen.smi.dao.entities.Users;
+import com.zen.smi.dao.exception.GenericDAOException;
+
+public interface GlobalColumnDAO extends BaseDAO<RuleColumns, Serializable>{
+	
+	RuleColumns getGlobalColumnById(Integer ruleColumnId) throws GenericDAOException;
+	
+	List<RuleColumns> getGlobalColumnByName(String name) throws GenericDAOException;
+	
+	
+	List<Object[]> getExistingRelationshipsOfGlobalColumnById(Integer ruleColumnId) throws GenericDAOException;
+}

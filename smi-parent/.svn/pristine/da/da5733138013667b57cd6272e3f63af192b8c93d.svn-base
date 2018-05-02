@@ -1,0 +1,176 @@
+package com.zen.smi.extsys.service.impl;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.codehaus.jettison.json.JSONObject;
+import org.springframework.util.StringUtils;
+
+import com.google.gson.Gson;
+import com.restfb.BinaryAttachment;
+import com.restfb.DefaultFacebookClient;
+import com.restfb.FacebookClient;
+import com.restfb.Parameter;
+import com.restfb.exception.FacebookException;
+import com.restfb.types.FacebookType;
+import com.zen.smi.extsys.facebook.bo.Account;
+import com.zen.smi.extsys.facebook.bo.FBMessageBO;
+import com.zen.smi.extsys.facebook.bo.Group;
+import com.zen.smi.extsys.facebook.bo.GroupPage;
+import com.zen.smi.extsys.facebook.bo.SocialMediaPostsBO;
+import com.zen.smi.extsys.service.FaceBookService;
+
+public class FaceBookServiceImpl implements FaceBookService {
+	
+	public static final String FACEBOOK_SEARCH_URL="https://graph.facebook.com/search";
+	private FacebookClient fbClient = null;
+	private final String PAGE_ACCESS_TOKEN = "CAAFVo2M27nQBANo17q7vIl5mtZChePKaCyCsr7KQCssYZBo7T0cprWyI12JyheOVBJehEUVoXrGfvbOzr0eHZCOnR7tZC3PvcjjFkjws9bYD0SGIRHIi08jA2rZAoCIMU4fJMk2Exx3HVRrQCICNxnZB2T251RQM9j0ZCZCSuVELqHURhvGKZBIxY​";
+	
+	public FaceBookServiceImpl()
+	{
+		fbClient = new DefaultFacebookClient(PAGE_ACCESS_TOKEN);
+		
+	}
+	
+
+	public List<Group> getGroups(String groupName) throws Exception {
+		if(StringUtils.containsWhitespace(groupName)){
+			  groupName =groupName.replace(" ","%20");
+			 
+				System.out.println(groupName);
+			}
+	
+		String groupsUrl = FACEBOOK_SEARCH_URL+"?q="+groupName+"&type=page&fields=id,name,picture,likes,location,category,is_verified&access_token="+this.getAccessToken();
+		String json = null;
+		List<Group> groupsList = new ArrayList<Group>();
+		Gson gson=new Gson();
+		json = readUrl(groupsUrl);
+		GroupPage page = gson.fromJson(json, GroupPage.class);
+		List<Group> groups = page.getData();
+		for(Group group:groups){
+			
+			if(null!=group.getLocation()){
+			if(group.getLocation().getCity()!=null && group.getLocation().getCountry()!=null){
+				
+				group.setGroup_location(group.getLocation().getCity()+","+group.getLocation().getCountry());
+			 }else if(group.getLocation().getCity()==null && group.getLocation().getCountry()!=null){
+				 group.setGroup_location(group.getLocation().getCountry());
+			 }
+				
+		}
+			
+		}
+		
+		groupsList.addAll(groups);
+
+		return groupsList;
+	}
+	
+	
+	
+
+	private static String readUrl(String urlString) throws Exception {
+		URL url = new URL(urlString);
+		 URLConnection connection = url.openConnection();
+		    HttpURLConnection httpConnection = (HttpURLConnection)connection;
+		    
+		    httpConnection.setRequestProperty("Content-Type", "application/json");
+		    
+		 
+		    InputStream response = connection.getInputStream();
+		    int responseCode = httpConnection.getResponseCode();
+		 
+		    if(responseCode != 200) {
+		      throw new RuntimeException("Response code was not 200. Detected response was "+responseCode);
+		    }
+		 
+		    String output;
+		    Reader reader = null;
+		    try {
+		      reader = new BufferedReader(new InputStreamReader(response, "UTF-8"));
+		      StringBuilder builder = new StringBuilder();
+		      char[] buffer = new char[8192];
+		      int read;
+		      while ((read = reader.read(buffer, 0, buffer.length)) > 0) {
+		        builder.append(buffer, 0, read);
+		      }
+		      output = builder.toString();
+		    } 
+		    finally {
+		        if (reader != null) try {
+		          reader.close(); 
+		        } catch (IOException logOrIgnore) {
+		          logOrIgnore.printStackTrace();
+		        }
+		    }
+		 
+		    System.out.println(output);
+			return output;
+		  
+	}
+	
+	public String getAccessToken(){
+		
+		return "996381790394162|GryjLMLrNkByhgFaU-KnXch2M0g";
+	}
+
+	/* (non-Javadoc)
+	 * @see com.zen.smi.extsys.service.FaceBookService#postMessage(com.zen.smi.extsys.facebook.bo.FBMessageBO)
+	 */
+	public String postMessage(FBMessageBO fbMessageBO) throws Exception {
+		String messageId = "";
+		try {
+			String toPostId = fbMessageBO.getMessageId();
+			if (toPostId.indexOf("*") > 0) {
+				int startIndex = 0;
+				int endIndex = toPostId.indexOf("*");
+				toPostId = toPostId.substring(startIndex, endIndex);
+			}
+			int startIndex = toPostId.indexOf("_") + 1;
+			int endIndex = toPostId.length();
+			String postId = toPostId.substring(startIndex, endIndex);
+			String messageJson = fbClient.publish(postId + "/comments",
+					String.class,
+					Parameter.with("message", fbMessageBO.getMessageText()));
+			JSONObject jsonObject = new JSONObject(messageJson);
+			if (jsonObject.has("id")) {
+				messageId = jsonObject.getString("id");
+			}
+		} catch (FacebookException ex) {
+			ex.printStackTrace(System.err);
+		}
+		
+		return messageId;
+	}
+
+	public String postToUserTimeLine(SocialMediaPostsBO socialMediaPostsBO,byte[] bytes) throws Exception {
+		
+		try {
+			
+			for(Account account:socialMediaPostsBO.getAccount()){
+				
+				FacebookType publishPhotoResponse = fbClient.publish(account.getAccountTypeId()+"/photos", FacebookType.class,
+						  BinaryAttachment.with(socialMediaPostsBO.getImageName(), bytes),
+						  Parameter.with("message", socialMediaPostsBO.getText()));
+				System.out.println("publishPhotoResponse"+publishPhotoResponse);
+			}
+			
+			
+		} catch (FacebookException ex) {
+			ex.printStackTrace(System.err);
+		}
+		
+		return "success";
+	}
+
+
+
+}

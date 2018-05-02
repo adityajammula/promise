@@ -1,0 +1,124 @@
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name smiApp.controller:NavCtrl
+ * @description
+ * # NavCtrl
+ * Controller of the smiApp
+ */
+angular.module('smiApp')
+  .controller('ViewCustomerHistoryFBController', function ($scope,$state,$modal) {
+	 
+	    $scope.mails =[];
+	    
+	    $scope.mails = [
+	     {
+	       "id": 0,
+	       "customerName": "Adithya",
+	       "casePriority": "High",
+	       "socialAccount": "<<value>>",
+	       "caseStatus": "Escalated",
+	       "image": "resources/images/random-avatar1.jpg",
+	       "content": "Commodo sunt minim incididunt ipsum dolore veniam nulla Lorem reprehenderit officia. Ut esse cillum quis deserunt.",
+	       "date": "16:54, 24.11.2014"
+	     },
+	     {
+	    	 "id": 1,
+		       "customerName": "Karthik",
+		       "casePriority": "Medium",
+		       "socialAccount": "<<value>>",
+		       "caseStatus": "Assighned",
+		       "image": "resources/images/random-avatar2.jpg",
+		       "content": "Commodo sunt minim incididunt ipsum dolore veniam nulla Lorem reprehenderit officia. Ut esse cillum quis deserunt.",
+		       "date": "16:54, 24.11.2014"
+	     }];
+	    
+	    $scope.fbCases = [];
+	    
+	    $scope.fbCases = [
+	              	    {
+	              	      "id": 0,
+	              	      "caseCatefory": "Debit Card",
+	              	      "customerName": "Adithya",
+	              	      "casePriority": "High",
+	              	      "socialAccount": "@account1",
+	              	      "caseStatus": "Escalated",
+	              	      "image": "resources/images/random-avatar1.jpg",
+	              	      "content": "Commodo sunt minim incididunt ipsum dolore veniam nulla Lorem reprehenderit officia. Ut esse cillum quis deserunt.",
+	              	      "date": "16:54, 24.11.2014"
+	              	    },
+	              	    {
+	              	    "id": 1,
+	              	    "caseCatefory": "Credit Card",
+	              	      "customerName": "Karthik",
+	              	      "casePriority": "Medium",
+	              	      "socialAccount": "@account2",
+	              	      "caseStatus": "Assighned",
+	              	      "image": "resources/images/random-avatar2.jpg",
+	              	      "content": "Commodo sunt minim incididunt ipsum dolore veniam nulla Lorem reprehenderit officia. Ut esse cillum quis deserunt.",
+	              	      "date": "16:54, 24.11.2014"
+	              	    }];
+		$scope.showCaseHistory = function() {
+			var modalInstance = $modal.open({
+				templateUrl : 'customerHistory.html',
+				controller : 'CustomerHistoryController',
+			});			
+		};
+		
+		}).controller('CustomerHistoryController', function($scope,$state,$modal, $modalInstance) {
+			/*$scope.fbCases = [];
+		    
+		    $scope.fbCases = [
+		              	    {
+		              	      "id": 0,
+		              	      "caseCatefory": "Debit Card",
+		              	      "customerName": "Adithya",
+		              	      "casePriority": "High",
+		              	      "socialAccount": "@account1",
+		              	      "caseStatus": "Escalated",
+		              	      "image": "resources/images/random-avatar1.jpg",
+		              	      "content": "Commodo sunt minim incididunt ipsum dolore veniam nulla Lorem reprehenderit officia. Ut esse cillum quis deserunt.",
+		              	      "date": "16:54, 24.11.2014"
+		              	    },
+		              	    {
+		              	    "id": 1,
+		              	    "caseCatefory": "Credit Card",
+		              	      "customerName": "Karthik",
+		              	      "casePriority": "Medium",
+		              	      "socialAccount": "@account2",
+		              	      "caseStatus": "Assighned",
+		              	      "image": "resources/images/random-avatar2.jpg",
+		              	      "content": "Commodo sunt minim incididunt ipsum dolore veniam nulla Lorem reprehenderit officia. Ut esse cillum quis deserunt.",
+		              	      "date": "16:54, 24.11.2014"
+		              	    }];*/
+			$scope.mails = [
+							{
+
+								"id" : 0,
+								"customerName" : "Adithya",
+								"casePriority" : "High",
+								"socialAccount" : "<<value>>",
+								"caseStatus" : "Escalated",
+								"image" : "resources/images/random-avatar1.jpg",
+								"content" : "Commodo sunt minim incididunt ipsum dolore veniam nulla Lorem reprehenderit officia. Ut esse cillum quis deserunt.",
+								"date" : "16:54, 24.11.2014"
+
+							},
+
+							{
+
+								"id" : 1,
+								"customerName" : "Karthik",
+								"casePriority" : "Medium",
+								"socialAccount" : "<<value>>",
+								"caseStatus" : "Assighned",
+								"image" : "resources/images/random-avatar2.jpg",
+								"content" : "Commodo sunt minim incididunt ipsum dolore veniam nulla Lorem reprehenderit officia. Ut esse cillum quis deserunt.",
+								"date" : "16:54, 24.11.2014"
+
+							} ];
+				$scope.close = function () {
+					$modalInstance.dismiss('close');
+			    };
+		});

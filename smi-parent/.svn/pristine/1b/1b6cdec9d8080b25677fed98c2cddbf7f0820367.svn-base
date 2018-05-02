@@ -1,0 +1,144 @@
+angular.module('smiApp')
+ .controller('CaseManagementController', function ($scope, $rootScope,$moment,cmfDashboardService) { 
+	 $scope.init = function(){
+		 $scope.caseCounts=[];
+		 $scope.ticks=[],
+			cmfDashboardService.getCaseCountDetails().then(function(response){
+			$scope.caseCounts = response.data.cmfCasePriorityBOList;
+			/*
+			 * Case Category Morris-Donut Chart Code.
+			 */
+			$scope.caseCategoryData = [
+					             {label: '', value: null, color: '#428bca'},
+					             {label: '', value: null, color: '#616f77'},
+					             {label: '', value: null, color: '#f0ad4e'},
+					             {label: '', value: null,  color: '#5bc0de'},                        
+					             {label: '', value: null, color: '#d9534f'},
+					             {label: '', value: null, color: '#1693A5'}
+					            ];
+				 var caseCategory = response.data.cmfCaseCategoryBO;
+				 for(var i=0; i<caseCategory.length; i++){
+				 		$scope.caseCategoryData[i].label= caseCategory[i].category_name;
+				 		$scope.caseCategoryData[i].value= caseCategory[i].issue_count_by_category_id;			 		
+				 	 }
+			/*
+			 * Case Priority Morris-Donut Chart Code.
+			 */
+	        $scope.casePriorityData = [
+					            {label: '', value:null ,color: '#d9534f'},
+					            {label: '', value:null, color: '#f0ad4e'},
+					            {label: '', value:null, color: '#428bca'},                        
+					            {label: '', value:null, color: '#1693A5'}
+					          ];
+					 	var casePriority = response.data.cmfCasePriorityBOList;
+					 	 for(var i=0; i<casePriority.length; i++){
+					 		$scope.casePriorityData[i].label= casePriority[i].priority_name;
+					 		$scope.casePriorityData[i].value= casePriority[i].issue_count_by_priority_id;		 		
+					 	 }
+						$scope.totalcases = response.data.total_cases_count;
+						$scope.totalfbcases = response.data.face_book_open_cases_count;
+						$scope.totaltwittercases = response.data.twitter_open_cases_count;
+						$scope.totalcaseprioritycases = response.data.cases_assigned_to_user_count;
+				    });
+	        }
+	 
+	 $scope.config = {
+	 		    title: 'Products',
+	 		    tooltips: true,
+	 		    labels: false,
+	 		   mouseover : function(d) {
+	 		 // alert(JSON.stringify(d.y));  
+	 			  // var t='=';
+	 			   $scope.titil=d.x + '=' + d.y  ;
+	 		   },
+	 		    mouseout: function(){
+	 		    	 $scope.titil=null;
+	 		    },
+	 		    click: function(){},
+	 		    legend: {
+	 		      display: true,
+	 		      //could be 'left, right'
+	 		      position: 'right'
+	 		    },
+	 		  colors: [],
+	 		 // isAnimate: true, // run animations while rendering chart
+	 		 // yAxisTickFormat: 's', //refer tickFormats in d3 to edit this value
+	 		//  xAxisMaxTicks: 7, // Optional: maximum number of X axis ticks to show if data points exceed this number
+	 		//  yAxisTickFormat: 's', // refer tickFormats in d3 to edit this value
+	 		 // waitForHeightAndWidth: false // if true, it will not throw an error when the height or width are not defined (e.g. while creating a modal form), and it will be keep watching for valid height and width values
+	 	};	 
+   $scope.caseStatisticVal = "CaseCategory";
+   $scope.startDate = $moment().subtract(1, 'days').format('MMMM D, YYYY');
+   $scope.endDate = $moment().add(31, 'days').format('MMMM D, YYYY');
+   $scope.rangeOptions = {
+     ranges: {
+       Today: [$moment(), $moment()],
+       Yesterday: [$moment().subtract(1, 'days'), $moment().subtract(1, 'days')],
+       'Last 7 Days': [$moment().subtract(6, 'days'), $moment()],
+       'Last 30 Days': [$moment().subtract(29, 'days'), $moment()],
+       'This Month': [$moment().startOf('month'), $moment().endOf('month')],
+       'Last Month': [$moment().subtract(1, 'month').startOf('month'), $moment().subtract(1, 'month').endOf('month')]
+     },
+     opens: 'left',
+     startDate: $moment().subtract(29, 'days'),
+     endDate: $moment(),
+     parentEl: '#content'
+   };
+          $scope.$watch('startDate', function() {
+        	// alert( $scope.startDate +"     "+$scope.endDate);
+        	 $scope.changeCase($scope.caseStatisticVal,$scope.startDate, $scope.endDate);
+         }, true);
+      //  alert(JSON.stringify($scope.data));
+         $scope.changeCase = function(selectedCaseStatisticVal) {
+        	 cmfDashboardService.getDashboardInitData().then(function(response){
+ 			  });
+        	 if(selectedCaseStatisticVal == 'CaseCategory'){
+        		
+        		   $scope.data = {
+        		 		    series: ['DEBIT CARD', 'CREDIT CARDS', 'ATM', 'CHANNEL OUTAGE', 'CHEQUE','MISCELLANEOUS','All'],
+        		 		    data: [{
+        		 		      x: "Jan",
+        		 		      y: [500, 300, 10,20,30,40,200],
+        		 		    }, {
+        		 		      x: "FEB",
+        		 		     y: [100, 200, 10,20,30,40,56],
+        		 		    }, {
+        		 		      x: "MAR",
+        		 		     y: [100, 80, 90,70,25,40,48],
+        		 		    }, {
+        		 		      x: "APR",
+        		 		     y: [50, 30, 35,520,30,40,100],
+        		 		    },
+        		 		   {
+          		 		      x: "MAY",
+          		 		     y: [50, 30, 35,520,30,40,100],
+          		 		    },
+          		 		 {
+          		 		      x: "JUN",
+          		 		     y: [50, 30, 35,520,30,40,100],
+          		 		    },{
+          		 		      x: "JULY",
+         		 		     y: [50, 30, 35,520,30,40,100],
+         		 		    },{
+          		 		      x: "AUG",
+         		 		     y: [50, 30, 35,520,30,40,100],
+         		 		    },{
+          		 		      x: "SEP",
+         		 		     y: [50, 30, 35,520,30,40,100],
+         		 		    },{
+            		 		      x: "OCT",
+              		 		     y: [50, 30, 35,520,30,40,100],
+              		 		    },{
+                		 		      x: "NOV",
+                  		 		     y: [50, 30, 35,520,30,40,100],
+                  		 		    },{
+                    		 		      x: "DEC",
+                      		 		     y: [50, 30, 35,520,30,40,100],
+                      		 		    }]
+        		 		  };
+        	 }else if(selectedCaseStatisticVal == 'CasePriority'){
+        	 }else{
+        	 }
+         }
+         $scope.init();
+ });

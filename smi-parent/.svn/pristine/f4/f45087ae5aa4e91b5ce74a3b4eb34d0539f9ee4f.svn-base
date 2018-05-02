@@ -1,0 +1,100 @@
+<div class="container-fluid">
+	<div class="row  tile">
+		<!-- tile -->
+		<div class="tile-header bg-greensea dvd dvd-btm">
+			<h1 class="custom-font">
+				<strong>Dash Board</strong>
+			</h1>
+		</div>
+		
+		<div class="col-md-12">
+
+        <!-- tile -->
+        <section class="tile" fullscreen="isFullscreen12">
+
+          <!-- tile header -->
+          
+          <!-- /tile header -->
+
+          <!-- tile body -->
+          <div class="tile-body" >
+
+            <!-- row -->
+            <div class="row" >
+              <!-- col -->
+              <div class="col-md-6">
+                <div  morris-line-chart
+                      line-data='basicData'
+                      line-xkey='year'
+                      line-ykeys='["a", "b"]'
+                      line-labels='["Series A", "Series B"]'
+                      line-colors='["#16a085","#FF0066"]' style="height: 250px"></div>
+              </div>
+              
+                <div class="col-md-6">
+
+            		<flot dataset="dataset" options="options" height="250px"></flot>
+
+          		</div>
+              
+              <!-- /col -->
+              <!-- /col -->
+            </div>
+            <!-- /row -->
+
+          </div>
+          <!-- /tile body -->
+
+        </section>
+        <!-- /tile -->
+	</div>
+   </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+ 

@@ -1,0 +1,29 @@
+package com.zen.smi.web.bo;
+
+import com.google.gson.annotations.SerializedName;
+
+
+
+public class RulesMessageBO {
+
+	@SerializedName("message")
+	private String message;
+	@SerializedName("formula")
+	private String formulaApplied;
+	
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	public String getFormulaApplied() {
+		return formulaApplied;
+	}
+	public void setFormulaApplied(String formulaApplied) {
+		this.formulaApplied = formulaApplied;
+	}
+	
+	
+	
+}

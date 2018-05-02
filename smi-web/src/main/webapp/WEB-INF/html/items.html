@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<!-- saved from url=(0050)https://0.s3.envato.com/files/156110003/fixed.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title>promise</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="author" content="admin">
+	<link href="resources/styles/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
+	<link href="resources/styles/css.css" rel="stylesheet" type="text/css">
+	<link href="resources/styles/demo.min.css" rel="stylesheet" type="text/css" media="all">
+			<link rel="stylesheet" type="text/css"  href="resources/styles/reset.css" media="screen" /> 
+		<link rel="stylesheet" type="text/css"  href="resources/styles/grid.css" media="screen" />
+        <link rel="stylesheet" type="text/css"  href="resources/styles/styles.css" media="screen" />
+         <link rel="stylesheet" type="text/css"  href="resources/styles/style1.css" media="screen" />
+        <link rel="stylesheet" type="text/css"  href="resources/styles/jquery.wysiwyg.css" media="screen" />
+        <link rel="stylesheet" type="text/css"  href="resources/styles/tablesorter.css" media="screen" />
+        <link rel="stylesheet" type="text/css"  href="resources/styles/thickbox.css" media="screen" />
+        <link rel="stylesheet" type="text/css"  href="resources/styles/theme-blue.css" media="screen" />
+        <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="resources/styles/style_signup.css" media="all" />
+  <script src="resources/scripts/jquery.min.js" type="text/javascript"></script>
+  
+  <!-- Montserrat Sans -->
+  <link href='http://fonts.googleapis.com/css?family=Montserrat:400, 700' rel='stylesheet' type='text/css'>  
+      
+		<style>
+		
+		#boxes .window {
+  position:fixed;
+  left:0;
+  top:0;
+  width:440px;
+  height:200px;
+  display:none;
+  z-index:9999;
+  padding:20px;
+}
+
+#boxes #hospitals {
+  width:375px; 
+  height:203px;
+  padding:10px;
+  background-color:#ffffff;
+}
+
+#boxes #hospitals1 {
+  width:375px; 
+  height:203px;
+}
+
+#hospitals1 .d-header {
+  background:url(images/login-header.png) no-repeat 0 0 transparent; 
+  width:375px; 
+  height:150px;
+}
+
+#hospitals1 .d-header input {
+  position:relative;
+  top:60px;
+  left:100px;
+  border:3px solid #cccccc;
+  height:22px;
+  width:200px;
+  font-size:15px;
+  padding:5px;
+  margin-top:4px;
+}
+
+#hospitals1 .d-blank {
+  float:left;
+  background:url(images/login-blank.png) no-repeat 0 0 transparent; 
+  width:267px; 
+  height:53px;
+}
+
+#hospitals1 .d-login {
+  float:left;
+  width:108px; 
+  height:53px;
+}
+
+#boxes #hospitals2 {
+  background:url(images/notice.png) no-repeat 0 0 transparent; 
+  width:326px; 
+  height:229px;
+  padding:50px 0 20px 25px;
+}
+			.wrapper {
+    background: #50a3a2;
+    background: -webkit-linear-gradient(top left, #50a3a2 0%, #53e3a6 100%);
+    background: linear-gradient(to bottom right, #50a3a2 0%, #53e3a6 100%);
+   
+}
+		</style>
+<style type="text/css"> #u-left-panel{ min-height: 800px; } .content-panel{ min-height: 720px;} </style><style type="text/css">.oridomi-active{background-color:transparent !important;background-image:none !important;-webkit-box-sizing:border-box !important;border:none !important;outline:none !important;padding:0 !important;-webkit-transform-style:preserve-3d !important;-webkit-mask:none !important;position:relative;}.oridomi-clone{margin:0 !important;-webkit-box-sizing:border-box !important;overflow:hidden !important;display:block !important;}.oridomi-holder{width:100%;position:absolute;top:0;bottom:0;-webkit-transform-style:preserve-3d;}.oridomi-stage{width:100%;height:100%;position:absolute;-webkit-transform:translate3d(-9999px, 0, 0);margin:0;padding:0;-webkit-transform-style:preserve-3d;}.oridomi-stage-left{-webkit-perspective-origin:0% 50%;}.oridomi-stage-right{-webkit-perspective-origin:100% 50%;}.oridomi-stage-top{-webkit-perspective-origin:50% 0%;}.oridomi-stage-bottom{-webkit-perspective-origin:50% 100%;}.oridomi-shader{width:100%;height:100%;position:absolute;opacity:0;top:0;left:0;pointer-events:none;-webkit-transition-property:opacity;}.oridomi-shader-left{background:-webkit-linear-gradient(left, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%);}.oridomi-shader-right{background:-webkit-linear-gradient(right, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%);}.oridomi-shader-top{background:-webkit-linear-gradient(top, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%);}.oridomi-shader-bottom{background:-webkit-linear-gradient(bottom, rgba(0, 0, 0, .5) 0%, rgba(255, 255, 255, .35) 100%);}.oridomi-content{margin:0 !important;position:relative !important;float:none !important;-webkit-box-sizing:border-box !important;overflow:hidden !important;}.oridomi-mask{width:100%;height:100%;position:absolute;overflow:hidden;-webkit-transform:translate3d(0, 0, 0);outline:1px solid transparent;}.oridomi-panel{width:100%;height:100%;padding:0;position:absolute;-webkit-transition-property:-webkit-transform;-webkit-transform-origin:left;-webkit-transform-style:preserve-3d;}.oridomi-panel-h{-webkit-transform-origin:top;}.oridomi-stage-right .oridomi-panel{-webkit-transform-origin:right;}.oridomi-stage-bottom .oridomi-panel{-webkit-transform-origin:bottom;}</style></head>
+<!-- 
+  <script src="resources/scripts/jquery-ui.js" type="text/javascript"></script>
+  <script src="resources/scripts/sweetalert-dev.js"></script>
+<script src="resources/scripts/searchscript.js"></script>
+<script src="resources/scripts/slip.js"></script>
+<script src="backend/js/jquery.ui.touch-punch.js"></script>
+  <link rel="stylesheet" href="backend/css/sweetalert.css">
+  
+ -->
+
+
+<script>
+$(document).ready(function(){
+	
+	
+	
+
+	//select all the a tag with name equal to modal
+	$('a[name=modal]').click(function(e) {
+		//Cancel the link behavior
+		e.preventDefault();
+		
+		//Get the A tag
+		var id = $(this).attr('href');
+	
+		//Get the screen height and width
+		var maskHeight = $(document).height();
+		var maskWidth = $(window).width();
+	
+		//Set heigth and width to mask to fill up the whole screen
+		$('#mask').css({'width':maskWidth,'height':maskHeight});
+		
+		//transition effect		
+		$('#mask').fadeIn(1000);	
+		$('#mask').fadeTo("slow",0.8);	
+	
+		//Get the window height and width
+		var winH = $(window).height();
+		var winW = $(window).width();
+              
+		//Set the popup window to center
+		$(id).css('top',  winH/2-$(id).height()/2);
+		$(id).css('left', winW/2-$(id).width()/2);
+	
+		//transition effect
+		$(id).fadeIn(2000); 
+	
+	});
+	
+	//if close button is clicked
+	$('.window .close').click(function (e) {
+		//Cancel the link behavior
+		e.preventDefault();
+		
+		$('#mask').hide();
+		$('.window').hide();
+	});		
+	
+	//if mask is clicked
+	$('#mask').click(function () {
+		$(this).hide();
+		$('.window').hide();
+	});			
+	
+
+	$(window).resize(function () {
+	 
+ 		var box = $('#boxes .window');
+ 
+        //Get the screen height and width
+        var maskHeight = $(document).height();
+        var maskWidth = $(window).width();
+      
+        //Set height and width to mask to fill up the whole screen
+        $('#mask').css({'width':maskWidth,'height':maskHeight});
+               
+        //Get the window height and width
+        var winH = $(window).height();
+        var winW = $(window).width();
+
+        //Set the popup window to center
+        box.css('top',  winH/2 - box.height()/2);
+        box.css('left', winW/2 - box.width()/2);
+	 
+	});	
+   
+	$.ajax({
+		  url: "http://api.decarta.com/v1/a2521a44e9f26ed1c1b861fc3104c0df/search/hospitals mobile al.json",
+		  type: "GET",
+		  cache: false,
+		  success: function(response){
+		
+			   var searchData=  JSON.stringify(response);
+			   searchData= $.parseJSON(searchData);
+			   var ul="";
+			   
+			  for(i=0;i<searchData.results.length;i++){
+				
+	   var html='<li class=" wrapper left-menu-parent left-menu-active" style="width:400px">'+
+	            '<span class="left-menu-link-info"><span class="link-name">'+searchData.results[i].poi.name+'</span>  '+
+	            '<span class="link-name">'+searchData.results[i].address.streetNumber+'</span> '+
+	            '<span class="link-name">'+searchData.results[i].address.streetName+'</span> '+
+	            '<span class="link-name">'+searchData.results[i].address.municipalitySubdivision+'</span> '+
+	            '<span class="link-name">'+searchData.results[i].address.countrySubdivision+'</span> '+
+	            '<span class="link-name">'+searchData.results[i].address.postalCode+'</span>'+
+	            '<span class="link-name">'+searchData.results[i].poi.url+'</span> '+		
+	            '<span class="link-name">'+searchData.results[i].poi.name+'</span></span>'+
+	            '</li> ';
+			
+				if(ul==""){
+					ul=html;
+				}else{
+					ul=ul+html;
+				}
+				
+			  }
+			 
+			  $('#hospitals').html("<ul>"+ul+"</ul>");
+			//  $("#hospitals").hospitals("open");
+		  }
+		}); 
+	
+	
+$.ajax({
+	  url: "current_user",
+	  type: "GET",
+	  cache: false,
+	  success: function(response){
+	   
+		  var key= $.parseJSON(response);
+		  var username=key.data.userName;
+		 $("#userName").html(username);
+	  }
+	});
+});
+
+function findHospital(){
+	
+	
+	 
+	$('#hospitals').show();
+	
+}
+
+function displaySub(id){
+	
+	for(var i=1;i<9;i++){
+		
+		$("#sub"+i).hide();
+		
+	}
+	$("#sub"+id).show();
+	
+}</script>
+
+<body class="skin-polaris">
+	<div id="u-app-wrapper" class="panel-fixed collapse-true">
+		<div id="u-topbar" style="
+    background: #50a3a2;
+    background: -webkit-linear-gradient(top left, #50a3a2 0%, #53e3a6 100%);
+    background: linear-gradient(to bottom right, #50a3a2 0%, #53e3a6 100%);">
+			<div class="title">
+				Promis<br>
+				<span class="title-sub">personalized health check</span>
+			</div>
+			<span class="left-panel-toggle">
+				<i class="fa fa-bars"></i>
+			</span>
+			<ul class="topbar-button list-unstyled">
+				<li class="message-btn">
+					<a href="#hospitals"><i class="fa fa-envelope-o"></i><em class="em-blue"></em></a>
+				</li>
+				<li class="notify-btn">
+					<a href="#hospitals"><i class="fa fa-bell-o"></i><em class="em-orange"></em></a>
+				</li>
+			</ul>
+			<ul class="topbar-user list-unstyled">
+				<li class="dropdown">
+					<a href="#hospitals" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+						
+						<span class="topbar-username">LOGOUT<i class="fa fa-angle-down"></i></span>
+						<span class="topbar-userimage"><img src="resources/images/user.jpe" alt="user-image"></span>
+					</a>
+					
+				</li>
+			</ul>
+		</div>
+		<div id="u-left-panel" class="u-left-panel16">
+			<div class="panel-user-wrapper style1">
+				<div class="panel-user">
+					<img src="resources/images/user.jpe" alt="user-image">
+				</div>
+				<div id="userName" class="panel-user-name" style="margin-bottom:20px;">
+					
+				</div>
+				
+			</div>
+			<div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 487px;"><div id="u-left-menu" style="overflow: hidden; width: auto; height: 487px;">
+				<ul class="left-menu-wrapper list-unstyled">
+					<li class="left-menu-parent left-menu-active">
+						<a href="home">
+							<span class="left-menu-link-icon">
+								<i class="fa fa-home"></i>
+							</span>
+							<span class="left-menu-link-info">
+								<span class="link-name">HOME</span>
+							</span>
+						</a>
+					</li>
+			
+		
+					<li class="left-menu-parent">
+						<a href="profile">
+							<span class="left-menu-link-icon">
+								<i class="fa fa-user"></i>
+							</span>
+							<span class="left-menu-link-info">
+								<span class="link-name">PROFILE</span>
+								<span class="link-state"></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent">
+						<a href="#">
+							<span class="left-menu-link-icon">
+								<i class="fa fa-ambulance"></i>
+							</span>
+							<span class="left-menu-link-info">
+								<span class="link-name">HEALTH CENTER</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					
+					</li>
+					</ul>
+					
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">HOSPITALS</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">HISTORY</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">MEDICATION</span>
+							</span>
+						</a>
+					</li>
+				</ul><!--Main ul-->
+			</div><div class="slimScrollBar" style="width: 7px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px; height: 414.631px; background: rgb(255, 255, 255);"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; opacity: 0.2; z-index: 90; right: 1px; background: rgb(51, 51, 51);"></div></div>
+		</div>
+		<div class="content-wrapper">
+			<div class="content-panel content-shrink">
+				<div class="col-xs-12">
+        <div class="grid_7" style="margin-left:200px;">
+            
+            <ul>
+					
+					<li  class="left-menu-parent left-menu-active" style="width:400px">
+						<a href="#">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Symptoms of the Head</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a id="1" onclick="displaySub(this.id);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Head Injury</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a id="2" onclick="displaySub(this.id);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Aphasia (Trouble speaking)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a id="3" onclick="displaySub(this.id);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name"> Confusion and headache</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					
+					<li class="left-menu-parent ">
+						<a id="4" onclick="displaySub(this.id);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Mouth Pain</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+					<a id="5" onclick="displaySub(this.id);">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Depressed</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					</ul>
+            </div><!-- End .grid_7 -->
+             <div id="sub1" class="grid_7" style="display:none;margin-left:600px;margin-top:-320px;">
+            
+            <ul>
+					
+					<li class="left-menu-parent left-menu-active" style="width:400px">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Causes for Head injury</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Altered mental status (confusion)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+					<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Cervical spine fracture (broken neck bone)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Concussion</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Contusion (bruise, ecchymosis)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Epidural hematoma (bleeding around brain or spine)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Headache</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li><li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Hematoma (collection of blood)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li><li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Hemotympanum (blood behind ear drum)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					</ul>
+            </div><!-- End .grid_7 -->
+             <div id="sub2" class="grid_7" style="display:none;margin-left:600px;margin-top:-320px;">
+            
+            <ul>
+					
+					<li class="left-menu-parent left-menu-active" style="width:400px">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Causes for Aphasia (Trouble speaking)</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Alcohol (ethanol) intoxication</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Alcohol (ethanol) intoxication</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Cerebral vascular accident (stroke)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Drug overdose</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Hemorrhagic stroke (CVA, cerebrovascular accident)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Hypoglycemia (low blood sugar)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li><li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Laryngitis (voice box inflammation)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li><li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Migraine (type of headache)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					</ul>
+            </div><!-- End .grid_7 -->
+             <div id="sub3" class="grid_7" style="display:none;margin-left:600px;margin-top:-320px;">
+            
+            <ul>
+					
+					<li  class="left-menu-parent left-menu-active" style="width:400px">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Causes for Confusion and headache</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Brain tumor (cancer of the brain)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Carbon monoxide poisoning (odorless, poisonous gas)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Concussion</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Encephalitis (brain infection)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Epidural hematoma (bleeding around brain or spine)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Hydrocephalus (brain fluid build-up)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li><li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Hypertensive emergency (severely high blood pressure)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li><li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Meningitis (spinal fluid infection)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					</ul>
+            </div><!-- End .grid_7 -->
+             <div id="sub4" class="grid_7" style="display:none;margin-left:600px;margin-top:-320px;">
+            
+            <ul>
+					
+					<li class="left-menu-parent left-menu-active" style="width:400px">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Causes for Mouth pain</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Dentures</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Gingivitis (inflammation of the gums)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Hand foot and mouth disease (Coxsackie virus)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Oral ulcers (mouth ulcers)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Teeth grinding (bruxism)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Toothache</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li><li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">TraumaCauses for Mouth pain</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					</ul>
+            </div><!-- End .grid_7 -->
+             <div id="sub5" class="grid_7" style="display:none;margin-left:600px;margin-top:-320px;">
+            
+            <ul>
+					
+					<li  class="left-menu-parent left-menu-active" style="width:400px">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Causes for Headache and weakness</span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent hidden-horizontal">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Carbon monoxide poisoning (odorless, poisonous gas)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Cerebral contusion (bruise of brain)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Cerebral vascular accident (stroke)
+</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Epidural hematoma (bleeding around brain or spine)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Head injury</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					<li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Heat stroke</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li><li class="left-menu-parent ">
+						<a href="#hospitals">
+							
+							<span class="left-menu-link-info">
+								<span class="link-name">Meningioma (brain tumor)</span>
+								<span class="link-state"><i class="fa fa-angle-right"></i></span>
+							</span>
+						</a>
+					</li>
+					</ul>
+            </div><!-- End .grid_7 -->
+             
+	  <div  id="hospitals" class="grid_7" style="margin-left:200px;margin-top:320px;">
+	 
+	  
+	  </div>
+					<div class="panel-transfer-temp"></div>
+					
+				</div>
+				
+			</div>
+			
+		
+		
+		</div>
+		
+		<!--
+			STYLE SWITCHER
+			INFO -> Ideal for Demo purposes only. Please remove after complete setup
+		-->
+ 
+	</div><!--Global-->
+
+	<!--COMBINED FILE-->
+	
+
+
+</body></html>

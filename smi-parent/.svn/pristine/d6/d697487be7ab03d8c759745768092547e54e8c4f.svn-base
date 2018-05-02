@@ -1,0 +1,49 @@
+package com.zen.smi.cmf.bo;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+
+public class CaseStatusUpdateBO {
+
+	@SerializedName("user_name")
+	String userName;
+	@SerializedName("reason")
+	String reason;
+	@SerializedName("cmf_case")
+	List<String> caseIdList;
+	
+	
+	/**
+	 * @return the userName
+	 */
+	public String getUserName() {
+		return userName;
+	}
+	/**
+	 * @param userName the userName to set
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public List<String> getCaseIdList() {
+		return caseIdList;
+	}
+	public void setCaseIdList(List<String> caseIdList) {
+		this.caseIdList = caseIdList;
+	}
+	/**
+	 * @return the reason
+	 */
+	public String getReason() {
+		return reason;
+	}
+	/**
+	 * @param reason the reason to set
+	 */
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+	
+	
+}
